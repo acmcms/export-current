@@ -1,4 +1,4 @@
-/AddAccount.js/1.1/Wed Dec 23 18:03:56 2015/-kb/
+/AddAccount.js/1.2/Thu Dec 27 14:16:42 2018/-kb/
 /AddGroup.js/1.1/Fri Feb 20 05:40:00 2015/-kb/
 /DropAccount.js/1.1/Fri Feb 20 04:59:46 2015/-kb/
 /DropAccountLogin.js/1.1/Thu Jul 27 18:00:51 2017/-kb/
@@ -9,5 +9,5 @@
 /ReadAccount.js/1.1/Thu Jul 27 18:01:37 2017/-kb/
 /SetAccountLogin.js/1.1/Fri Feb 20 05:05:14 2015/-kb/
 /SetMembership.js/1.1/Thu Jul 27 18:01:34 2017/-kb/
-/UpdateAccount.js/1.1/Thu Jul 27 18:02:00 2017/-kb/
+/UpdateAccount.js/1.2/Thu Dec 27 14:17:06 2018/-kb/
 /UpdateAccountEmail.js/1.1/Thu Jul 27 18:02:07 2017/-kb/
