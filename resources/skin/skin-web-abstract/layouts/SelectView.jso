@@ -1,0 +1,17 @@
+{
+	onLayoutExecute : function( context, layout ) {
+		if(!layout.options){
+			return layout;
+		}
+		return Object.create(layout, {
+			layout : {
+				value : 'sequence',
+				enumerable : true
+			},
+			elements : {
+				value : layout.options,
+				enumerable : true
+			}
+		});
+	}
+}

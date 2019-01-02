@@ -1,0 +1,234 @@
+<html><head><!-- <%FORMAT:'html'%><%
+	%><%IGNORE%> -->  
+		<script type="text/javascript" src="../../js/require.js"></script>
+	<!-- <%/IGNORE%><%
+%><%OUTPUT: head %><%
+	%><%= '<!' + '-- ' + 'begin' %>-->
+	<style>
+		.img{
+			display: block;
+			background-image: url(/!/public/resources/data/images/famfamfam.com/silk/anchor.png);
+			width: 128px;
+			height: 128px;
+		}
+	</style>
+	<script> 
+		// <%FORMAT:'js'%>
+		require("lib/standard");
+		require("Utils/Coordinates");
+		require("Utils/Event");
+		require("Utils/Comms");
+		
+		require("Effects/Busy");
+		
+		require("Features/PopHint");
+		require.style("Features/PopHint.css");
+
+		var targets = [];
+		
+		function prepare(){
+			['td','div'].forEach(function(item){
+				var list = document.getElementsByTagName(item);
+				for( var i = 0; i < list.length; ++i ) {
+					list[i].getAttribute("skip") || targets.push( list[i] );
+				}
+			});
+		}
+		
+		function makeTargets(contents){
+			targets.forEach(function(target){
+				var holder = document.createElement("popHint");
+				holder.setAttribute("src", "/!/public/resources/data/images/famfamfam.com/silk/house.png");
+				target.appendChild(holder);
+				target.appendChild(document.createTextNode("@"));
+			});
+		}
+
+		function fn(e){
+			return "/!/public/resources/data/images/famfamfam.com/silk/cross.png";
+		}
+		
+		function dummy(e){
+			e || (e = window.event);
+			e.cancelBubble = true; /* Microsoft */
+			e.stopPropagation && e.stopPropagation(); /* W3C */
+			return false;
+		}
+		
+		function fnw(e){
+			return Math.round((e.clientWidth || e.innerWidth || e.offsetWidth) * 2 / 3);
+		}
+		
+		// <%/FORMAT%>
+	</script>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+	%><%IGNORE%> -->
+	</head>
+	<body>
+	<h1>Popup Hint</h1>
+	<!-- <%/IGNORE%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %>-->
+	<p>An extended tooltip.</p>
+	<code><%FORMAT: 'default' %>
+	// element:
+	//		popHint
+	//
+	// to mark a container add:
+	//		&lt;popHint ...attrs...>&lt;/popHint> inside that container. Container 
+	//					(parent element) will be augumented to display popup hint
+	//					Implementation will look for 'title' attribute of parent 
+	//					element if it cannot deduct hint contents from popHint 
+	//					element attributes.
+	//
+	// attributes:
+	//		src
+	//		src_expression
+	//		width_expression
+	//		height_expression
+	//
+	// uses CSS:
+	//		.shadow-plane - shadow plane,
+	//
+	// Usage:
+	//		Features.PopHint.initAllElements([document]) - to find and attach to all popHint elements in current [given] document.
+	//
+	<%/FORMAT%></code>
+	
+	<table style="height:250px;margin: 3px">
+		<tr>
+			<td></td>
+			<td></td>
+			<th valign="bottom">
+				<a href="../../tests.html">
+					&gt; click for tests.html &lt;
+				</a>
+			</th>
+		</tr>
+	</table>
+	<table style="width:75%; border: 3px solid black" border="1">
+		<tr>
+			<td title="transparent title hint" align="left" skip="true">
+				<span class="img"></span>parent-title
+				<popHint />
+			</td>
+			<td align="left" skip="true">
+				<span class="img"></span>src
+				<popHint src="/!/public/resources/data/images/famfamfam.com/silk/anchor.png"/>
+			</td>
+			<td align="left" skip="true">
+				<span class="img"></span>src
+				<popHint src="/!/public/resources/data/images/famfamfam.com/silk/anchor.png" height_expression="fnw(this)" />
+			</td>
+			<td align="left" skip="true">
+				<span class="img"></span>src
+				<popHint src="/!/public/resources/data/images/famfamfam.com/silk/anchor.png"/>
+			</td>
+		</tr>
+	</table>
+	<table style="width:75%; border: 3px solid green" border="1">
+		<tr>
+			<td title="green title hint" align="right" skip="true">
+				<span class="img"></span>parent-title
+				<popHint />
+			</td>
+			<td align="right" skip="true">
+				<span class="img"></span>src-expression
+				<popHint src_expression="'/!/public/resources/data/images/famfamfam.com/silk/anchor.png'" />
+			</td>
+			<td align="right" skip="true">
+				<span class="img"></span>src-expression
+				<popHint src_expression="'/!/public/resources/data/images/famfamfam.com/silk/anchor.png'" height_expression="Math.round((this.clientWidth || this.innerWidth || this.offsetWidth) * 2 / 3)" />
+			</td>
+			<td align="right" skip="true">
+				<span class="img"></span>src-expression
+				<popHint src_expression="'/!/public/resources/data/images/famfamfam.com/silk/anchor.png'" />
+			</td>
+		</tr>
+	</table>
+	<table style="width:50%; border: 3px solid yellow" border="1">
+		<tr>
+			<td skip="true">
+				<span class="img"></span>src-expression
+				<popHint src_expression="fn(this)" height_expression="fnw(this)" />
+			</td>
+			<td skip="true">
+				<span class="img"></span>src-expression
+				<popHint src_expression="fn(this)" />
+			</td>
+		</tr>
+	</table>
+	<table style="width:50%;border: 3px solid cyan" border="1">
+		<tr>
+			<td title="cyan title hint">1-parent-title</td>
+			<td>2</td>
+		</tr>
+	</table>
+	<table style="width:33%;height:40px;border: 3px solid blue" border="1">
+		<tr>
+			<td title="blue title hint">31-parent-title</td>
+			<td>32</td>
+			<td>33</td>
+			<td skip="true">
+				34
+				<popHint />
+			</td>
+			<td skip="true">
+				35-html
+				<popHint html="Hello world!<br /><b>bold text</b><br /><center><img src='../../$files/sample.png' /></center>" />
+			</td>
+			<td skip="true">
+				36-html-fn
+				<popHint html-fn="fn"/>
+			</td>
+		</tr>
+	</table>
+	<table style="width:33%;height:40px;border: 3px solid brown" border="1">
+		<tr>
+			<td skip="true">
+				21-text-long
+				<popHint text="21 is twenty one long-long-long, long-long-long<br />long-long-long long-long-long long-long-long long-long-long long-long-long long-long-long long-long-long long-long-long long-long-long long-long-long" />
+			</td>
+			<td skip="true">
+				22-src
+				<popHint src="popHint.part.htm" />
+			</td>
+			<td skip="true">
+				23-text
+				<popHint text="23 is twenty three" />
+			</td>
+		</tr>
+	</table>
+	<div style="width:120px;height:120px;border: 3px solid red">
+	</div>
+	<div style="position:fixed;top:30px;right:10px;width:120px;height:120px;border: 3px solid black">
+	</div>
+	<div style="position:absolute;top:30px;right:150px;width:120px;height:120px;border: 3px solid black">
+	</div>
+	<script>
+		// <%FORMAT:'js'%>
+		function fn(callback){
+			setTimeout(function(){
+				callback('Html text!')
+			}, 1000)
+		}
+		
+		prepare();
+		makeTargets();
+		Features.PopHint.initAllElements(document);
+		// <%/FORMAT%>
+	</script>
+	<div style="height: 800px; border: 1px dotted blue">&nbsp;</div>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Abstract: Features.PopHint',
+		template	: "html-document",
+		useRequire	: true,
+		useDebug	: true,
+		head		: head,
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

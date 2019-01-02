@@ -1,0 +1,77 @@
+<% // 	
+		Дерево админки в виде XML для основного лэйаута.
+
+
+%><%FINAL: 'text/xml' %><%
+	%><%CODE: 'ACM.ECMA' %>
+
+		maxLevel = Integer(Request.maxlevel,1);
+
+		import ru.myx.ae3.vfs.Storage;
+		import ru.myx.ae3.vfs.TreeReadType;
+		
+		root = Storage.ROOT; // Storage.PUBLIC 
+
+		cPath = '';
+		if( Request.root ){
+			cPath = cPath + Request.root;
+			for(var key in Request.root.split('/')) {
+				key && (root = root.getContentElement(key, null));
+			}
+		}
+		if( Request.path ){
+			path = root.getKey() + '/' + Request.path;
+			path = path.replace('//','/');
+			pathNodes = path.split('/');
+			rPath = Request.path.substring(1);
+			rPath.endsWith('/') || (rPath += '/');
+		}
+		
+		pathsLength = ArrayLength(pathNodes);
+		
+		%><?xml version="1.0" encoding="UTF-8"?><%
+		%><body><%
+			%><XML ID="oMetaData" base="" entryname="entry" type="tree"><%
+				function recursion(node, path, level){
+					if (node && true /* ControlAPI.isAccessible(path, node) */) {
+						var searchFlag = level < pathsLength - 1 && pathNodes[level] == node.getKey();
+						var children = node.isContainer() && node.getContentCollection(TreeReadType.ITERABLE) /* ControlAPI.filterAccessibleHierarchy(path, node.getChildren()) */;
+				
+						%><entry<%
+								%> path="<%= Format.xmlAttributeFragment( path ) %>"<%
+								%> children="<%= Array.isFilled( children ) %>"<%
+								%> icon="<%= ControlAPI.getIcon( node ) %>"<%
+								%> level="<%= level %>"<%
+								%> type="<%= level ? 'child' : 'root' %>"<%
+								%> name="<%= Format.xmlAttributeFragment( node.getKey() ) %>"<%
+								%> title="<%= Format.xmlAttributeFragment( node.title || node.getKey() ) %>"<%
+								if ( rPath == path ) {
+									// is target
+									%> selected="true"<%
+								}
+						if ( level < maxLevel || searchFlag ) {
+							%>><%
+							var foundFlag = false;
+							if ( children ) {
+								for( var child in children ) {
+									recursion( child, path + child.getKey() + '/', level + 1 );
+									searchFlag && (foundFlag || (foundFlag = (child.getKey() == pathNodes[level])));
+								}
+							}
+							if ( searchFlag && !foundFlag ) {
+								var deep = node.getContentElement(pathNodes[level + 1], null);
+								deep && recursion(deep, path + deep.getKey() + '/', level + 1 );
+							}
+							%></entry><%
+						}else{
+							%>/><%
+						}
+					}
+				}
+				recursion(root, cPath, 0);
+			%></XML><%
+		%></body><%
+		// end of ecma code
+	<%/CODE%><%
+%><%/FINAL%><%
+%>

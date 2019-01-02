@@ -1,0 +1,512 @@
+<%
+%><div id=ContextMenu><%
+	%><div id="ContextMenuContentForms"><%
+		%><%= contextMenuForms || '' %><%
+	%></div><%
+	%><div id="ContextMenuContentCommands"><%
+		%><%= contextMenuContentCommands || '' %><%
+	%></div><%
+	%><div id="ContextMenuNodeForms"><%
+		%><%= contextMenuNodeForms || '' %><%
+	%></div><%
+	%><div id="ContextMenuNodeCommands"><%
+		%><%= contextMenuNodeCommands || '' %><%
+	%></div><%
+	%><div id="ContextMenuTreeCommon"><%
+		%><%= contextMenuTreeCommon || '' %><%
+	%></div><%
+	%><div id="ContextMenuFormCommands"><%
+		%><%= contextMenuFormCommands || '' %><%
+	%></div><%
+	%><div id="ContextMenuFieldCommands"><%
+		%><%= contextMenuFieldCommands || '' %><%
+	%></div><%
+	%><div id="ContextMenuFieldContentCommands"><%
+		%><%= contextMenuFieldContentCommands || '' %><%
+	%></div><%
+	%><div id="ContextMenuQuickLinks"><%
+		%><%= contextMenuQuickLinks || '' %><%
+	%></div><%
+	%><div id="__loading" style="text-align:center;display:none;margin:0 0 2px 0;padding:5px"><%
+		%><img src='icons/feedback-wait-loading-<%= User.getUser().getProfile('mwmAdmin',true).WaitIcon || 'koffe' %>.32.gif' style="margin:0 0 5px 0"><%
+		%><br><%
+		%>...loading...<%
+	%></div><%
+%></div><%
+
+
+
+
+%><script id="Menu"><%
+	%><%FORMAT: 'js' %>
+		window.router || (window.require && requireScript("app/Router.js"), router = new Router("menu"));
+		requireScript("app/Dom.js");
+		
+		var MenuGroup = function(oDiv){
+			this.parentGroup = oDiv.parentNode;
+			var firstElement = Dom.firstElement(oDiv);
+			this.headerRow = firstElement.rows[0];
+			this.headerRow.parent = this;
+			this.headerRow.onclick = function(){
+				this.parent.switchBlock();
+			};
+			this.headerRow.switcher = Dom.firstElement(this.headerRow.cells[0]).rows[0].cells[1];
+	
+			this.List = firstElement.rows[1].cells[0];
+			this.List || (window.top.debug && window.top.debug("panel-menu: group list is undefined"));
+			this.status = false;
+			this.parentGroup.groups[oDiv.id] = this;
+	
+			return this;
+		};
+		MenuGroup.prototype = {
+			switchBlock : function(){
+				if(!this.status){
+					this.parentGroup.displayStatus = '';
+					Utils.Cookies.erase("menu_"+this.parentGroup.id);
+					if (this.parentGroup.contentStatus == 'hide'){
+						oMenu.onFire(this.parentGroup.eType, this.parentGroup.eValue, this.parentGroup.sender);
+						return;
+					}
+					this.blockOn();
+				}else{
+					this.parentGroup.displayStatus = 'none';
+					Utils.Cookies.create("menu_"+this.parentGroup.id, 'none', 3650);
+					this.blockOff();
+				}
+			},
+			blockOn : function(){
+				this.status = true;
+				this.List.parentNode.style.display = '';
+				this.headerRow.switcher.innerHTML = "&#x25B2;";
+			},
+			blockOff : function(){
+				this.status = false;
+				this.List.parentNode.style.display = 'none';
+				this.headerRow.switcher.innerHTML = "&#x25BC;";
+			},
+			pointsIni : function(){
+				var table = Dom.firstElement(this.List);
+				for (var i = 0; i < table.rows.length; ++i){
+					curTR = table.rows[i];
+					if(curTR.nonSelected){
+						continue;
+					}
+					curTR.path = curTR.getAttribute("path");
+					curTR.cmd = curTR.getAttribute("cmd");
+					curTR.myCmd = curTR.getAttribute("myCmd");
+					curTR.key = curTR.getAttribute("key");
+					curTR.title = curTR.getAttribute("title");
+					curTR.parent = this;
+					curTR.ondblclick = function(){
+						return false;
+					};
+					curTR.onmousedown = function(){
+						this.className = '';
+					};
+					curTR.onmouseover = function(){
+						this.parent.parentGroup.parent.selectedItem && (this.parent.parentGroup.parent.selectedItem.className = '');
+						this.parent.parentGroup.parent.selectedItem = this;
+						this.className = 'on';
+					};
+					curTR.openWindow = function(url){
+						var W = 600; H = 400;
+						var winSize = (window.require && require("Utils.Cookies").read("winSize", ""));
+						if(winSize){
+							W = winSize.split(',')[0];
+							H = winSize.split(',')[1];
+						}
+						var arg = [];
+						arg.sender = this.parent.parentGroup.sender;
+						window.require && requireScript("app/Windows.js");
+						Windows.open(url, arg, "", "height="+H+", width="+W);
+					};
+	
+					curTR.onclick = function(){
+						switch(this.parent.commandType){
+						case 'form' :
+							if(this.myCmd){
+								var src = 'execute.xml?type=form' + (this.path ? '&path=' + this.path : '') + (this.key ? '&key=' + escape(this.key) : '') + (this.myCmd ? '&' + this.myCmd + '=true' : '');
+								Containers.executeXmlQuery(this, src, router);
+							}else{
+								var src = 'execute.xml?type=form' + (this.path ? '&path=' + this.path : '') + (this.key ? '&key=' + escape(this.key) : '') + (this.cmd ? '&cmd=' + this.cmd : '');
+								Containers.createSubmitBuffer(this, document.getElementById("FBODY"), src);
+								router.fire("Submit", oMenu.id, {cmd : this.cmd}, oMenu);
+							}
+							break;
+	
+						case 'form_field' :
+							if(this.myCmd){
+								var w = window.showModalDialog(this.path, {sender : this.parent.parentGroup.sender}, "dialogWidth:500px; dialogHeight:145px; scroll:no; status:no; resizable:yes; help:no");
+								return;
+							}else{
+								var src = 'execute.xml?type=form' + (this.key ? '&key=' + escape(this.key) : '') + (this.cmd ? '&'+this.cmd+'=1' : '');
+								Containers.executeXmlQuery(this, src, router);
+							}
+							break;
+	
+						default:
+							var src = 'execute.xml?type='+this.parent.commandType + (this.path ? '&path=' + this.path : '') + (this.key ? '&key=' + escape(this.key) : '') + (this.cmd ? '&cmd=' + this.cmd : '');
+							Containers.executeXmlQuery(this, src, router);
+							break;
+						}
+					};
+	
+					curTR.executed = function(xmlData){
+						var currentNode = Dom.firstElement(xmlData);
+						if(!currentNode){
+							router.fire("CommandError", oMenu.id, false, oMenu);
+							return;
+						}
+						var type = currentNode.getAttribute("type");
+						var sender = (this.parent.sender || this.parent.parentGroup.sender);
+						switch(type){
+							case 'error':
+								alert(currentNode.text || currentNode.textContent);
+								router.fire("CommandError", oMenu.id, false, oMenu);
+								break;
+							case 'string':
+								alert(currentNode.text || currentNode.textContent);
+								sender ? sender.refresh() : router.fire("SubmitDone",oMenu.id,false,oMenu);
+								break;
+							case 'url':
+								var text = currentNode.text || currentNode.textContent;
+								window.open(text, '', '');
+								router.fire("Done", oMenu.id, text, oMenu);
+								break;
+							case 'confirmation':
+								var confirm = Windows.confirm(currentNode.getAttribute("title"));
+								if(!confirm){
+									return;
+								}
+								var src = 'execute.xml?type=form&key=' + currentNode.getAttribute("id") + '&cmd=' + currentNode.getAttribute("cmd") + '&__confirmation=1';
+								Containers.executeXmlQuery(this, src, router);
+								break;
+							case 'form':
+								var src = 'form.htm?id=' + currentNode.getAttribute("id");
+								if(this.parent.commandType != 'form'){
+									this.openWindow(src);
+								}else{
+									if(currentNode.getAttribute("id") == this.key){
+										router.fire("FormRefresh", oMenu.id, src, oMenu);
+									}else{
+										router.fire("FormChangeLocation", oMenu.id, src, oMenu);
+									}
+								}
+								break;
+							case 'apply':
+								if(this.parent.commandType != 'node_form_open'){
+									if(xmlData.childNodes){
+										var oXML = new ActiveXObject("Microsoft.XMLDOM");
+										var oRoot = oXML.createNode(1,"entry","");
+										oRoot.setAttribute('type','apply');
+										oXML.appendChild(oRoot);
+										for(var i=0; i<currentNode.childNodes.length; ++i){
+											var cNode = currentNode.childNodes[i];
+											if(cNode.nodeType != 1){ // not an element
+												continue;
+											}
+											if(cNode.getAttribute('type') == 'field'){
+												var oNode = oXML.createNode(1,"entry","");
+												oNode.setAttribute('type','field');
+												for (var j = 0; j < cNode.attributes.length; j++){
+													if(cNode.attributes[j].nodeName.indexOf('CMD') == 0){
+														oNode.setAttribute(cNode.attributes[j].nodeName, cNode.attributes[j].nodeValue);
+													}
+												}
+												oRoot.appendChild(oNode);
+											}
+										}
+										currentNode = oRoot;
+									}
+									sender 
+										? sender.refresh()
+										: router.fire("ApplyDone", oMenu.id, currentNode, oMenu);
+								}
+								break;
+							case 'done':
+								if(this.parent.commandType != 'node_form_open'){
+									sender 
+										? sender.refresh()
+										: router.fire("SubmitDone", oMenu.id, false, oMenu);
+								}
+								break;
+						}
+					};
+	
+	
+					curTR.setLocation = function(path){
+						router.fire("FormChangeLocation", oMenu.id, path, oMenu);
+					};
+					curTR.submit = function(path,targettype){
+						router.fire("Submit", oMenu.id, {Url : path, TargetType : targettype}, oMenu);
+					};
+					curTR.close = function(){
+						router.fire("Close", oMenu.id, false, oMenu);
+					};
+				}
+			}
+		};
+	
+		var menuTimer = {};
+		var oMenu = document.getElementById("ContextMenu");
+		oMenu.entryType = 'menu';
+	
+		oMenu.clickTimers = [];
+	
+		oMenu.ini = function(){
+			this.groupsContainer = this;
+	
+			this.onmouseout = function(){
+				this.timer || !this.selectedItem || (this.timer = setTimeout("oMenu.unselect()", 500));
+			};
+			this.onmouseover = function(){
+				clearTimeout(this.timer);
+				this.timer = null;
+			};
+			this.unselect = function(){
+				this.selectedItem.className = '';
+				this.selectedItem = null;
+			};
+	
+			this.groups = [];
+			var htmlMenuGroups = this.groupsContainer.childNodes;
+			for (var i=0; i<htmlMenuGroups.length; ++i){
+				var htmlMenuGroup = htmlMenuGroups[i];
+				if(htmlMenuGroup.nodeType != 1){ // not an element
+					continue;
+				}
+				if(htmlMenuGroup.id.indexOf('ContextMenu') != 0){
+					this.groups[htmlMenuGroup.id] = htmlMenuGroup;
+					continue;
+				}
+				htmlMenuGroup.groups = [];
+				htmlMenuGroup.parent = this;
+	
+				htmlMenuGroup.displayStatus =  (requireScript("lib/standard.js"), Standard.readCookie("menu_"+htmlMenuGroup.id, ""));
+	
+				// One menu folder can contain several menu groups mixed
+	
+				if(htmlMenuGroup.hasChildNodes()){
+					for(var j = 0; j < htmlMenuGroup.childNodes.length; j++){
+						var groupElement = htmlMenuGroup.childNodes[j];
+						if(groupElement.nodeType != 1){ // not an element
+							top.debug && top.debug("panel-menu: skip non element node, block=" + htmlMenuGroup.id);
+							continue;
+						}
+						var menuGroup = new MenuGroup(groupElement);
+						htmlMenuGroup.sender = groupElement.sender && document.getElementById(groupElement.sender);
+						menuGroup.commandType = groupElement.getAttribute("CommandType");
+						top.debug && top.debug("panel-menu: creating menu group: #" + j + ", block=" + htmlMenuGroup.id + ", commandType=" + menuGroup.commandType);
+						menuGroup.pointsIni();
+					}
+				}
+				htmlMenuGroup.hideGroups = function(){
+					for (var i in this.groups){
+						this.groups[i].blockOff();
+					}
+				};
+				htmlMenuGroup.showGroups = function(){
+					for (var i in this.groups){
+						this.groups[i].blockOn();
+					}
+				};
+				htmlMenuGroup.clearAll = function(){
+					this.groups = [];
+					this.sender = false;
+					this.eType = false;
+					this.eValue = false;
+					this.contentStatus = false;
+					this.innerHTML = "";
+				};
+				htmlMenuGroup.loading = function(){
+					this.clearAll();
+					this.parent.groups.__loading.style.display = '';
+				};
+				this.groups[htmlMenuGroup.id.split('ContextMenu')[1]] = htmlMenuGroup;
+			}
+		}
+	
+		oMenu.ini();
+	
+		oMenu.onFire = function(eType,eValue,eObj){
+			eObj && (this.sender = eObj);
+			clearTimeout(menuTimer);
+			menuTimer = null;
+	
+			var request = '';
+			var path = false;
+			switch(eType){
+				case "ObjectSelect" :
+					this.groups.NodeForms.hideGroups();
+					this.groups.NodeCommands.hideGroups();
+					this.groups.TreeCommon.hideGroups();
+					this.groups.ContentCommands.loading();
+					this.groups.ContentForms.loading();
+					this.groups.ContentCommands.sender = eObj;
+					this.groups.ContentForms.sender = eObj;
+					path = 'menuObjectCommandsAndForms.xml?path='+escape(eValue.path)+(escape(eValue.id) ? '&key='+escape(eValue.id) : '')+(eValue.type ? '&type='+eValue.type : '');
+					break;
+	
+				case "ObjectsSelect" :
+					this.groups.NodeForms.hideGroups();
+					this.groups.NodeCommands.hideGroups();
+					this.groups.TreeCommon.hideGroups();
+					this.groups.ContentForms.loading();
+					this.groups.ContentCommands.loading();
+					this.groups.ContentCommands.sender = eObj;
+					this.groups.ContentForms.sender = eObj;
+					path = 'menuObjectCommandsAndForms.xml?path=' + escape(eValue.path) + (escape(eValue.ids) ? '&key='+escape(eValue.ids) : '') + (eValue.type ? '&type='+eValue.type : '');
+					break;
+	
+				case "ObjectUnselect" :
+					this.groups.NodeForms.showGroups();
+					this.groups.NodeCommands.showGroups();
+					this.groups.TreeCommon.showGroups();
+					this.groups.ContentCommands.clearAll();
+					this.groups.ContentForms.clearAll();
+					return;
+	
+				// <%IF: Int(User.getUser().getProfile('mwmAdmin',true).ShowFieldMenu,1) > 0%>
+				case "FieldActivate" :
+					this.groups.FieldContentCommands.clearAll();
+					this.groups.FieldCommands.clearAll();
+					this.groups.FieldCommands.loading();
+					this.groups.FieldCommands.sender = eObj;
+					path = 'menuFieldCommands.xml?'+eValue.path;
+					break;
+	
+				case "FieldDeactivate" :
+					this.groups.FieldContentCommands.clearAll();
+					this.groups.FieldCommands.clearAll();
+					return;
+	
+				case "FieldItemSelectBegin" :
+					this.groups.FieldContentCommands.loading();
+					break;
+	
+				case "FieldItemSelect" :
+					this.groups.FieldContentCommands.sender = eObj;
+					this.build(eValue.xmlData);
+					break;
+	
+				case "FieldItemUnselect" :
+					this.groups.FieldContentCommands.clearAll();
+					break;
+				// <%/IF%>
+			}
+	
+			if(path){
+				menuTimer = setTimeout("Containers.executeXmlQuery(oMenu, '" + (path + request) + "')", 800);
+			}
+		};
+	
+		oMenu.hideGroups = function(){
+			for (var i in this.groups) {
+				for (var j in this.groups[i].groups){
+					this.groups[i].groups[j].blockOff();
+				}
+			}
+		};
+		oMenu.showGroups = function(){
+			for (var i in this.groups) {
+				for (var j in this.groups[i].groups){
+					this.groups[i].groups[j].blockOn();
+				}
+			}
+		};
+	
+		oMenu.build = function(xmlData,oObj){
+			this.groups.__loading.style.display = 'none';
+			for (var j=0; j<xmlData.childNodes.length; j++){
+				var currentNode = xmlData.childNodes[j];
+				if(currentNode.nodeType != 1){ // not an element
+					continue;
+				}
+				if(!Dom.firstElement(currentNode)){
+					continue;
+				}
+				var currGroup = this.groups[currentNode.getAttribute("group")];
+				currGroup.contentStatus = currentNode.getAttribute("status");
+				if(currGroup.contentStatus == 'empty'){
+					currGroup.clearAll();
+					continue;
+				}
+				var group;
+				if(currGroup.groups[currentNode.getAttribute("id")]){
+					group = currGroup.groups[currentNode.getAttribute("id")];
+					group.List.innerHTML =  buildPoints(currentNode);
+				}else{
+					var oDiv = document.createElement("div");
+					oDiv.id = currentNode.getAttribute("id");
+					oDiv.className = 'FrameBorder';
+					oDiv.style.width = '100%';
+					oDiv.style.marginBottom = '2px';
+					currGroup.insertBefore(oDiv, currGroup.firstChild);
+					var oTable = document.createElement("table");
+					oTable.cellPadding = 0;
+					oTable.cellSpacing = 0;
+					oTable.border = 0;
+					oTable.width = '100%';
+					oDiv.appendChild(oTable);
+					var oTR = oTable.insertRow(-1);
+					var oTD = oTR.insertCell(-1);
+					oTD.className = 'SubMenuHeader';
+	
+					var otbl = document.createElement("table");
+					otbl.cellPadding = 0;
+					otbl.cellSpacing = 0;
+					otbl.border = 0;
+					otbl.width = '100%';
+					oTD.appendChild(otbl);
+					var oTR = otbl.insertRow(0);
+					var oTD = oTR.insertCell(0);
+					oTD.innerHTML = currentNode.getAttribute("title");
+	
+					var oTD = oTR.insertCell(1);
+					oTD.style.textAlign = 'right';
+					oTD.innerHTML = "&#x25BC;";
+	
+					var oTR = oTable.insertRow(1);
+					oTR.style.display = 'none';
+					var oTD = oTR.insertCell(0);
+					oTD.className = 'SubmenuButton';
+					oTD.style.backgroundColor = 'threedhighlight';
+					if(currentNode.getAttribute("status") == 'true'){
+						oTD.innerHTML = buildPoints(currentNode);
+					}
+					window.top.debug && window.top.debug("panel-menu: creating menu group from XML.");
+					group = new MenuGroup(oDiv);
+					group.commandType = currentNode.getAttribute("CommandType");
+				}
+				if(currentNode.getAttribute("status") == 'true'){
+					group.pointsIni();
+					group.blockOn();
+				}
+			}
+		};
+	
+		function buildPoints(xmlData){
+			if(!Dom.firstElement(xmlData)){
+				return '';
+			}
+			var str = '<table border=0 cellpadding=2 cellspacing=0 width=100%>';
+			for (var j=0; j<xmlData.childNodes.length; j++){
+				var currentNode = xmlData.childNodes[j];
+				if(currentNode.nodeType != 1){ // not an element
+					continue;
+				}
+				str += '<tr';
+				str += (currentNode.getAttribute("myCmd") ? ' myCmd ="' + currentNode.getAttribute("myCmd") + '"' : '');
+				str += currentNode.getAttribute("path")			? ' path="'+currentNode.getAttribute("path")+'"' : '';
+				str += currentNode.getAttribute("key")			? ' key="'+currentNode.getAttribute("key")+'"' : '';
+				str += currentNode.getAttribute("cmd")			? ' cmd="'+currentNode.getAttribute("cmd")+'"' : '';
+				str += currentNode.getAttribute("description")	? ' description="'+currentNode.getAttribute("description")+'"' : ''
+				str += '><td valign=top><img src="icons/'+currentNode.getAttribute("icon")+'.32.gif" width=32 height=32></td><td width=100%>'+currentNode.getAttribute("title")+'</td></tr>';
+			}
+			str += '</table>';
+			return str;
+		}
+		router.register(oMenu,'form');
+	<%/FORMAT%><%
+%></script>

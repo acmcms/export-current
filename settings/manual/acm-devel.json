@@ -1,0 +1,6 @@
+{
+	type : "ae3.Manual",
+	title : "ACM Developer Manuals",
+	name : "acm-devel",
+	group : "acm.cms",
+}

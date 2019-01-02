@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE> <%=Runtime.getSystemName()%> </TITLE><%
+	
+	%><LINK HREF="frames.css" REL=stylesheet><%
+	%><SCRIPT id="EventsMethods" src="EventsMethods.js"></script><%
+	%><SCRIPT id="WindowsMethods" src="WindowsMethods.js"></script><%
+
+
+%><style>
+INPUT, SELECT{
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+	border: 0;
+	background-color: activecaption;
+	color:captiontext;
+}
+</style><%
+
+%><script><%
+	%>var Objects = [];<%
+	%>var iBuffers = [];<%
+	%>var eventMethods = CreateEventMethods();<%
+%></script><%
+
+%></head><%
+
+%><BODY BGCOLOR=buttonface scroll="no" style="cursor:default; margin:0px;"><%
+	%><TABLE border=0 cellpadding=0 cellspacing=0 style="height:100%; width:100%; padding:1px"><%
+		%><TR><%
+			%><TD><%
+		 		%><div style="height:100%;" class=FrameBorder><%
+					%><div style="height:100%;" class=FrameBorder2><%
+						%><TABLE border=0 cellpadding=0 cellspacing=0 width=100%><%
+							%><TR><%
+								%><TD class=F2rameBorder2 style="padding:0 4px 0 4px" width=100%><%
+									%><button style="margin:0" class=Menu style="width:expression(this.firstChild.offsetWidth + 16)" onclick="mainFrame.switchLeftFrame()" onmouseover="this.className='MenuOn'" onmouseout="this.className='Menu'"><%
+										%><span><%
+											%><img src=$files/ico-tree.gif height=16 width=16 align=absmiddle><%
+											%><%= intl( en = "Tree", ru = "Дерево" ) %><%
+										%></span><%
+									%></button><%
+									%><button style="margin:0" class=Menu style="width:expression(this.firstChild.offsetWidth + 16)" onclick="eventMethods.fire('setLocation','sysmenu','xxx');" onmouseover="this.className='MenuOn'" onmouseout="this.className='Menu'"><%
+										%><span><%
+											%><img src=icons/object-system.16.gif height=16 width=16 align=absmiddle><%
+											%><%= intl( en = "System properties", ru = "Системные свойства" ) %><%
+										%></span><%
+									%></button><%
+								%></TD><%
+			
+								%><TD class=F2rameBorder2 style="padding:0 0 0 4px" width=100% align=right><%
+									%><button style="margin:0" class=Menu style="width:expression(this.firstChild.offsetWidth + 16)" onclick="document.location.assign('/_sys/logout?back=<%=Runtime.ENTRANCE%>')" onmouseover="this.className='MenuOn'" onmouseout="this.className='Menu'"><%
+										%><span><%
+											%><img src=$files/ico-logout.gif height=16 width=16 align=absmiddle><%
+											%><%= intl( en = "Logout", ru = "Выйти" ) %><%
+										%></span><%
+									%></button><%
+									%><button style="margin:0" class=Menu style="width:expression(this.firstChild.offsetWidth + 16)" onclick="document.location.assign('re-login?uid=<%=User.UserID%>')" onmouseover="this.className='MenuOn'" onmouseout="this.className='Menu'"><%
+										%><span><%
+											%><img src=$files/ico-relogin.gif height=16 width=16 align=absmiddle><%
+											%><%= intl( en = "Relogin", ru = "Перезайти" ) %><%
+										%></span><%
+									%></button><%
+								%></TD><%
+			
+								%><%EXEC: language = Runtime.getLanguage() %><%
+								%><TD style="padding:0 4px 0 4px" width=100% align=right><select style="width:130px" onchange="document.location=this.value"><%
+									%><%EXEC: languages = Runtime.getLanguages() %><%
+									%><%ITERATE: language : languages %><%
+										%><option <%
+										%><%IF: languageName == language.name %><%
+											%>selected="selected" <%
+										%><%/IF%><%
+											%>value="<%= Runtime.getLanguageSelectionUrl( language.name, Session.mwmAdminUrlPath ) %>"><%
+												%><%= language.nativeName %> (<%= language.commonName %>) <%
+										%></option><%
+									%><%/ITERATE%><%
+								%></select></TD><%
+			
+							%></TR><%
+						%></TABLE><%
+		 			%></div><%
+				%></div><%
+			%></TD><%
+		%></TR><%
+		%><TR><%
+			%><TD style="height:100%"><%
+				%><iframe id="mainFrame" src="MainFrameSet.htm<%=Request.path ? '?path='+Request.path : ''%>" style="width:100%; height:100%"></iframe><%
+			%></TD><%
+		%></TR><%
+	%></TABLE><%
+%></BODY><%
+%></HTML>

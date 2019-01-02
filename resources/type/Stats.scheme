@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<type>
+	<title>Static: Statistics</title>
+	<visibility>hidden</visibility>
+	<icon>stats</icon>
+
+	<command>
+		<type>hidden</type>
+		<key>chartLog</key>
+		<static>true</static>
+		<execute>always</execute>
+		<description><![CDATA[
+			Tracking stats from your code. Insert calls to this method in proper checkpoints.
+			Example:
+				%><%EXEC: Stats.chartLog(cls = 'refr', folder = host, object = "-", param = referer, type = '200', value = 0 ) %><%
+				%><%EXEC: Stats.chartLog(cls = 'entr', folder = "http://"+Request.getTargetExact(), object = "-", param = Request.getUrl(), type = '200', value = 0 ) %><%
+		]]></description>
+		<arguments class="fieldset">
+			<field id="cls" class="string" default="*"/>
+			<field id="folder" class="string" default="*"/>
+			<field id="object" class="string" default="*"/>
+			<field id="param" class="string" default="*"/>
+			<field id="type" class="string" default="*"/>
+			<field id="value" class="integer" default="0"/>
+			<field id="user" class="string" default="= Request.getUserID() "/>
+			<field id="address" class="string" default="= Request.getSourceAddress() "/>
+			<field id="language" class="string" default="= Request.getLanguage() "/>
+			<field id="entry" class="object"/>
+			<field id="ttl" class="integer" default="= 24L * 60L * 60L * 1000L"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var userAgent = Request.getAttributes()["User-Agent"];
+			if( "stress" != userAgent ){
+				return;
+			}
+			Stats.chartLogImpl( 
+				date		= Date.now(), 
+				ttl			= ttl, 
+				cls			= cls, 
+				object		= object, 
+				folder		= folder, 
+				param		= param, 
+				type		= type, 
+				value		= value, 
+				user		= user, 
+				address		= address, 
+				language	= language, 
+				entry		= entry );
+		]]></script>
+	</command>
+
+	<command>
+		<type>hidden</type>
+		<key>chartLogImpl</key>
+		<static>true</static>
+		<execute>buffered</execute>
+		<delay>30s</delay>
+		<period>15s</period>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%EXEC: commands = [] %><%
+			%><%ITERATE: record : Array( data ) %><%
+				%><%EXEC: cls = record.cls || '*' %><%
+				%><%EXEC: object = record.object || '*' %><%
+				%><%EXEC: folder = record.folder || '*' %><%
+				%><%EXEC: param = record.param || '*' %><%
+				%><%EXEC: type = record.type || '*' %><%
+				%><%EXEC: value = Int(record.value, 0) %><%
+				%><%EXEC: user = record.user %><%
+				%><%EXEC: address = record.address %><%
+				%><%EXEC: language = record.language %><%
+
+				%><%IF: folder == '*' %><%
+					%><%EXEC: entry = record.entry %><%
+					%><%IF: entry %><%
+						%><%WHILE: folder == '*' && (parent = entry.getParent()) %><%
+							%><%IF: parent.getType().isInstance("$fundamental") %><%
+								%><%EXEC: folder = parent.getGuid() %><%
+							%><%/IF%><%
+							%><%EXEC: entry = parent %><%
+						%><%/WHILE%><%
+					%><%/IF%><%
+				%><%/IF%><%
+
+				%><%OUTPUT: query %><%
+					%>INSERT INTO c0ChartLog <%
+					%>(<%
+						%>grpDate,<%
+						%>itrDeath,<%
+						%>itmType,<%
+						%>itmGuid,<%
+						%>itmFolder,<%
+						%>itmParam,<%
+						%>itrType,<%
+						%>itrUser,<%
+						%>itrAddress,<%
+						%>itrLang,<%
+						%>itrCountry,<%
+						%>itrValue) <%
+					%>VALUES <%
+					%>(<%
+						%><%= Calendar.roundTime( record.date, 180000L) / 180000L %>,<%
+						%><%= Calendar.roundTime( record.date + record.ttl, 60000L) / 60000L %>,<%
+						%>'<%= LimitString(cls, 32) %>',<%
+						%>'<%= LimitString(object, 32) %>',<%
+						%>'<%= LimitString(folder, 64) %>',<%
+						%>'<%= formatSqlStringParameter( LimitString( param, 512 ) ) %>',<%
+						%>'<%= LimitString(type, 32) %>',<%
+						%>'<%= LimitString(user, 32) %>',<%
+						%>'<%= LimitString(address, 32) %>',<%
+						%>'<%= language %>',<%
+						%>'<%= Geography.getCountryCodeForAddressSafe(address,'**').toLowerCase() %>',<%
+						%><%= value %><%
+					%> )<%
+				%><%/OUTPUT%><%
+				%><%EXEC: commands.add( query ) %><%
+			%><%/ITERATE%><%
+			%><%IF: Array.isFilled( commands ) %><%
+				%><%SQLBATCH: "default", commands %><%
+			%><%/IF%><%
+		%>]]></script>
+	</command>
+
+	<command>
+		<type>hidden</type>
+		<key>buildAgregation</key>
+		<static>true</static>
+		<execute>auto</execute>
+		<delay>1m</delay>
+		<period>10m</period>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%LOG: "STATS/MTN", "Started, counter=" + (Stats.counter = ( Stats.counter | 0 ) + 1) %><%
+			%><%OUTPUT: query %><%
+				%>DELETE <%
+				%>FROM c0ChartLog <%
+				%>WHERE <%
+					%>(itrDeath < <%= Calendar.roundTime( Date.now(), 60000L ) / 60000L %>)<%
+			%><%/OUTPUT%><%
+
+			%><%SQLEXEC: "default", query %><%
+
+			%><%OUTPUT: query %><%
+				%>SELECT itmType as type, count(*) as cnt <%
+				%>FROM c0ChartLog <%
+				%>GROUP BY itmType <%
+				%>ORDER BY 2 DESC<%
+			%><%/OUTPUT%><%
+
+			%><%SQL: "default", query %><%
+				%><%OUTAPPEND: records %><%
+					%><%= "\r\n\t" %><%
+					%><%= Record.type %><%
+					%><%= '\t' %>[<%= Record.cnt %>]<%
+				%><%/OUTAPPEND%><%
+			%><%/SQL%><%
+
+			%><%LOG: "STATS/MTN", "Finished, records: " + records %><%
+		%>]]></script>
+	</command>
+
+</type>

@@ -1,0 +1,200 @@
+body,html,td{
+	font-family:Tahoma,Arial;
+	font-size:10pt;
+}
+
+html{
+	width:100%;
+	height:100%;
+	padding:0;
+	margin:0;
+	overflow:hidden;
+	background-color:#C8C8C8; // ButtonFace;
+}
+
+.ui-input, .ui-popup{
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	box-shadow: 2px 2px 5px #777;
+	-moz-box-shadow: 2px 2px 5px #777;
+	-webkit-box-shadow: 2px 2px 5px #777;
+}
+
+ui-menu, .ui-menu{
+	background-color:#FFFFFF; // Window;
+	border:solid 1px #838383; // ButtonShadow;
+	cursor:default;
+}
+
+
+
+ui-document, .ui-document{
+	background-color:#FFFFFF; // Window;
+	border:solid 1px #838383; // ButtonShadow;
+}
+
+
+
+
+ui-drop-panel, .ui-drop-panel{
+	opacity:0.9;
+}
+
+
+
+
+
+
+
+ui-attachment .ui-spacer{
+	margin:0;
+	padding:3px 3px 0 0;
+	background-color:#C8C8C8; // ButtonFace;
+}
+ui-menu .ui-spacer{
+	margin:5px;
+	padding:1px 1px 0 0;
+	background-color:#838383;// ButtonShadow;
+}
+ui-toolbar .ui-spacer{
+	margin:2px;
+	padding:1px 1px 0 0;
+	background-color:#838383;// ButtonShadow;
+}
+ui-button .ui-spacer{
+	margin:1px;
+	padding:1px 1px 0 0;
+	background-color:#838383;// ButtonShadow;
+}
+
+
+
+
+
+.ui-outset{
+	border:solid 1px #939393;
+	border-top-color:#F0F0F0;
+	border-left-color:#F0F0F0;
+}
+.ui-inset{
+	border:solid 1px #939393;
+	border-bottom-color:#F0F0F0;
+	border-right-color:#F0F0F0;
+}
+.ui-padding{
+	padding:3px;
+}
+.ui-normal{
+	border:solid 1px #C8C8C8; // ButtonFace;
+	color:#000000;// ButtonText;
+}
+.ui-active{
+	border:solid 1px #6595EF; // Highlight;
+	background-color:#6595EF; // Highlight;
+	color:#FEFEFE;// HighlightText;
+}
+.ui-header{
+	font-family:Tahoma, Arial;
+	font-size:11px;
+	line-height:13px;
+	background-color:#739EE3;
+	color:#FEFEFE;
+	font-weight:bold;
+	height:14px;
+	padding:2px 4px;
+}
+.ui-window{
+	background-color:#FFFFFF;// Window;
+	color:#000000;// WindowText;
+	overflow:auto;
+}
+
+
+ui-button, .ui-button{
+	border:solid 1px #C8C8C8; // ButtonFace;
+}
+ui-button:HOVER, .ui-button:HOVER{
+	border-style:outset;
+}
+ui-menu .ui-button, .ui-menu .ui-button, ui-menu .ui-button:HOVER, .ui-menu .ui-button:HOVER{
+	border:none;
+	padding:3px 0;
+}
+
+
+
+
+
+
+
+.ui-button{
+	min-height:1em;
+	min-width:4px;
+	text-decoration:none;
+	vertical-align:middle;
+}
+.ui-button IMG{
+	padding:1px;
+	width:16px;
+	height:16px;
+	border:none;
+}
+.ui-button SPAN{
+}
+.ui-button-self, .ui-button-self-inactive{
+	border:solid 1px #C8C8C8;// ButtonFace;
+	background-color:#C8C8C8;// ButtonFace;
+	color:#000000;// ButtonText;
+	padding:0;
+	text-decoration:none;
+	vertical-align:middle;
+	white-space:nowrap;
+	cursor:hand;
+}
+.menu-self .ui-button-self, .menu-self .ui-button-self-inactive{
+	background-color:#FFFFFF;// Window;
+}
+.ui-button-self-active, .menu-self .ui-button-self:HOVER{
+	padding:0;
+	text-decoration:none;
+	white-space:nowrap;
+	vertical-align:middle;
+	cursor:hand;
+}
+
+
+
+
+
+
+
+
+
+
+.Window{
+	background-color:#FFFFFF;
+}
+.ButtonFace{
+	background-color:#C8C8C8;
+}
+.ButtonText{
+	background-color:#000000;
+}
+.ButtonShadow{
+	background-color:#838383;
+}
+.ButtonHighlight{
+	background-color:#F0F0F0;
+}
+.ActiveCaption{
+	background-color:#739EE3;
+}
+.CaptionText{
+	background-color:#FEFEFE;
+}
+.Highlight{
+	color:#6595EF;
+}
+.HighlightText{
+	color:#FEFEFE;
+}

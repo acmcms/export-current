@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Project</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+	</statelist>
+	<folder>true</folder>
+	<children>
+		<type>Todo</type>
+		<type>Project</type>
+	</children>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					return this.fillSelection( content );
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>modify</key>
+		<arguments class="fieldset">
+			<field id="title" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			try{
+				var change = this.createChange();
+				change.$title = title;
+				change.email = email;
+				change.commit();
+				return true;
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+</type>

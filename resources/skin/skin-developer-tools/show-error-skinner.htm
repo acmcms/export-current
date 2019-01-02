@@ -1,0 +1,29 @@
+<html><body><!--
+<% 
+	//
+	//
+	//
+	
+%><%EXEC: request = (context && context.query) || Request.getCurrentRequest() %><%
+%><%IF: request.preview %><%
+	%><%RETURN: {
+		template	: "show-error.tpl"
+	} %><%
+%><%/IF%><%
+
+%><%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' %><%
+	%>-->
+		<iframe style="width:100%;height:100%;" src="?preview=true"></iframe>
+	<!-- <%= '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: "Developer Tools: Show Error (in reply skinner)",
+		template	: "html-screen",
+		keywords	: "show error, show exception",
+		header		: '<a href="?preview=true">remove header...</a>',
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

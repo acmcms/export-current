@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+	<type>beresite</type>
+	<prototype>skin-beresite</prototype>
+	<responsible class="string">email address here</responsible>
+	<charset>utf-8</charset>
+
+	<keywords>
+		ключевые слова
+	</keywords>
+	<description>
+		Описание
+	</description>
+	<title>
+		Название сайта
+	</title>
+
+	<meta name='yandex-verification' content='504bae3a0e06e551' />			
+	<meta name="google-site-verification" content="7OZbg4VZgwkBBxfMHaP1dJIilMuNdqdtaVh4RpskT2M" />
+	<header><![CDATA[
+		<i>Верхний колонтитул сайта, показывается на каждой странице сайта.</i>
+	]]></header>
+	<footer>
+		Все права защищены. 2011 год.
+	</footer>
+
+	<section name="adres_razdela_pervogo_urovnia">
+		<title>Название раздела первого уровня</title>
+		<text><![CDATA[
+			<img src="$files/image.jpg" />
+			Текст страницы...
+						<h2>Подзаголовок страницы</h2>
+		]]></text>
+		<keywords>Ключевые слова страницы</keywords>
+		<description>Описание страницы</description>
+		
+		<section name="adres_podrazdela_vtorogo_urovnia">
+			<title>Название подраздела второго уровня</title>
+			<text><![CDATA[			Текст страницы...
+			
+			]]></text>
+		</section>
+	</section>
+	<!-- fghjk -->
+
+</settings>

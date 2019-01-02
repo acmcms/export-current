@@ -1,0 +1,13 @@
+<%FINAL: 'text/html' %><%
+	%><%EXEC: path = Request.path || '/' %><%
+	%><%IF: Request.mode == 'finder' %><%
+		%><%EXEC: publicUrl = Runtime.getLinkagePublicUrl(path) %><%
+	%><%ELSE%><%
+		%><%EXEC: cNode = ControlAPI.childForPath(Runtime.getLinkageRootNode(), path) %><%
+		%><%EXEC: publicUrl = cNode ? cNode.getLocationAbsolute() : path %><%
+	%><%/ELSE%><%
+	%><%/IF%><%
+	%><script><%
+		%>parent.ReturnUrl(<%= Format.jsString(publicUrl) %>);<%
+	%></script><%
+%><%/FINAL%>

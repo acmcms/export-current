@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>ACM.TPL language manual</title>
+	<!-- hidden: abstract means 'cannot be instantiated' -->
+	<abstract>true</abstract>
+	<charset>UTF-8</charset>
+	
+	<default>language-acm.tpl.html</default>
+	
+	<prototype>skin-standard-html</prototype>
+	
+	<renderer>
+		<type>ACM.TPL</type>
+		<suffix>.tpl</suffix>
+	</renderer>
+</settings>

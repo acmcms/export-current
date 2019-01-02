@@ -1,0 +1,51 @@
+var content = Object.create(content);
+
+var profile = User.getUser().getProfile();
+var style = profile.style ? profile.style : 'v1';
+
+var packages = content.packages || new VlapanRequire();
+packages.add('jquery');
+packages.add('yuicss', {resources:['reset', 'base', 'fonts', 'grids']});
+packages.css.add('/$files/vcard-base');
+packages.css.add('/$files/vcard-' + style);
+//packages.js.add('/$files/vcard.js');
+content.packages = packages;
+
+$output( body ){
+	%><body><%
+		%><div id="wrapper"><%
+			if( HashFilled( content.card ) ){
+				= {
+					$layout : 'layout-hCard',
+					card : content.card
+				};
+			}else{
+				%>nothing here<%
+			}
+			%><div class="buttons styles"><%
+				%><span class="item"><%
+					%><a href="/style?v1=1">v1</a><%
+				%></span><%
+				%>&nbsp;<%
+				%><span class="item"><%
+					%><a href="/style?v2=1">v2</a><%
+				%></span><%
+			%></div><%
+			/*
+			%><div class="buttons langs"><%
+				%><span class="item"><%
+					%><a href="/intl/en/">en</a><%
+				%></span><%
+				%>&nbsp;<%
+				%><span class="item"><%
+					%><a href="/intl/ru/">ru</a><%
+				%></span><%
+			%></div><%
+			*/
+		%></div><%
+		%><div style="display:none" class="watermark">hCard</div><%
+	%></body><%
+}
+content.body = body;
+content.template = "vlapan-default";
+return content;

@@ -1,0 +1,5 @@
+{
+	type		: "ae3.WebIndex",
+	name		: "manual",
+	reference	: "ru.myx.ae3.manual/ManualWebIndex"
+}

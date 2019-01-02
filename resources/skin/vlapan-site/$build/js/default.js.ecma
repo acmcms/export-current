@@ -1,0 +1,7 @@
+$output( body ){
+	%>$("body").hide();<%
+	%>$().ready(function(){<%
+		%>$("body").show();<%
+	%>});<%
+}
+return $base.final( "text/javascript", body );

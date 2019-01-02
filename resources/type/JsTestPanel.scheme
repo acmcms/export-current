@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>JsTestPanel</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+	</statelist>
+	<folder>true</folder>
+	<extends>AbstractService</extends>
+	<children>
+		<type>Server</type>
+	</children>
+
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>0</ttl>
+			<cache>0</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					return { message:"no response" };
+				}
+				case "set":{
+					Runtime.log("JsTestPanel","set","new result");
+					this.addResult( 
+						key = Request.key,
+						type = Request.type,
+						ordinal = Request.ordinal,
+						result = Request.result,
+						user = Request.user,
+						sys = Request.sys,
+						real = Request.real,
+						cpu = Request.cpu,
+						s = Request.s,
+						ms = Request.ms
+					);
+					this.checkIn( name = Request.servername );
+					if( !Request.key ){
+						return $default.redirect( this.getLocation() );
+					}else{
+						return { message:"ok" };
+					}
+				}
+				case "request":{
+					this.acmupd();
+					return $default.redirect( this.getLocation() + "html" + (Request.args ? "?" + Request.args : "") );
+				}
+				case "acmupd":{
+					var content = {};
+					content.message = (this.updateversion ? this.updateversion : 1) + (this.comment ? "-" + this.comment : "" );
+					this.checkIn( name = Request.servername );
+					return content;
+				}
+				case "html":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.online = this.online;
+					content.tests = this.getChildren(6,"$key-");
+					return this.fillSelection( content );
+				}
+				case "transform":{
+					this.transform();
+					return { message : "ok" };
+				}
+				case "removeAll":{
+					for each(var item in this.getChildren(0, "$key")){
+						var change = item.createChange();
+						change.delete();
+					}
+					return { message : "ok" };
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>addResult</key>
+		<execute>buffered</execute>
+		<delay>30s</delay>
+		<period>0</period>
+		<arguments class="fieldset">
+			<field id="key" class="string"/>
+			<field id="type" class="string"/>
+			<field id="ordinal" class="integer"/>
+			<field id="result" class="double"/>
+			<field id="user" class="double"/>
+			<field id="real" class="double"/>
+			<field id="sys" class="double"/>
+			<field id="cpu" class="double"/>
+			<field id="s" class="double"/>
+			<field id="ms" class="double"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			Runtime.log("JsTestPanel","buffered addResult()","process results, arguments length: "+arguments.length);
+			var newResults = {};
+			for(var i=0;i<arguments.length;i++){
+				var item = arguments[i];
+				if(!item.key || !item.type){
+					continue;
+				}
+				var result = { type : item.type };
+				result.ordinal = item.ordinal ? item.ordinal : "-";
+				if(item.result)	result.score = Floating(item.result);
+				if(item.user)	result.user = Floating(item.user);
+				if(item.real)	result.real = Floating(item.real);
+				if(item.sys)	result.sys = Floating(item.sys);
+				if(item.cpu)	result.cpu = Floating(item.cpu);
+				if(item.s)		result.s = Floating(item.s);
+				if(item.ms)		result.ms = Floating(item.ms);
+				var list = Array(newResults[item.key]);
+				list.add(result);
+				newResults[item.key] = list;
+			}
+			var mainChange = this.createChange();
+			for(var testKey in Object.keys(newResults)){
+				var test = this.getChildByName(testKey);
+				if(!test) test = Test.create({key : testKey}, this);
+				var types = test.types ? Create.mapClone(test.types) : {};
+				for(var newResult in Array(newResults[testKey])){
+					var units = types.get(newResult.type);
+					if(!units) units = {};
+
+					for(var unitKey in Object.keys(newResult)){
+						if(unitKey == "ordinal" || unitKey == "type") continue;
+						var ordinals = units[unitKey];
+
+						if(!ordinals) ordinals = {};
+
+						var results = Array(ordinals[newResult.ordinal]);
+						if(!results) results = [];
+						results.add(newResult[unitKey]);
+
+						ordinals[newResult.ordinal] = results;
+
+						units[unitKey] = ordinals;
+					}
+					types.put(newResult.type, units);
+				}
+				var change = mainChange.createChange( test );
+				change.types = types;
+				change.commit();
+			}
+			mainChange.commit();
+		]]></script>
+	</command>
+
+	<command>
+		<key>checkIn</key>
+		<execute>buffered</execute>
+		<delay>120s</delay>
+		<period>0</period>
+		<arguments class="fieldset">
+			<field id="name" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			Runtime.log("JsTestPanel","buffered checkIn()","process results, arguments length: "+arguments.length);
+			var online = {};
+			for(var i=0;i<arguments.length;i++){
+				var item = arguments[i];
+				if(!item.name || online[item.name]){
+					continue;
+				}
+				Runtime.log("JsTestPanel","buffered checkIn()","process result: "+item.name);
+				online[item.name] = true;
+			}
+			var change = this.createChange();
+			change.online = online;
+			change.commit();
+		]]></script>
+	</command>
+
+	<command>
+		<key>acmupd</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var updateversion = this.updateversion ? this.updateversion : 1;
+			var change = this.createChange();
+			change.updateversion = ++updateversion;
+			change.comment = Request.comment.replace(" ", "_");
+			change.commit();
+		]]></script>
+	</command>
+</type>

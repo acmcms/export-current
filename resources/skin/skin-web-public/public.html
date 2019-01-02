@@ -1,0 +1,24 @@
+<html><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>--><body>
+		<h1>acmcms %public%</h1>
+		<ul>
+			<li>
+				More
+				<ul>
+					<li><a href="/!/skin/skin-ae3-info/">ae3?</a></li>
+					<li><a href="/!/skin/skin-acmcms-info/">acm.cms?</a></li>
+				</ul>
+			</li>
+		</ul>
+	</body><!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'acmcms %public%',
+		template	: "html-page",
+		pathPrefix	: '/client/',
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></html>

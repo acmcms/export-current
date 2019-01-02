@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>EXAMPLE: Panels</title>
+	<script type="text/javascript" src="../../js/require.js"></script>
+	<script>
+		require.script("debug.js");
+		
+		var Layout = require("Layouts.Layout");
+
+		require("Inputs.BoxSelect");
+
+		require.style("lib/boxselect.css");
+	</script>
+</head>
+<body>
+	<script>
+		var alert = function(message){
+			top.debug && top.debug("ALERT: " + message);
+		};
+	
+		var page = {};
+		new Layout(document.body, {
+			layout	: "screen",
+			comment	: "page",
+			onAfterCreate	: function(){
+				alert("create: screen");
+				page = this;
+			},
+			content	: {
+				layout	: "padding",
+				onAfterCreate	: function(){
+					alert("create: padding");
+				},
+				content	: {
+					layout		: "attachment",
+					side		: "south",
+					spacing		: true,
+					onAfterCreate	: function(){
+						alert("create: attachment");
+					},
+					attachment	: {
+						layout	: "inset",
+						onAfterCreate	: function(){
+							alert("create: attachment-attachment");
+						},
+						content	: {
+							layout	: "outset",
+							onAfterCreate	: function(){
+								alert("create: attachment-attachment-outset");
+							},
+							content	: {
+								layout			: "statusbar",
+								title			: "Status bar",
+								comment			: "Bottom statusbar panel",
+								onAfterCreate	: function(){
+									alert("create: attachment-attachment-outset-statusbar");
+									page.statusbar = this;
+								}
+							}
+						}
+					},
+					content		: {
+						layout		: "attachment",
+						side		: "north",
+						spacing		: true,
+						onAfterCreate	: function(){
+							alert("create: attachment-content-attachment");
+						},
+						attachment	: {
+							layout			: "container",
+							title			: "Main toolbar",
+							comment			: "Top toolbar panel",
+							onAfterCreate	: function(){
+								page.toolbar = this;
+							}
+						},
+						content		: {
+							layout		: "attachment",
+							side		: "west",
+							size		: 260,
+							spacing		: true,
+							attachment	: {
+								layout	: "inset",
+								content	: {
+									layout	: "outset",
+									content	: {
+										layout	: "padding",
+										content	: {
+											layout			: "container",
+											title			: "Navigation panel",
+											comment			: "Left Navigation panel",
+											onAfterCreate	: function(){
+												page.navigation = this;
+											}
+										}
+									}
+								}
+							},
+							content		: {
+								layout	: "string",
+								value	: "text 1"
+							}
+						}
+					}
+				}
+			}
+		});
+		
+		
+		
+		page.navigation.toolbar = page.navigation.attachNorth({
+							spacing		: true
+						});
+						
+		page.navigation.pushLayout({
+							layout		: "container",
+							cssClass	: "window"
+						});
+						
+		page.navigation.toolbar.buttons = page.navigation.toolbar.attachEast({
+							spacing : true
+						});
+						
+		page.navigation.toolbar.pushLayout(["inset", {
+			layout	: "header",
+			content	: {
+				layout	: "string",
+				value	: "Site Tree"
+			}
+		}]);
+
+		page.pushLayout("inset");
+
+		page.menu = page.attachEast({
+							width : 166
+						});
+
+		page.menu.pushLayout("outset");
+		page.menu.pushLayout("padding");
+
+		page.list = {};
+		page.list.toolbar = page.attachNorth({
+							content		: {
+								layout		: "container",
+								title		: "List listing",
+								cssClass	: "window"
+							}
+						});
+		page.list.toolbar.pushLayout("outset");
+		page.list.toolbar.pushLayout("padding");
+		page.list.toolbar.buttons = page.list.toolbar.attachEast({
+							spacing : true
+						});
+		page.list.toolbar.pushLayout(["inset",{
+			layout	: "header",
+			content	: {
+				layout	: "string",
+				value	: "Listing"
+			}
+		}]);
+
+		page.menu.pushLayout({
+							layout		: "screen",
+							cssClass	: "borderIn window",
+							cssStyle	: "overflow-x:hidden"
+						});
+
+		page.navigation.setBusy();
+		page.menu.setBusy();
+		page.statusbar.setBusy();
+		page.setBusy();
+		
+		page.navigation.toolbar.buttons.pushLayout({
+			layout	: "toolbar",
+			zoom : "compact",
+			elements : requireScript("sample/button-list.js") 
+		});
+		
+		page.list.toolbar.buttons.pushLayout({ 
+			layout	: "toolbar",
+			width : "compact",
+			elements : requireScript("sample/button-list.js") 
+		});
+		
+		new BoxSelect(page.menu, "setselect-menu", requireScript("sample/setselect-contents.js"), true);
+		
+		setTimeout("page.navigation.setReady()", 15000);
+		setTimeout("page.menu.setReady()", 15000);
+		setTimeout("page.statusbar.setReady()", 15000);
+		setTimeout("page.setReady()", 10000);
+
+		var rightbar = page.toolbar.attachEast();
+		
+		page.toolbar.pushLayout({
+			layout	: "toolbar",
+			zoom	: "wide",
+			elements : requireScript("sample/topmenu.js")
+		});
+
+		var trayBar = rightbar.pushLayout({
+			layout	: "toolbar",
+			zoom	: "row", 
+			elements : requireScript("sample/button-list.js")
+		});
+		
+		trayBar.add({
+			layout	: "button", 
+			icon	: "images/icons/chart_curve.png", 
+			title	: "added", 
+			onClick	: "alert('added button')" 
+		});
+
+		setTimeout(function(){
+			page.navigation.pushElement(document.getElementById("content").cloneNode(true), true);
+			page.pushElement(document.getElementById("content").cloneNode(true), true);
+		}, 100);
+	</script>
+
+	<table id=content style="display:none;"><tr><td>
+	<div class=test style="position:relative;height:100%">
+		<div style="height:10px;border:solid 20px black"></div>
+		<div style="position:absolute;width:100%;height:100%">
+			<div style="border:solid 15px yellow;position:absolute;left:0;top:0;width:100%;height:100%">
+				<div style="border:solid 15px magenta;height:100%">
+				</div>
+			</div>
+		</div>
+		<span style="white-space: nowrap">
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+		</span>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN*<br>
+	</div>
+	</td></tr></table>
+</body>
+</html>

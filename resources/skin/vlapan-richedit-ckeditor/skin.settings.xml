@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>vlapan RichEdit CKEditor</title>
+	<charset>UTF-8</charset>
+	<renderer>ACM.TPL</renderer>
+	<secure>false</secure>
+	<auth>false</auth>
+	<prototype>skin-standard-html</prototype>
+	<abstract>true</abstract>
+</settings>

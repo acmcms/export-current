@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE>=)</TITLE><%
+	%><style><%
+		%>BODY, TD, DIV, BUTTON {<%
+			%>font-family : Tahoma, Arial ;<%
+			%>font-size: 8pt;<%
+			%>color: buttontext;<%
+		%>}<%
+	%></style><%
+	
+	%><script><%
+		%>window.returnValue = false;<%
+	%></script><%
+%></HEAD><%
+
+%><BODY style="margin:5px 10px 0 10px; background-color:buttonface;"><%
+
+	%><TABLE border=0 cellpadding=0 cellspacing=10 width=100% height=100%><%
+		%><TR><%
+			%><TD valign=top><script>document.write("<img src='icons/command-dispose.32.gif' width=32 height=32 border=0>")</script></TD><%
+			%><TD width=100% al2ign=center><script>document.write(dialogArguments['txt'])</script></TD><%
+		%></TR><%
+		
+		%><TR><%
+			%><TD colspan=2 align=center valign=bottom height=100%><%
+				%><button onclick="window.returnValue=true; window.close()" style="width:100px; padding-left:10px; padding-right:10px"><%
+					%><script>document.write(dialogArguments['ok'])</script><%
+				%></button><%
+				%> &nbsp; <button onclick="window.close()" style="width:100px; padding-left:10px; padding-right:10px"><%
+					%><script>document.write(dialogArguments['cancel'])</script><%
+				%></button><%
+			%></TD><%
+		%></TR><%
+	%></TABLE><%
+
+
+%></BODY><%
+%></HTML>

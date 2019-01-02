@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Layout: Toolbar</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawLayout</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="abilities" class="list"/>
+			<field id="opened" class="boolean" default="true"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var title;
+			$output( title ){
+				%>Панель управления&nbsp;<%
+				%><a class="panelhelp" rel="/help/panel"><%
+					%><img width="16" height="16" src="/$files/icons/info.png" alt="Информация"/><%
+				%></a><%
+			}
+			= {
+				$layout			: "layout-menu",
+				menus			: abilities,
+				siteMenuIcons	: true,
+				cssClass		: "toolbar",
+				opened			: opened,
+				title			: title,
+				handle			: true
+			};
+			= $jqm.drawWindow();
+		]]></script>
+	</command>
+</type>

@@ -1,0 +1,198 @@
+<%
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add("frames") %><%
+%><%EXEC: requireCss.add("shared-editor_style") %><%
+%><%EXEC: requireCss.add("shared-editor_popup-style") %><%
+%><%EXEC: requireCss.add("formFields.listmultiple") %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add("require") %><%
+%><%EXEC: requireJs.add("app/Router") %><%
+
+%><%OUTPUT: head %><%
+	%><style>
+
+.dtab TD{
+	height:15px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-style:solid;
+	border-width:1px;
+}
+
+.dtab .icon{
+	padding:0;
+	border:0px;
+}
+
+.dtab .title{
+	padding:0 0 0 4px;
+	border:0px;
+}
+
+.droppedItem{
+	filter: gray() alpha(opacity=30);
+}
+
+</style><%
+
+%><%EXEC: fieldname = Request.fieldname %><%
+%><%EXEC: session_form = Session[Request.id] %><%
+%><%EXEC: data = session_form.data.getData() %><%
+%><%EXEC: mapPaths = split(fieldname,'/') %><%
+%><%EXEC: fieldset = session_form.data.fieldset %><%
+
+%><%IF: mapPaths.size() > 1%><%
+	%><%CALL:ForArray(mapPaths) %><%
+		%><%EXEC: field = fieldset.getField(Current) %><%
+		%><%EXEC: fieldset = field.attributes.fieldset %><%
+		%><%EXEC: data = (value || data) %><%
+		%><%EXEC: value = data[Current] %><%
+		%><%EXEC: fieldname = Current %><%
+	%><%/CALL%><%
+%><%/IF%><%
+
+
+%><script>
+router = new app.Router("edit-list-multiple");
+
+window.returnValue = false;
+
+function listFrameIni(){
+	router.register(this, this, 'itemsList');
+	this.onFire = function(eType,eValue,eObj){
+		this.returnValue = (eObj && eObj.returnValue);
+	}
+}
+
+function Start(){
+	var array = window.dialogArguments;
+	if(array){
+		valuesList.returnValue = array;
+	}
+
+	listFrameObj = document.getElementById('listFrame');
+	listFrameObj.ini = listFrameIni;
+	listFrameObj.ini();
+}
+
+function Add(){
+	var obj = document.getElementById('listFrame');
+	var value = obj.returnValue;
+	if(!value) return;
+	for(var i = 0; i<value.length; ++i){
+		valuesList.add(value[i]);
+	}
+}
+
+function Remove(){
+	valuesList.remove();
+}
+
+
+function submit(){
+	window.returnValue = valuesList.getValue();
+	window.close();
+}
+</script>
+
+<%EXEC: ARRAY_ALPHABET = {}%>
+<%EXEC: ARRAY_ALPHABET.en = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %>
+<%EXEC: ARRAY_ALPHABET.ru = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ' %>
+
+<%CALL:ForHash(ARRAY_ALPHABET) %>
+	<%EXEC: txt = Current %>
+	<%EXEC: arr = [] %>
+	<%CALL:For(0,txt.length()) %>
+		<%EXEC: arr.add( substr(txt,CurrentIndex,1) ) %>
+	<%/CALL%>
+	<%EXEC: ARRAY_ALPHABET[CurrentKey] = arr %>
+<%/CALL%>
+
+</HEAD><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+%><body onload = "Start()">
+<table border=0 cellpadding=0 cellspacing=0 width=100% height=100%>
+	<tr>
+		<td width=50% height=100%>
+			<table border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+			<%IGNORE%>
+				<tr>
+					<td s2tyle="height:120">
+						<fieldset style="height:100%;">
+							<table border=0 cellpadding=0 cellspacing=2 style="width:100%">
+							<form name=usersForm method=get target=listFrame action="formListMultiple.container">
+							
+							<input name=letter type=hidden>
+							<input name=fieldname type=hidden value="<%= fieldname %>">
+							<input name=id type=hidden value="<%= Request.id %>">
+
+							<table border=0 cellpadding=0 cellspacing=0 style="width:100%">
+							<tr>
+								<td width=100% style="padding:0 1px 1px 1px"><div class="SubmenuFrame" onclick="var letter = (event.srcElement || event.target).letter; if(!letter) return false; document.forms.usersForm.elements.letter.value = letter; document.forms.usersForm.submit();">
+								<%CALL:ForHash(ARRAY_ALPHABET) %>
+									<%CALL:ForArray(Current) %>
+										<a href=# letter="<%= Current %>"><%= Current %></a>
+									<%/CALL%>
+								<%/CALL%>
+								&nbsp; <a href=# letter="all" style="font-weight:bold">[ALL]</a>
+								</div></td>
+							</tr>
+							</form>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+			<%/IGNORE%>
+			<tr>
+				<td style="height:100%; padding: 2px 0 0 0"><%
+					%><div style="height:100%" class=FrameBorder><%
+						%><table border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%"><%
+						%><tr><%
+							%><td style="height:100%; background-color:window"><%
+								%><iframe<%
+									%> id="listFrame"<%
+									%> name="listFrame"<%
+									%> src="formListMultiple.container?<%= Request.getParameterString() %>"<%
+									%> style="width:100%; height:100%"<%
+									%> frameborder="0"<%
+								%>><%
+								%></iframe><%
+							%></td><%
+						%></tr><%
+						%></table><%
+					%></div><%
+				%></td><%
+			%></tr><%
+			%></table><%
+		%></td><%
+		%><td style="padding:2px"><%
+			%><button onclick="Add()" class="iconSymbol" style="font-size:10pt;" title="Add">&#x25BA;</button><br><%
+			%><button onclick="Remove()" class="iconSymbol" style="font-size:10pt;" title="Remove">3</button><br><%
+		%></td><%
+		%><td width=50%><%
+			%><div id="valuesList" style="width:100%; height:100%; overflow:auto; padding:0" class="FrameBorder formListTable"><%
+			%><table border=0 cellpadding=0 cellspacing=0 class=dtab style="BORDER-COLLAPSE: collapse" width=100%><%
+			%></table><%
+			%></div><%
+		%></td><%
+	%></tr><%
+	%><tr><%
+		%><td align=right style="padding:10px 0 4px 0" colspan=3><BUTTON onclick="submit()" style="width:80px">Set</BUTTON>&nbsp;<BUTTON ONCLICK="window.close();" style="width:80px">Cancel</BUTTON></td><%
+	%></tr><%
+%></table><%
+
+
+%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: "Edit List",
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

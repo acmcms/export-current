@@ -1,0 +1,231 @@
+<BODY BGCOLOR=buttonface scroll="no" style="cursor:default; margin:2px; border:0" onresize="keepEditorSize()">
+
+<script>
+var resizeTimer = false;
+
+function keepEditorSize(){
+	clearTimeout(resizeTimer);
+	resizeTimer = setTimeout("putEditorSizeInCookies()",1000);
+}
+
+function putEditorSizeInCookies(){
+	setCookie('editorSize',document.body.offsetWidth+","+document.body.offsetHeight);
+}
+
+function setCookie(name,content,path){
+	var domain='';
+	var expDate='expires=Wednesday, 09-Aug-2020 00:00:00 GMT';
+	path = (path) ? 'path='+path+'; ' : '';
+	document.cookie = name+'='+content+'; '+path+expDate+domain;
+}
+</script>
+
+
+<div id="divTemp" style="VISIBILITY: hidden; OVERFLOW: hidden; POSITION: absolute; WIDTH: 1px; HEIGHT: 1px"></div>
+
+<style>
+
+.border TD{
+	height:1px
+}
+
+.border .TabOn{
+	background-color: buttonshadow;
+}
+
+.border .TabOffl{
+	border-left: solid 1px buttonhighlight;
+}
+
+.border .offr{
+	border-right: solid 1px buttonhighlight;
+}
+
+
+.zakladka .TabOff DIV{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-bottom: solid 1px buttonshadow;
+	height:16px;
+	padding:0 8px 0 8px;
+	white-space: nowrap;
+}
+
+.zakladka .TabOn DIV{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-bottom: solid 1px buttonshadow;
+	height:20px;
+	padding:4px 8px 0 8px;
+	white-space: nowrap;
+}
+
+
+<%INCLUDE: 'editor_style.css' %>
+</style>
+
+<script>
+window.returnValue="none";
+
+<%INCLUDE: 'EventsMethods.js' %>
+var eventMethods = CreateEventMethods();
+
+<%INCLUDE: 'DHTMLEd.js' %>
+<%INCLUDE: 'editor_toolbar.js' %>
+<%INCLUDE: 'editor_toolbar-html.js' %>
+<%INCLUDE: 'editor_toolbar.title' %>
+<%INCLUDE: 'editor_actions.js' %>
+<%INCLUDE: 'editor_wysiwyg_contextmenu.js' %>
+
+
+var tabSplitter1 = "<TABLE border=0 cellpadding=0 cellspacing=0><TR><TD><img height=1 width=1></TD><TD bgcolor=buttonshadow><img height=16 width=1></TD><TD bgcolor=buttonhighlight><img height=16 width=1></TD><TD><img height=1 width=1></TD></TR><TR><TD bgcolor=buttonshadow><img height=1 width=1></TD><TD></TD><TD></TD><TD bgcolor=buttonhighlight><img height=1 width=1></TD></TR><TR><TD><img height=3 width=1></TD><TD></TD><TD></TD><TD></TD></TR></TABLE>";
+var tabSplitter2 = "<TABLE border=0 cellpadding=0 cellspacing=0><TR><TD></TD><TD bgcolor=buttonhighlight><img height=16 width=1></TD><TD><img height=1 width=1></TD></TR><TR><TD></TD><TD></TD><TD bgcolor=buttonhighlight><img height=1 width=1></TD></TR><TR><TD><img height=3 width=2></TD><TD></TD><TD></TD></TR></TABLE>";
+var tabSplitter3 = "<TABLE border=0 cellpadding=0 cellspacing=0><TR><TD bgcolor=buttonhighlight><img height=18 width=1></TD><TD><img height=1 width=1></TD><TD><img height=1 width=1></TD></TR><TR><TD></TD><TD bgcolor=buttonhighlight><img height=1 width=1></TD><TD><img height=1 width=1></TD></TR><TR><TD></TD><TD></TD><TD bgcolor=buttonshadow><img height=1 width=2></TD></TR></TABLE>";
+var tabSplitter4 = "<TABLE border=0 cellpadding=0 cellspacing=0><TR><TD><img height=1 width=1></TD><TD><img height=1 width=1></TD><TD bgcolor=buttonshadow><img height=18 width=1></TD></TR><TR><TD><img height=1 width=1></TD><TD bgcolor=buttonshadow><img height=1 width=1></TD><TD></TD></TR><TR><TD bgcolor=buttonshadow><img height=1 width=2></TD><TD></TD><TD></TD></TR></TABLE>";
+var tabSplitter5 = "<TABLE border=0 cellpadding=0 cellspacing=0><TR><TD><img height=1 width=1></TD><TD bgcolor=buttonshadow><img height=16 width=1></TD><TD></TD></TR><TR><TD bgcolor=buttonshadow><img height=1 width=1></TD><TD></TD><TD></TD></TR><TR><TD></TD><TD></TD><TD><img height=3 width=2></TD></TR></TABLE>";
+
+
+function TabIni(obj){
+	obj.switchTab = SwitchTab;
+	obj.getValue = GetValue;
+	obj.holders = [];
+	obj.frames = obj.cells[0].firstChild.rows;	
+	var cells = obj.cells[1].firstChild.rows[1].cells;
+	for (var i=0; i < cells.length; ++i){
+		if (cells[i].getAttribute('holder')){
+			cells[i].parent = obj;
+			cells[i].tabNum = obj.holders.length;
+			cells[i].frame = obj.frames[cells[i].tabNum];
+			cells[i].frame.holder = cells[i];
+			cells[i].onclick = function(){
+				this.parent.switchTab(this.tabNum);
+			}
+			obj.holders[obj.holders.length] = cells[i];
+			if (cells[i].className == 'TabOn') obj.select = cells[i];
+		}
+	}
+}
+
+function SwitchTab(n){
+	if(this.select.tabNum == n) return;
+	try{
+		this.value = this.select.frame.valueObject.returnValue();
+	}catch(Error){}
+
+	TabHolderOff(this.select);
+	this.select.frame.style.display = 'none';
+	this.select = this.holders[n];
+	TabHolderOn(this.select);
+	this.select.frame.style.display = '';
+	try{
+		eventMethods.fire('SwitchTab',this.id,this.select.getAttribute('hName'),this);
+	}catch(Error){}
+}
+
+function GetValue() {
+	try{
+		this.value = this.select.frame.valueObject.returnValue();
+	}catch(Error){}
+	return this.value;
+}
+
+function TabHolderOff(obj){
+	var oTable = obj.offsetParent;
+	obj.className = 'TabOff';
+	oTable.rows[1].cells[obj.tabNum * 2].innerHTML = (obj.tabNum > 0) ? tabSplitter1 : tabSplitter2;
+	oTable.rows[1].cells[obj.tabNum * 2 + 2].innerHTML = (obj.tabNum < obj.parent.holders.length - 1) ? tabSplitter1 : tabSplitter5;
+	oTable.rows[0].cells[obj.tabNum * 2].className = 'TabOn';
+	oTable.rows[0].cells[obj.tabNum * 2 + 1].className = 'TabOn';
+	oTable.rows[0].cells[obj.tabNum * 2 + 2].className = 'TabOn';
+}
+
+function TabHolderOn(obj){
+	var oTable = obj.offsetParent;
+	obj.className = 'TabOn';
+	oTable.rows[1].cells[obj.tabNum * 2].innerHTML = tabSplitter3;
+	oTable.rows[1].cells[obj.tabNum * 2 + 2].innerHTML = tabSplitter4;
+	oTable.rows[0].cells[obj.tabNum * 2].className = 'TabOffl'
+	oTable.rows[0].cells[obj.tabNum * 2 + 1].className = ''
+	oTable.rows[0].cells[obj.tabNum * 2 + 2].className = 'TabOffr';
+}
+
+
+function Return(){
+	window.returnValue = TabsForm.getValue();
+	window.close();
+}
+</script>
+
+
+<TABLE border=0 cellpadding=0 cellspacing=0 width=100% height=100%>
+	<TR>
+		<TD></TD>
+	</TR>
+	<TR>
+		<TD height=100%>
+
+			<TABLE border=0 cellpadding=0 cellspacing=0 width=100% height=100% id=TabsForm>
+			<TR>
+				<TD height=100%>
+					<TABLE border=0 cellpadding=0 cellspacing=0 width=100% style="border-left: 1 solid buttonhighlight; border-right: 1 solid buttonshadow; border-top: 1 solid buttonhighlight; padding:5; height:100%">
+					<TR>
+						<TD valign=top><%INCLUDE: 'editor_wysiwyg.obj' %></TD>
+					</TR>
+					<TR style="display:none">
+						<TD valign=top><%INCLUDE: 'editor_html.obj' %></TD>
+					</TR>
+					<TR style="display:none">
+						<TD valign=top><%INCLUDE: 'editor_browse.obj' %></TD>
+					</TR>
+					</TABLE>
+				</TD>
+			</TR>
+
+			<TR>
+				<TD>
+					<TABLE border=0 cellpadding=0 cellspacing=0 class=zakladka width=100%>
+					<TR class=border>
+						<TD class=TabOffl><img width=0 height=0></TD>
+						<TD><img width=0 height=0></TD>
+						<TD class=TabOffr><img width=0 height=0></TD>
+						<TD class=TabOn><img width=0 height=0></TD>
+						<TD class=TabOn><img width=0 height=0></TD>
+						<TD class=TabOn><img width=0 height=0></TD>
+						<TD class=TabOn><img width=0 height=0></TD>
+						<TD class=TabOn><img width=0 height=0></TD>
+					</TR>
+					<TR>
+						<TD><script>document.write(tabSplitter3)</script></TD>
+						<TD class=TabOn holder=1 hName=WYSIWYG nowrap><div>WYSIWYG</div></TD>
+						<TD><script>document.write(tabSplitter4)</script></TD>
+						<TD class=TabOff holder=1 hName=HTML nowrap><div>HTML</div></TD>
+						<TD><script>document.write(tabSplitter1)</script></TD>
+						<TD class=TabOff holder=1 hName=Browse nowrap><div>Browse</div></TD>
+						<TD><script>document.write(tabSplitter5)</script></TD>
+						<TD style="width:100%"></TD>
+					</TR>
+					</TABLE>				
+				</TD>
+			</TR>
+			</TABLE>
+
+			<script>
+				TabIni(TabsForm);
+				TabsForm.value = (window.dialogArguments && window.dialogArguments.value) 
+										? window.dialogArguments.value 
+										: '';
+			</script>
+		</TD>
+	</TR>
+	<TR>
+		<TD align=right style="padding:10px 0 4px 0"><button onclick="Return()"><%=intl(en="Save", ru="Сохранить")%></button>&nbsp;<button onclick='window.close()'><%=intl(en="Close", ru="Закрыть")%></button></TD>
+	</TR>
+</TABLE>
+
+<!--
+<script language="javascript" event="onerror(msg, url, line)" for="window">
+	return true;
+</script>
+-->
+
+</BODY>

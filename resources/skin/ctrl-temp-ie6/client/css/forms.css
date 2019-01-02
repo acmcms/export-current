@@ -1,0 +1,85 @@
+P,TD,DIV {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	color: buttontext;
+}
+
+INPUT,.input2,TEXTAREA,BUTTON {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+INPUT,.input2,TEXTAREA {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding: 1px;
+	margin: 0;
+	border-width: 1px;
+}
+
+TEXTAREA {
+	behavior: url(/_form-textarea.htc);
+}
+
+.disable {
+	background-color: buttonface;
+}
+
+.input2monospace {
+	font-family: Courier New;
+	font-size: 9pt;
+}
+
+.fieldhead,TH {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	vertical-align: top;
+}
+
+BUTTON {
+	border-color: buttonhighlight;
+	font-family: Tahoma;
+	font-size: 8pt;
+	padding: 0;
+	border-width: 1px;
+}
+
+.active {
+	background-color: buttonhighlight;
+}
+
+.icon {
+	border: solid 1px buttonface;
+	behavior: url(/_icon.htc);
+	width: 21px;
+	height: 21px;
+}
+
+.menuToolbar {
+	behavior: url(/_menu-toolbar.htc);
+}
+
+.toolbar SPAN {
+	margin-bottom: 0;
+}
+
+.menuToolbar BUTTON {
+	border: solid 1px buttonface;
+	behavior: url(/_icon.htc);
+	width: 21px;
+	height: 21px;
+}
+
+.drawingImage {
+	behavior: url(/_drawing-image.htc);
+	border-bottom: solid 1px buttonhighlight;
+	border-right: solid 1px buttonhighlight;
+	border-top: solid 1px buttonshadow;
+	border-left: solid 1px buttonshadow;
+}
+
+FIELDSET {
+	padding: 1px;
+}

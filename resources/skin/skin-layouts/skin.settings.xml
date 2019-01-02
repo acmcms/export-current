@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>LAYOUT</type>
+	<title>Internal: Layouts ae3.l2</title>
+	<hidden>true</hidden>
+	<abstract>true</abstract>
+	<charset>UTF-8</charset>
+	
+	<default>default.html</default>
+	
+	<prototype>skin-standard-html</prototype>
+	
+	<renderer>
+		<type>ACM.ECMA</type>
+		<suffix>.ecma</suffix>
+	</renderer>
+</settings>

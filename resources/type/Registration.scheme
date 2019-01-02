@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>System: Registration</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+		<state>ready</state>
+	</statelist>
+	<extends>$Root</extends>
+	<folder>true</folder>
+	<modify>
+		<form> 
+			<fields class="fieldset">
+				<field 	class="string"
+						id="adminemail"
+						type="string"
+						title="administrators email"
+						hint="lorina@repina.ru, lora@repina.ru"/>
+			</fields>
+		</form>
+	</modify>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>0h</ttl>
+			<cache>0h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%EXEC: target = Request.getResourceIdentifier() %><%
+			%><%CHOOSE: target %><%
+				%><%MATCH: "", "/" %><%
+					%><%REDIRECT: this.getLocation() + "step1" %><%
+				%><%MATCH: "check", "check/" %><%
+					%><%EXEC: username = Request.username ? Request.username.trim() : "" %><%
+					%><%EXEC: email = Request.email ? Request.email.trim() : "" %><%
+					%><%FINAL: "text/xml" %><%
+						%><result><%
+						%><%IF: username %><%
+							%><%IF: !username.matches("^[a-zA-Z0-9\-\.]{3,16}$") %><%
+								%><user>введенно неправильное имя пользователя.</user><%
+							%><%ELSE%><%
+								%><%IF: ArrayFilled( UserManager.searchUsers( username, "", -1L, -1L) ) %><%
+									%><user>пользователь уже существует, попробуйте другое имя</user><%
+								%><%ELSE%><%
+									%><user>данное имя свободно</user><%
+								%><%/ELSE%><%
+								%><%/IF%><%
+							%><%/ELSE%><%
+							%><%/IF%><%
+						%><%/IF%><%
+						%><%IF: email %><%
+							%><%IF: !email.matches("^[^_.]{0}([a-zA-Z0-9_]*[.]{0}?[a-zA-Z0-9_]+[^_]{0}){1}@{1}[a-z0-9]+[.]{1}(([a-z]{2,4})|([a-z]{2,4}[.]{1}[a-z]{2,4}))$") %><%
+								%><email>введен неправильный почтовый адрес</email><%
+							%><%ELSE%><%
+								%><%IF: ArrayFilled( UserManager.searchUsers( "", email, -1L, -1L) ) %><%
+									%><email>почта уже существует, попробуйте другой адрес</email><%
+								%><%ELSE%><%
+									%><email>данный почтовый адрес свободен</email><%
+								%><%/ELSE%><%
+								%><%/IF%><%
+							%><%/ELSE%><%	
+							%><%/IF%><%
+						%><%/IF%><%
+						%></result><%
+					%><%/FINAL%><%
+				%><%MATCH: "step1", "step1/" %><%
+					%><%EXEC: content = {} %><%
+					%><%EXEC: content.title = afterPoint( this.getTitle() ) %><%
+					%><%EXEC: profile = User.getUser().getProfile() %><%
+					%><%OUTPUT: body %><%
+						%><script><%
+						%>function dataCheck(resultId,check){<%
+							%>var http_request;<%
+							%>if(document.getElementById(check).value){<%
+								%>if(window.XMLHttpRequest){<%
+									%>http_request=new XMLHttpRequest();<%
+									%>if(http_request.overrideMimeType){<%
+										%>http_request.overrideMimeType('text/xml');<%
+									%>}<%
+								%>}else if(window.ActiveXObject){<%
+									%>try{<%
+										%>http_request = new ActiveXObject("Msxml2.XMLHTTP");<%
+									%>}catch(e){<%
+										%>try{<%
+											%>http_request = new ActiveXObject("Microsoft.XMLHTTP");<%
+										%>}catch(e){}<%
+									%>}<%
+								%>}<%
+
+								%>if(!http_request){<%
+									%>document.getElementById(resultId).innerHTML="";<%
+									%>return false;<%
+								%>}<%
+
+								%>document.getElementById(resultId).innerHTML="работаю...";<%
+								%>http_request.open("GET","check?"+ check + "=" + document.getElementById( check ).value,true);<%
+								%>http_request.onreadystatechange=function(){<%
+									%>if(http_request.readyState == 4){<%
+										%>var data = http_request.responseText;<%
+										%>document.getElementById( resultId ).innerHTML = "(" + data + ")";<%
+									%>}<%
+								%>};<%
+								%>http_request.send(null);<%
+							%>}else{<%
+								%>document.getElementById( resultId ).innerHTML = "";<%
+							%>}<%
+						%>}<%
+						%></script><%
+						%><%IF: Request.error == 2 %><%
+							%><a style="color:red">Введенно неправильное имя пользователя.</a><br/><%
+						%><%/IF%><%
+						%><%IF: Request.error == 3 %><%
+							%><a style="color:red">Введен неправильный почтовый адрес.</a><br/><%
+						%><%/IF%><%
+						%><%IF: Request.error == 4 %><%
+							%><a style="color:red">Такой пользователь уже существует.</a><br/><%
+						%><%/IF%><%
+						%><%IF: Request.error == 5 %><%
+							%><a style="color:red">Такой адрес электроной почты уже существует, воспользуйтесь формой востановления пароля.</a><br/><%
+						%><%/IF%><%
+						%><span style="font-size:1.2em;color:#ff0000">*</span> - обязательные поля<%
+						%><form action="step1.2" type="post"><%
+							%><table cellpadding="3" cellspacing="0" border="0" width="100%"><%
+								%><tr><td colspan="3"><b>имя пользователя <span style="font-size:1.2em;color:#ff0000">*</span></b></td></tr><%
+								%><tr><td colspan="3"><%
+									%><input id="username" type="text" name="username" value="<%= profile.username ? profile.username : "" %>" onkeydown="document.getElementById( 'userResult' ).innerHTML=''"/>&nbsp;<%
+									%><input type="button" value="проверить" onclick="dataCheck('userResult', 'username')"/> <a id="userResult" style="color:red;"></a><%
+								%></td></tr><%
+								%><tr><td colspan="3"><b>адрес электронной почты <span style="font-size:1.2em;color:#ff0000">*</span></b></td></tr><%
+								%><tr><td colspan="3"><%
+									%><input id="email" type="text" name="email" value="<%= profile.email ? profile.email : "" %>"/>&nbsp;<%
+									%><input type="button" value="проверить" onclick="dataCheck('emailResult', 'email')"/> <a id="emailResult" style="color:red;"></a><%
+								%></td></tr><%
+								%><tr style="font-weight:bold"><%
+									%><td>фамилия <span style="font-size:1.2em;color:#ff0000">*</span></td><%
+									%><td>имя <span style="font-size:1.2em;color:#ff0000">*</span></td><%
+									%><td colspan="2">отчество <span style="font-size:1.2em;color:#ff0000">*</span></td></tr><%
+								%><tr><%
+									%><td width="33%"><input style="width:100%" name="lastname" type="string"/></td><%
+									%><td width="33%"><input style="width:100%" name="firstname" type="string"/></td><%
+									%><td width="33%"><input style="width:100%" name="middlename" type="string"/></td><%
+								%></tr><%
+								%><tr><td colspan="3"><b>дата рождения</b></td></tr><%
+								%><tr><td colspan="3"><input name="birthdate" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>место работы</b></td></tr><%
+								%><tr><td colspan="3"><input style="width:100%" name="workplace" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>должность</b></td></tr><%
+								%><tr><td colspan="3"><input style="width:100%" name="post" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>ученая степень</b></td></tr><%
+								%><tr><td colspan="3"><input style="width:100%" name="degree" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>ученое звание</b></td></tr><%
+								%><tr><td colspan="3"><input style="width:100%" name="rank" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>тема диссертации</b></td></tr><%
+								%><tr><td colspan="3"><input style="width:100%" name="dissertation" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>сфера научных интересов</b></td></tr><%
+								%><tr><td colspan="3"><input style="width:100%" name="fieldofresearch" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>читаемые курсы</b></td></tr><%
+								%><tr><td colspan="3"><input style="width:100%" name="courses" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>общее кол-во публикаций</b></td></tr><%
+								%><tr><td colspan="3"><input name="publications" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>основные публикации</b></td></tr><%
+								%><tr><td colspan="3"><textarea style="width:100%;height:90px" name="commonpub"></textarea></td></tr><%
+								%><tr><td colspan="3"><b>проекты - принимали участие</b></td></tr><%
+								%><tr><td colspan="3"><textarea style="width:100%;height:90px" name="projectsshare"></textarea></td></tr><%
+								%><tr><td colspan="3"><b>проекты - планы</b></td></tr><%
+								%><tr><td colspan="3"><textarea style="width:100%;height:90px" name="projectsplan"></textarea></td></tr><%
+								%><tr><td colspan="3"><b>идеи</b></td></tr><%
+								%><tr><td colspan="3"><textarea style="width:100%;height:90px" name="ideas"></textarea></td></tr><%
+								%><tr><td colspan="3"><b>город</b></td></tr><%
+								%><tr><td colspan="3"><input style="width:100%" name="city" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>адрес рабочий</b></td></tr><%
+								%><tr><td colspan="3"><input style="width:100%" name="workaddress" type="string"/></td></tr><%
+								%><tr><td colspan="3"><b>адрес домашний</b></td></tr><%
+								%><tr><td colspan="3"><input style="width:100%" name="homeaddress" type="string"/></td></tr><%
+								%><tr style="font-weight:bold"><td>телефон рабочий</td><td>телефон домашний</td><td>факс</td></tr><%
+								%><tr><%
+									%><td width="33%"><input style="width:100%" name="worktelephone" type="string"/></td><%
+									%><td width="33%"><input style="width:100%" name="hometelephone" type="string"/></td><%
+									%><td width="33%"><input style="width:100%" name="fax" type="string"/></td><%
+								%></tr><%
+							%></table><%
+							%><input type="submit" value=" далее "/><%
+						%></form><%
+					%><%/OUTPUT%><%
+					%><%EXEC: content.body = body %><%
+					%><%RETURN: this.fillSelection( content = content ) %><%
+				%><%MATCH: "step1.2", "step1.2/" %><%
+					%><%IF: Request.username && Request.email %><%
+						%><%IF: !Request.username.trim().matches("^[a-zA-Z0-9\-\.]{3,16}$") %><%
+							%><%REDIRECT: this.getLocation() + "step1?error=2" %><%
+						%><%/IF%><%
+						%><%IF: !Request.email.trim().matches("^[^_.]{0}([a-zA-Z0-9_]*[.]{0}?[a-zA-Z0-9_]+[^_]{0}){1}@{1}[a-z0-9]+[.]{1}(([a-z]{2,4})|([a-z]{2,4}[.]{1}[a-z]{2,4}))$") %><%
+							%><%REDIRECT: this.getLocation() + "step1?error=3" %><%
+						%><%/IF%><%
+						%><%ITERATE: item : UserManager.searchUsers( Request.username.trim(), "", -1L, -1L) %><%
+							%><%REDIRECT: this.getLocation() + "step1?error=4" %><%
+						%><%/ITERATE%><%
+						%><%ITERATE: item : UserManager.searchUsers( "", Request.email.trim(), -1L, -1L) %><%
+							%><%REDIRECT: this.getLocation() + "step1?error=5" %><%
+						%><%/ITERATE%><%
+						%><%EXEC: members = this.getParent().getChildByName("members") %><%
+						%><%IF: members.searchLocal(1, true, "", -1L, -1L,"$key=" + Request.username.trim() ) %><%
+							%><%REDIRECT: this.getLocation() + "step1?error=4" %><%
+						%><%/IF%><%
+						%><%EXEC: change = members.createChild() %><%
+						%><%EXEC: change.setKey( Request.username.trim() ) %><%
+						%><%EXEC: change.setTypeName( "Member" ) %><%
+						%><%EXEC: change.setState( Storage.STATE_DRAFT ) %><%
+						%><%EXEC: change.setFolder( true ) %><%
+						%><%EXEC: change.email = Request.email.trim() %><%
+						%><%EXEC: change.lastname = Request.lastname.trim() %><%
+						%><%EXEC: change.firstname = Request.firstname.trim() %><%
+						%><%EXEC: change.middlename = Request.middlename.trim() %><%
+						%><%EXEC: change.birthdate = Request.birthdate.trim() %><%
+						%><%EXEC: change.workplace = Request.workplace.trim() %><%
+						%><%EXEC: change.post = Request.post.trim() %><%
+						%><%EXEC: change.degree = Request.degree.trim() %><%
+						%><%EXEC: change.rank = Request.rank.trim() %><%
+						%><%EXEC: change.dissertation = Request.dissertation.trim() %><%
+						%><%EXEC: change.fieldofresearch = Request.fieldofresearch.trim() %><%
+						%><%EXEC: change.courses = Request.courses.trim() %><%
+						%><%EXEC: change.publications = Request.publications.trim() %><%
+						%><%EXEC: change.commonpub = Request.commonpub.trim() %><%
+						%><%EXEC: change.projectsshare = Request.projectsshare.trim() %><%
+						%><%EXEC: change.projectsplan = Request.projectsplan.trim() %><%
+						%><%EXEC: change.ideas = Request.ideas.trim() %><%
+						%><%EXEC: change.city = Request.city.trim() %><%
+						%><%EXEC: change.workaddress = Request.workaddress.trim() %><%
+						%><%EXEC: change.homeaddress = Request.homeaddress.trim() %><%
+						%><%EXEC: change.worktelephone = Request.worktelephone.trim() %><%
+						%><%EXEC: change.hometelephone = Request.hometelephone.trim() %><%
+						%><%EXEC: change.fax = Request.fax.trim() %><%
+						%><%EXEC: change.activate = false %><%
+						%><%EXEC: change.commit() %><%
+
+						%><%EXEC: userfio = Request.lastname.trim() + " " +  Request.firstname.trim() + " " + Request.middlename.trim() %><%
+						%><%OUTPUT: msg %><%
+							%><html><%
+							%><body><%
+								%>Здравствуйте, это сообщение послано роботом с целью подтверждения регистрации<%
+								%> на сайте <%= Request.getSettings().siteName %>, пользователя <b><%= userfio %></b> <%
+								%><br/> - <a href="<%= Request.getSettings().siteHref + members.getLocation() + Request.username.trim() %>">посмотреть данные</a> <%
+								%><br/> С уважением, <%= Request.getSettings().siteName %><%
+							%></body><%
+							%></html><%
+						%><%/OUTPUT%><%
+						%><%IF: this.adminemail %><%
+							%><%EXEC: adminemail = this.adminemail.split(",") %><%
+							%><%ITERATE: item : adminemail %><%
+								%><%EXEC: Runtime.SendMail(
+									From = Request.getSettings().robot,
+									To = item.trim(),
+									Subject = userfio + " :: подтверждение регистрации",
+									Format = "html",
+									Body = msg
+								) %><%
+							%><%/ITERATE%><%
+						%><%/IF%><%
+						%><%REDIRECT: this.getLocation() + "step2" %><%
+					%><%ELSE%><%
+						%><%REDIRECT: this.getLocation() + "step1?error=1" %><%
+					%><%/ELSE%><%
+				    %><%/IF%><%
+				%><%MATCH: "step2", "step2/" %><%
+					%><%EXEC: content = {} %><%
+					%><%EXEC: content.title = afterPoint( this.getTitle() ) %><%
+					%><%OUTPUT: body %><%
+						%>Ваша анкета будет рассмотрена в скором времени. После подтверждения анкеты администратором,<%
+						%> Вам будет высланно сообщение с кодом доступа.<%
+					%><%/OUTPUT%><%
+					%><%EXEC: content.body = body %><%
+					%><%RETURN: this.fillSelection( content = content ) %><%
+				%><%MATCH: "remind", "remind/" %><%
+
+				%><%MATCH%><%
+					%><%REDIRECT: this.getLocation() %><%
+			%><%/CHOOSE%><%
+		%>]]></script>
+	</respond>
+</type>

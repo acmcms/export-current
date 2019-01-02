@@ -1,0 +1,185 @@
+<%
+
+%><%CODE: 'ACM.ECMA' %>
+	/**
+	 * method is used (instead of .currentRequest) cause 'Request' SAPI exposes
+	 * query parameters accessible as properties as well. So, theoretically, one
+	 * can override Request.currentRequest property with ?currentRequest= url
+	 * parameter.
+	 */
+	request = Request.getCurrentRequest();
+	
+	parameters = request.parameters || {};
+	
+	/**
+	 * request object doesn't expose query parameters as properties. This expression
+	 * is equal to: all = request.getParameterString() == "all";
+	 */
+	all = request.parameterString === "all";
+	
+	user = User.getUser();
+	userProfile = user.getProfile();
+	
+	currentInterface = userProfile["useInterface-" + request.target] || userProfile.useInterface || "n/a";
+<%/CODE%><%
+
+%><%IF: parameters.skin %><%
+	%><%CODE: 'ACM.ECMA' %>
+		userProfile["useInterface-" + request.target] = parameters.skin;
+		user.setProfile(userProfile);
+		user.commit();
+	<%/CODE%><%
+	%><%REDIRECT: request.urlBase + "/intl/" + request.language + '/' %><%
+%><%/IF%><%
+
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireJs = [] %><%
+
+%><%OUTPUT: head %><%
+	%><%FORMAT: 'css' %><style>
+		a.aaa {
+			display: inline-block;
+			border-radius: 0.5em;
+			background-color: #000;
+		}
+		ul.option.list {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+		}
+		a.button {
+			display: inline-block;
+			margin: 0.1em 0;
+			padding: 0.2em 1.1em;
+			font-family: Arial;
+			font-size: 100%;
+			text-decoration: none;
+			border-radius: 0.3em;
+			-moz-border-radius: 0.3em;
+			-webkit-border-radius: 0.3em;
+		}
+		a.button.option {
+			color: #eee;
+			text-shadow: -1px -1px 2px #694;
+			background-color: #ac5;
+			background-image: -moz-linear-gradient(#9b4, #ac5 35%, #694);
+			background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #9b4),color-stop(.35, #ac5),color-stop(1, #694));
+			filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#99bb44', endColorstr='#669944');
+			border: 1px solid #694;
+		}
+		a.button.option:hover {
+			color: #fff;
+			text-shadow: -1px -1px 2px #6a5;
+			background-color: #ad6;
+			background-image: -moz-linear-gradient(#9c5, #ad6 35%, #6a5);
+			background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #9c5),color-stop(.35, #ad6),color-stop(1, #6a5));
+			filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#99cc55', endColorstr='#66aa55');
+			border: 1px solid #6a5;
+		}
+		a.button.selected {
+			color: #eee;
+			text-shadow: -1px -1px 2px #469;
+			background-color: #26a;
+			background-image: -moz-linear-gradient(#259, #26a 75%, #135);
+			background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #259),color-stop(.75, #26a),color-stop(1, #135));
+			filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#225599', endColorstr='#113355');
+			border: 1px solid #135;
+		}
+		a.button.selected:hover {
+			color: #fff;
+			text-shadow: -1px -1px 2px #469;
+			background-color: #27b;
+			background-image: -moz-linear-gradient(#26a, #27b 75%, #146);
+			background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #26a),color-stop(.75, #27b),color-stop(1, #146));
+			filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#2266aa', endColorstr='#114466');
+			border: 1px solid #135;
+		}
+	</style><%/FORMAT%><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+		%><small><%
+			%><b><%= intl( en = "You are talking to", ru = "Вам ответил" ) %>: </b><%
+			%><%= Runtime.systemName + " - " + Runtime.systemVersion + " @ " + request.target %><%
+		%></small><%
+		%><br /><%
+		
+		%><small><%
+			%><b><%= intl( en = "Your user agent", ru = "Ваш браузер" ) %>: </b><%
+			%><%= request.attributes["User-Agent"] || "n/a" %><%
+		%></small><%
+		%><br /><%
+		
+		%><small><%
+			%><b><%= intl( en = "Your current interface", ru = "Ваш текущий интерфейс" ) %>: </b><%
+			%><%= currentInterface %><%
+		%></small><%
+		%><br /><%
+		
+		%><small><%
+			%><b><%= intl( en = "JavaScript is", ru = "Выполнение скриптов" ) %>: </b><%
+			%><script>document.write('<%= intl( en = "supported and enabled", ru = "поддерживается и включено" ) %>');</script><%
+			%><noscript><%= intl( en = "unsupported or disabled", ru = "не поддерживается или отключено" ) %></noscript><%
+		%></small><%
+		%><br /><%
+
+		%>&nbsp;<%
+		%><br /><%
+		
+		%><table width="100%"><%
+			%><tr><%
+				%><td valign="top"><%
+					%><h3><%= intl( en = "Languages", ru = "Языки" ) %>:</h3><%
+					%><ul class="option list"><%
+						%><%EXEC: languageName = Runtime.getLanguage() %><%
+						%><%EXEC: languages = Runtime.getLanguages() %><%
+						%><%ITERATE: language : languages %><%
+							%><li><%
+								%><a class="button <%= languageName == language.name ? 'selected' : 'option' %>" href="<%= Runtime.getLanguageSelectionUrl( language.name, "/!" ) %>"><%
+									%><%= language.nativeName %><%
+									%><br /><%
+									%><%= language.commonName %><%
+								%></a><%
+							%></li><%
+						%><%/ITERATE%><%
+					%></ul><%
+				%></td><%
+				%><td valign="top"><%
+					%><h3><%= intl( en = "Shares", ru = "Точки доступа" ) %>:</h3><%
+					%><ul class="option list"><%
+						%><%ITERATE: share : Application.getDomainSharePoints(all) %><%
+							%><li><%
+								%><a class="button option" href="http://<%= share.getAlias() %>"><%
+									%><%= share.getAlias() %><%
+								%></a><%
+							%></li><%
+						%><%/ITERATE%><%
+					%></ul><%
+				%></td><%
+				%><td valign="top"><%
+					%><h3><%= intl( en = "Interfaces", ru = "Интерфейсы" ) %>:</h3><%
+					%><ul class="option list"><%
+						%><%ITERATE: name : Application.getSkinnerNames() %><%
+							%><%EXEC: skin = Application.getSkinner( name ) %><%
+							%><%CONTINUE: IF: !all && skin.isAbstract() %><%
+							%><li><%
+								%><a class="button <%= currentInterface == name ? 'selected' : 'option' %>" href="!?skin=<%= name %>"><%
+									%><%= skin.title %> (<%= name %>)<%
+								%></a><%
+							%></li><%
+						%><%/ITERATE%><%
+					%></ul><%
+				%></td><%
+			%></tr><%
+		%></table><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: intl( en = "Welcome!", ru = "Добро пожаловать!" ),
+		template	: "html-document",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		useRequire	: false,
+		head		: head,
+		body		: body
+	} %><%
+%>

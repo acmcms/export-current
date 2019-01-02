@@ -1,0 +1,7 @@
+{
+	type : "ae3.Manual",
+	title : "ACM.CMS General Index",
+	name : "acmcms-info-general",
+	group : "acm.cms",
+	url : "/!/skin/skin-acmcms-info/",
+}

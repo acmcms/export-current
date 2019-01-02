@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?>
+<xml namespacePrefix="installation::" layout="documentation">
+	<title>AE3 Installation</title>
+
+	<section namespacePrefix="classes::Binary::" layout="section">
+		<anchor>type-Binary</anchor>
+		<title>Type: Binary</title>
+
+		<article>
+			<title>Summary</title>
+			<text>
+				<paragraph>
+					The <b>Binary</b> type represents binary objects. It is not just a byte 
+					array (for which we have ArrayBuffer class), but it could be any source
+					of constant, reproducible, immutable binary data.
+				</paragraph>
+				<paragraph>
+					Instances of <b>Binary</b> type have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							length
+						</n><d>
+							<code>length():Number</code>
+							Returns the binary length (in bytes).
+						</d></item>
+						<item><n>
+							toStringUtf8
+						</n><d>
+							<code>toStringUtf8():String</code>
+							Provides a text representation of the <b>Binary</b> treating it as a text
+							in 'UTF-8' charset.
+						</d></item>
+						<item><n>
+							messageDigest
+						</n><d>
+							<code>messageDigest():Digest</code>
+							Creates the Whirlpool message digest and updates it with underlying binary bytes.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+		<article>
+			<title>Examples</title>
+			<text>
+				<paragraph>
+					Usage:
+					<code>var length = binary.length;</code>
+					<code>var string = binary.toStringUtf8();</code>
+					<code>var md5 = Format.binaryAsHex(binary.messageDigest.digest());</code>
+				</paragraph>
+				<paragraph>
+					Module example #1:
+					<code><![CDATA[
+module.exports = {
+	myNumber : 5,
+	myString : 'test',
+	myMethod : function(a, b){
+		return a + b;
+	}
+};
+					]]></code>
+				</paragraph>
+			</text>
+		</article>
+
+	</section>
+
+
+
+	<section namespacePrefix="classes::BodyAccess::" layout="section">
+		<anchor>type-BodyAccess</anchor>
+		<title>Interface: BodyAccess</title>
+
+		<article>
+			<anchor>type-BodyAccessUnknown</anchor>
+			<title>BodyAccessUnknown interface summary</title>
+			<text>
+				<paragraph>
+					The <b>BodyAccessUnknown</b> type represents an abstract interface
+					for types, like: <a href="#type-Message">Message</a>, 
+					<a href="#type-Reply">Reply</a>, etc. to provide access for
+					an enclosed message body. The body could be available in one
+					or more forms, be not available (i.e. isEmpty() method returns 'true') and,
+					finally, convertable to either 'binary' or 'character' form.
+				</paragraph>
+				<paragraph>
+					Implementors of <b>BodyAccessUnknown</b> interface have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							object
+						</n><d>
+							Property that could contain the body represented by an 
+							attached generic runtime object instance (or 'null').
+						</d></item>
+						<item><n>
+							objectClass
+						</n><d>
+							Property that contains the class type for the body 
+							represented by an attached generic runtime object (or 
+							'null' when there is no runtime object attached).
+						</d></item>
+						<item><n>
+							isBinary
+						</n><d>
+							<code>isBinary():Boolean</code>
+							Returns 'true' if this object implements 
+							<a href="#type-BodyAccessBinary">BodyAccessBinary</a> 
+							interface.
+						</d></item>
+						<item><n>
+							isCharacter
+						</n><d>
+							<code>isCharacter():Boolean</code>
+							Returns 'true' if this object implements 
+							<a href="#type-BodyAccessCharacter">BodyAccessCharacter</a> 
+							interface.
+						</d></item>
+						<item><n>
+							isEmpty
+						</n><d>
+							<code>isEmpty():Boolean</code>
+							Returns 'true' if this object does not have any body (i.e. body is 'undefined')
+							of the length of the body is 0.
+						</d></item>
+						<item><n>
+							isObject
+						</n><d>
+							<code>isObject():Boolean</code>
+							Returns 'true' if this object have body object available through 'object' property.
+						</d></item>
+						<item><n>
+							toCharacter
+						</n><d>
+							<code>toCharacter():BodyAccessCharacter</code>
+							The method that casts or converts this BodyAccess object into 
+							an instance of <a href="#type-BodyAccessCharacter">BodyAccessCharacter</a>.
+						</d></item>
+						<item><n>
+							toBinary
+						</n><d>
+							<code>toBinary():BodyAccessBinary</code>
+							The method that casts or converts this BodyAccess object into 
+							an instance of <a href="#type-BodyAccessBinary">BodyAccessBinary</a>.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+
+		<article>
+			<anchor>type-BodyAccessCharacter</anchor>
+			<title>BodyAccessCharacter interface summary</title>
+			<text>
+				<paragraph>
+					The <b>BodyAccessCharacter</b> type represents an abstract interface
+					for types, like: <a href="#type-CharacterMessage">CharacterMessage</a>, 
+					<a href="#type-CharacterReply">CharacterReply</a>, etc. to provide access for
+					an enclosed character message body. The body could be available in one
+					or more forms, be not available (i.e. isEmpty() method returns 'true') and,
+					finally, convertable to either 'binary' or 'character' form.
+				</paragraph>
+				<paragraph>
+					Implementors of <b>BodyAccessCharacter</b> interface have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-BodyAccessUnknown">BodyAccessUnknown</a> interface are inherited.
+						</d></item>
+						<item><n>
+							characterContentLength
+						</n><d>
+							Property that contains numeric integer value of
+							the length (number of characters) of the character body.
+						</d></item>
+						<item><n>
+							text
+						</n><d>
+							Property that contains the text content of the body 
+							as a CharacterSequence object (like: 'string' === typeof x).
+						</d></item>
+						<item><n>
+							textContent
+						</n><d>
+							Property that contains the text content of the body 
+							as a Reference to a CharacterSequence object (like future 
+							promise object).
+						</d></item>
+						<item><n>
+							isCharacter
+						</n><d>
+							<code>isCharacter():Boolean</code>
+							Returns 'true'.
+						</d></item>
+						<item><n>
+							isEmpty
+						</n><d>
+							<code>isEmpty():Boolean</code>
+							Returns 'true' if character length of the text body is 0.
+						</d></item>
+						<item><n>
+							isObject
+						</n><d>
+							<code>isObject():Boolean</code>
+							Returns 'true'.
+						</d></item>
+						<item><n>
+							toCharacter
+						</n><d>
+							<code>toCharacter():BodyAccessCharacter</code>
+							Returns same 'this' reference.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+
+
+		<article>
+			<anchor>type-BodyAccessBinary</anchor>
+			<title>BodyAccessBinary interface summary</title>
+			<text>
+				<paragraph>
+					The <b>BodyAccessBinary</b> type represents an abstract interface
+					for types, like: <a href="#type-BinaryMessage">BinaryMessage</a>, 
+					<a href="#type-BinaryReply">BinaryReply</a>, etc. to provide access for
+					an enclosed binary message body. The body could be available in one
+					or more forms, be not available (i.e. isEmpty() method returns 'true') and,
+					finally, convertable to either 'binary' or 'character' form.
+				</paragraph>
+				<paragraph>
+					Implementors of <b>BodyAccessBinary</b> interface have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-BodyAccessUnknown">BodyAccessUnknown</a> interface are inherited.
+						</d></item>
+						<item><n>
+							binaryContentLength
+						</n><d>
+							Property that contains numeric integer value of
+							the length of the binary body.
+						</d></item>
+						<item><n>
+							binary
+						</n><d>
+							Property that contains the binary content of the body 
+							as a <a href="#type-Binary">Binary</a> object.
+						</d></item>
+						<item><n>
+							binaryContent
+						</n><d>
+							Property that contains the binary content of the body 
+							as a Reference to a <a href="#type-Binary">Binary</a>
+							object (probably like future promise object).
+						</d></item>
+						<item><n>
+							binaryMessageDigest
+						</n><d>
+							Property that provides the MessageDigest value for the 
+							contents of the binary body.
+						</d></item>
+						<item><n>
+							isBinary
+						</n><d>
+							<code>isBinary():Boolean</code>
+							Returns 'true'.
+						</d></item>
+						<item><n>
+							isEmpty
+						</n><d>
+							<code>isEmpty():Boolean</code>
+							Returns 'true' if byte length of the binary body is 0.
+						</d></item>
+						<item><n>
+							isObject
+						</n><d>
+							<code>isObject():Boolean</code>
+							Returns 'true'.
+						</d></item>
+						<item><n>
+							toBinary
+						</n><d>
+							<code>toBinary():BodyAccessBinary</code>
+							Returns same 'this' reference.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+		<article>
+			<title>Examples</title>
+			<text>
+				<paragraph>
+					Usage:
+					<code>var length = binary.length;</code>
+					<code>var string = binary.toStringUtf8();</code>
+					<code>var md5 = Format.binaryAsHex(binary.messageDigest.digest());</code>
+				</paragraph>
+				<paragraph>
+					Module example #1:
+					<code><![CDATA[
+module.exports = {
+	myNumber : 5,
+	myString : 'test',
+	myMethod : function(a, b){
+		return a + b;
+	}
+};
+					]]></code>
+				</paragraph>
+			</text>
+		</article>
+
+	</section>
+
+
+	<section namespacePrefix="classes::event::" layout="section">
+		<anchor>type-Event</anchor>
+		<title>Type: Event</title>
+
+		<article>
+			<anchor>type-Event</anchor>
+			<title>Summary</title>
+			<text>
+				<paragraph>
+					The <b>Event</b> type represents abstract event objects and serves as a 
+					super-type for <a href="#type-Message">Message</a> and 
+					it's descendant types.
+				</paragraph>
+				<paragraph>
+					Instances of <b>Event</b> type have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							date
+						</n><d>
+							Property containing the date of the event as numeric
+							value of unix-time in milliseconds.
+						</d></item>
+						<item><n>
+							eventTypeId
+						</n><d>
+							Property containing the string event type value.
+						</d></item>
+						<item><n>
+							process
+						</n><d>
+							Property containing the numeric process number that created given event object.
+						</d></item>
+						<item><n>
+							subject
+						</n><d>
+							Property containing the string event 'subject' value.
+						</d></item>
+						<item><n>
+							title
+						</n><d>
+							Property containing the string event 'title' value.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+	</section>
+
+
+
+
+
+	<section namespacePrefix="classes::message::" layout="section">
+		<anchor>type-Message</anchor>
+		<title>Type: Message</title>
+
+		<article>
+			<anchor>type-Message</anchor>
+			<title>Summary</title>
+			<text>
+				<paragraph>
+					The <b>Message</b> type represents message objects and serves as a 
+					super-type for <a href="#type-Reply">Reply</a> and 
+					<a href="#type-Request">Request</a> types.
+				</paragraph>
+				<paragraph>
+					Instances of <b>Message</b> type have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-Event">Event</a> interface are inherited.
+						</d></item>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-BodyAccessUnknown">BodyAccessUnknown</a> interface are inherited.
+						</d></item>
+						<item><n>
+							attributes
+						</n><d>
+							Property containing the message attributes (headers) map.
+						</d></item>
+						<item><n>
+							toCharacter
+						</n><d>
+							<code>toCharacter():CharacterMessage</code>
+							The method that casts or converts this message into 
+							a <a href="#type-CharacterMessage">CharacterMessage</a> instance.
+						</d></item>
+						<item><n>
+							toBinary
+						</n><d>
+							<code>toBinary():BinaryMessage</code>
+							The method that casts or converts this message into 
+							a <a href="#type-BinaryMessage">BinaryMessage</a> instance.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+
+		<article>
+			<anchor>type-CharacterMessage</anchor>
+			<title>CharacterMessage</title>
+			<text>
+				<paragraph>
+					The <b>CharacterMessage</b> type represents message objects that
+					have that message body available in character form.
+				</paragraph>
+				<paragraph>
+					Instances of <b>CharacterMessage</b> type have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-Message">Message</a> interface are inherited.
+						</d></item>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-BodyAccessCharacter">BodyAccessCharacter</a> interface are inherited.
+						</d></item>
+						<item><n>
+							toCharacter
+						</n><d>
+							<code>toCharacter():CharacterMessage</code>
+							Returns same 'this' message object.
+						</d></item>
+						<item><n>
+							toBinary
+						</n><d>
+							<code>toBinary():BinaryMessage</code>
+							The method that casts or converts this message into 
+							a <a href="#type-BinaryMessage">BinaryMessage</a> instance.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+
+		<article>
+			<anchor>type-BinaryMessage</anchor>
+			<title>BinaryMessage</title>
+			<text>
+				<paragraph>
+					The <b>BinaryMessage</b> type represents message objects that
+					have that message body available in binary form.
+				</paragraph>
+				<paragraph>
+					Instances of <b>BinaryMessage</b> type have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-Message">Message</a> interface are inherited.
+						</d></item>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-BodyAccessBinary">BodyAccessBinary</a> interface are inherited.
+						</d></item>
+						<item><n>
+							toCharacter
+						</n><d>
+							<code>toCharacter():CharacterMessage</code>
+							The method that casts or converts this message into 
+							a <a href="#type-CharacterMessage">CharacterMessage</a> instance.
+						</d></item>
+						<item><n>
+							toBinary
+						</n><d>
+							<code>toBinary():BinaryMessage</code>
+							Returns same 'this' message object.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+		<article>
+			<title>Examples</title>
+			<text>
+				<paragraph>
+					Usage:
+					<code>var length = binary.length;</code>
+					<code>var string = binary.toStringUtf8();</code>
+					<code>var md5 = Format.binaryAsHex(binary.messageDigest.digest());</code>
+				</paragraph>
+				<paragraph>
+					Module example #1:
+					<code><![CDATA[
+module.exports = {
+	myNumber : 5,
+	myString : 'test',
+	myMethod : function(a, b){
+		return a + b;
+	}
+};
+					]]></code>
+				</paragraph>
+			</text>
+		</article>
+
+	</section>
+
+
+
+	<section namespacePrefix="classes::reply::" layout="section">
+		<anchor>type-Reply</anchor>
+		<title>Type: Reply</title>
+
+		<article>
+			<anchor>type-Reply</anchor>
+			<title>Summary</title>
+			<text>
+				<paragraph>
+					The <b>Reply</b> type represents reply message objects.
+				</paragraph>
+				<paragraph>
+					Instances of <b>Reply</b> type have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-Message">Message</a> interface are inherited.
+						</d></item>
+						<item><n>
+							code
+						</n><d>
+							Property containing numeric code value for the reply.
+						</d></item>
+						<item><n>
+							expirationDate
+						</n><d>
+							Property containing numeric (unix time in milliseconds) timestamp.
+						</d></item>
+						<item hl="true"><n>
+							flags
+						</n><d>
+							Map of context flags.
+						</d></item>
+						<item><n>
+							query
+						</n><d>
+							Property containing the reference to a corresponding 
+							<a href="#type-Request">Request</a> object.
+						</d></item>
+						<item><n>
+							sessionId
+						</n><d>
+							Property containing the string value of the session 
+							id cookie (if any).
+						</d></item>
+						<item><n>
+							timeToLiveSeconds
+						</n><d>
+							Property containing the numeric value of the reply message TTL in seconds.
+						</d></item>
+						<item><n>
+							userId
+						</n><d>
+							Property containing the string value of the user 
+							id cookie (if any).
+						</d></item>
+						<item><n>
+							isFinal
+						</n><d>
+							<code>isFinal():Boolean</code>
+							Returns 'true' is this reply doesn't need any skinning 
+							and should be send as is now.
+						</d></item>
+						<item><n>
+							isPrivate
+						</n><d>
+							<code>isPrivate():Boolean</code>
+							Returns 'true' is this reply should not be cached for 
+							public use.
+						</d></item>
+						<item><n>
+							nextClone
+						</n><d>
+							<code>nextClone(query:Request):Reply</code>
+							Returns new clone of 'this' reply as a reply 
+							to a <a href="#type-Request">Request</a> instance
+							specified by a 'query' argument.
+						</d></item>
+						<item><n>
+							seal
+						</n><d>
+							<code>seal():Reply</code>
+							Returns the 'sealed' version of 'this' reply object.
+						</d></item>
+						<item><n>
+							setCode
+						</n><d>
+							<code>setCode(code:Integer):Reply</code>
+							Sets the new 'code' property value and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setExpirationDate
+						</n><d>
+							<code>setExpirationDate(dateMillis:Integer):Reply</code>
+							Sets the new 'expiration date' value and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setFinal
+						</n><d>
+							<code>setFinal():Reply</code>
+							Sets the 'final' property value to 'true' and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setFlags
+						</n><d>
+							<code>setFlags(flags:Map):Reply</code>
+							Applies all flags from given map to 'this' reply message
+							'flags' map property and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setLastModified
+						</n><d>
+							<code>setLastModified(dateMillis:Integer):Reply</code>
+							Sets the new 'last modified date' value and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setNoCaching
+						</n><d>
+							<code>setNoCaching():Reply</code>
+							Sets the attributes for 'no caching' mode and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setPrivate
+						</n><d>
+							<code>setPrivate():Reply</code>
+							Sets the attributes for 'private' mode (i.e. isPrivate() returns 'true') and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setSubject
+						</n><d>
+							<code>setSubject(x:String):Reply</code>
+							Sets the reply message event 'subject' property value 
+							and returns the same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setTimeToLiveDays
+						</n><d>
+							<code>setTimeToLiveDays(ttlDays:Integer):Reply</code>
+							Sets the new 'expiration date' value and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setTimeToLiveHours
+						</n><d>
+							<code>setTimeToLiveHours(ttlHours:Integer):Reply</code>
+							Sets the new 'expiration date' value and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setTimeToLiveMinutes
+						</n><d>
+							<code>setTimeToLiveMinutes(ttlMinutes:Integer):Reply</code>
+							Sets the new 'expiration date' value and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setTimeToLiveSeconds
+						</n><d>
+							<code>setTimeToLiveSeconds(ttlSeconds:Integer):Reply</code>
+							Sets the new 'expiration date' value and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setTimeToLiveWeeks
+						</n><d>
+							<code>setTimeToLiveWeeks(ttlWeeks:Integer):Reply</code>
+							Sets the new 'expiration date' value and returns the
+							same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							setTitle
+						</n><d>
+							<code>setTitle(x:String):Reply</code>
+							Sets the reply message event 'title' property value 
+							and returns the same 'this' or new reply object.
+						</d></item>
+						<item><n>
+							toCharacter
+						</n><d>
+							<code>toCharacter():CharacterReply</code>
+							The method that casts or converts this reply message into 
+							a <a href="#type-CharacterReply">CharacterReply</a> instance.
+						</d></item>
+						<item><n>
+							toBinary
+						</n><d>
+							<code>toBinary():BinaryReply</code>
+							The method that casts or converts this reply message into 
+							a <a href="#type-BinaryReply">BinaryReply</a> instance.
+						</d></item>
+						<item><n>
+							useFlags
+						</n><d>
+							<code>useFlags(flags:Map):Reply</code>
+							Replaces 'flags' map property with a map object provided 
+							and returns the same 'this' or new reply object.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+
+		<article>
+			<anchor>type-CharacterReply</anchor>
+			<title>CharacterReply</title>
+			<text>
+				<paragraph>
+					The <b>CharacterReply</b> type represents reply message objects 
+					that have their message body available in character form.
+				</paragraph>
+				<paragraph>
+					Instances of <b>CharacterReply</b> type have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-Reply">Reply</a> interface are inherited.
+						</d></item>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-BodyAccessCharacter">BodyAccessCharacter</a> interface are inherited.
+						</d></item>
+						<item><n>
+							toCharacter
+						</n><d>
+							<code>toCharacter():CharacterReply</code>
+							Returns same 'this' reply message object.
+						</d></item>
+						<item><n>
+							toBinary
+						</n><d>
+							<code>toBinary():BinaryReply</code>
+							The method that casts or converts this reply message into 
+							a <a href="#type-BinaryReply">BinaryReply</a> instance.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+
+		<article>
+			<anchor>type-BinaryReply</anchor>
+			<title>BinaryReply</title>
+			<text>
+				<paragraph>
+					The <b>BinaryReply</b> type represents reply message objects 
+					that have their message body available in binary form.
+				</paragraph>
+				<paragraph>
+					Instances of <b>BinaryReply</b> type have the following methods and properties:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-Reply">Reply</a> interface are inherited.
+						</d></item>
+						<item><n>
+							*
+						</n><d>
+							Members of <a href="#type-BodyAccessBinary">BodyAccessBinary</a> interface are inherited.
+						</d></item>
+						<item><n>
+							toCharacter
+						</n><d>
+							<code>toCharacter():CharacterReply</code>
+							The method that casts or converts this reply message into 
+							a <a href="#type-CharacterReply">CharacterReply</a> instance.
+						</d></item>
+						<item><n>
+							toBinary
+						</n><d>
+							<code>toBinary():BinaryReply</code>
+							Returns same 'this' reply message object.
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+		<article>
+			<title>Examples</title>
+			<text>
+				<paragraph>
+					Usage:
+					<code>var length = binary.length;</code>
+					<code>var string = binary.toStringUtf8();</code>
+					<code>var md5 = Format.binaryAsHex(binary.messageDigest.digest());</code>
+				</paragraph>
+				<paragraph>
+					Module example #1:
+					<code><![CDATA[
+module.exports = {
+	myNumber : 5,
+	myString : 'test',
+	myMethod : function(a, b){
+		return a + b;
+	}
+};
+					]]></code>
+				</paragraph>
+			</text>
+		</article>
+
+	</section>
+
+
+
+
+</xml>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Сайт: Приземление</title>
+	<visibility>default</visibility>
+	<extends>$root</extends>
+	<icon>storage</icon>
+	<folder>true</folder>
+	<state>system</state>
+	<statelist>
+		<state>ready</state>
+		<state>system</state>
+	</statelist>
+	<version>1</version>
+
+	<modify>
+		<form> 
+			<title>Landing properties</title>
+			<fields class="fieldset">
+				<field 
+					class="string" 
+					variant="link"
+					id="host" 
+					title="Имя хоста или url"
+					min="1"/>
+			</fields>
+		</form>
+		<trigger class="script" type="ACM.ECMA"><![CDATA[
+			change.target = change.host;
+			if( change.target.endsWith("/") ){
+				change.target = change.target.substring(0, change.target.length()-1);
+			}
+			if( !change.target.startsWith("/") && change.target.indexOf("://") == -1 ){
+				change.target = "http://" + change.target;
+			}
+		]]></trigger>
+	</modify>
+
+	<respond>
+		<behaviour>
+			<handle>all</handle>
+			<public>true</public>
+			<ttl>0</ttl>
+			<cache>0</cache>
+		</behaviour>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%IF: !this.target %><%
+				%><%REDIRECT: 
+					"http://" +
+					this.host +
+					"/" +
+					Request.getResourceIdentifier(), true %><%
+			%><%/IF%><%
+			%><%REDIRECT: 
+				this.target +
+				"/" +
+				Request.getResourceIdentifier(), true %><%
+		%>]]></script>
+	</respond>
+
+	<render>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%EXEC: target =
+				this.target +
+				Request.getResourcePrefix() +
+				Request.getResourceIdentifier() %><%
+			%><a href="<%= target %>"><%= this.getTitle() %></a><%
+		%>]]></script>
+	</render>
+
+</type>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Layout: hCard</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawLayout</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="card" class="map"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><div class="vcard"><%
+				%><div class="avatarplace"><%
+					%><img src="<%= card.asrc %>" alt="<%= card.nname %>'s avatar" width="60" height="60" class="avatar photo"/><%
+					%><div class="nickname"><%= card.nname %></div><%
+				%></div><%
+				%><div class="text"><%
+					%><div class="fn n"><%
+						%><span class="given-name"><%= card.fname %></span><%
+						%>&nbsp;<%
+						%><span class="family-name"><%= card.lname %></span><%
+					%></div><%
+					%><div class="email"><%= card.email %></div><%
+					%><a href="<%= card.url %>" class="url"><%= card.url %></a><%
+				%></div><%
+				%><div class="clear"></div><%
+			%></div><%
+		]]></script>
+	</command>
+</type>

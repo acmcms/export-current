@@ -1,0 +1,6 @@
+{
+	type : "ae3/Factory",
+	name : "zipfs",
+	description : "ZIP FS, args: <vfsZipFilePath>",
+	reference : "ru.myx.ae3.sys/vfs/FactoryZIPFS"
+}

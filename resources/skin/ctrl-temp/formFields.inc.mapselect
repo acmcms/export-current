@@ -1,0 +1,286 @@
+<%
+%><%EXEC: requireCss.add("zakladki") %><%
+%><%EXEC: requireJs.add('app/Zakladki') %><%
+
+%><tr id="fld__<%=name%>">
+<td colspan=2 style="height:<%=singleField ? '100%' : '200px' %>; padding:5px 0 5px 0">
+
+	<table border=0 cellpadding=0 cellspacing=0 width=100% height=100% id="fld__<%=name%>_obj">
+	<tr>
+		<td>
+			<table border=0 cellpadding=0 cellspacing=0 class=zakladka width=100%>
+			<tr>
+				<td><script>document.write(app.Zakladki.tabSplitter3)</script></td>
+				<td class=TabOn id="holder" nowrap onclick="mForm.switchWholeWindowMode('fld__<%=name%>')"><div>
+					<table border=0 cellpadding=0 cellspacing=0 width=100%><tr><td nowrap><%=title%></td><td align=right style="font-family:Webdings; padding:0 10 0 10">5</td></tr></table>
+				</div></td>
+				<td><script>document.write(app.Zakladki.tabSplitter4)</script></td>
+				<td style="width:100%"></td>
+			</tr>
+			<tr class=border>
+				<td class=TabOffl><img width=0 height=0></td>
+				<td><img width=0 height=0></td>
+				<td class=TabOffr><img width=0 height=0></td>
+				<td class=TabOn><img width=0 height=0></td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td height=100%><%
+			%><table border=0 cellpadding=0 cellspacing=0 width=100% style="border-left: 1px solid buttonhighlight; border-right: 1px solid buttonshadow; border-bottom: 1px solid buttonshadow; padding:5px; height:100%"><%
+			%><tr><%
+				%><td valign=top><%
+					%><table id="mapselect_<%=name%>" border=0 cellpadding=0 cellspacing=0 width=100% height=100%><tr><%
+						%><td valign=top height=100% s2tyle="width:200px" class=multiselectList><%
+							%><div style="width:200px; height:100%; background-color:window; overflow:auto"><%
+								%><table class=blockParent width=100% border=0 cellpadding=0 cellspacing=0 style="margin:2px;" id="mapselect_<%=name%>_list"><%
+								%><%ITERATE: cKey : attributes.lookup %><%
+									%><%EXEC: cTitle = attributes.lookup[cKey] || cKey %><%
+									%><tr<%IF: IsInArray(value,cKey) %> Checked=true<%/IF%> selectParent=1 Value="<%=cKey%>"><%
+										%><td class=check><div isChecker=true><%IF: IsInArray(value,cKey) %>a<%/IF%></div><input type=hidden <%IF: !IsInArray(value,cKey) %>pre<%/IF%>name="fieldcmd_<%=name%>_mapselect" value="<%=cKey%>"></td><%
+										%<<td noWrap<%IF: IsInArray(value,cKey) %> style="font-weight:bold"<%/IF%>><%
+											%><%= Format.xmlNodeValue(cTitle) %><%
+										%></td><%
+									%></tr><%
+								%><%/ITERATE%><%
+								%></table><%
+							%></div><%
+						%></td><%
+						%><td valign=top style="padding:0 0 0 5px" height=100% width=100%><%
+							%><div id="mapselect_<%=name%>_container" style="overflow:auto"></div><%
+						%></td><%
+					%></tr></table><%
+				%></td><%
+			%></tr><%
+			%></table><%
+		%></td><%
+	%></tr><%
+	%></table>
+
+
+
+<%FORMAT:'default' %>
+<script>
+mapselectIni(document.getElementById("mapselect_<%=name%>"));
+
+function mapselectIni(obj){
+	obj.list = document.getElementById(obj.id+'_list');
+	obj.list.parent = obj;
+	obj.container = document.getElementById(obj.id+'_container');
+	obj.container.parent = obj;
+
+	obj.onclick = function(e){
+		e || (e = window.event);
+		var o = (e.srcElement || e.target);
+		var selectParent = Dom.searchParentByAttributeOrId(o,"selectParent");
+		(selectParent.nodeName == 'TR') && ((o.nodeName == 'DIV') ? selectParent.Check() : selectParent.Select());
+	}
+
+	obj.showForm = function(formName){
+		formName = (formName || this.list.selectObject.Value);
+		if(!this.forms[formName]){
+			this.load(formName);
+		}else{
+			this.forms[formName].style.display = '';
+		}
+	}
+
+	obj.hideForm = function(formName){
+		var form = formName ? this.forms[formName] : this.forms[this.list.selectObject.Value];
+		form.style.display = 'none';
+	}
+
+	obj.load = function(formName){
+		var oDiv = document.createElement("DIV");
+		oDiv.form = formName;
+		this.container.insertBefore(oDic, this.container.firstChild);
+		this.forms[formName] = oDiv;
+		oDiv.parent = this;
+		oDiv.executed = function(o){
+			this.innerHTML = String(o.innerHTML);
+		};
+		var container = Containers.createHTMLBuffer(oDiv);
+		var src = "formFields.inc.mapselect.fields?id=<%=Request.id%>&mapName=" + obj.id.split('mapselect_')[1] + "&mapKey=" + obj.list.selectObject.Value;
+		container.src = src;
+	}
+
+	obj.forms = Dom.getElementsByAttributeName(obj.container, 'form');
+
+	for(var i=0; i<obj.list.rows.length; ++i){
+		cRow = obj.list.rows[i];
+
+		cRow.parent = obj.list;
+		cRow.titler = cRow.cells[1];
+		cRow.checker = cRow.cells[0].firstChild;
+		cRow.Check = function(){
+			this.Checked = !this.Checked;
+			if(this.Checked){
+				this.checker.innerHTML = 'a';
+				this.titler.style.fontWeight = 'bold';
+				this.checker.nextSibling.name = this.checker.nextSibling.prename;
+			}else{
+				this.checker.innerHTML = '';
+				this.titler.style.fontWeight = 'normal';
+				this.checker.nextSibling.removeAttribute('name');
+			}
+		}
+		cRow.Select = function(){
+			if(this.parent.selectObject == this){
+				return;
+			}
+			if(this.parent.selectObject){
+				this.parent.selectObject.className = '';
+				this.parent.parent.hideForm();
+			}
+			this.className = 'select';
+			this.parent.selectObject = this;
+			this.Checked || this.Check();
+			this.parent.parent.showForm()
+		}
+	}
+}
+</script>
+
+</td>
+</tr>
+
+<%IGNORE%><%
+
+%><%EXEC: requireCss.add("zakladki") %><%
+%><%EXEC: requireJs.add('app/Zakladki') %><%
+
+%><tr id="fld__<%=name%>">
+<td colspan=2 style="height:<%=singleField ? '100%' : '200px' %>; padding:5px 0 5px 0">
+
+	<table border=0 cellpadding=0 cellspacing=0 width=100% height=100% id="fld__<%=name%>_obj">
+	<tr>
+		<td>
+			<table border=0 cellpadding=0 cellspacing=0 class=zakladka width=100%>
+			<tr>
+				<td><script>document.write(app.Zakladki.tabSplitter3)</script></td>
+				<td class=TabOn id="holder" nowrap onclick="mForm.switchWholeWindowMode('fld__<%=name%>')"><div>
+					<table border=0 cellpadding=0 cellspacing=0 width=100%><tr><td nowrap><%=title%></td><td align=right style="font-family:Webdings; padding:0 10px 0 10px">5</td></tr></table>
+				</div></td>
+				<td><script>document.write(app.Zakladki.tabSplitter4)</script></td>
+				<td style="width:100%"></td>
+			</tr>
+			<tr class=border>
+				<td class=TabOffl><img width=0 height=0></td>
+				<td><img width=0 height=0></td>
+				<td class=TabOffr><img width=0 height=0></td>
+				<td class=TabOn><img width=0 height=0></td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td height=100%>
+			<table border=0 cellpadding=0 cellspacing=0 width=100% style="border-left: 1px solid buttonhighlight; border-right: 1px solid buttonshadow; border-bottom: 1px solid buttonshadow; padding:5px; height:100%">
+			<tr>
+				<td valign=top>
+					<table id="mapselect_<%=name%>" border=0 cellpadding=0 cellspacing=0 width=100% height=100%><tr>
+						<td valign=top height=100% s2tyle="width:200px" class=multiselectList>
+							<div style="width:200px; height:100%; background-color:window; overflow:auto">
+								<table class=blockParent width=100% border=0 cellpadding=0 cellspacing=0 style="margin:2px;" id="mapselect_<%=name%>_list">
+								<%ITERATE: cKey : attributes.lookup %>
+									<%EXEC: cTitle = attributes.lookup[cKey] || cKey %>
+									<tr<%IF: IsInArray(value,cKey) %> Checked=true<%/IF%> selectParent=1 Value="<%=cKey%>">
+										<td class=check><div isChecker=true><%IF: IsInArray(value,cKey) %>a<%/IF%></div><input type=hidden <%IF: !IsInArray(value,cKey) %>pre<%/IF%>name="fieldcmd_<%=name%>_mapselect" value="<%=cKey%>"></td>
+										<td noWrap<%IF: IsInArray(value,cKey) %> style="font-weight:bold"<%/IF%>><%= Format.xmlNodeValue(cTitle) %></td>
+									</tr>
+								<%/ITERATE%>
+								</table>
+							</div>
+						</td>
+
+						<td valign=top style="padding:0 0 0 5px" height=100% width=100%>
+							<iframe id="mapselect_<%=name%>_container" id="mapselect_<%=name%>_container" frameborder=0 style="width:100%; height:100%"></iframe>
+						</td>
+					</tr></table>
+				</td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+<script>
+mapselectIni(document.getElementById("mapselect_<%=name%>"));
+
+
+
+function mapselectIni(obj){
+	obj.list = document.getElementById(obj.id+'_list');
+	obj.list.parent = obj;
+	obj.container = document.getElementById(obj.id+'_container');
+	obj.container.parent = obj;
+
+	obj.onclick = function(e){
+		e || (e = window.event);
+		var o = (e.srcElement || e.target);
+		var selectParent = Dom.searchParentByAttributeOrId(o,"selectParent");
+		(selectParent.nodeName == 'TR') && ((o.nodeName == 'DIV') ? selectParent.Check() : selectParent.Select());
+	};
+
+	obj.showForm = function(formName){
+		try{
+			document.frames[this.container.name].document.form.submit();
+			return;
+		}catch(Error){
+			//
+		}
+		this.load();
+	};
+
+	obj.hideForm = function(formName){
+		var form = formName ? this.forms[formName] : this.forms[this.list.selectObject.Value];
+		form.style.display = 'none';
+	};
+
+	obj.load = function(formName){
+		var src = "formFields.inc.mapselect.form?id=<%=Request.id%>&mapName=" + obj.id.split('mapselect_')[1] + "&mapKey=" + obj.list.selectObject.Value;
+		this.container.src = src;
+	};
+
+	obj.forms = Dom.getElementsByAttributeName(obj.container, 'form');
+
+	for(var i=0; i<obj.list.rows.length; ++i){
+		cRow = obj.list.rows[i];
+
+		cRow.parent = obj.list;
+		cRow.titler = cRow.cells[1];
+		cRow.checker = cRow.cells[0].firstChild;
+		cRow.Check = function(){
+			this.Checked = !this.Checked;
+			if(this.Checked){
+				this.checker.innerHTML = 'a';
+				this.titler.style.fontWeight = 'bold';
+				this.checker.nextSibling.name = this.checker.nextSibling.prename;
+			}else{
+				this.checker.innerHTML = '';
+				this.titler.style.fontWeight = 'normal';
+				this.checker.nextSibling.removeAttribute('name');
+			}
+		};
+		cRow.Select = function(){
+			if(this.parent.selectObject == this) return;
+			if(this.parent.selectObject){
+				this.parent.selectObject.className = '';
+			}
+			this.className = 'select';
+			this.parent.selectObject = this;
+			if(!this.Checked) this.Check();
+			this.parent.parent.showForm()
+		};
+	}
+}
+</script>
+<%/FORMAT%>
+</td>
+</tr>
+
+<%/IGNORE%>

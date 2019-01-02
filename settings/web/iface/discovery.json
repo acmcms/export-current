@@ -1,0 +1,5 @@
+{
+	type		: "ae3.WebIndex",
+	name		: "discovery",
+	reference	: "ru.myx.ae3.internal/discovery/DiscoveryWebIndex"
+}

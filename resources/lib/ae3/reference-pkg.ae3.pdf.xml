@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?>
+<xml namespacePrefix="" layout="documentation">
+	<anchor>pkg-ae3.pdf</anchor>
+	<title>Package: ae3.pdf</title>
+
+	<article>
+		<name>PDF API Reference</name>
+		<text>
+			<paragraph>ae3.pdf package provides the API to create PDF documents.</paragraph>
+			<paragraph>Obtain the instance of PDF API.</paragraph>
+			<code>const PDF = require('ae3/pdf');</code>
+			<paragraph>
+				API provides these methods and properties:
+				<fields layout="list">
+					<columns>
+						<column id="n" title="Name"/>
+						<column id="d" title="Summary"/>
+					</columns>
+					<item n="createA4"><d>
+						Creates new <a href="#pkg-ae3.pdf.DocumentBuilder">DocumentBuilder</a> object to construct the PDF document.
+					</d></item>
+					<item n="createBinaryFromLayout"><d>
+						Creates binary object containing the PDF file generated using 'layout' argument.
+					</d></item>
+					<item n="create" hl="true hl-hd-true"><d>
+						Deprecated. Alias for 'createBinaryFromLayout'.
+					</d></item>
+					<item n="createBinaryFromHtml"><d>
+						Creates binary object containing the PDF file generated using text or binary 'html' argument.
+					</d></item>
+					<item n="createBinaryFromXhtml"><d>
+						Creates binary object containing the PDF file generated using text or binary 'xhtml' argument.
+					</d></item>
+				</fields>
+			</paragraph>
+		</text>
+	</article>
+
+	<article>
+		<anchor>pkg-ae3.pdf.DocumentBuilder</anchor>
+		<title>DocumentBuilder object</title>
+		<text>
+			<paragraph>
+				The instance of DocumentBuilder class is created when 
+				you building a new PDF document. It provides a set of methods to
+				work on document's content and meta-data. Each instance of 
+				DocumentBuilder has following methods and properties:
+				<fields layout="list">
+					<columns>
+						<column id="n" title="Name"/>
+						<column id="d" title="Summary"/>
+					</columns>
+					<item n="flushPage"><d>
+						Starts new page.
+					</d></item>
+					<item n="appendLayout"><d>
+						Appends document's content using layout object provided by 'layout' argument.
+					</d></item>
+					<item n="appendHtml"><d>
+						Appends document's content using html text provided by 'html' argument.
+					</d></item>
+					<item n="appendXhtml"><d>
+						Appends document's content using xhtml text provided by 'xhtml' argument.
+					</d></item>
+					<item n="toBinary"><d>
+						Finalizes the document and returns the binary object in PDF format.
+					</d></item>
+				</fields>
+			</paragraph>
+		</text>
+	</article>
+
+	<article>
+		<anchor>ae3.pdf-examples</anchor>
+		<title>Examples</title>
+		<text>
+			<paragraph>
+				Creating a document using HTML and Layouts:
+				<code><![CDATA[
+const PDF = require('ae3/pdf');
+const builder = PDF.createA4();
+
+builder.appendHtml(html);
+
+builder.flushPage();
+
+builder.appendLayout({
+	layout : "grid",
+	width : 4,
+	border : true,
+	elements : [
+		'Hello!',
+		'World!',
+		{ layout : 'link', href : 'http://capandcap.ru', title : 'Кепки...' },
+		{ layout : 'link', href : 'http://dustbag.ru', title : 'Мешки...' },
+		'Здвавствуй!',
+		'Мир!',
+		{
+			layout : "grid",
+			width : 2,
+			border : false,
+			elements : [
+				{ layout : "image", href : "http://capandcap.ru/img$s_png450w/201405231516-4343.htm/0651-01.jpg" },
+				{ layout : "image", href : "http://capandcap.ru/img$s_png450w/201405231516-4343.htm/0651-01.jpg" },
+				{ layout : "image", href : "http://capandcap.ru/img$s_png450w/201405231516-4343.htm/0651-01.jpg" },
+				{ layout : "image", href : "http://capandcap.ru/img$s_png450w/201405231516-4343.htm/0651-01.jpg" }
+			]
+		},
+		{
+			layout : "grid",
+			width : 3,
+			border : false,
+			elements : [
+				'Hello!',
+				'World!',
+				'World!',
+				'Hello!',
+				'World!',
+				{ layout : 'link', href : 'http://mmsource.ru', title : 'Сайты...' }
+			]
+		},
+		"1",
+		{ layout : "image", href : "http://capandcap.ru/img$s_png450w/201405231516-4343.htm/0651-01.jpg" },
+		"3",
+		"4"
+	]
+});
+
+return builder.toBinary();
+
+				]]></code>
+			</paragraph>
+		</text>
+	</article>
+
+	<article>
+		<anchor>ae3.pdf-references</anchor>
+		<title>References</title>
+		<text>
+			<paragraph>
+				The 'pdf' package is using the Lowagie iText 2.1.7 library. The 
+				2.1.7 version of iText is the last version that is licensed under
+				MPL/LGPL license. Newer versions (&gt;= 5.x) are licensed under
+				AGPL license which is not compatible with any possible activities, 
+				so we have to stick with version 2.1.7 which we were using since 
+				it was first released.
+			</paragraph>
+			<paragraph>
+				See:<ul>
+					<li><a href="https://en.wikipedia.org/wiki/IText">https://en.wikipedia.org/wiki/IText</a> for general info;</li>
+					<li><a href="http://www.coderanch.com/how-to/javadoc/itext-2.1.7/">http://www.coderanch.com/how-to/javadoc/itext-2.1.7/</a> for java-docs.</li>
+				</ul>
+				<!-- https://github.com/ymasory/iText-4.2.0/downloads  - there is something newer  -->
+			</paragraph>
+			<paragraph>
+				The 'DejaVuSerifCondensed.ttf' open source font is used as a base for Unicode support. Check 
+				<a href="http://www.fontsquirrel.com/fonts/list/foundry/dejavu-fonts">http://www.fontsquirrel.com/fonts/list/foundry/dejavu-fonts</a>
+				for font preview.
+			</paragraph>
+		</text>
+	</article>
+	
+</xml>

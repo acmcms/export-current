@@ -1,0 +1,6 @@
+{
+	type : "ae3.Manual",
+	title : "AE3 Daemon Process",
+	name : "ae3-daemon-process",
+	group : "administrator",
+}

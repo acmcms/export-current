@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Wiki</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>publish</state>
+	<statelist>
+		<state>publish</state>
+		<state>draft</state>
+	</statelist>
+	<folder>true</folder>
+	<children>
+		<type>VlapanWikiPage</type>
+	</children>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>0</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			var abilities = content.abilities ? Array( content.abilities ) : [];
+			abilities.add({
+				title : this.getTypeTitle(),
+				id : "wikiMenu",
+				abilities : this.getAbilities()
+			});
+			content.abilities = abilities;
+			return this.fillSelection( content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+
+					content.abilities = [
+						{
+							title : this.getTypeTitle(),
+							id : "wikiMenu",
+							abilities : this.getAbilities()
+						}
+					];
+					if(this.jsonLayout){
+						content.layout3 = eval( this.jsonLayout );
+					}
+					return this.fillSelection( content );
+				}
+				case "auth":{
+					User.requestAuthorization();
+					User.requestHighAuthorization();
+					var referer = Request.getAttributes().Referer;
+					return $default.redirect( referer ? referer : this.getLocation() );
+				}
+				case "toolbar":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var profile = User.getUser().getProfile();
+					profile.toolbarOpened = Request.opened ? true : false;
+					User.getUser().setProfile( profile );
+					return { null : true };
+				}
+				case "help/panel":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.string = "<p style='text-align:left;'>Панель управления разбита на две части.<br/>Первая часть относиться к странице где вы сейчас находитесь, вторая к корню вашего сайта.</p>";
+					return this.fillSelection( content );
+				}
+				case "addinfoform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+						content.form = VlapanWikiPage.getCreateForm();
+						return this.fillSelection( content = content );
+					}
+				}
+				case "addinfo":{
+					if( registered ){
+						var object = VlapanWikiPage.create( Request.getParameters(), this );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "addinfoform?error=1" );
+						}
+						return $default.redirect( object.getLocation() );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "addform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+
+						content.form = Category.getCreateForm();
+
+						return this.fillSelection( content = content );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "add":{
+					if( registered ){
+						var object = Category.create( Request.getParameters(), this );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "addform?error=1" );
+						}
+						return $default.redirect( object.getLocation() );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "modifyform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+						content.form = this.getModifyForm();
+						return this.fillSelection( content = content );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "modify":{
+					if( registered ){
+						var object = this.modify( Request.getParameters() );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "modifyform?error=1" );
+						}
+						return $default.redirect( object.getLocation() );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "remove":{
+					if( registered ){
+						var redirect = this.getParent().getLocation();
+						var change = this.createChange();
+						change.delete();
+						return $default.redirect( redirect );
+					}	
+					return $default.redirect( this.getLocation() );
+				}
+				default:{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+
+					content.abilities = [
+						{
+							title : this.getTypeTitle(),
+							id : "wikiMenu",
+							abilities : this.getAbilities()
+						}
+					];
+					content.body = "no page, <a href='"+this.getLocation()+"addinfo?titleName="+target+"'>create</a>?";
+					content.layout2 = HashFilled( this.layout ) ? this.layout : xmlToMap( this.getDefaultLayout() );
+					return this.fillSelection( content );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>getTypeTitle</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return intl( en = "Wiki", ru = "Вики" );
+		]]></script>
+	</command>
+
+	<command>
+		<key>getChildrenNames</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return [ "VlapanWikiPage" ];
+		]]></script>
+	</command>
+
+	<command>
+		<key>create</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="map" />
+			<field id="parent" class="object" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName ) return false;
+			try{
+				var change = parent.createChild();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.$type = "VlapanWiki";
+				change.$folder = true;
+				change.$state = Storage.STATE_PUBLISH;
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>getCreateForm</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="action" class="string" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = [
+				{ title : "Название", name : "titleName", type : "text", value : "wiki", required : true },
+				{ title : "", name : "submit", type : "submit", value : "Опубликовать" }
+			];
+			return {
+				id : "form",
+				title : 'Добавление вики',
+				info : '',
+				focus : "titleName",
+				action : action ? action : "addwiki",
+				method : "post",
+				legend : "",
+				fields : fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>modify</key>
+		<arguments class="fieldset">
+			<field id="data" class="map" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName ) return false;
+			try{
+				var change = this.createChange();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.depth = data.depth ? data.depth : 0;
+				change.jsonLayout = Request.jsonLayout ? Request.jsonLayout : "";
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>getModifyForm</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = Array( $base.getDefaultFields( this ) );
+			fields.push({
+				title: "Структура вывода JSON",
+				name: "jsonLayout",
+				type: "textarea",
+				value: this.jsonLayout ? this.jsonLayout : this.getDefaultLayout()
+			});
+			fields.add({
+				title: "",
+				name: "submit",
+				type: "submit",
+				value: "Опубликовать"
+			});
+			return {
+				id: "form",
+				title: 'Редактирование каталога',
+				warning: Request.error ? "Заполните необходимые поля" : "",
+				info: '',
+				focus: "titleName",
+				action: "modify",
+				method: "post",
+				legend: "",
+				fields: fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>getAbilities</key>
+		<script class="script" type="ACM.CALC"><![CDATA[
+			[{
+				title: "Добавить страницу",
+				icon: "img_add",
+				href: this.getLocation() + "addinfoform",
+				name: "pageAdd",
+				ajax: true
+			},{
+				title: "Свойства",
+				icon: "app_edit",
+				href: this.getLocation() + "modifyform",
+				name: "catModify",
+				ajax: true
+			},{
+				title: "Удалить",
+				icon: "app_delete",
+				href: this.getLocation() + "remove",
+				confirm: true
+			}]
+		]]></script>
+	</command>
+
+	<command>
+		<key>getDefaultXMLLayout</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><layout><%
+				%><box className="categoryList"><%
+					%><list source="$this"><%
+						%><box className="Category"><%
+							%><list source="$item"><%
+								%><box className="Card-Book"><%
+									%><link href="$item"><%
+										%><string field="title"/><%
+									%></link><%
+								%></box><%
+							%></list><%
+						%></box><%
+					%></list><%
+				%></box><%
+			%></layout><%
+		]]></script>
+	</command>
+
+	<command>
+		<key>getDefaultLayout</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%>[
+				{
+					type:"box",
+					className:"layout",
+					data:[{
+						type:"string",
+						data:"empty layout"
+					}]
+				}
+			]<%
+		]]></script>
+	</command>
+</type>

@@ -1,0 +1,34 @@
+var content = Object.create(content);
+
+var packages = content.packages || new VlapanRequire();
+
+$output( head ){
+//	VlapanReqireIEFix.insert();
+	if( content.gaid && !( attributes.testing || content.private ) ){
+		= VlapanRequireGoogleAnalytics.insert( content.gaid );
+	}
+}
+packages.head.push(head);
+
+var map = {};
+
+for(var key in content.packages){
+	
+}
+
+for(var group in map){
+
+}
+
+var js = content.js || [];
+var css = content.css || [];
+
+content.doctype = 'standard';
+content.template = 'html-page';
+content.pathPrefix = content.pathPrefix || '/$build/';
+content.requireCss = (packages.css && ArrayFilled(packages.css)) ? (css.addAll(packages.css) && css) : css;
+content.requireJs = (packages.js && ArrayFilled(packages.js)) ? (js.addAll(packages.js) && js) : js;
+content.useDebug = content.debug || false;
+content.head = packages.head.join("\n") || content.head;
+content.uaCompatible = 'standard';
+return content;

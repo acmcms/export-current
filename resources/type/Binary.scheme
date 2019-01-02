@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://vlapan.com/acmcms/scheme.xsd">
+	<title>Content: File</title>
+	<visibility>default</visibility>
+	<icon>document</icon>
+	<state>publish</state>
+	<statelist>
+		<state>publish</state>
+	</statelist>
+	<folder>false</folder>
+	<modify>
+		<form> 
+			<fields class="fieldset">
+				<field 	class="binary"
+						type="binary"
+					 	id="file"
+						title="File"
+						max="100m"/>
+			</fields>
+		</form>
+	</modify>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>0</ttl>
+			<cache>0</cache>
+		</behavior>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%EXEC: target = Request.getResourceIdentifier() %><%
+			%><%CHOOSE: target %><%
+				%><%MATCH: "", "/" %><%
+					%><%RETURN: this.file %><%
+				%><%MATCH%><%
+					%><%REDIRECT: this.getParent().getLocation() %><%
+			%><%/CHOOSE%><%
+		%>]]></script>
+	</respond>
+</type>

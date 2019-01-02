@@ -1,0 +1,348 @@
+<%
+%><%EXEC: form = Session[Request.id] %><%
+%><%IF: !form %><%
+	%><%RETURN: {
+		template	: '500',
+		title		: 'Error',
+		body		: 'No form available, please retry.'
+	} %><%
+%><%/IF%><%
+
+%><%EXEC: data = form.data %><%
+%><%EXEC: errors = form.errors || {} %><%
+%><%EXEC: fieldset = data.fieldset %><%
+
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add('frames') %><%
+%><%EXEC: requireCss.add('forms') %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add("require") %><%
+%><%EXEC: requireJs.add("Utils/Cookies") %><%
+%><%EXEC: requireJs.add("Utils/Event") %><%
+%><%EXEC: requireJs.add("app/Containers") %><%
+%><%EXEC: requireJs.add("app/Dom") %><%
+%><%EXEC: requireJs.add("app/Router") %><%
+%><%EXEC: requireJs.add("app/Form") %><%
+%><%EXEC: requireJs.add("app/Windows") %><%
+
+%><%OUTPUT: head %><%
+	%><!-- version: 29 --><%
+	%><script><%
+		%><%FORMAT: 'js' %>
+			/* for IE DOM */
+			document.createElement("entry");
+		
+			<%IF: Int(User.getUser().getProfile('mwmAdmin',true).ShowFieldMenu,1) > 0%>
+				document.onactivate = function(){
+					var obj = event.srcElement;
+					var aObj = Dom.getSelectParent(obj, 'activate');
+					var menu = Dom.getSelectParent(obj, 'ContextMenu');
+					if(!menu && !aObj){
+						router.fire('FieldDeactivate','form',false,false);
+						document.aObj = false;
+						window.status = window.status + ' e';
+						return;
+					}
+					if(menu){
+						return;
+					}
+					if(aObj != document.aObj){
+						document.aObj = aObj;
+						var sender = (aObj.valueObject) ? eval(aObj.valueObject) : aObj;
+						router.fire("FieldActivate","form",{
+							path : aObj.activate
+						},sender);
+						window.status = window.status + ' n';
+					}else{
+						window.status = window.status + ' o';
+					}
+				}
+			<%/IF%>
+		
+			mForm = new app.Form(document);
+			mForm.mode = 'none';
+			router = new app.Router("form");
+			router.register(mForm, document, 'ContextMenu');
+			
+			var dialogArguments = opener ? opener.Windows[window.name].dialogArguments : window.dialogArguments;
+			window.resizeTimer = false;
+			
+			function keepWinSize(){
+				clearTimeout(window.resizeTimer);
+				window.resizeTimer = setTimeout("putWinSizeInCookies()",1000);
+			}
+			
+			function putWinSizeInCookies(){
+				(window.require && require("Utils.Cookies").create("winSize", document.body.offsetWidth+","+document.body.offsetHeight, 3650));
+			}
+		<%/FORMAT%><%
+
+	%></script><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: formBody %><%
+	%><%EXEC: source = data.getData() %><%
+	%><%EXEC: target = {} %><%
+	%><%EXEC: fieldset.dataRetrieve(source, target) %><%
+	%><%EXEC: data.setData(target) %><%
+	%><%IF: fieldset %><%
+		%><%EXEC: normalFieldsCount = fieldset.size() %><%
+		%><%EXEC: bigFieldsCount = 0 %><%
+		%><%EXEC: zoomingFieldsCount = 0 %><%
+		%><%RECURSION: fieldset = fieldset, target = target, prefix="" %><%
+			%><%ITERATE: Current : fieldset %><%
+				%><%EXEC: value = target[ Current.key ] %><%
+				%><%EXEC: fieldAttributes = Current.attributes %><%
+				%><%EXEC: (fieldAttributes.type == 'transparent') && (normalFieldsCount --) %><%
+				%><%IF: !fieldAttributes.fieldset || fieldAttributes.type != 'map' %><%
+					%><%CHOOSE: fieldAttributes.type %><%
+						%><%MATCH: 'list','map','set','text','binary','drawing' %><%
+							%><%EXEC: bigFieldsCount ++ %><%
+							%><%EXEC: bigFieldName = prefix + Current.getKey() %><%
+					%><%/CHOOSE%><%
+					%><%CHOOSE: fieldAttributes.type %><%
+						%><%MATCH: 'list','map','set','text','drawing' %><%
+							%><%EXEC: zoomingFieldsCount ++ %><%
+							%><%EXEC: zoomingFieldName = prefix+Current.getKey() %><%
+					%><%/CHOOSE%><%
+				%><%ELSE%><%
+					%><%EXEC: fieldfieldset = fieldAttributes.fieldset %><%
+					%><%EXEC: newTarget = {} %><%
+					%><%EXEC: fieldfieldset.dataRetrieve( value , newTarget ) %><%
+					%><%DEEPER: fieldset = fieldfieldset, target = newTarget, prefix = "tomap_"+Current.getKey()+"___" %><%
+				%><%/ELSE%><%
+				%><%/IF%><%
+			%><%/ITERATE%><%
+		%><%/RECURSION%><%
+		%><%EXEC: singleField = normalFieldsCount <= 1 %><%
+		%><%EXEC: oneBigField = (bigFieldsCount == 1 && normalFieldsCount < 9 && zoomingFieldsCount == 1) %><%
+		%><%EXEC: fieldsetFlag = true %><%
+		%><%OUTPUT:tabHolders %><%
+			%><tr><%
+				%><td height="100%"><%
+					%><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><%
+						%><tr><%
+							%><td><%
+								%><table border="0" cellpadding="0" cellspacing="0" class="zakladka" width="100%"><%
+								%><tr><%
+									%><td><%
+										%><script>document.write(app.Zakladki.tabSplitter3)</script><%
+									%></td><%
+									%><%CALL: ForArray( fieldset ) %><%
+										%><%EXEC: fieldAttributes = Current.attributes %><%
+										%><%EXEC: title = Current.getTitle() %><%
+										%><%IF: fieldAttributes.type == 'map' && fieldAttributes.fieldset %><%
+											%><%IF: First %><%
+												%><td class="TabOn" id="holder" onclick="app.Zakladki.SwitchTab(this)" 	nowrap><div><%= title %></div></td><%
+												%><td><script>document.write(app.Zakladki.tabSplitter4)</script></td><%
+											%><%ELSE%><%
+												%><td class="TabOff" id="holder" onclick="app.Zakladki.SwitchTab(this)" 	nowrap><div><%= title %></div></td><%
+												%><%IF: Last %><%
+													%><td><script>document.write(app.Zakladki.tabSplitter5)</script></td><%
+												%><%ELSE%><%
+													%><td><script>document.write(app.Zakladki.tabSplitter1)</script></td><%
+												%><%/ELSE%><%
+												%><%/IF%><%
+											%><%/ELSE%><%
+											%><%/IF%><%
+										%><%ELSE%><%
+											%><%EXEC: fieldsetFlag = false %><%
+										%><%/ELSE%><%
+										%><%/IF%><%
+									%><%/CALL%><%
+									%><td style="width:100%"><%
+									%></td><%
+								%></tr><%
+								%><tr class=border><%
+									%><td class=TabOffl><img width=0 height=0></td><%
+									%><%CALL: ForArray( fieldset ) %><%
+										%><%IF: First %><%
+											%><td><img width=0 height=0></td><%
+											%><td class=TabOffr><img width=0 height=0></td><%
+										%><%ELSE%><%
+											%><td class=TabOn><img width=0 height=0></td><%
+											%><td class=TabOn><img width=0 height=0></td><%
+										%><%/ELSE%><%
+										%><%/IF%><%
+									%><%/CALL%><%
+									%><td class=TabOn><img width=0 height=0></td><%
+								%></tr><%
+							%></table><%
+						%></td><%
+					%></tr><%
+					%><tr><%
+						%><td height=100% valign="top"><%
+							%><table<%
+								%> border=0<%
+								%> cellpadding=0<%
+								%> cellspacing=0<%
+								%> width=100%<%
+								%> height=100%<%
+								%> style="<%
+									%>border-left:1px solid buttonhighlight;<%
+									%>border-right:1px solid buttonshadow;<%
+									%>border-bottom: 1px solid buttonshadow;<%
+									%>padding:5px;<%
+								%>"<%
+							%>><%
+		%><%/OUTPUT%><%
+		%><div style="position:relative;width:100%;height:100%;overflow:hidden"><%
+			%><div style="position:relative;height:100%;width:100%"<%IF: !fieldsetFlag %> class=FrameBorder2<%/IF%>><%
+				%><div<%
+					%> keyDown='OnKeyDownList(this)'<%
+					%> style="position:absolute;top:0;left:0;width:100%;height:100%<%
+					%><%IF: !fieldsetFlag %><%
+						%>;padding:3px;overflow:auto;overflow-x:hidden<%
+					%><%/IF%><%
+					%>"<%
+					%> class="<%= false && !fieldsetFlag 
+						? 'FrameBorder2' 
+						: 'BorderBox' 
+					%>"<%
+				%>><%
+					%><table border=0 cellpadding=0 cellspacing=1 width=100%<%IF: (singleField || oneBigField) || fieldsetFlag %> style="height:100%" height=100%<%/IF%> object=formTable><%
+						%><form id="FBODY" method="POST" target="_blank" enctype="multipart/form-data" class="form1"><%
+							%><%IF: Object.isFilled(errors) %><%
+								%><tr ondblclick="this.style.display='none'"><%
+									%><td colspan=2 style="padding:0"><%
+										%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+											%><tr><%
+												%><td valign=top><%
+													%><img src="icons/status-error.32.gif" style="margin:3px"><%
+												%></td><%
+												%><td width=100%><%
+													%><TEXTAREA class=DescriptionPlain style="height:32px; width:100%; overflow:auto; overflow-x:hidden; margin:0"><%
+														%><%CALL: ForHash(errors) %><%
+															%><%= fieldset.getField(CurrentKey).getTitle() %>: <%= Format.xmlNodeValue(Current) %><%
+														%><%/CALL%><%
+													%></TEXTAREA><%
+												%></td><%
+											%></tr><%
+										%></table><%
+									%></td><%
+								%></tr><%
+							%><%/IF%><%
+							%><%IF: !singleField %><%
+								%><tr style="display:none;" id="wholeWindow"><%
+									%><td><%
+										%><div id=wholeWindowNode></div><%
+									%></td><%
+								%></tr><%
+							%><%/IF%><%
+					
+					
+							%><%IF: fieldsetFlag %><%
+								%><%EXEC: requireCss.add('zakladki') %><%
+								%><%EXEC: requireJs.add('app/Zakladki') %><%
+								%><%= tabHolders %><%
+							%><%/IF%><%
+					
+							%><%INCLUDE: 'formFields.inc' %><%
+					
+							%><%IF: fieldsetFlag %><%
+												%></table><%
+											%></td><%
+										%></tr><%
+										%></table><%
+									%></td><%
+								%></tr><%
+							%><%/IF%><%
+						%></form><%
+					%></table><%
+				%></div><%
+			%></div><%
+		%></div><%
+	%><%/IF%><%
+%><%/OUTPUT%><%
+
+%><%EXEC: commands = ControlAPI.filterAccessibleCommands( data.attributes.path || '',data.getCommands()) %><%
+%><%OUTPUT:contextMenuFormCommands %><%
+	%><div<%
+		%> id="FormCommands"<%
+		%> title="<%= intl( en = "Form commands", ru="Команды формы" ) %>"<%
+		%> status="true"<%
+		%> group="NodeCommands"<%
+		%> commandType="form"<%
+		%> sender="listing"<%
+	%>><%
+		%><%ITERATE: command : commands %><%
+			%><%IF: command.getKey() != '' %><%
+				%><entry<%
+					%> cmd="<%= Format.xmlAttributeFragment( command.getKey() ) %>"<%
+					%> key="<%= Format.xmlAttributeFragment( Request.id ) %>"<%
+					%> title="<%= Format.xmlAttributeFragment( command.getTitle() || '-- untitled --' ) %>"<%
+					%> description="<%= Format.xmlAttributeFragment( command.commandDescription() || '' ) %>"<%
+					%> icon="<%= ControlAPI.getIcon(command) %>"<%
+				%>><%
+				%></entry><%
+			%><%/IF%><%
+		%><%/ITERATE%><%
+		%><entry<%
+			%> myCmd="close"<%
+			%> key="<%= Format.xmlAttributeFragment( Request.id ) %>"<%
+			%> title="<%= intl( en = "Close", ru = "Закрыть" ) %>"<%
+			%> icon="command-close"<%
+		%>><%
+		%></entry><%
+	%></div><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body class="BorderBox" style="position:relative;padding:3px" onresize="keepWinSize()"><%
+		%><div style="position:relative;width:100%;height:100%" class="FrameBorder"><%
+			%><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><%
+				%><tr><%
+					%><td height="100%" style="position:relative;overflow:hidden;"><%
+						%><div style="position:relative;width:100%;height:100%;overflow:hidden;"><%
+							%><div class="BorderBox" style="position:relative;width:100%;height:100%;padding-right:166px;overflow:hidden"><%
+								%><%= formBody %><%
+							%></div><%
+							%><div class="FrameBorder2" style="position:absolute;right:0;top:0;width:166px;height:100%;overflow:hidden"><%
+								%><div style="position:relative;width:100%;height:100%;overflow:hidden;"><%
+									%><%INCLUDE: 'include-menu' %><%
+								%></div><%
+							%></div><%
+						%></div><%
+					%></td><%
+				%></tr><%
+				
+				%><tr><%
+					%><td style="height:20px; padding-top:2px"><%
+						%><table border=0 cellpadding=0 cellspacing=0 width=100% style="padding:0 2px" height=100%><%
+							%><tr><%
+								%><td class=FrameBorder width=220px><%
+									%><table border=0 cellpadding=0 cellspacing=0 style="padding:1px" height=100% id=FormStatusBar><%
+										%><tr><%
+											%><td nowrap><%
+											%></td><%
+											%><td width=100%><%
+											%></td><%
+											%><td nowrap><%
+											%></td><%
+										%></tr><%
+									%></table><%
+								%></td><%
+								%><td class=FrameBorder><%
+									%>&nbsp;<%
+								%></td><%
+							%></tr><%
+						%></table><%
+					%></td><%
+				%></tr><%
+			%></table><%
+		%></div><%
+		%><script><%
+			%>mForm.ini();<%
+		%></script><%
+	%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: data.getTitle(),
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

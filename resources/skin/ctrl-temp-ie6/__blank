@@ -1,0 +1,21 @@
+<%
+%><%OUTPUT: body %><%
+	%><body onload = "start()"><%
+		%>BLANK<%
+		%><script><%
+			%>function start(){<%
+				%>try{<%
+					%>var oName = String(window.frameElement.name).split('preview')[0];<%
+					%>document.body.innerHTML = parent.document.getElementById(oName).value;<%
+				%>}catch(Error){<%
+				%>}<%
+			%>}<%
+		%></script><%
+	%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title	: "BLANK",
+		template: "html-page",
+		body	: body
+	} %><%
+%>

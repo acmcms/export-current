@@ -1,0 +1,169 @@
+.menu-button, .menu-button-active, .menu-plane{
+	position: relative;
+	white-space: nowrap;
+	vertical-align: middle;
+	border: solid 1px #AAAAAA;
+	color: black;
+	background-color: #EEEEEE;
+	line-height: 100%;
+	margin: 0;
+	padding: 0;
+	cursor: default;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	box-shadow: 3px 3px 7px rgba(0,0,0,0.4);
+	-webkit-box-shadow: 3px 3px 7px rgba(0,0,0,0.4);
+	-moz-box-shadow: 3px 3px 7px rgba(0,0,0,0.4);
+}
+.menu-button-disabled{
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}
+.menu-button, .menu-button-active{
+	font-size: 100%;
+	padding: 0;
+}
+.menu-button{
+	border-right-color: black;
+	border-bottom-color: black;
+}
+.menu-button-active{
+	border-left-color: black;
+	border-top-color: black;
+}
+/* IE6 - fix button padding */
+* html button.menu-button, * html button.menu-button-active, * html button.menu-button-disabled {
+	overflow: visible;
+	width: 1px;
+}
+/* IE7 - fix button padding  */
+*+html button.menu-button, *+html button.menu-button-active, *+html button.menu-button-disabled {
+	overflow: visible;
+}
+.menu-button-notitle{
+	width: 2em;
+}
+.menu-plane{
+	font-size: 90%;
+	min-width: 13em;
+}
+/* IE6 - fix needs alternative width (100% in table cell otherwise) */
+* html .menu-plane {
+	overflow: visible;
+	width: 13em;
+}
+.menu-plane A{
+	cursor: default;
+	text-decoration: none;
+	display: block;
+}
+/* IE6 - fix needs alternative width (100% in table cell otherwise) */
+* html .menu-plane AAAA{
+	position: relative;
+}
+.menu-plane HR{
+	margin:0;
+	padding:0;
+}
+.menu-element, .menu-element-active{
+	position: relative;
+	display: block;
+	padding: 3px 1.3em 4px 1.6em;
+}
+.menu-element{
+	background-color: #eeeeee;
+	color: black;
+}
+.menu-element > A{
+	color: #000000;
+}
+.menu-element-active{
+	background-color: #3875D7;
+	color: white;
+}
+.menu-element-active > A{
+	color: white;
+}
+.menu-button > .menu-element, .menu-button-active > .menu-element-active, NOSCRIPT > .menu-element, NOSCRIPT > .menu-element-active{
+	padding: 1px 1em 1px 1.1em;
+	height: 1.1em;
+	background-color: #eeeeee;
+	color: black;
+}
+.menu-button > .menu-element-active, .menu-button-active > .menu-element{
+	padding: 1px 1em 1px 1.1em;
+	height: 1.1em;
+	background-color: #3875D7;
+	color: white;
+}
+.menu-plane img, 
+.menu-button > .menu-element > img, 
+.menu-button > .menu-element-active > img, 
+.menu-button-active > .menu-element-active > img, 
+NOSCRIPT > .menu-element > img, 
+NOSCRIPT > .menu-element-active > img {
+	position: absolute;
+	left: 1px;
+	top: 1px;
+	border: none;
+	width: 1em;
+	height: 1em;
+}
+.menu-plane img{
+	left: 4px;
+	top: 3px;
+}
+/* IE6 - fix needs alternative positioning */
+* html .menu-plane img {
+	left: -19px;
+}
+.menu-button-notitle img{
+	position: static;
+	margin-left: 1px;
+	margin-top: 1px;
+}
+.menu-plane span, 
+.menu-button > .menu-element > span, 
+.menu-button > .menu-element-active > span, 
+.menu-button-active > .menu-element-active > span,
+NOSCRIPT > .menu-element > span,  
+NOSCRIPT > .menu-element-active > span{
+	position: absolute;
+	right: 2px;
+	top: 3px;
+	font-size: 80%;
+	line-height: 15px;
+}
+.menu-plane span{
+	top: 4px;
+}
+.menu-element hr, .menu-element-active hr{
+	line-height: 0;
+	border: none;
+	border-top: 1px solid black;
+	position: absolute;
+	display: block;
+	top: 45%;
+	left: 10%;
+	padding: 0;
+	margin: 0;
+	width: 80%;
+}
+
+.menu-button-notitle .menu-element, .menu-button-notitle .menu-element-active{
+	padding: 1px 0 1px 18px;
+}
+.menu-button-disabled{
+	border: solid 1px #CCCCCC;
+	background-color: #CCCCCC;
+}
+.menu-button-disabled, .menu-button-disabled img{
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+}

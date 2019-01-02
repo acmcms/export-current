@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Layout: FormRadio</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawLayout</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="name" class="string" default="DFormSelect"/>
+			<field id="options" class="map"/>
+			<field id="selected" class="string"/>
+			<field id="withNull" class="boolean" default="false"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var selectedKey;
+			if( selected ) {selectedKey = selected;}
+			if( HashFilled( options ) ) {
+				for( var option in options.entrySet() ){
+					%><input type="radio" class="radio" name="<%= name %>" value="<%= option.key %>"<%= selectedKey == option.key ? ' selected' : '' %>> <%= option.value %><br/><%
+				}
+			}
+		]]></script>
+	</command>
+</type>

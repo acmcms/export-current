@@ -1,0 +1,450 @@
+<%
+%><%EXEC: urlPrefix = require('ru.acmcms.internal/ctrl-temp-ie6').mainUrlPrefix();
+
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add('shared-editor_style') %><%
+%><%EXEC: requireCss.add('shared-editor_popup-style') %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add("require") %><%
+%><%EXEC: requireJs.add("app/Router") %><%
+%><%EXEC: requireJs.add("Utils/Cookies") %><%
+%><%EXEC: requireJs.add("Utils/Event") %><%
+%><%EXEC: requireJs.add("Utils/Comms") %><%
+%><%EXEC: requireJs.add("app/Containers") %><%
+
+%><%OUTPUT: head %><%
+	%><!-- version: 1 --><%
+	%><%EXEC: finderFlag = true %><%
+	%><%IF: Request.path %><%
+		%><%EXEC: path = Runtime.getLinkagePrivatePath(Request.path) %><%
+		%><%EXEC: pathLink = path.endsWith('/') ? path.substring(0, path.length() - 1) : path %><%
+		%><%EXEC: pathLink = substr(pathLink,0,lastIndexOf(pathLink,'/')) %><%
+		%><%EXEC: finderFlag = indexOf(Request.path,'/_finder/') >= 0 %><%
+	%><%/IF%><%
+	
+	%><%EXEC: lastPath = pathLink || Session.getParameters().pathLink || '' %><%
+
+
+	%><style><%
+		%><%FORMAT: 'css' %>
+			IFRAME{
+				position:absolute;
+				left:0;
+				top:0;
+				width:100%;
+				height:100%;
+				background-color:white;
+				
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+				-ms-box-sizing: border-box;
+				box-sizing: border-box;
+			}
+		<%/FORMAT%><%
+	%></style><%
+
+	%><SCRIPT><%
+		%><%EXEC: cookie = "treeLinkWidth" %><%
+		%><%FORMAT: 'js' %>
+			router = new app.Router("link");
+			params = window.dialogArguments;
+
+			function getMainFrameset(){
+				var W = parseInt(Utils.Cookies.read(<%= Format.jsString( cookie ) %>, "")) || 280;
+				var cols = (W && W != Number.NaN ? W : 280) + "px,*";
+				return	'<%FORMAT: 'html' %><%
+					%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd"><%
+					%><html><%
+						%><head><%
+							%><META HTTP-EQUIV="Pragma" CONTENT="no-cache"><%
+							%><META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, maxage=0, s-maxage=0"><% 
+							%><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8"><%
+							%><title>Listing/Form</title><%
+							%><style><%
+								%>BODY,HTML,FRAMESET{<%
+									%>font-family: Tahoma, Arial;<%
+									%>width: 100%;<%
+									%>height: 100%;<%
+									%>padding: 0;<%
+									%>margin: 0;<%
+									%>border: 0;<%
+									%>overflow: hidden;<%
+									%>background-color: buttonface;<%
+								%>}<%
+							%></style><%
+							%><script><%
+								%><%CODE: 'ACM.ECMA' %>
+									var response = Request.querySkin({
+										timeout		: 0,
+										verb		: "GET",
+										skinner		: "skin-jsclient",
+										resource	: "/js/require.js",
+										attributes	: {
+											"User-Agent" : "Local"
+										}
+									});
+									require = response ? response.toCharacter().text : "Not found";
+									(!response || response.getCode() != 200) && 
+										(require = "alert(\"FATAL: require.js error: " + Format.jsStringFragment( require ) + "\")");
+								<%/CODE%><%
+								%><%= Format.jsStringFragment( require ) %><%
+							%></'+'script><%
+							%><script><%
+								%><%FORMAT: 'xml' %>
+									require("Utils.Cookies");
+									require("Utils.Event");
+
+									cols = (
+										W = parseInt(Utils.Cookies.read(<%= Format.jsString( cookie ) %>, "")) || 280,
+										(W > 10 ? W : 280) + "px,*"
+									);
+
+									allDone = false;
+									
+									initAll = function initAll(){
+										if(allDone){
+											top.debug && top.debug("root: initAll skipped");
+											return;
+										}
+										allDone = true;
+										(window.router = parent.router) || null("Expect a router!");
+										var tree = document.getElementById("tree");
+										tree.parentNode.setAttribute("cols", tree.parentNode.prevCols = tree.parentNode.cols = cols);
+										tree.status = parseInt(tree.parentNode.prevCols) > 10 
+											? "shown" 
+											: "hidden";
+										Utils.Event.listen(tree.parentNode,"resize", keepWinSize);
+										Utils.Event.listen(tree,"resize", keepWinSize);
+										/* opera cannot stand this 8-( tree.contentWindow && Utils.Event.listen(tree.contentWindow,"resize", keepWinSize); */
+
+										var list = document.getElementById("list");
+										list.entryType = "form";
+										list.router = router;
+										list.onFire = function(eType,eValue){
+											switch(eType){
+												case "treeChange":
+													top.debug && top.debug("root-form: treeChange, path=" + eValue.path);
+													/* this.contentWindow.location.replace("defaultAction?path=" + eValue.path); */
+													this.src = "<%= Format.jsStringFragment(urlPrefix) %>listing.htm?mode=link&path=" + eValue.path;
+													break;
+												case "setLocation":
+													top.debug && top.debug("root-form: setLocation, src=" + eValue);
+													/* this.contentWindow.location.replace(eValue); */
+													this.src = eValue;
+													break;
+											}
+										};
+										router.register(list, list, "tree");
+										router.register(list, list, "sysmenu");
+									};
+									
+									switchLeftFrame = function switchLeftFrame(){
+										var o = document.getElementById("tree");
+										o.status == "hidden" 
+											? showLeftFrame()
+											: hideLeftFrame();
+									};
+									
+									hideLeftFrame = function hideLeftFrame(){
+										var o = document.getElementById("tree");
+										if (o.status == "hidden"){
+											return;
+										}
+										o.status = "hidden";
+										o.parentNode.prevCols = o.parentNode.cols;
+										o.parentNode.cols = "0,*";
+										keepWinSize();
+									};
+									
+									showLeftFrame = function showLeftFrame(){
+										var o = document.getElementById("tree");
+										if (o.status != "hidden"){
+											return;
+										}
+										o.status = "shown";
+										o.parentNode.cols = parseInt(o.parentNode.prevCols) > 10 
+											? o.parentNode.prevCols 
+											: "280px,*";
+										keepWinSize();
+									};
+									
+									resizeTimer = false;
+									keepWinSize = function keepWinSize(){
+										var o = document.getElementById("tree");
+										if(o.prevWidth && o.offsetWidth == o.prevWidth){
+											return;
+										}
+										clearTimeout(resizeTimer);
+										resizeTimer = setTimeout(putWinSizeInCookies, 1000);
+									};
+									
+									putWinSizeInCookies = function putWinSizeInCookies(){
+										var o = document.getElementById("tree");
+										o.prevWidth = o.offsetWidth;
+										o.status = parseInt(o.parentNode.prevCols) > 10 
+											? "shown" 
+											: "hidden"; 
+										Utils.Cookies.create(<%= Format.jsString( cookie ) %>, o.offsetWidth, 3650);
+									};
+
+									Utils.Event.listen(document, "DOMContentLoaded", initAll);
+									Utils.Event.listen(window, "load", initAll);
+									
+								<%/FORMAT%><%
+							%></'+'script><%
+						%></head><%
+							// no BODY for FRAMESET pages!
+						%><frameset<%
+							%> cols="' + cols + '"<%
+							%> framespacing="5"<%
+							%> border="5"<%
+							%> topmargin="0"<%
+							%> leftmargin="0"<%
+							%> marginheight="0"<%
+							%> marginwidth="0"<%
+							%> onload="setTimeout(function(){initAll();},0)"<%
+							%> onresize="setTimeout(function(){keepWinSize();},0)"<%
+						%>><%
+							%><frame<%
+								%> SRC="<%= Format.jsStringFragment(
+									Format.xmlAttributeFragment(
+										urlPrefix + 'treeContainer.htm?mode=link&path=' + (lastPath || '/') 
+									)
+								) %>"<%
+								%> id="tree"<%
+								%> name="tree"<%
+								%> frameborder="0"<%
+								%> topmargin="0"<%
+								%> leftmargin="0"<%
+								%> marginheight="0"<%
+								%> marginwidth="0"<%
+								%> onresize="setTimeout(function(){keepWinSize();},0)"<%
+							%>><%
+							%><frame<%
+								%> SRC="<%= Format.jsStringFragment(
+									Format.xmlAttributeFragment(
+										urlPrefix + 'listing.htm?mode=link&path=' + (lastPath || '/')
+									)
+								) %>"<%
+								%> id="list"<%
+								%> name="list"<%
+								%> frameborder="0"<%
+								%> topmargin="0"<%
+								%> leftmargin="0"<%
+								%> marginheight="0"<%
+								%> marginwidth="0"<%
+							%>><%
+						%></FRAMESET><%
+						%><script><%
+							// new thread
+							%>setTimeout(function(){initAll();},0);<%
+						%></'+'script><%
+					%></html><%
+				%><%/FORMAT%>';
+			}
+		
+			function SetDefaults(){
+				if(params){
+					if (params.path){
+						document.getElementById("URL").value	 = params.path;
+						if(params.path.indexOf('/_finder/') < 0) finderFlag.checked = false;
+					}
+					params.title && (document.getElementById("title").value	 = params.title);
+					params.target && (document.getElementById("target").value	 = params.target);
+				}
+				<%IF: path %>
+					document.getElementById("URL").value = <%= Format.jsString( path ) %>;
+				<%/IF%>
+			}
+
+			function SubMit(){
+				var value = document.getElementById("URL").value; 
+				var full = value.indexOf('mailto:') == 0 || value.indexOf('http:') == 0 || value.indexOf('https:') == 0 || value.indexOf('ftp:') == 0;
+				if(full){
+					return ReturnUrl(value);
+				}
+				document.body.executed = function(element){
+					ReturnUrl(element.result);
+				};
+				Containers.executeXmlQuery(
+					document.body, 
+					"Runtime.getLinkagePublicUrl.htm?"+(finderFlag.checked ? "mode=finder&" : "")+"path="+value,
+					null
+				);
+			}
+			
+			function ReturnUrl(arg){
+				var result = {
+					path	: arg,
+					title	: document.getElementById("title").value,
+					target	: document.getElementById("target").value
+				};
+				window.returnValue = result;
+				window.close();
+			}
+			
+			
+			function SwitchView(){
+				var myTable = document.getElementById("myTable");
+				if (!myTable.viewFlag){
+					window.frame || (
+						frame = (
+							require("Utils.Comms"),
+							Utils.Comms.createFrameStatic(
+								document.getElementById("mainframediv"),
+								getMainFrameset()
+							)
+						)
+					);
+					myTable.viewFlag = true;
+					myTable.rows[0].cells[0].style.display = '';
+					myTable.height = '100%';
+					myTable.style.height = '100%';
+					if(window.dialogHeight !== undefined){
+						var h = Number(window.dialogHeight.split('px')[0]) + 250;
+						window.dialogHeight = h+'px';
+					}
+					return;
+				}
+			}
+		<%/FORMAT%><%
+	%></SCRIPT><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body><%
+		%><table id=myTable border=0 cellpadding=0 cellspacing=2 width=100%><%
+			%><tr><%
+				%><td style="display:none" height=100%><%
+					%><div id="mainframediv" style="position:relative;width:100%;height:100%;overflow:hidden"><%
+					%></div><%
+				%></td><%
+			%><tr><%
+			
+			%><tr><%
+				%><td height=10><%
+					%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+					%><tr><%
+						%><td class=t3 nowrap><%
+							%><%= intl(en="Document path",ru="Путь объекта") %>:&nbsp;<%
+						%></td><%
+						%><td width=100%><%
+							%><input id=URL name=URL type=text class=input2 style="width:100%"><%
+						%></td><%
+						%><td><%
+							%><button class=button1 onclick="SwitchView()" style="margin-left:3px"><%
+								%>...<%
+							%></button><%
+						%></td><%
+					%></tr><%
+					%></table><%
+				%></td><%
+			%></tr><%
+			%><tr><%
+				%><td height=10><%
+					%><fieldset class=BorderBox width=100% style="position:relative;width:100%;overflow:hidden;"><%
+						%><LEGEND class=legend1><%
+							%><%= intl(en="Attributes",ru="Атрибуты") %><%
+						%></LEGEND><%
+						%><table border=0 cellpadding=0 cellspacing=8 style="margin:3px;width:100%;"><%
+							%><tr><%
+								%><td class=t3 nowrap><%
+									%><%= intl(en="Title",ru="Заголовок") %>:&nbsp;<%
+								%></td><%
+								%><td style="width:100%"><%
+									%><input type=text id="title" name="title" style="width:100%"><%
+								%></td><%
+								%><td class=t3 nowrap><%
+									%>&nbsp;&nbsp;<%= intl(en="Target",ru="Открывать") %>:&nbsp;<%
+								%></td><%
+								%><td><%
+									%><select id="target" name="target" class=input2 style="width:80px"><%
+										%><option value=""></option><%
+										%><option value="_self"><%= intl(en="self",ru="в том же") %></option><%
+										%><option value="_parent"><%= intl(en="parent",ru="в родительском") %></option><%
+										%><option value="_top"><%= intl(en="top",ru="в верхнем") %></option><%
+										%><option value="_blank"><%= intl(en="blank",ru="в новом") %></option><%
+									%></select><%
+								%></td><%
+							%></tr><%
+						%></table><%
+					%></fieldset><%
+				%></td><%
+			%></tr><%
+			
+			
+			
+			%><tr><%
+				%><td align=right height=30><%
+					%><table border=0 cellpading=0 cellspacing=0 width=100%><%
+						%><tr><%
+							%><td width=100%><%
+								%><table border=0 cellpading=0 cellspacing=0><%
+									%><tr><%
+										%><td><%
+											%><input type="checkbox" id="finderFlag" name="finderFlag"<%IF: finderFlag %> checked<%/IF%>><%
+										%></td><%
+										%><td nowrap><%
+											%><label for="finderFlag"><%
+												%><%= intl( en = "As finder index", ru = "Подставлять FINDER" ) %><%
+											%></label><%
+										%></td><%
+									%></tr><%
+								%></table><%
+							%></td><%
+							%><td style="padding-left:20px"><%
+								%><nobr><%
+									%><button class=button3 onclick="SubMit()"><%
+										%>&nbsp;&nbsp;<%= intl( en = "OK", ru = "ОК" ) %>&nbsp;&nbsp;<%
+									%></button><%
+									%>&nbsp;<%
+									%><button class=button3 onclick="window.returnValue = false; window.close()"><%
+										%><%= intl( en = "Cancel", ru = "Отменить" ) %><%
+									%></button><%
+								%></nobr><%
+							%></td><%
+						%></tr><%
+					%></table><%
+				%></td><%
+			%></tr><%
+		%></table><%
+	
+		%><SCRIPT><%
+			%><%FORMAT: 'js' %>
+				SetDefaults();
+				var oForm = {
+					onFire : function(eType,eValue){
+						switch(eType){
+							case 'ObjectSelect':
+								document.getElementById("URL").value = eValue.path + eValue.id;
+								break;
+							case 'treeChange':
+								document.getElementById("URL").value = eValue.path;
+								break;
+						}
+					}
+				};
+				
+				router.register(oForm, document, 'form');
+				router.register(oForm, document, 'tree');
+			
+			<%/FORMAT%><%
+			%><%IF: Request.mode == 'open' %><%
+				%>SwitchView();<%
+			%><%/IF%><%
+		%></SCRIPT><%
+	
+	%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: Request.mode == "open"
+			? intl( en = "Picker", ru = "Выбрать" )
+			: intl( en = "Address", ru = "Адрес" ),
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

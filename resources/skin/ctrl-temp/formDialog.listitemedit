@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML><%
+%><head><%
+	%><TITLE>Edit list item</TITLE><%
+	%><%INCLUDE: 'include-head' %><%
+	%><script id="scriptRequire" src="client/js/require.js"></script><%
+
+	%><script><%
+		%>requireScript("app/Zakladki.js");<%
+		%>requireStyle('zakladki.css');<%
+		%>requireScript("app/Dom.js");<%
+		%>requireStyle('editor_style.css');<%
+		%>requireStyle('editor_popup-style.css');<%
+	%></style><%
+	
+	%><script>
+	function Submit(){
+		var cTab = (tabulator1.currentTabIndex || 0);
+		document.getElementById("form"+cTab).submit();
+	}
+	
+	function onDone(obj){
+		if(obj){
+			switch(obj.type){
+			case 'error' :
+				alert(obj.error);
+				break;
+			default:
+				window.dialogArguments && dialogArguments.sender && dialogArguments.sender.refresh();
+				window.close();
+			}
+		}else{
+			alert('error');
+		}
+	}
+	
+	</script><%
+%></head><%
+%><body><%
+
+%><%EXEC: form = Session[Request.id] %><%
+%><%EXEC: data = form.data %><%
+%><%EXEC: fieldName = Request.data %><%
+%><%EXEC: fieldset = data.fieldset %><%
+%><%EXEC: field = fieldset.getField(fieldName) %><%
+%><%EXEC: keyName = Request.index%><%
+%><%EXEC: target = {} %><%
+%><%EXEC: target[ fieldName ] = field.dataRetrieve( data.getData()[ fieldName ], data.getData() ) %><%
+%><%EXEC: list = target[ fieldName ] %><%
+
+%><table border=0 cellpadding=0 cellspacing=0 width=100% height=100%><%
+	%><tr><%
+		%><td></td><%
+	%></tr><%
+	%><tr><%
+		%><td height=100%><%
+			%><table border=0 cellpadding=0 cellspacing=0 width=100% height=100%><%
+				%><tr><%
+					%><td><%
+						%><table border=0 cellpadding=0 cellspacing=0 class=zakladka width=100% id=tabulator1><%
+							%><tr><%
+								%><td><script>document.write(app.Zakladki.tabSplitter3)</script></td><%
+								%><td class=TabOn id="holder" onclick="app.Zakladki.SwitchTab(this)" nowrap><div><%=intl(en="String value", ru="Строковое значение") %></div></td><%
+								%><td><script>document.write(app.Zakladki.tabSplitter4)</script></td><%
+								%><td class=TabOff id="holder" onclick="app.Zakladki.SwitchTab(this)" nowrap><div><%=intl(en="Binary value / upload a file", ru="Бинарное значение / файл") %></div></td><%
+								%><td><script>document.write(app.Zakladki.tabSplitter5)</script></td><%
+								%><td style="width:100%"></td><%
+							%></tr><%
+							%><tr class=border><%
+								%><td class=TabOffl><img width=0 height=0></td><%
+								%><td><img width=0 height=0></td><%
+								%><td class=TabOffr><img width=0 height=0></td><%
+								%><td class=TabOn><img width=0 height=0></td><%
+								%><td class=TabOn><img width=0 height=0></td><%
+								%><td class=TabOn><img width=0 height=0></td><%
+								%><td class=TabOn><img width=0 height=0></td><%
+								%><td class=TabOn><img width=0 height=0></td><%
+							%></tr><%
+						%></table><%
+					%></td><%
+				%></tr><%
+				%><tr><%
+					%><td height=100%><%
+						%><table border=0 cellpadding=0 cellspacing=0 width=100% style="border-left: 1px solid buttonhighlight; border-right: 1px solid buttonshadow; border-bottom: 1px solid buttonshadow; padding:5px; height:100%"><%
+							%><tr><%
+								%><td valign=top><%
+									%><form id=form0 target=buffer action="form.command?type=form&id=<%=Request.id%>&command=listset&data=<%=Request.data%>&keyname=<%=keyName%>" method=post enctype="multipart/form-data"><%
+										%><table border=0 cellpadding=0 cellspacing=1 width=100% style="margin-bottom:5px"><%
+											%></tr><%
+												%><td class=th nowrap><%= intl( en = "Enter value", ru = "Значение" ) %>:</td><%
+												%><td width=100%><INPUT type=text name=value value="<%= Format.xmlAttributeFragment( list[Integer(keyName)] ) %>" style="width:100%"></td><%
+											%></tr><%
+										%></table><%
+									%></form><%
+								%></td><%
+							%></tr><%
+							%><tr style="display:none"><%
+								%><td valign=top><%
+									%><form id=form1 target=buffer action="form.command?type=form&id=<%=Request.id%>&command=listset&data=<%=Request.data%>&keyname=<%=keyName%>" method=post enctype="multipart/form-data"><%
+									%><table border=0 cellpadding=0 cellspacing=1 width=100% style="margin-bottom:5px"><%
+										%></tr><%
+											%><td class=th nowrap><%= intl( en = "Select a file", ru = "Файл" ) %>:</td><%
+											%><td width=100%><INPUT type=file name=value style="width:100%"></td><%
+										%></tr><%
+									%></table><%
+									%></form><%
+		
+								%></td><%
+							%></tr><%
+						%></table><%
+					%></td><%
+				%></tr><%
+			%></table><%
+
+		
+		%></td><%
+	%></tr><%
+	%><tr><%
+		%><td align=right style="padding:10px 0 4px 0"><%
+			%><BUTTON onclick="Submit()">&nbsp;<B><%= intl( en = "Set", ru = "Присвоить" ) %></B>&nbsp;</BUTTON><%
+			%>&nbsp;<%
+			%><BUTTON ONCLICK="window.close();">&nbsp;<%= intl( en = "Cancel", ru = "Отмена" ) %>&nbsp;</BUTTON><%
+		%></td><%
+	%></tr><%
+%></table><%
+
+
+%><iframe name=buffer id=buffer border=0 frameborder=no width=1 height=1 scrolling=no src="" style="position:absolute; left:0; top: -20; visibility:hidden;"></iframe><%
+
+%></body><%
+%></HTML>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Static: Entry State Switcher</title>
+	<visibility>hidden</visibility>
+	<icon>types</icon>
+
+	<command>
+		<type>view</type>
+		<key>startTest</key>
+		<title class="string">Тест</title>
+		<icon class="string">command-run</icon>
+		<export>true</export>
+		<static>true</static>
+		<enable class="expression"><![CDATA[
+			true
+		]]></enable>
+		<execute>always</execute>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return TestStatic.getForm1();
+		]]></script>
+	</command>
+	<command>
+		<key>getForm1</key>
+		<static>true</static>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return Control.createSimpleForm(
+				"title",
+				{guid: "ggggg"},
+				TestStatic.getForm1FieldSet(),
+				function(commandId){
+					return commandId === 'close' 
+						? null 
+						: TestStatic.getForm2(this.message);
+				}
+			);
+		]]></script>
+	</command>
+	<command>
+		<key>getForm1FieldSet</key>
+		<static>true</static>
+		<script class="script" type="ACM.FIELDSET"><![CDATA[
+			<fields class="fieldset">
+				<field 	class="string"
+						id="message"
+						title="Cообщение"
+						max="256"
+						hint="глобальное сообщение по всему сайту"
+				/>
+				<field 	class="string"
+						id="body"
+						type="text"
+						variant="html"
+						title="Тело"
+						max="1m"
+						hint="тело главной страницы, если пусто то редирект"
+				/>
+			</fields>
+		]]></script>
+	</command>
+
+	<command>
+		<key>getForm2</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field class="string" id="message"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return Control.createSimpleForm(
+				"title",
+				{body: message},
+				TestStatic.getForm2FieldSet(),
+				function(data){
+					if(this.message){
+						return null;
+					}
+					return TestStatic.getForm1();
+				}
+			);
+		]]></script>
+	</command>
+	<command>
+		<key>getForm2FieldSet</key>
+		<static>true</static>
+		<script class="script" type="ACM.FIELDSET"><![CDATA[
+			<fields class="fieldset">
+				<field 	class="boolean"
+						id="message"
+						title="Cообщение"
+						hint="глобальное сообщение по всему сайту"
+				/>
+				<field 	class="string"
+						id="body"
+						type="text"
+						variant="html"
+						title="Тело"
+						max="1m"
+						hint="тело главной страницы, если пусто то редирект"
+				/>
+			</fields>
+		]]></script>
+	</command>
+</type>

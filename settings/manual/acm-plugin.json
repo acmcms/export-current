@@ -1,0 +1,6 @@
+{
+	type : "ae3.Manual",
+	title : "ACM Extra Plugins",
+	name : "acm-plugin",
+	group : "acm.cms",
+}

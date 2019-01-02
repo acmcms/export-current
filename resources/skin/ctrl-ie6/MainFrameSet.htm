@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE> <%=Runtime.getSystemName()%> </TITLE><%
+	%>
+
+<script id="Cookies" src="Cookies.js"></script>
+<script>
+
+eventMethods = parent.eventMethods;
+Windows = parent.Windows;
+
+function switchLeftFrame(){
+	var o = document.getElementById('tree');
+	if (o.status != "hidden") hideLeftFrame();
+	else showLeftFrame();
+}
+
+function hideLeftFrame(){
+	var o = document.all('tree');
+	o.status = "hidden";
+	o.parentNode.prevCols = o.parentNode.cols
+	o.parentNode.cols = "0,*";
+}
+
+function showLeftFrame(){
+	var o = document.getElementById('tree');
+	if (o.status != "hidden") return;
+	o.status = "visibility";
+	o.parentNode.cols = o.parentNode.prevCols;
+}
+
+function Start(){
+	var obj = document.all('list');
+	obj.entryType = 'form';
+//	obj.eventMethods = eventMethods;
+	obj.onFire = function(eType,eValue){
+		switch(eType){
+			case "treeChange":
+//				this.src = "NewForm.htm?src=" + eValue['path'];
+				this.src = "defaultAction?path=" + eValue['path'];
+				break;
+			case "setLocation":
+				this.src = eValue;
+				break;
+		}
+	}
+	eventMethods.register(obj,'tree');
+	eventMethods.register(obj,'sysmenu');
+//	obj.onFire("treeChange",{'path':'/'});
+}
+
+var resizeTimer = false;
+function keepWinSize(){
+	var o = document.all('tree');
+	if(o.prevWidth && o.offsetWidth == o.prevWidth) return;
+	clearTimeout(resizeTimer);
+	resizeTimer = setTimeout("putWinSizeInCookies()",1000)
+}
+
+function putWinSizeInCookies(){
+	var o = document.all('tree');
+	o.prevWidth = o.offsetWidth;
+	if(o.offsetWidth > 0) o.status = "visibility";
+	setCookie('treeWidth',o.offsetWidth);
+}
+
+
+
+</script>
+
+<%EXEC:lastPath = Request.path || Session.getParameters().path %>
+</HEAD>
+<script>
+	var W = getCookie('treeWidth');
+	if(!W) W = 280;
+	document.write('<FRAMESET COLS="' + W + ',*" border="1" frameborder="1" FRAMESPACING="5" TOPMARGIN="0" LEFTMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" onload="Start()"><FRAME SRC="treeContainer.htm" id=tree NAME="tree" TOPMARGIN="0" LEFTMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" FRAMEBORDER="no" BORDER="1" onresize="keepWinSize()"><FRAME SRC="<%=lastPath ? 'defaultAction?path=' + lastPath : 'defaultAction'%>" id=list NAME="list" FRAMEBORDER="no" BORDER="0" BORDERCOLOR="buttonface"></FRAMESET>');
+</script>
+</HTML>
+

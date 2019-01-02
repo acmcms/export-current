@@ -1,0 +1,17 @@
+{
+	onLayoutExecute : function(context, layout) {
+		/**
+		 * TODO: unfinished / unused
+		 */
+		switch(context.zoom) {
+		case null:
+		case undefined :
+		case 'document':
+			return require('ae3.l2.xml/helper').makeSelectViewReply(context, layout);
+		}
+		/**
+		 * pass to upper layout group
+		 */
+		return layout;
+	}
+}

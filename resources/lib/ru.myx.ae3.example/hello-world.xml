@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?>
+<xml namespacePrefix="" layout="documentation">
+	<title>Hello World Example Manual</title>
+	
+	<article>
+		<name>What is 'Hello-World' example?</name>
+		<text>
+			<paragraph>Hello-World example is an ae3 package designed with sole purpose
+			of serving as an example complementing the system's documentation. It registers
+			many system interfaces and has some dummy implementations for developers to
+			be able to see what we are talking about in manuals.</paragraph>
+		</text>
+	</article>
+	
+</xml>

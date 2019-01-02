@@ -1,0 +1,29 @@
+<%
+%><%OUTPUT: body %><%
+	%><body BGCOLOR="buttonface" scroll="no" style="cursor:default; padding:10px" class="BorderBox"><%
+		%><table border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%; padding:3px" class="BorderBox"><%
+			%><tr><%
+				%><td valign=top><%
+					%><img src="icons/status-error.32.gif"><%
+				%></td><%
+				%><td valign=top style="padding-top:12px" width=100%><%
+					%><h1><%= Flags.ContentBody || "Error" %></h1><%
+				%></td><%
+			%></tr><%
+			%><tr><%
+				%><td height=100% colspan=2><%
+					%><textarea wrap=off style="width:100%; height:100%; background-color:window; font-size:9pt" class=FrameBorder><%
+						%><%= Format.throwableAsPlainText(Flags.exception) %><%
+					%></textarea><%
+				%></td><%
+			%></tr><%
+		%></table><%
+	%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: "ACM.CMS : ERROR",
+		template	: "html-page",
+		requireCss	: ['frames'],
+		body		: body
+	} %><%
+%>

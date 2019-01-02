@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+	 attributeFormDefault="unqualified"
+	 elementFormDefault="qualified"
+	 version="1.0"
+	 xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="settings" type="beresiteType" />
+  <xs:complexType name="beresiteType">
+    <xs:sequence>
+      <xs:element name="type" type="xs:string" />
+      <xs:element name="prototype" type="xs:string" />
+      <xs:element name="charset" type="xs:string" />
+
+      <xs:element minOccurs="0" maxOccurs="1" name="responsible" type="responsibleType" />
+
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="meta" type="metaType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="keywords" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="description" type="xs:string" />
+      <xs:element name="title" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="header" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="section" type="sectionType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="footer" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="sectionType">
+    <xs:sequence>
+      <xs:element name="title" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="text" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="keywords" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="description" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="section" type="sectionType" />
+    </xs:sequence>
+    <xs:attribute use="optional" name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="metaType">
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="content" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="responsibleType">
+    <xs:attribute use="optional" name="class" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

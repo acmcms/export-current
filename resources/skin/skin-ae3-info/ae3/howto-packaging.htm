@@ -1,0 +1,51 @@
+<html><body><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<p>
+			Packages do generally consist of executable code, some data and several
+			service registration files. There are 'resource' and 'settings' folders
+			allowed in the root of ae3 package, so all package contents must be
+			located in either of those two folders.
+		</p>
+		<p>
+			The executable code can be either in form of <a href="http://wiki.commonjs.org/wiki/Modules/1.1.1">CommonJS</a>
+			java script library or/and in form of <a href="http://java.com">Java</a> 
+			jar file. CommonJS libraries should be located in 'resource/lib' hierarchy
+			in form of 'library_name/jsApi_name.js' related internal scripts and data
+			may be located in the same folder or it's sub-folders (for example: 
+			'ru.myx.farm.dns' library with 'DnsWebService.js' web service and other 
+			files related to implementation of given service should be located in
+			'resource/lib/ru.myx.farm.dns/' folder.
+		</p>
+		<p>
+			The data may contain images, manuals, etc. Those files, depending on their 
+			relation to the whole package, to package libraries should be located
+			either in package's  folder, either in CommonJS library folder, either
+			in some cases the location could depend on an API requirement, like 
+			'resource/skin/' folder contain all the skins.
+		</p>
+		<p>
+			Service registration files are called <a href="descriptors.htm">descriptors</a> 
+			and are used to specify properties to extensible interfaces provided 
+			by ae3 system and other packages. They are JSON files and only those 
+			descriptor files are allowed to be present at 'settings' root folder 
+			of any package.
+		</p>
+		<ul>
+			<li>
+				<h3>Other</h3>
+				<ul>
+					<li><a href="/!/skin/skin-ae3-info/">AE3 Information Center</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'AE3 Developer: Packaging in detail',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

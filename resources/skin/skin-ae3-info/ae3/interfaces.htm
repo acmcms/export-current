@@ -1,0 +1,156 @@
+<html><body><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<p>
+			Some major interfaces, i.e. sets of methods object should support. 
+			You need to implement some methods and properties in your objects to
+			claim that your object supports given interface. Then system will be 
+			able to interact with your objects.
+		</p>
+		<ul>
+			<li>
+				<h3>Contents</h3>
+				<ul>
+					<li><a href="#executable">Executable interface</a></li>
+					<li><a href="#service">System Service interface</a></li>
+					<li><a href="#share">Web Share Handler interface</a></li>
+				</ul>
+			</li>
+			<li><a name="executable"></a>
+				<h3>ae3/Executable</h3>
+				<p>Task interface is used by 'periodic' service, 'shell' commands.</p>
+				<code>
+<%FORMAT: 'default' %>
+{
+	run : function(),
+	description : string
+}
+<%/FORMAT%>
+				</code>
+				<p>Properties:
+					<ol>
+						<li><b>run</b> mandatory method, called when task is to 
+						be executed. 
+						<!-- <ul>
+							<li><b>console</b> argument is an instance of character 
+							console (used for user i/o, debug output, logging...)</li>
+							<li><b>args</b> argument is an argument object
+							 for a task (depending on circumstances can be NULL,
+							 array, object, etc...)</li>
+						</ul> -->
+						The <b>run</b> method supposed to return <b>true</b> upon
+						successful execution.
+						</li>
+						<!--  <li>getManual method should return text or layout manual</li> -->
+						<li><b>description</b> - optional property for text description.</li>
+					</ol>
+				</p>
+				<p>
+					Example:
+					<code>
+<%FORMAT: 'default' %>
+exports.run = function run(){
+	console.log("Executed, type of arguments :" + (typeof arguments));
+	return true;
+};
+<%/FORMAT%>
+					</code>
+				</p>
+			</li>
+			<li><a name="service"></a>
+				<h3>ae3.Service</h3>
+				<p></p>
+				<code>
+<%FORMAT: 'default' %>
+{
+	start : function(),
+	stop : function(),
+	description : string
+}
+<%/FORMAT%>
+				</code>
+				<p>Properties:
+					<ol>
+						<li><b>start</b> method is called when service is started</li>
+						<li><b>stop</b> method is called when service is stopped</li>
+						<li><b>description</b> - optional property for text description.</li>
+					</ol>
+				</p>
+				<p>
+					Example:
+					<code>
+<%FORMAT: 'default' %>
+var vfs = require('ae3/vfs');
+
+exports.start = function start(){
+	console.log("Service started.");
+};
+
+exports.stop = function stop(){
+	console.log("Service stopped.");
+};
+<%/FORMAT%>
+					</code>
+				</p>
+			</li>
+			<li><a name="share"></a>
+				<h3>ae3.web/Share</h3>
+				<p></p>
+				<code>
+<%FORMAT: 'default' %>
+{
+	// query is context.query
+	handle : function(context),
+	description : string
+}
+<%/FORMAT%>
+				</code>
+				<p>Properties:
+					<ol>
+						<li><b>handle</b> method is called for every query to a web share,
+						the <b>query</b> object will be passed with current query. Method 
+						supposed to return the 'response' an object representing the 
+						result of handler's execution or NULL to indicate that query
+						was not handled by given handler.</li>
+						<li><b>description</b> - optional property for text description.</li>
+					</ol>
+				</p>
+				<p>
+					Example:
+					<code>
+<%FORMAT: 'default' %>
+
+
+module.exports = {
+	handle : function(context) {
+		if(context.query.parameters.layouts){
+			return {
+				layout	: "document",
+				content	: "Hello World!!!"
+			};
+		}
+		return "Hello world!";
+	},
+	description : "'Hello World' example web share handler."
+};
+<%/FORMAT%>
+					</code>
+				</p>
+			</li>
+			<li>
+				<h3>Other</h3>
+				<ul>
+					<li><a href="/!/skin/skin-ae3-info/">AE3 Information Center</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'AE3 Developer: Object Interfaces',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

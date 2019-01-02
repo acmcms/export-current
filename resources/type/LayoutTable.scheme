@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Layout: Table</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawLayout</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="layout" variant="fieldset" class="map">
+				<fieldset class="fieldset">
+					<field id="numbers" class="boolean" default="true"/>
+					<field id="className" class="string"/>
+					<field id="title" class="string"/>
+					<field id="data" class="object"/>
+				</fieldset>
+			</field>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var table = layout.data;
+			var rowNum = 1;
+			var type = HashFilled( table ) ? "map" : ( ArrayFilled( table ) ? "list" : null );
+			%><div class="<%= layout.className ? layout.className : "default_table" %>"><%
+				%><div class="title"><%= layout.title %></div><%
+				if( type ){
+					%><table><%
+						%><tr><%
+							if( layout.numbers ){
+								%><td class="title" width="20">#</td><%
+							}
+							if( type == "map" ){
+								%><td class="title"><b>значение</b></td><%
+								for( var item in table.entrySet() ){
+									for( var header in item.value.entrySet() ){
+										%><td class="title"><b><%= afterPoint( header.key ) %></b></td><%
+									}
+									break;
+								}
+							}else if( type == "list" ){
+								for( var item in table ){
+									for( var header in item.entrySet() ){
+										%><td class="title"><b><%= afterPoint( header.key ) %></b></td><%
+									}
+									break;
+								}
+							}
+						%></tr><%
+						if( type == "map" ){
+							for( var item in table.entrySet() ){
+								var row = item.value;
+								var name = item.key;
+								= LayoutTable.drawRow( name = name, row = row, number = layout.numbers ? rowNum++ : null );
+							}
+						}else if( type == "list" ){
+							for( var item in table ){
+								var row = item;
+								= LayoutTable.drawRow( row = row, number = layout.numbers ? rowNum++ : null );
+							}
+						}
+					%></table><%
+				}
+			%></div><%
+		]]></script>
+	</command>
+
+	<command>
+		<key>getBackGround</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="value" class="integer"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( value < 300 ) { return ' bgcolor="#fff"'; }
+			else if( value < 350 ) { return ' style="background-color:#eee;"'; }
+			else if( value < 500 ) { return ' style="background-color:#ccc;"'; }
+			else if( value < 700 ) { return ' style="background-color:#999;"' ; }
+			else if( value < 1200 ) { return ' style="background-color:#666;color:#fff"'; }
+			else if( value < 3400 ) { return ' style="background-color:#555;color:#fff"'; }
+			return ' style="background-color:#333;color:#fff"';
+		]]></script>
+	</command>
+	
+	<command>
+		<key>drawRow</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="row" class="object"/>
+			<field id="name" class="string"/>
+			<field id="number" class="integer"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><tr><%
+				if( number ){
+					%><td><%= number %></td><%
+				}
+				if( name ){
+					%><td><%= afterPoint( name ) %></td><%
+				}
+				for( var item in row.entrySet() ){
+					%><td<%= item.key == 'avgSpeed' ? LayoutTable.getBackGround( item.value ) : '' %>><%
+						= item.value == "" ? "<i>пусто</i>" : clearHtmlFormatting( item.value );
+					%></td><%
+				}
+			%></tr><%
+		]]></script>
+	</command>
+</type>

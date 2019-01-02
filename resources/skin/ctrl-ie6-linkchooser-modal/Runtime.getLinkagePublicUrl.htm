@@ -1,0 +1,20 @@
+<%
+%><%CODE: 'ACM.ECMA' %>
+	path = Request.path || '/';
+	if( Request.mode == 'finder' ){
+		publicUrl = Runtime.getLinkagePublicUrl(path);
+	}else{
+		cNode = ControlAPI.childForPath(Runtime.getLinkageRootNode(), path);
+		publicUrl = cNode 
+			? cNode.getLocationAbsolute() 
+			: path;
+	}
+<%/CODE%><%
+%><%FINAL: 'text/xml' %><%
+	%><body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}"><%
+		%><XML ID="oMetaData" result="<%= Format.xmlAttributeFragment(publicUrl) %>" type="commandResult" format="XML"><%
+			%><entry type="form" id="<%= guid %>" /><%
+		%></XML><%
+	%></body><%
+%><%/FINAL%><%
+%>	

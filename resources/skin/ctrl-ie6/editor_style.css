@@ -1,0 +1,68 @@
+BUTTON {
+	background-color: buttonface;
+	border-color: buttonhighlight;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding: 0;
+	border-width:1px;
+	color: buttontext;
+}
+
+
+
+.toolbar{
+	width:100%;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+}
+
+.toolbar DIV{
+	display:inline;
+	height:20px;
+	vertical-align: middle;
+	margin-bottom:0px;
+}
+
+.toolbar SPAN{
+	display:inline-block;
+	vertical-align: middle;
+	margin-bottom:0px;
+}
+
+.toolbar DIV IMG{
+	border: buttonface 1px solid;
+}
+
+
+.toolbar .ButtonOver{
+	border-right: solid 1px buttonshadow;
+	border-top: solid 1px buttonhighlight;
+	border-left: solid 1px buttonhighlight;
+	border-bottom: solid 1px buttonshadow;
+}
+
+.toolbar .ButtonActive{
+	background-color:buttonhighlight;
+	border-right: solid 1px buttonhighlight ;
+	border-top:  solid 1px buttonshadow;
+	border-left: solid 1px buttonshadow;
+	border-bottom: solid 1px buttonhighlight;
+}
+
+.toolbar .ButtonDisabled{
+	filter: gray() alpha(opacity=30);
+	border: solid 1px buttonface;
+}
+
+
+
+INPUT, SELECT{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	margin: 0;
+	border-width:1px;
+	border-left-color:buttonshadow;
+	border-top-color:buttonshadow;
+	border-right-color:buttonhighlight;
+	border-bottom-color:buttonhighlight;
+}

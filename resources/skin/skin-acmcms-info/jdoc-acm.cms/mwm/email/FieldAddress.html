@@ -1,0 +1,423 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+<title>FieldAddress (AE3 ACM SAPI)</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="FieldAddress (AE3 ACM SAPI)";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar_top">
+<!--   -->
+</a><a href="#skip-navbar_top" title="Skip navigation links"></a><a name="navbar_top_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../mwm/email/FieldSimple.html" title="class in mwm.email"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../index.html?mwm/email/FieldAddress.html" target="_top">Frames</a></li>
+<li><a href="FieldAddress.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">mwm.email</div>
+<h2 title="Class FieldAddress" class="title">Class FieldAddress</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li><a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">mwm.email.FieldAbstract</a></li>
+<li>
+<ul class="inheritance">
+<li><a href="../../mwm/email/FieldSimple.html" title="class in mwm.email">mwm.email.FieldSimple</a></li>
+<li>
+<ul class="inheritance">
+<li>mwm.email.FieldAddress</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd>java.io.Serializable</dd>
+</dl>
+<hr>
+<br>
+<pre>public final class <span class="strong">FieldAddress</span>
+extends <a href="../../mwm/email/FieldSimple.html" title="class in mwm.email">FieldSimple</a></pre>
+<div class="block">This is a dedicated header field which extends the EmailHeaderField for
+ addresses including header field encoding possibilities. Encoding is
+ performed by a Encoder object which can be specified upon creation of a new
+ address field object. Default encoding is the so called "q" encoding using
+ the "ISO-8859-1" character set.
+ <p>
+ 
+ Multiple addresses will be separated by a ",", a canonical line break and a
+ tab, this behavior is called "folding" and is presented in RFC 822.
+ <p></div>
+<dl><dt><span class="strong">Author:</span></dt>
+  <dd>Lars J. Nilsson</dd>
+<dt><span class="strong">See Also:</span></dt><dd><a href="../../serialized-form.html#mwm.email.FieldAddress">Serialized Form</a></dd></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../mwm/email/FieldAddress.html#FieldAddress(java.lang.String)">FieldAddress</a></strong>(java.lang.String&nbsp;name)</code>
+<div class="block">Construct a new address field with a specified encoder and field name.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><strong><a href="../../mwm/email/FieldAddress.html#FieldAddress(java.lang.String, java.nio.charset.Charset)">FieldAddress</a></strong>(java.lang.String&nbsp;name,
+            java.nio.charset.Charset&nbsp;charset)</code>
+<div class="block">Construct a new address field with a specified encoder and field name.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/FieldAddress.html#addAddress(mwm.email.EmailAddress)">addAddress</a></strong>(<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;address)</code>
+<div class="block">Add an address to this field.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/FieldAddress.html#clearField()">clearField</a></strong>()</code>
+<div class="block">Clear the field by removing all addresses.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/FieldAddress.html#containsAddress(mwm.email.EmailAddress)">containsAddress</a></strong>(<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;address)</code>
+<div class="block">Test if an address exist in this field.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.util.Iterator&lt;<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/FieldAddress.html#getAddresses()">getAddresses</a></strong>()</code>
+<div class="block">Get all addresses as an iteration of EmailAddress objects.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/FieldAddress.html#length()">length</a></strong>()</code>
+<div class="block">Get the number of addresses in this field.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/FieldAddress.html#removeAddress(mwm.email.EmailAddress)">removeAddress</a></strong>(<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;address)</code>
+<div class="block">Remove an address from this field.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/FieldAddress.html#write(java.io.OutputStream)">write</a></strong>(java.io.OutputStream&nbsp;out)</code>
+<div class="block">Write this header field to an output stream.</div>
+</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_mwm.email.FieldSimple">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;mwm.email.<a href="../../mwm/email/FieldSimple.html" title="class in mwm.email">FieldSimple</a></h3>
+<code><a href="../../mwm/email/FieldSimple.html#addParameter(java.lang.String, java.lang.String)">addParameter</a>, <a href="../../mwm/email/FieldSimple.html#getParameterValue(java.lang.String)">getParameterValue</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_mwm.email.FieldAbstract">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;mwm.email.<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a></h3>
+<code><a href="../../mwm/email/FieldAbstract.html#getName()">getName</a>, <a href="../../mwm/email/FieldAbstract.html#getValue()">getValue</a>, <a href="../../mwm/email/FieldAbstract.html#setName(java.lang.String)">setName</a>, <a href="../../mwm/email/FieldAbstract.html#setValue(java.lang.String)">setValue</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="FieldAddress(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>FieldAddress</h4>
+<pre>public&nbsp;FieldAddress(java.lang.String&nbsp;name)</pre>
+<div class="block">Construct a new address field with a specified encoder and field name.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - </dd></dl>
+</li>
+</ul>
+<a name="FieldAddress(java.lang.String, java.nio.charset.Charset)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>FieldAddress</h4>
+<pre>public&nbsp;FieldAddress(java.lang.String&nbsp;name,
+            java.nio.charset.Charset&nbsp;charset)</pre>
+<div class="block">Construct a new address field with a specified encoder and field name.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - </dd><dd><code>charset</code> - </dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="addAddress(mwm.email.EmailAddress)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addAddress</h4>
+<pre>public&nbsp;void&nbsp;addAddress(<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;address)</pre>
+<div class="block">Add an address to this field.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>address</code> - </dd></dl>
+</li>
+</ul>
+<a name="clearField()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clearField</h4>
+<pre>public&nbsp;void&nbsp;clearField()</pre>
+<div class="block">Clear the field by removing all addresses.</div>
+</li>
+</ul>
+<a name="containsAddress(mwm.email.EmailAddress)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>containsAddress</h4>
+<pre>public&nbsp;boolean&nbsp;containsAddress(<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;address)</pre>
+<div class="block">Test if an address exist in this field.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>address</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="getAddresses()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAddresses</h4>
+<pre>public&nbsp;java.util.Iterator&lt;<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&gt;&nbsp;getAddresses()</pre>
+<div class="block">Get all addresses as an iteration of EmailAddress objects. Note that
+ changes made to this iterator will reflect on the field content.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>iterator</dd></dl>
+</li>
+</ul>
+<a name="length()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>length</h4>
+<pre>public&nbsp;int&nbsp;length()</pre>
+<div class="block">Get the number of addresses in this field.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>int</dd></dl>
+</li>
+</ul>
+<a name="removeAddress(mwm.email.EmailAddress)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>removeAddress</h4>
+<pre>public&nbsp;void&nbsp;removeAddress(<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;address)</pre>
+<div class="block">Remove an address from this field.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>address</code> - </dd></dl>
+</li>
+</ul>
+<a name="write(java.io.OutputStream)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>write</h4>
+<pre>public&nbsp;void&nbsp;write(java.io.OutputStream&nbsp;out)
+           throws java.io.IOException</pre>
+<div class="block">Write this header field to an output stream.</div>
+<dl>
+<dt><strong>Overrides:</strong></dt>
+<dd><code><a href="../../mwm/email/FieldSimple.html#write(java.io.OutputStream)">write</a></code>&nbsp;in class&nbsp;<code><a href="../../mwm/email/FieldSimple.html" title="class in mwm.email">FieldSimple</a></code></dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code>java.io.IOException</code></dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar_bottom">
+<!--   -->
+</a><a href="#skip-navbar_bottom" title="Skip navigation links"></a><a name="navbar_bottom_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../mwm/email/FieldSimple.html" title="class in mwm.email"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../index.html?mwm/email/FieldAddress.html" target="_top">Frames</a></li>
+<li><a href="FieldAddress.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+<p class="legalCopy"><small><i>Copyright &#169; 2000-2011 -= MyX =- (http://myx.ru). All Rights Reserved.</i></small></p>
+</body>
+</html>

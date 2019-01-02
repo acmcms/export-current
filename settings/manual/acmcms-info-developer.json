@@ -1,0 +1,7 @@
+{
+	type : "ae3.Manual",
+	title : "ACM.CMS: Developer Index",
+	name : "acmcms-info-developer",
+	group : "acm-devel",
+	url : "/!/skin/skin-acmcms-info/developer.htm",
+}

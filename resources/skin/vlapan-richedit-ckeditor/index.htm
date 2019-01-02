@@ -1,0 +1,43 @@
+<%
+%><%CODE: 'ACM.ECMA' %>
+	editorName = "ckeditor";
+	/**
+	 * no 'var' - must be visible in TPL
+	 */
+	editor = new VlapanRichedit( editorName = editorName );
+	requireCss = Create.set();
+
+	requireJs = [];
+	//requireJs.add();
+<%/CODE%><%
+
+%><%OUTPUT: head %><%
+	%><!-- YUI CSS Reset --><% 
+	%><link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssreset/reset-min.css"/><%
+	%><%= editor.init() %><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body><%
+		%><h2>CKEditor package</h2><%
+		%><form method="post"><%
+			%><p><%
+				%><textarea id="<%= editorName %>" name="<%= editorName %>"></textarea><%
+				%><%= editor.replace( id = editorName ) %><%
+			%></p><%
+			%><p><%
+				%><input type="submit" /><%
+			%></p><%
+		%></form><%
+	%></body><%
+%><%/OUTPUT%><%
+
+%><%RETURN: {
+		title		: "CKEditor",
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

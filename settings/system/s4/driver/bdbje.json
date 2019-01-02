@@ -1,0 +1,6 @@
+{
+	type : "ae3/Factory",
+	name : "bdbje",
+	description : "Oracle BDB JE S4 Local Driver",
+	reference : "ru.myx.ae3.vfs.s4.lcl.bdbj/bdbj"
+}

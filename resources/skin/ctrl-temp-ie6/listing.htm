@@ -1,0 +1,295 @@
+<%CODE: 'ACM.ECMA' %>
+	path = Request.path || '/';
+	path.endsWith('/') || (path += '/');
+
+	mode = Request.mode || 'none';
+
+	cNode = mode == 'link' 
+		? Runtime.getLinkageRootNode()
+		: ControlAPI.nodeForObject(Request.getSharedObject());
+
+	cNode = ControlAPI.childForPath(cNode, path);
+
+	requireCss = [];
+	requireCss.add('frames');
+	requireCss.add('forms');
+
+	requireJs = [];
+	requireJs.add("require");
+	requireJs.add("app/Router");
+	requireJs.add("app/Form");
+
+	requireJs.add("app/Containers");
+	requireJs.add("app/Dom");
+	requireJs.add("app/Windows");
+	requireJs.add("app/Listing");
+
+	initial = "listing-data.htm?path=" + StringToUrl(path) + "&mode=" + StringToUrl(mode);
+	var response = Request.querySkin({
+		timeout		: 0,
+		verb		: "GET",
+		skinner		: "ctrl-temp-ie6",
+		resource	: "/listing-data.htm",
+		parameters	: {
+			path : path,
+			mode : mode
+		},
+		attributes	: {
+			Secure : true
+		}
+	});
+	
+	preload = response ? response.toCharacter().text : "Not found";
+	if(!response || response.getCode() != 200){ 
+		$output( preload ){
+			%><html><%
+				%><head><%
+					%><script><%
+						%>alert("pre-load error: <%= Format.jsStringFragment( preload ) %>")<%
+						%>location.replace(<%
+							= Format.jsString( initial );
+						%>);<%
+					%></script><%
+				%></head><%
+				%><body><%
+					%><h1>preload error, redirecting to normal location</h1><%
+					%>which is: <a href="<%= Format.xmlAttributeFragment( initial ) %>"><%= initial %></a><%
+				%></body><%
+			%></html><%
+		}
+	}
+	
+<%/CODE%><%
+%><%OUTPUT: head %><%
+	%><!-- version: 21 --><%
+	%><script><%
+		%><%FORMAT: 'js' %>
+			/* for IE DOM */
+			document.createElement("entry");
+			mForm = new app.Form(document);
+			mForm.type = "Navigation";
+			mForm.path = <%= Format.jsString(path) %>;
+			mForm.mode = <%= Format.jsString(mode) %>;
+			
+			router = new app.Router("listing-<%= Format.jsStringFragment( mode ) %>");
+		<%/FORMAT%><%
+	%></script><%
+	%><%EXEC: commands = ControlAPI.filterAccessibleCommands(path, cNode.getCommands()) %><%
+	%><%IF: Array.isFilled(commands) %><%
+		%><%OUTPUT: contextMenuNodeCommands %><%
+			%><div<%
+				%> id="NodeCommands"<%
+				%> title="<%= intl( en = "Folder", ru = "Папка" ) %>"<%
+				%> status="true"<%
+				%> group="NodeCommands"<%
+				%> commandType="node"<%
+				%> sender="listing"<%
+			%>><%
+				%><%ITERATE: command : commands %><%
+					%><%IF: command.getKey() != '' %><%
+						%><entry<%
+							%> path="<%= Format.xmlAttributeFragment( path ) %>"<%
+							%> cmd="<%= Format.xmlAttributeFragment( command.getKey() ) %>"<%
+							%> title="<%= Format.xmlAttributeFragment( command.getTitle() || '-- untitled --' ) %>"<%
+							%> description="<%= Format.xmlAttributeFragment( command.commandDescription() || '' ) %>"<%
+							%> icon="<%= ControlAPI.getIcon(command) %>"<%
+						%>><%
+						%></entry><%
+					%><%/IF%><%
+				%><%/ITERATE%><%
+			%></div><%
+		%><%/OUTPUT%><%
+	%><%/IF%><%
+	
+	%><%EXEC: forms = ControlAPI.filterAccessibleCommands(path, cNode.getForms()) %><%
+	%><%IF: Array.isFilled(forms) %><%
+		%><%OUTPUT:contextMenuNodeForms %><%
+			%><div<%
+				%> id="NodeForms"<%
+				%> title="<%= intl( en = "Folder Forms", ru = "Формы папки" ) %>"<%
+				%> status="true"<%
+				%> group="NodeForms"<%
+				%> commandType="node_form_open"<%
+				%> sender="listing"<%
+			%>><%
+				%><%ITERATE: command : forms %><%
+					%><%IF: command.getKey() != '' %><%
+						%><entry<%
+							%> path="<%= Format.xmlAttributeFragment( path ) %>"<%
+							%> cmd="<%= Format.xmlAttributeFragment( command.getKey() ) %>"<%
+							%> title="<%= Format.xmlAttributeFragment( command.getTitle() || '-- untitled --' ) %>"<%
+							%> description="<%= Format.xmlAttributeFragment( command.commandDescription() || '' ) %>"<%
+							%> icon="<%= ControlAPI.getIcon(command) %>"<%
+						%>><%
+						%></entry><%
+					%><%/IF%><%
+				%><%/ITERATE%><%
+			%></div><%
+		%><%/OUTPUT%><%
+	%><%/IF%><%
+	
+	
+	%><%EXEC: QuickLinksCnt = Int(User.getUser().getProfile('mwmAdmin',true).QuickLinksCnt,5) %><%
+	%><%IF: QuickLinksCnt > 0%><%
+		%><%TRY%><%
+			%><%EXEC: quick = ControlAPI.getQuickActor() %><%
+			%><%EXEC: options = quick.getCommands() %><%
+		%><%CATCH%><%
+		%><%/TRY%><%
+		%><%IF: Array.isFilled(options) %><%
+			%><%OUTPUT:contextMenuQuickLinks %><%
+			%><div<%
+				%> id="QuickLinks"<%
+				%> title="<%= intl( en = "Quick Links", ru = "Быстрые ссылки" ) %>"<%
+				%> status="true"<%
+				%> group="QuickLinks"<%
+				%> commandType="quick"<%
+			%>><%
+				%><%CALL: ForArray(options,0,QuickLinksCnt) %><%
+					%><%EXEC: command = Current %><%
+					%><%IF: command.getKey() != '' %><%
+						%><entry<%
+							%> cmd="<%= Format.xmlAttributeFragment( command.getKey() ) %>"<%
+							%> title="<%= Format.xmlAttributeFragment( command.getTitle() || '-- untitled --' ) %>"<%
+							%> description="<%= Format.xmlAttributeFragment( command.commandDescription() || '' ) %>"<%
+							%> icon="<%= ControlAPI.getIcon(command) %>"<%
+						%>><%
+						%></entry><%
+					%><%/IF%><%
+				%><%/CALL%><%
+			%></div><%
+			%><%/OUTPUT%><%
+		%><%/IF%><%
+	%><%/IF%><%
+	
+	%><%EXEC: common = ControlAPI.getCommonActor(path) %><%
+	%><%EXEC: common && (common = ControlAPI.filterAccessibleCommands(path, common.getCommands())) %><%
+	
+	%><%IF: Array.isFilled(common) %><%
+		%><%OUTPUT:contextMenuTreeCommon%><%
+			%><div<%
+				%> id="TreeCommon"<%
+				%> title="<%= intl( en = "System", ru = "Системные" ) %>"<%
+				%> status="true"<%
+				%> group="TreeCommon"<%
+				%> commandType="tree_common"<%
+				%> sender="listing"<%
+			%>><%
+				%><%ITERATE: command : common %><%
+					%><%IF: command.getKey() != '' %><%
+						%><entry<%
+							%> path="<%= Format.xmlAttributeFragment( path ) %>"<%
+							%> cmd="<%= Format.xmlAttributeFragment( command.getKey() ) %>"<%
+							%> title="<%= Format.xmlAttributeFragment( command.getTitle() || '-- untitled --' ) %>"<%
+							%> description="<%= Format.xmlAttributeFragment( command.commandDescription() || '' ) %>"<%
+							%> icon="<%= ControlAPI.getIcon(command) %>"<%
+						%>><%
+						%></entry><%
+					%><%/IF%><%
+				%><%/ITERATE%><%
+			%></div><%
+		%><%/OUTPUT%><%
+	%><%/IF%><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: childrenView %><%
+	%><table border=0 cellpadding=0 cellspacing=0 width=100% height=100% id="childrenList" path="<%= Format.xmlAttributeFragment(path) %>"><%
+		%><tr><%
+			%><td class="FrameBorder2 BorderBox"><%
+				%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+					%><tr><%
+						%><td style="padding:2px" class="BorderBox" cla2ss=FrameBorder2 width=100%><%
+							%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+								%><tr><%
+									%><td width=100% class=SubmenuFrame nowrap id=TDPaging><%
+										%>&nbsp;<%
+									%></td><%
+									%><%IF: !mode %><%
+										%><td class=SubmenuFrame nowrap id=TDPath style="padding-top:0; padding-bottom:0"><%
+											%><table border=0 cellpadding=0 cellspacing=0><%
+												%><tr><%
+													%><td><%
+														%><b><%= intl(en="path", ru="путь") %>:</b>&nbsp;<%
+													%></td><%
+													%><td><%
+														%><input style="width:150px" re2adonly value="<%= path %>"><%
+													%></td><%
+												%></tr><%
+											%></table><%
+										%></td><%
+									%><%/IF%><%
+								%></tr><%
+							%></table><%
+						%></td><%
+						
+						%><td style="padding:1px" class="BorderBox"><%
+							%><nobr><%
+								%><%IF: path != '/' %><%
+									%><%EXEC: goToPath = substr( path, 0, lastIndexOf(path,'/') ) %><%
+									%><%EXEC: goToPath = substr( goToPath, 0, lastIndexOf(goToPath,'/') + 1 ) %><%
+									%><button class=icon onclick="listing.changeLocationSetList('<%= goToPath %>','childrenList');"><%
+										%><img src="icons/command-escape.16.gif" width=16 height=16 title="<%= intl( en = "Up", ru = "Вверх" ) %>"><%
+									%></button><%
+								%><%/IF%><%
+								%><button class=icon onclick="listing.refresh();"><%
+									%><img src="icons/command-reload.16.gif" width=16 height=16 title="<%= intl( en = "Refresh", ru = "Обновить" ) %>"><%
+								%></button><%
+							%></nobr><%
+						%></td><%
+					%></tr><%
+				%></table><%
+			%></td><%
+		%></tr><%
+		%><tr><%
+			%><td height=100%><%
+				%><div id="listing" style="position:relative;width:100%;height:100%;overflow:hidden"><%
+					// LISTING GRID FRAME WILL BE HERE
+				%></div><%
+			%></td><%
+		%></tr><%
+	%></table><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body path="<%= Format.xmlAttributeFragment( path ) %>" class="FrameBorder" style="position:relative; padding-bottom:1px"><%
+		%><%IF: mode == 'link' %><%
+			%><%= childrenView %><%
+		%><%ELSE%><%
+			%><div style="position:relative;width:100%;height:100%"><%
+				%><div class="BorderBox" style="position:relative;width:100%;height:100%;padding-right:166px;overflow:hidden"><%
+					%><%= childrenView %><%
+				%></div><%
+				%><div class="FrameBorder2" style="position:absolute;right:0;top:0;width:166px;height:100%;overflow:hidden"><%
+					%><div style="position:relative;width:100%;height:100%"><%
+						%><%INCLUDE: 'include-menu' %><%
+					%></div><%
+				%></div><%
+			%></div><%
+		%><%/ELSE%><%
+		%><%/IF%><%
+		%><script><%
+			%><%FORMAT: 'js' %>
+				window.listing || (listing = document.getElementById("listing"));
+				router.register(mForm, listing, "listing");
+				app.Listing.prototype.path = <%= Format.jsString( path ) %>;
+				app.Listing.prototype.strObjects = "<%= intl( en = "Objects", ru = "Объектов" ) %>";
+				window.listing = new app.Listing(
+					listing,
+					"listing",
+					<%= Format.jsString( initial ) %>,
+					<%= Format.jsString( preload ) %>
+				);
+			<%/FORMAT%><%
+		%></script><%
+	%></body><%
+%><%/OUTPUT%><%
+
+%><%RETURN: {
+		title		: Runtime.getSystemName() + "-listing @ " + Request.getTarget(),
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

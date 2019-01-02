@@ -1,0 +1,4 @@
+{
+	type		: "ae3.web/Share",
+	reference	: "ru.acmcms.tools/GeoWebService"
+}

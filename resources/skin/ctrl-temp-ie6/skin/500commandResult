@@ -1,0 +1,10 @@
+<%
+%><%LOG:'500commandResult',content.body%><%
+%><%FINAL: 'text/html' %><%
+	%><body onload="try{parent.document.getElementById(window.name).onDone();}catch(Error){parent.onDone();}"><%
+		%><XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML"><%
+			%><entry type="error"><%= Format.xmlNodeValue(content.body) %></entry><%
+		%></XML><%
+	%></body><%
+%><%/FINAL%><%
+%>

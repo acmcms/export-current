@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>vlapan richedit</title>
+	<charset>UTF-8</charset>
+	<secure>false</secure>
+	<auth>false</auth>
+	<richedit>Hello</richedit>
+
+	<renderer>
+		<type>ACM.ECMA</type>
+		<suffix>.ecma</suffix>
+	</renderer>
+
+	<prototype>vlapan-example</prototype>
+
+	<import namespace="markitup" package="vlapan-richedit-markitup" />
+	<import namespace="ckeditor" package="vlapan-richedit-ckeditor" />
+	<import namespace="tinymce" package="vlapan-richedit-tinymce" />
+	<import namespace="yui" package="vlapan-richedit-yui" />
+	<import namespace="yuisimple" package="vlapan-richedit-yuisimple" />
+
+	<import namespace="simple-finder" package="vlapan-hierarchy-simple-finder" />
+	<import namespace="gwt-finder" package="vlapan-hierarchy-gwt-finder" />
+</settings>

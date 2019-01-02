@@ -1,0 +1,123 @@
+body,html,td{
+	font-family:Arial;
+	font-size:10pt;
+}
+
+html{
+	position:relative;
+	width:100%;
+	height:100%;
+	padding:0;
+	margin:0;
+	overflow:hidden;
+	background-color:#C8C8C8;
+}
+
+
+
+
+ui-menu, .ui-menu{
+	background-color:#FFFFFF;
+	border:inset 5px #BBBBBB;
+	cursor:default;
+}
+
+
+
+
+ui-drop-panel, .ui-drop-panel{
+	opacity:0.9;
+}
+
+
+
+
+
+
+ui-attachment .ui-spacer{
+	margin:0;
+	padding:3px 3px 0 0;
+	background-color:#C8C8C8; // ButtonFace;
+}
+ui-menu .ui-spacer{
+	margin:5px;
+	border:inset 5px blue;
+}
+ui-toolbar .ui-spacer{
+	margin:2px;
+	padding:1px 1px 0 0;
+	background-color:#838383;// ButtonShadow;
+}
+ui-button .ui-spacer{
+	margin:1px;
+	padding:1px 1px 0 0;
+	background-color:#838383;// ButtonShadow;
+}
+
+
+
+
+
+
+
+.ui-outset{
+	border:solid 7px #939393;
+	border-top-color:#F0F0F0;
+	border-left-color:#F0F0F0;
+}
+.ui-inset{
+	border:solid 7px #939393;
+	border-bottom-color:#F0F0F0;
+	border-right-color:#F0F0F0;
+}
+.ui-padding{
+	padding:7px;
+}
+.ui-normal{
+	border:solid 7px #C8C8C8;
+	background-color:#C8C8C8;
+	color:#000000;
+}
+.ui-active{
+	border:solid 7px #5555FF;
+	background-color:#5555FF;
+	color:#FFFFFF;
+}
+.ui-header{
+	font-family:Tahoma, Arial;
+	font-size:11px;
+	line-height:13px;
+	background-color:#739EE3;
+	color:#FEFEFE;
+	font-weight:bold;
+	height:14px;
+	padding:2px 4px;
+}
+.ui-window{
+	background-color:#FFFFFF;
+	color:#000000;
+	overflow:auto;
+}
+
+
+.Window{
+	background-color:#FFFFFF;
+}
+.ButtonFace{
+	background-color:#C8C8C8;
+}
+.ButtonShadow{
+	background-color:#838383;
+}
+.ButtonHighlight{
+	background-color:#F0F0F0;
+}
+.ActiveCaption{
+	background-color:#739EE3;
+}
+.CaptionText{
+	background-color:#FEFEFE;
+}
+.Highlight{
+	color:#B5D5FF
+}

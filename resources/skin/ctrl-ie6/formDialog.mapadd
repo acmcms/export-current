@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE>Add map item</TITLE><%
+	
+	%><style>
+<%INCLUDE: 'editor_style.css' %>
+<%INCLUDE: 'editor_popup-style.css' %>
+</style>
+
+<%INCLUDE: 'zakladki.inc' %>
+
+<script>
+
+window.dialogHeight = '160px';
+
+function Submit(){
+	var cTab = (tabulator1.currentTabIndex || 0);
+	eval("form"+cTab+".submit()");
+}
+
+function onDone(obj){
+	if(obj){
+		switch(obj.type){
+		case 'error' :
+			alert(obj.error);
+			break;
+		default:
+			try{
+				window.dialogArguments.sender.refresh();
+			}catch(Error){}
+			window.close();
+		}
+	}else{
+		alert('error');
+	}
+}
+
+</script>
+
+<BODY>
+
+
+
+
+<TABLE border=0 cellpadding=0 cellspacing=0 width=100% height=100%>
+	<TR>
+		<TD></TD>
+	</TR>
+	<TR>
+		<TD height=100%>
+			<TABLE border=0 cellpadding=0 cellspacing=0 width=100% height=100%>
+			<TR>
+				<TD>
+					<TABLE border=0 cellpadding=0 cellspacing=0 class=zakladka width=100% id=tabulator1>
+					<TR>
+						<TD><script>document.write(tabSplitter3)</script></TD>
+						<TD class=TabOn id="holder" onclick="SwitchTab(this)" nowrap><div><%=intl(en="String value", ru="Строковое значение")%></div></TD>
+						<TD><script>document.write(tabSplitter4)</script></TD>
+						<TD class=TabOff id="holder" onclick="SwitchTab(this)" nowrap><div><%=intl(en="Binary value / upload a file", ru="Бинарное значение / файл")%></div></TD>
+						<TD><script>document.write(tabSplitter5)</script></TD>
+						<TD style="width:100%"></TD>
+					</TR>
+					<TR class=border>
+						<TD class=TabOffl><img width=0 height=0></TD>
+						<TD><img width=0 height=0></TD>
+						<TD class=TabOffr><img width=0 height=0></TD>
+						<TD class=TabOn><img width=0 height=0></TD>
+						<TD class=TabOn><img width=0 height=0></TD>
+						<TD class=TabOn><img width=0 height=0></TD>
+						<TD class=TabOn><img width=0 height=0></TD>
+						<TD class=TabOn><img width=0 height=0></TD>
+					</TR>
+					</TABLE>				
+				</TD>
+			</TR>
+			<TR>
+				<TD height=100%>
+					<TABLE border=0 cellpadding=0 cellspacing=0 width=100% style="border-left: 1 solid buttonhighlight; border-right: 1 solid buttonshadow; border-bottom: 1 solid buttonshadow; padding:5; height:100%">
+					<TR>
+						<TD valign=top>
+							<form id=form0 target=buffer action="form.command?type=form&id=<%=Request.id%>&command=mapset&data=<%=Request.data%>" method=post enctype="multipart/form-data">
+								<TABLE border=0 cellpadding=0 cellspacing=1 width=100% style="margin-bottom:5px">
+								</TR>
+									<TD class=th nowrap><%=intl(en="Key", ru="Ключ")%>:</TD>
+									<TD width=100%><INPUT type=text name=keyname style="width:100%"></TD>
+								</TR>
+								</TR>
+									<TD class=th nowrap><%=intl(en="Value", ru="Значение")%>:</TD>
+									<TD width=100%><INPUT type=text name=value style="width:100%"></TD>
+								</TR>
+								</TABLE>
+							</form>
+						</TD>
+					</TR>
+					<TR style="display:none">
+						<TD valign=top>
+							<form id=form1 target=buffer action="form.command?type=form&id=<%=Request.id%>&command=mapset&data=<%=Request.data%>" method=post enctype="multipart/form-data">
+							<TABLE border=0 cellpadding=0 cellspacing=1 width=100% style="margin-bottom:5px">
+							</TR>
+								<TD class=th nowrap><%=intl(en="Key", ru="Ключ")%>:</TD>
+								<TD width=100%><INPUT type=text name=keyname style="width:100%"></TD>
+							</TR>
+							</TR>
+								<TD class=th nowrap><%=intl(en="Value (file)", ru="Значение (файл)")%>:</TD>
+								<TD width=100%><INPUT type=file name=value style="width:100%"></TD>
+							</TR>
+							</TABLE>
+							</form>
+
+						</TD>
+					</TR>
+					</TABLE>				
+				</TD>
+			</TR>
+			</TABLE>
+
+		
+		</TD>
+	</TR>
+	<TR>
+		<TD align=right style="padding:10,0,4,0"><BUTTON onclick="Submit()">&nbsp;<B><%=intl(en="Add", ru="Добавить")%></B>&nbsp;</BUTTON>&nbsp;<BUTTON ONCLICK="window.close();">&nbsp;<%=intl(en="Cancel", ru="Отмена")%>&nbsp;</BUTTON></TD>
+	</TR>
+</TABLE>
+
+
+<iframe name=buffer id=buffer border=0 frameborder=no width=1 height=1 scrolling=no src="" style="position:absolute; left:0; top: -20; visibility:hidden;"></iframe>
+
+</BODY>
+</HTML>

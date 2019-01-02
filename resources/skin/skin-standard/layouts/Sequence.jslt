@@ -1,0 +1,22 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+// Simple one - returns content of container layout. When container has 'title' 
+// attribute return sequence of it's title and contents.
+//
+// Inserts same layout with title hidden into a sequence.
+//
+
+return layout.title 
+	? {
+		layout		: 'sequence',
+		title		: 0,
+		elements	: [
+			layout.title, 
+			Layouts.extend( layout, { title : 0 } ), 
+			""
+		]
+	} 
+	: layout;

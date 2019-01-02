@@ -1,0 +1,19 @@
+.formSetMultiple {
+	cursor: default;
+	behavior: url(/_form-set-multiple.htc);
+}
+
+.formSetMultiple .check DIV {
+	height: 13px;
+	width: 13px;
+	border-bottom: solid 1px buttonhighlight;
+	border-right: solid 1px buttonhighlight;
+	border-top: solid 1px buttonshadow;
+	border-left: solid 1px buttonshadow;
+	font-family: Webdings;
+	font-size: 10pt;
+	line-height: 10px;
+	padding: 0;
+	overflow: hidden;
+	margin: 2px 4px 2px 2px;
+}

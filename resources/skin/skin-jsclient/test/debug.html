@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+	<script type="text/javascript" src="../js/debug.js"></script>
+	
+<!--<%FORMAT:'html'%>
+	<%OUTPUT: title %>-->
+		<title>debug.js test</title>
+<!--<%/OUTPUT%>
+	<%EXEC: title = title.substring(3, title.length - 4).trim() %>
+	<%EXEC: title = title.substring(7, title.length - 8).trim() %>
+	<%OUTPUT: head %><% = '<!' + '-- ' %>-->
+	<style>
+		#info, #report, #clean A{
+			padding: 5px;
+		}
+		#info{
+			background-color: #ffaaaa;
+			color: #000;
+		}
+		#report{
+			background-color: #aaffaa;
+			color: #000;
+		}
+		#clean A{
+			background-color: #aaaaff;
+			color: #000;
+			border: 1px solid black;
+			display: inline-block;
+		}
+	</style>
+<!--<%= ' --' + '>' %><%/OUTPUT%>
+	<%/FORMAT%>-->
+</head>
+<body>
+<!-- <%FORMAT:'html'%><%OUTPUT: body %><% = '<!' + '-- ' + 'begin' %> -->
+	&nbsp;<br />
+	<div id="info">
+		info:<br />
+		<p>This is <a href="../debug.js.html">debug.js</a> test page.</p>
+		<script>document.write("page loaded: " + new Date() + "<br />");</script>
+	</div>
+	&nbsp;<br />
+	<div id="report">
+		state:<br />
+		<div id="state"></div>
+	</div>
+	&nbsp;<br />
+	<div id="clean">
+		new state from scratch:<br />
+		<a href="?">no parameters</a>
+		
+		<a href="?__use_jquery=true">use jQuery</a>
+		<a href="?__no_jquery=true">no jQuery</a>
+		
+		<a href="?__use_yui=true">use YUI</a>
+		<a href="?__no_yui=true">no YUI</a>
+		
+		<a href="?__use_debug=true">use debug</a>
+		<a href="?__no_debug=true">no debug</a>
+		
+		<a href="?__use_require=true">use require</a>
+		<a href="?__no_require=true">no require</a>
+	</div>
+	<script>
+		window.debug && window.debug("Page script started!");
+		var state = document.getElementById("state");
+		(function(){
+			state.innerHTML =	
+				"Debug value (evaluated to boolean) is: " + Boolean( window.debug ) + "<br />" +
+				"Require value (evaluated to boolean) is: " + Boolean( window.require ) + "<br />" +
+				"jQuery value (evaluated to boolean) is: " + Boolean( window.jQuery ) + "<br />" +
+				"YUI value (evaluated to boolean) is: " + Boolean( window.YUI ) + "<br />" +
+				"";
+			setTimeout(arguments.callee, 1500);
+		})();
+		window.debug && window.debug("Page script finished!");
+	</script>
+<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%>
+<%RETURN: {
+	title		: title,
+	template	: "html-document",
+	useDebug	: Request.getParameterString() ? undefined : true,
+	head		: head,
+	body		: body
+} %>
+<%/FORMAT%> -->
+</body>
+</html>

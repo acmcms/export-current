@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Root: Simple Site</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+	</statelist>
+	<folder>true</folder>
+	<children>
+		<type>$Root</type>
+	</children>
+	<modify>
+		<form> 
+			<title>Root: Site Root</title>
+			<fields class="fieldset">
+				<field
+						class="string" 
+						id="message" 
+						title="Message" 
+						max="256"
+				/>
+				<field
+						class="string"
+						type="text"
+						variant="html"
+						id="text" 
+						title="Text" 
+						max="256"
+				/>
+				<field
+						class="binary"
+						type="binary"
+						id="image" 
+						title="Image"
+						max="4m"
+				/>
+			</fields>
+		</form>
+	</modify>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.TPL"><![CDATA[<%
+			%><%IF: Object.isMap( content ) %><%
+				%><%EXEC: content = Create.map( content ) %><%
+				%><%EXEC: content.siteTitle = this.getTitle() %><%
+				%><%EXEC: content.message = this.message %><%
+			%><%/IF%><%
+			%><%RETURN: content %><%
+		%>]]></filter>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%EXEC: target = Request.getResourceIdentifier() %><%
+			%><%CHOOSE: target %><%
+				%><%MATCH: "", "/" %><%
+					%><%EXEC: content = {} %><%
+					%><%EXEC: content.title = this.getTitle() %><%
+					%><%EXEC: content.message = this.message %><%
+					%><%EXEC: content.text = this.text %><%
+					%><%EXEC: content.logo = this.image ? true : false %><%
+					%><%RETURN: content %><%
+				%><%MATCH: "logo.jpg", "/logo.jpg" %><%
+					%><%IF: this.image %><%
+						%><%RETURN: this.image %><%
+					%><%/IF%><%
+				%><%MATCH%><%
+					%><%REDIRECT: this.getLocation() %><%
+			%><%/CHOOSE%><%
+		%>]]></script>
+	</respond>
+	<command>
+		<key>getSiteRoot</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return this;
+		]]></script>
+	</command>
+</type>

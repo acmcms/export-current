@@ -1,0 +1,9 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+// Simple one - returns undefined.
+//
+
+return undefined;

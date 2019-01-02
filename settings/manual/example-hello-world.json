@@ -1,0 +1,7 @@
+{
+	type : "ae3.Manual",
+	title : "Hello World",
+	name : "example-hello-world",
+	group : "example",
+	vfs : "/resources/lib/ru.myx.ae3.example/hello-world.xml"
+}

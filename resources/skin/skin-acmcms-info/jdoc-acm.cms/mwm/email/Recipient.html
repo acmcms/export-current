@@ -1,0 +1,399 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+<title>Recipient (AE3 ACM SAPI)</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="Recipient (AE3 ACM SAPI)";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar_top">
+<!--   -->
+</a><a href="#skip-navbar_top" title="Skip navigation links"></a><a name="navbar_top_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../mwm/email/Message.html" title="interface in mwm.email"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../mwm/email/RecipientHandler.html" title="interface in mwm.email"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../index.html?mwm/email/Recipient.html" target="_top">Frames</a></li>
+<li><a href="Recipient.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">mwm.email</div>
+<h2 title="Class Recipient" class="title">Class Recipient</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li>mwm.email.Recipient</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd>java.io.Serializable</dd>
+</dl>
+<hr>
+<br>
+<pre>public final class <span class="strong">Recipient</span>
+extends java.lang.Object
+implements java.io.Serializable</pre>
+<div class="block">This is a wrapper class for a simple recipient. It holds the recipient type
+ and email address and is imutable. The recipient can be checked for equality
+ using the <code>equals</code> method. This method checks if the two
+ recipients is of the same type and in that case - if the also have the same
+ email address.
+ <p>
+ 
+ The different recipient types is stated in the RecipientType class. To create
+ a carbon copy recipient to address none@none.com would look like this:
+ 
+ <pre>
+ try {
+        
+        EmailAddress address = new EmailAddress( &quot;none@none.com&quot; );
+        Recipient recipient = new Recipient( RecipientType.CC, address );
+        
+ } catch (final InvalidFormatException e) {
+        // handle the malformed email address here
+ }
+ </pre></div>
+<dl><dt><span class="strong">Author:</span></dt>
+  <dd>Lars J. Nilsson</dd>
+<dt><span class="strong">See Also:</span></dt><dd><a href="../../serialized-form.html#mwm.email.Recipient">Serialized Form</a></dd></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../mwm/email/Recipient.html#Recipient(int, mwm.email.EmailAddress)">Recipient</a></strong>(int&nbsp;type,
+         <a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;address)</code>
+<div class="block">Create a new recipient.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Recipient.html#equals(mwm.email.Recipient)">equals</a></strong>(<a href="../../mwm/email/Recipient.html" title="class in mwm.email">Recipient</a>&nbsp;recipient)</code>
+<div class="block">Check this recipient for equality.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a></code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Recipient.html#getAddress()">getAddress</a></strong>()</code>
+<div class="block">Get the recipients email address</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Recipient.html#getType()">getType</a></strong>()</code>
+<div class="block">Get the recipient type.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Recipient.html#isBcc()">isBcc</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Recipient.html#isCc()">isCc</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Recipient.html#isTo()">isTo</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Recipient.html#toString()">toString</a></strong>()</code>&nbsp;</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>equals, getClass, hashCode, notify, notifyAll, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="Recipient(int, mwm.email.EmailAddress)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>Recipient</h4>
+<pre>public&nbsp;Recipient(int&nbsp;type,
+         <a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;address)</pre>
+<div class="block">Create a new recipient. The different recipient types are located as
+ static members of the RecipientType class, and they are rather simple:
+ 
+ <pre>
+ 
+     RecipientType.TO
+     RecipientType.CC
+     RecipientType.BCC
+ 
+ </pre></div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>type</code> - </dd><dd><code>address</code> - </dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="equals(mwm.email.Recipient)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>equals</h4>
+<pre>public&nbsp;boolean&nbsp;equals(<a href="../../mwm/email/Recipient.html" title="class in mwm.email">Recipient</a>&nbsp;recipient)</pre>
+<div class="block">Check this recipient for equality. Two recipients are equal if they is of
+ the same recipient type and their email addresses are equal.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>recipient</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="getAddress()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAddress</h4>
+<pre>public&nbsp;<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;getAddress()</pre>
+<div class="block">Get the recipients email address</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>address</dd></dl>
+</li>
+</ul>
+<a name="getType()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getType</h4>
+<pre>public&nbsp;int&nbsp;getType()</pre>
+<div class="block">Get the recipient type. The different recipient types are located as
+ static members of the RecipientType class:
+ 
+ <pre>
+ 
+     RecipientType.TO
+     RecipientType.CC
+     RecipientType.BCC
+ 
+ </pre></div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>int</dd></dl>
+</li>
+</ul>
+<a name="isBcc()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isBcc</h4>
+<pre>public&nbsp;boolean&nbsp;isBcc()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="isCc()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isCc</h4>
+<pre>public&nbsp;boolean&nbsp;isCc()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="isTo()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isTo</h4>
+<pre>public&nbsp;boolean&nbsp;isTo()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="toString()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>toString</h4>
+<pre>public&nbsp;java.lang.String&nbsp;toString()</pre>
+<dl>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>toString</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar_bottom">
+<!--   -->
+</a><a href="#skip-navbar_bottom" title="Skip navigation links"></a><a name="navbar_bottom_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../mwm/email/Message.html" title="interface in mwm.email"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../mwm/email/RecipientHandler.html" title="interface in mwm.email"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../index.html?mwm/email/Recipient.html" target="_top">Frames</a></li>
+<li><a href="Recipient.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+<p class="legalCopy"><small><i>Copyright &#169; 2000-2011 -= MyX =- (http://myx.ru). All Rights Reserved.</i></small></p>
+</body>
+</html>

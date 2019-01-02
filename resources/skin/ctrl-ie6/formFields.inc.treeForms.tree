@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE></TITLE>
+</HEAD>
+
+<style id=Tree>
+BODY {
+	background-color: window;
+	margin:2px;
+}
+
+.fldImg {
+	height: 16px;
+	width: 16px;
+	border-width:0;
+	border:0;
+}
+
+.thread1 {
+	height: 16px;
+	width: 16px;
+	background-image: URL($files/thread1.gif);
+}
+
+.thread2 {
+	height: 16px;
+	width:16px;
+	background-image: URL($files/thread2.gif);
+}
+
+.thread3 {
+	height: 16px;
+	width:16px;
+	background-image: URL($files/thread3.gif);
+}
+
+.thread4 {
+	height: 16px;
+	width:16px;
+	background-image: URL($files/thread4.gif);
+}
+
+.thread5 {
+	height: 16px;
+	width:16px;
+	background-image: URL($files/thread5.gif);
+}
+
+.table {
+	border: 0;
+	border-width: 0;
+}
+
+.fldTxt {
+	font-family:Tahoma;
+	font-size:8pt;
+	padding-left:3pt;
+	padding-right:3pt;
+	color:windowtext;
+}
+
+.fldTxtOn {
+	font-family:Tahoma;
+	font-size:8pt;
+	padding-left:3pt;
+	padding-right:3pt;
+	background-color: highlight;
+	color: highlighttext;
+}
+
+</style>
+
+
+<script>
+document.onclick = TreeOnClick;
+document.oncontextmenu = function(){
+	event.srcElement.click();
+	return false;
+}
+document.onselectstart = new Function("return false;");
+
+document.ondblclick = function(){
+	SearchOpenThreads();
+}
+
+function TreeOnClick(){
+	var o = event.srcElement;
+	if(!selectOn(o)) return;
+	document.body.putResult();
+}
+
+
+function getSelectParent(obj){
+	while(obj.parentNode){
+		var o = obj.parentNode;
+		if (o.selectobj) return o;
+		obj = o;
+	}
+	return false;
+}
+
+
+function selectOn(obj){
+	var o = getSelectParent(obj);
+	if(document.body.currentSelect && o){
+		document.body.currentSelect.TD['title'].className = 'fldTxt';
+		document.body.currentSelect = null;
+	}
+	if(!o) return false;
+	o.parent.TD['title'].className = 'fldTxtOn';
+	document.body.currentSelect = o.parent;
+	document.body.returnValue['path'] = o.parent.path;
+	setTimeout("correctScrollY()",800);
+	return document.body.currentSelect;
+}
+
+function correctScrollY(){
+	var cy = getTopY(document.body.currentSelect);
+	if(document.body.scrollTop > cy) document.body.scrollTop = cy -16;
+	if( (cy + 16) > (document.body.scrollTop + document.body.offsetHeight) ) document.body.scrollTop = cy + 32 - document.body.offsetHeight;
+}
+
+function getTopY(obj){
+	y = 0;
+	while(obj.offsetParent){
+		y += obj.offsetTop;
+		obj = obj.offsetParent;
+	}
+	return y;
+}
+
+
+
+</script>
+
+
+<SCRIPT id = "BuildTree" src="BuildTree.js"></script>
+<script id = "Containers" src="Containers.js"></script>
+
+<BODY></BODY>
+
+<script>
+
+eventMethods = parent.eventMethods;
+
+//document.body.goToPath = "cmd/zzz/b1/";
+
+//document.body.eventMethods = eventMethods;
+//eventMethods.register(document.body,'form');
+
+/*
+document.body.onFire = function(eType,eValue,eObj){
+	switch(eType){
+		case "ChangeLocation" :
+			if(eValue.path.substr(eValue.path.length - 1) != '/') eValue.path += '/';
+			this.goToPath = eValue.path;
+			GoToThread(this);
+			break;
+		case "FormRefresh" :
+			ReloadThread(eValue);
+			break;
+		case "SetListRefresh" :
+			ReloadThread(eValue);
+			break;
+	}
+}
+*/
+
+document.body.onload=function(){
+	CreateXMLBuffer(document.body,'TreeData.xml',eventMethods);
+}
+
+function ReloadThread(path){
+//	path = path.substr(1);
+	var obj = document.getElementById("thread_" + path);
+	if(!obj) return;
+	obj.TD['switch'].refresh();
+}
+
+function SearchOpenThreads(){
+	var arr = document.body.getElementsByTagName("TABLE");
+	var threads = [];
+	for(var i=0; i<arr.length; ++i){
+		if(arr[i].path && arr[i].TD['switch'].childThread.displayMode) threads[threads.length] = arr[i].path;
+//		if(arr[i].parent.path || arr[i].parent.path!="") threads[threads.length] = arr[i].path;
+	}
+
+//	alert(threads)
+//	var zz = threads;
+
+	for(var i=0; i<threads.length; ++i){
+		if (!threads[i]) continue;
+		for(var j=0; j<threads.length; j++){
+			if (!threads[j] || i == j) continue;
+//			alert(threads[i] + " : " + threads[j])
+			if(threads[i].indexOf(threads[j]) == 0 ) threads[j] = false;
+		}
+	}
+
+//	alert("!!! " + threads)
+
+
+}
+
+function GoToThread(obj){
+	for (var i in obj.childNodes){
+		var cn = obj.childNodes[i];
+		if(cn.nodeName != "TABLE") continue;
+		if(obj.goToPath == cn.path){
+			selectOn(cn.TD['title']);
+			obj.goToPath = false;
+			return;
+		}
+		if(obj.goToPath.indexOf(cn.path) == 0){
+//			if(cn.TD['childs'].hasChild == "true"){
+//				if(cn.TD['childs'].childLoad){
+//					cn.TD['childs'].goToPath = obj.goToPath;
+//					obj.goToPath = false;
+//					cn.TD['switch'].show();
+//					GoToThread(cn.TD['childs']);
+//				}else{
+//					alert(obj.goToPath)
+//					alert('GoToThread [' + cn.path + ' : ' + obj.goToPath + ']')
+					cn.TD['childs'].goToPath = obj.goToPath;
+					obj.goToPath = false;
+					cn.TD['switch'].open();
+					return;
+//				}
+//			}
+			break;
+		}
+	}
+	obj.goToPath = false;
+}
+
+</script>
+
+</HTML>

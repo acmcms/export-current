@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>Abstract DHTML skin</title>
+	<abstract>true</abstract>
+	<prototype>skin-standard-html</prototype>
+	<import package="skin-jsclient" namespace="client"/>
+	<charset>UTF-8</charset>
+	<renderer>ACM.TPL</renderer>
+</settings>

@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Категория</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+	</statelist>
+	<folder>true</folder>
+	<replacement>PortfolioCategory</replacement>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.thickbox = true;
+
+					content.abilities = [
+						{ title : this.getTypeTitle(), id : "pageMenu", abilities : this.getAbilities() }
+					];
+
+					if(this.jsonLayout){
+						content.layout3 = eval( this.jsonLayout );
+					}else{
+						content.layout2 = HashFilled( this.layout ) ? this.layout : xmlToMap( this.getDefaultXMLLayout() );
+					}
+//					content.layout = this.getLayout();
+
+					return this.fillSelection( content = content );
+				}
+				case "image.png":{
+					if( this.image ){
+//						= a.null();
+//						return $base.final("text/html", ""+this.image + " : " + this.image.getClass());
+						return this.image;
+					}else{
+						return $default.redirect( this.getLocation() );
+					}
+				}
+				case "addinfoform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+						content.form = InfoPage.getCreateForm();
+						return this.fillSelection( content = content );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "addinfo":{
+					if( registered ){
+						var object = InfoPage.create( Request.getParameters(), this );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "addinfoform?error=1" );
+						}
+						return $default.redirect( object.getLocation() );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "addworkform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+						content.form = Work.getCreateForm();
+						return this.fillSelection( content = content );
+					}
+				}
+				case "addwork":{
+					if( registered ){
+						var object = Work.create( Request.getParameters(), this );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "addworkform?error=1" );
+						}
+						return $default.redirect( object.getLocation() );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "modifyform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+						content.form = this.getModifyForm();
+						return this.fillSelection( content = content );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "modify":{
+					if( registered ){
+						if( !Request.titleName ){
+							return $default.redirect( this.getLocation() + "modifyform?error=1" );
+						}
+						var change = this.createChange();
+						change.$title = Request.titleName;
+						change.$key = FileAPI.clearSlashes( FileAPI.niceNameNotation( transliterate( Request.titleName ) ) );
+						change.jsonLayout = Request.jsonLayout ? Request.jsonLayout : "";
+						try{
+							change.layout = xmlToMap( Request.xmlLayout );
+							change.xmlLayout = Request.xmlLayout;
+						}
+						if( Request.image ){
+							try{
+//								var image = Imaging.imageForBinary( Request.image );
+//								image = Imaging.bitmapResizeCrop( image, 220, 165 );
+								change.image = Request.image;
+							}catch(e){
+								return $default.redirect( this.getLocation() + "modifyform?error=1" );
+							}
+						}
+						change.commit();
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "remove":{
+					if( registered ){
+						var redirect = this.getParent().getLocation();
+						var change = this.createChange();
+						change.delete();
+						return $default.redirect( redirect );
+					}	
+					return $default.redirect( this.getLocation() );
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>getTypeTitle</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return intl( en = "Category", ru = "Категория" );
+		]]></script>
+	</command>
+
+	<command>
+		<key>getDepth</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var depth = 1;
+			function checkNext( parent ){
+				if( parent && parent.$type != "Catalogue" && parent.$type != "Portfolio" && depth < 5 ){
+					depth = depth + 1;
+					var upperParent = parent.getParent();
+					checkNext( upperParent );
+				}
+			}
+			var parent = this.getParent();
+			checkNext( parent );
+			return depth;
+		]]></script>
+	</command>
+
+	<command>
+		<key>create</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+			<field id="parent" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName ) return false;
+			try{
+				var change = parent.createChild();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.$type = "Category";
+				change.$state = Storage.STATE_SYSTEM;
+				change.image = data.image ? data.image : null;
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>getCreateForm</key>
+		<static>true</static>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = [
+				{ title : "Название", name : "titleName", type : "text", required : true },
+				{ title : "Картинка", name : "image", type : "file" },
+				{ title : "", name : "submit", type : "submit", value : "Опубликовать" }
+			];
+			return {
+				id : "form",
+				title : 'Добавление категории',
+				info : '',
+				focus : "titleName",
+				action : "add",
+				method : "post",
+				legend : "",
+				fields : fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>getModifyForm</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = [
+				{ title : "Название", name : "titleName", type : "text", value : this.title, required : true },
+				//{ title : "Текст", name : "text", type : "wymeditor", value : this.title, required : true },
+				{ title : "Картинка", name : "image", type : "file" },
+				{ title : "Структура вывода XML", name : "xmlLayout", type : "textarea", value : this.xmlLayout ? this.xmlLayout : this.getDefaultXMLLayout() },
+				{ title : "Структура вывода JSON", name : "jsonLayout", type : "textarea", value : this.jsonLayout },
+				{ title : "", name : "submit", type : "submit", value : "Опубликовать" }
+			];
+			return {
+				id : "form",
+				title : 'Редактирование категории "' + this.getTitle() + '"',
+				warning : Request.error ? "Заполните необходимые поля" : "",
+				info : '',
+				focus : "titleName",
+				action : "modify",
+				method : "post",
+				legend : "",
+				fields : fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>getAbilities</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var abilities = [];
+			var catalogue = this.getCatalogueRoot();
+			if( catalogue.depth && catalogue.depth > this.getDepth() ){
+				abilities.add({
+					title: "Добавить категорию",
+					icon: "app_add",
+					href: this.getLocation() + "addform",
+					name: "catAdd",
+					ajax: true
+				});
+			}
+			abilities.add({
+				title: "Добавить работу",
+				icon: "img_add",
+				href: this.getLocation() + "addworkform",
+				name: "workAdd",
+				ajax: true
+			});
+			abilities.add({
+				title: "Добавить страницу",
+				icon: "img_add",
+				href: this.getLocation() + "addinfoform",
+				name: "pageAdd",
+				ajax: true
+			});
+			abilities.add({
+				title: "Свойства",
+				icon: "cog_edit",
+				href: this.getLocation() + "modifyform",
+				name: "catModify",
+				ajax: true
+			});
+			abilities.add({
+				title: "Удалить",
+				icon: "app_delete",
+				href: this.getLocation() + "remove",
+				confirm: true
+			});
+			return abilities;
+		]]></script>
+	</command>
+
+	<command>
+		<key>getImageSrc</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return this.getLocation() + "image.png";
+		]]></script>
+	</command>
+
+	<command>
+		<key>getDefaultXMLLayout</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><layout><%
+				%><box className="worksList"><%
+					%><list source="$this"><%
+						%><box className="workItem"><%
+							%><link href="$item" hrefsuffix="image.png" rel="image"><%
+								%><image file="imagemini.png"/><%
+							%></link><%
+						%></box><%
+					%></list><%
+				%></box><%
+			%></layout><%
+		]]></script>
+	</command>
+
+	<command>
+		<key>getDefaultLayout</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%>[{type:"box",className:"layout",data:[{type:"string",data:"empty layout"}]}]<%
+		]]></script>
+	</command>
+</type>

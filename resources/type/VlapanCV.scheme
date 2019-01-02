@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>VlapanCV</title>
+	<visibility>hidden</visibility>
+
+	<command>
+		<key>init</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="editor" class="string" default="ckeditor"/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[
+			<%CHOOSE: editor %>
+				<%MATCH: "ckeditor" %>
+					<%= VlapanRicheditCKEditor.init() %>
+				<%MATCH: "tinymce" %>
+					<%= VlapanRicheditTinyMCE.init() %>
+				<%MATCH: "yui" %>	
+					<%= VlapanRicheditYUI.init() %>
+				<%MATCH: "yuisimple" %>
+					<%= VlapanRicheditYUISimple.init() %>
+			<%/CHOOSE%>
+		]]></script>
+	</command>
+	<command>
+		<key>replace</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="id" class="string"/>
+			<field id="editor" class="string" default="ckeditor"/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[
+			<%CHOOSE: editor %>
+				<%MATCH: "ckeditor" %>
+					<%= VlapanRicheditCKEditor.replace( id = id ) %>
+				<%MATCH: "tinymce" %>
+					<%= VlapanRicheditTinyMCE.replace( id = id ) %>
+				<%MATCH: "yui" %>	
+					<%= VlapanRicheditYUI.replace( id = id ) %>
+				<%MATCH: "yuisimple" %>
+					<%= VlapanRicheditYUISimple.replace( id = id ) %>
+			<%/CHOOSE%>
+		]]></script>
+	</command>
+</type>

@@ -1,0 +1,6 @@
+{
+	type : "ae3/Factory",
+	name : "db4o",
+	description : "Db4O S4 Local Driver",
+	reference : "java.class/ru.myx.ae3.vfs.s4.lcl.db4o.Db4oLocalS4"
+}

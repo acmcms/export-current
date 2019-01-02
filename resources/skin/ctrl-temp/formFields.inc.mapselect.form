@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML><%
+%><HEAD><%
+	%><%EXEC: form = Session[Request.id] %><%
+	%><%EXEC: data = form.data %><%
+	%><%EXEC: mainFieldset = data.fieldset %><%
+	%><%EXEC: field = mainFieldset.getField(Request.mapName) %><%
+	%><%EXEC: (value = data[Request.mapName]) || (form[Request.mapName] = value = {}) %><%
+	
+	%><%EXEC: fieldset = field.attributes.fieldset %><%
+	
+	%><%EXEC: source = value[Request.mapKey] %><%
+	%><%EXEC: target = {} %><%
+	%><%EXEC: fieldset.dataRetrieve(source, target) %><%
+	
+	%><%EXEC: prefix = "tomap_"+Request.mapName+"___"+Request.mapName+"___" %><%
+	
+	%><%EXEC: errors || (errors = {}) %><%
+
+	%><TITLE><%=data.getTitle() %></TITLE><%
+	%><%INCLUDE: 'include-head' %><%
+	%><script id="scriptRequire" src="client/js/require.js"></script><%
+
+	%><script><%
+		%>requireScript("debug.js");<%
+		%>requireScript("lib/standard.js");<%
+		%>requireScript("app/Dom.js");<%
+		%>requireScript("app/Containers.js");<%
+		%>requireScript("app/form.js");<%
+
+		%>Objects = [];<%
+		%>iBuffers = [];<%
+
+		%>requireStyle("frames.css");<%
+		%>requireStyle("forms.css");<%
+	%></script><%
+	
+	%><script>
+		var oMenu = {};
+		oMenu.id = 'ContextMenu';
+		
+		function Submit(){
+			router.fire("Submit", oMenu.id, {cmd : 'save'});
+		}
+	</script><%
+%></HEAD><%
+
+%><body BGCOLOR="buttonface" scroll="no" style="cursor:default; margin:3px;overflow:hidden"><%
+
+%><%IF: fieldset%><%
+	%><FORM id="FBODY" target="formBuffer" method="POST" enctype="multipart/form-data" class="form1" action=""><%
+	%><table border=0 cellpadding=0 cellspacing=1 width=100% object=formTable><%
+		%><%INCLUDE: 'formFields.inc' %><%
+	%></table><%
+	%></FORM><%
+	%><script><%
+		%>Containers.createSubmitBuffer(null, document.getElementById("FBODY"), 'execute.xml?type=form&key=<%= Request.id %>&cmd=save');<%
+	%></script><%
+%><%/IF%><%
+
+%></body><%
+
+%></HTML>

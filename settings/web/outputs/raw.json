@@ -1,0 +1,5 @@
+{
+	type		: "ae3.web/Output",
+	description	: "Raw web output type",
+	reference	: "java.class/ru.myx.ae3.i3.web.WebContextType"
+}

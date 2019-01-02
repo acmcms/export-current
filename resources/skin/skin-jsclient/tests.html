@@ -1,0 +1,87 @@
+<html><body><h1>JS Client: Tests</h1><!-- <%FORMAT:'html'%><%
+	%><%IGNORE%> --><head><script type="text/javascript" src="js/require.js"></script></head><!-- <%/IGNORE%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<ul>
+			<li>
+				<h2>Effects</h2>
+				<ul>
+					<li><a href="test/Effects/Busy/busy.html">Busy</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Elements</h2>
+				<ul>
+					<li><a href="test/Elements/Dialog.html">Dialog: Just kind of pop-up (dialogs)</a></li>
+					<li><a href="test/Elements/ScalableImage.html">ScalableImage: Image respecting container size</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Features</h2>
+				<ul>
+					<li><a href="test/Features/DeferredChange.html">Deferred change (delayed onchange and such events)</a></li>
+					<li><a href="test/Features/MouseCapture.html">MouseCapture: Mouse Capture (drag scroll)</a></li>
+					<li><a href="test/Features/PopHint.html">PopHint: An extended tooltip</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Inputs</h2>
+				<ul>
+					<li><a href="test/Inputs/BoxSelect.html">BoxSelect (single/multiple options)</a></li>
+					<li><a href="test/Inputs/BixSelect.html">BixSelect (single/multiple options)</a></li>
+					<li><a href="test/Inputs/BoxSelect-table.html">BoxSelect using TABLEs (single/multiple options)</a></li>
+					<li><a href="test/Inputs/BoxSelect-div.html">BoxSelect using DIVs (single/multiple options)</a></li>
+					<li><a href="test/Inputs/DropSelect.html">DropSelect (single option)</a></li>
+					<li><a href="test/Inputs/Select.html">Select</a></li>
+					<li><a href="test/Inputs/String.html">String</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Layouts</h2>
+				<ul>
+					<li><a href="test/Layouts/attachment.html">Attachment</a></li>
+					<li><a href="test/Layouts/button.html">Button</a></li>
+					<li><a href="test/Layouts/content.html">Content</a></li>
+					<li><a href="test/Layouts/icon.html">Icon</a></li>
+					<li><a href="test/Layouts/tabble.html">Tabble</a></li>
+					<li><a href="test/Layouts/window.html">Window</a></li>
+					
+					<li><a href="test/Layouts/macro/content-and-menupane.html">Content And MenuPane</a></li>
+					<li><a href="test/Layouts/macro/content-and-status.html">Content And Status</a></li>
+					<li><a href="test/Layouts/macro/toolbar-and-content.html">Toolbar And Content</a></li>
+					
+					<li><a href="test/Layouts/panels.html">panels?</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Utils</h2>
+				<ul>
+					<li><a href="test/Utils/comms.html">Comms</a></li>
+					<li><a href="test/Utils/coordinates.html">Coordinates</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>lib</h2>
+				<ul>
+					<li><a href="test/lib/charcode.html">charcode.js</a></li>
+					<li><a href="test/lib/menu.html">menu.js</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>other</h2>
+				<ul>
+					<li><a href="test/ae3.html">ae3.js</a></li>
+					<li><a href="test/debug.html">debug.js</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'JS Client: tests',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

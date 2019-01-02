@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>VlapanCSSBorderRadius</title>
+	<visibility>hidden</visibility>
+
+	<command>
+		<key>insert</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="value" class="string"/>
+			<field id="setAll" class="boolean" default="false"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%>border-radius:<%= value %>;<%
+			%>-o-border-radius:<%= value %>;<%
+			%>-moz-border-radius:<%= value %>;<%
+			%>-webkit-border-radius:<%= value %>;<%
+			index = 0;
+			for( var item in value.split(" ") ){
+				if( (item != "" && item != "0") || setAll ){
+					%>-webkit-border-<%= VlapanCSSBorderRadius.corner().get(index) %>-radius:<%= item %>;<%
+				}
+				index++;
+			}
+//			%>behavior:url(/$files/border-radius.htc);<%
+		]]></script>
+	</command>
+
+	<command>
+		<key>corner</key>
+		<static>true</static>
+		<script class="script" type="ACM.CALC"><![CDATA[
+			[
+				"top-left",
+				"top-right",
+				"bottom-right",
+				"bottom-left"
+			]
+		]]></script>
+	</command>
+</type>

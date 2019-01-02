@@ -1,0 +1,117 @@
+<html><body><h1>JS Client</h1><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		It's just another library of browser (you know, web) -oriented scripts and 
+		classes.
+		<ul>
+			<li>
+				<h2>Basics</h2>
+				Some of basic stuff that is just useful itself but required for heaps
+				of other stuff contained in 'jsclient' library.
+				<ul>
+					<li><a href="debug.js.html">debug</a> - crazily usable thing. 
+						Creates minimized debug console for scripts developers
+						to be able to write logs (debugging information) and be 
+						able to open this console and investigate those logs in 
+						run-time.</li>
+					<li><a href="json2.js.html">JSON</a> - it is a common way to encode
+						 / decode (materialize / serialize one can say) java-script 
+						 objects.
+					</li>
+					<li><a href="require.js.html">require</a> - for script to be able 
+						to access some classes, other scripts, report data, etc. from 
+						the server.
+					</li>
+				</ul>
+			</li>
+			<li>
+				<h2>Effects</h2>
+				Effects are a set of classes intended to provide some kind of visual 
+				effect (feedback). Those effects are attached to surfaces (usually 
+				it is a DIV element). Effect is displayed assuming that effect's 
+				intended view-port is the whole surface it is attached to. Every 
+				effect instance provides set of methods to control effect displayed.
+				<ul>
+					<li><a href="test/Effects/Busy/busy.html">Busy</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Elements</h2>
+				Elements add some extended document elements.
+				<ul>
+					<li><a href="test/Elements/Dialog.html">Dialog</a> - Just kind of pop-up (dialogs)</li>
+					<li><a href="test/Elements/ScalableImage.html">ScalableImage</a> - Image respecting container size</li>
+				</ul>
+			</li>
+			<li>
+				<h2>Features</h2>
+				Features add some abilities to objects.
+				<ul>
+					<li><a href="test/Features/DeferredChange.html">Deferred change (delayed onchange and such events)</a></li>
+					<li><a href="test/Features/MouseCapture.html">Mouse Capture (drag scroll)</a></li>
+					<li><a href="test/Features/PopHint.html">PopHint</a> - An extended tooltip</li>
+				</ul>
+			</li>
+			<li>
+				<h2>Inputs</h2>
+				Inputs are a set of classes representing inputs for user interaction.
+				They are either attached, either automatically create real HTML input 
+				elements (such as: "INPUT", "TEXTAREA", "SELECT"...). It is designed 
+				this way to:<br>
+				&nbsp;1) virtually represent real DOM elements for third-party scripts compatibility;<br>
+				&nbsp;2) have the ability to wrap real HTML form to enhance simple HTML.
+				<ul>
+					<li><a href="test/Inputs/BoxSelect.html">BoxSelect (single option / multiple options)</a></li>
+					<li><a href="test/Inputs/DropSelect.html">DropSelect (single option)</a></li>
+					<!-- li><a href="test/Inputs/Select.html">Select</a></li -->
+					<li><a href="test/Inputs/String.html">String</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Layouts</h2>
+				<ul>
+					<li><a href="test/Layouts/attachment.html">Attachment</a></li>
+					<li><a href="test/Layouts/button.html">Button</a></li>
+					<li><a href="test/Layouts/content.html">Content</a></li>
+					<li><a href="test/Layouts/icon.html">Icon</a></li>
+					<li><a href="test/Layouts/tabble.html">Tabble</a></li>
+					<li><a href="test/Layouts/window.html">Window</a></li>
+					
+					<li><a href="test/Layouts/macro/content-and-menupane.html">Content And MenuPane</a></li>
+					<li><a href="test/Layouts/macro/content-and-status.html">Content And Status</a></li>
+					<li><a href="test/Layouts/macro/toolbar-and-content.html">Toolbar And Content</a></li>
+					
+					<li><a href="test/Layouts/panels.html">panels?</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Utils</h2>
+				<ul>
+					<li><a href="test/Utils/comms.html">Comms</a></li>
+					<li><a href="test/Utils/coordinates.html">Coordinates</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>lib</h2>
+				<ul>
+					<li><a href="test/lib/charcode.html">charcode.js</a></li>
+					<li><a href="test/lib/menu.html">menu.js</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>other</h2>
+				<ul>
+					<li><a href="tests.html">JS Client Tests</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'JS Client',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

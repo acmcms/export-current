@@ -1,0 +1,9 @@
+{
+	type		: "ae3.web/Share",
+	name		: "acmcms-info",
+	aliases		: "acmcms-info.*",
+	reference	: {
+		type : "skin",
+		skin : "skin-acmcms-info"
+	}
+}

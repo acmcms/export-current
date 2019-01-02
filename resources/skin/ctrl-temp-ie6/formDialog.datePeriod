@@ -1,0 +1,442 @@
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add("shared-editor_style") %><%
+%><%EXEC: requireCss.add("shared-editor_popup-style") %><%
+
+%><%EXEC: requireJs = [] %><%
+
+%><%EXEC: requireCss.add('zakladki') %><%
+%><%EXEC: requireJs.add('app/Zakladki') %><%
+
+%><%OUTPUT: head %><%
+%><script>
+
+function submit(){
+	var cTab = (tabulator1.currentTabIndex || 0);
+
+	switch(cTab){
+	case 0:
+		var sYear = eYear = currYear;
+		var sMonth = eMonth = currMonth;
+		var sDay = eDay = currDay;
+		var sHour = eHour = currHour;
+		var sMin = eMin = currMin;
+
+		switch(periodType){
+		case 'year':
+			eYear++;
+			sMonth = eMonth = 1;
+			sDay = eDay = 1;
+			sHour = eHour = 0;
+			sMin = eMin = 0;
+			break;
+		case 'month':
+			eMonth++;
+			sDay = eDay = 1;
+			sHour = eHour = 0;
+			sMin = eMin = 0;
+			break;
+		case 'day':
+			eDay++;
+			sHour = eHour = 0;
+			sMin = eMin = 0;
+			break;
+		case 'hour':
+			eHour++;
+			sMin = eMin = 0;
+			break;
+		case 'minute':
+			eMin++;
+			break;
+		}
+		var sMillis = Date.parse(sMonth+"/"+sDay+"/"+sYear+" " + sHour + ":" + sMin);
+		var eMillis = Date.parse(eMonth+"/"+eDay+"/"+eYear+" " + eHour + ":" + eMin) - 1;
+
+		break;
+	case 1:
+		break;
+	}
+}
+
+function onDone(obj){
+	if(obj){
+		switch(obj.type){
+		case 'error' :
+			alert(obj.error);
+			break;
+		default:
+			try{
+				window.dialogArguments.sender.refresh();
+			}catch(Error){}
+			window.close();
+		}
+	}else{
+		alert('error');
+	}
+}
+
+</script>
+
+
+<script>
+
+var currYear = false;
+var currMonth = false;
+var currDay = false;
+var currHour = false;
+var currMin = false;
+var periodType = 'day';
+
+var d = new Date();
+
+try{
+	if(window.dialogArguments)
+		var parametrs = window.dialogArguments;
+	else
+		var parametrs = {};
+}catch(Error){
+	var parametrs = {};
+}
+
+if(!parametrs.millis)
+	parametrs.millis = d;
+if(!parametrs.format || parametrs.format == null || parametrs.format == 'null')
+	parametrs.format = 'yyyy.MM.dd HH:mm';
+
+
+
+
+var t = d.setTime(parametrs.millis);
+SetDate(t);
+
+function SetDate(t){
+	var ndate = new Date(t);
+	currYear = ndate.getFullYear();
+
+	currMonth = ndate.getMonth() + 1;
+
+	currDay = ndate.getDate();
+	currHour = ndate.getHours();
+	currMin = ndate.getMinutes();
+}
+
+var mnths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var mdArr = [31,28,31,30,31,30,31,31,30,31,30,31];
+var wdArr = [3,4,5,6,0,1,2];
+
+var calendarTable = {};
+
+
+function move(){
+	for (var i=calendarTable.rows.length-1; i>0; --i) calendarTable.rows[i].removeNode(true);
+	drawCalendar();
+}
+
+
+function start(){
+	calendarTable = document.getElementById('calendar');
+	document.getElementById('Year').value = currYear;
+
+	document.getElementById('Month').options[currMonth-1].selected = true;
+
+	document.getElementById('Hour').value = currHour;
+	document.getElementById('Min').value = currMin;
+	drawCalendar();
+}
+
+
+function drawCalendar(){
+	var startDay = getWeekDay(currYear,currMonth);
+
+	var i=1;
+	var oTR = calendarTable.insertRow();
+	if (wdArr[startDay]!=1){
+		for ( i=1; i<(wdArr[startDay]!=0?wdArr[startDay]:7); ++i){
+			var oTD = oTR.insertCell();
+		}
+	}
+
+	var dIm = mdArr[currMonth-1];
+	if ( (currYear%4 == 0) && currMonth == 2 ) dIm++;
+	for (var j=1; j<=dIm; j++){
+		var oTD = oTR.insertCell();
+		oTD.className = 't';
+		oTD.day = j;
+		oTD.id = 'day'+j;
+		oTD.style.textAlign = 'center';
+		oTD.onclick = function(){
+			if(calendarTable.selectedObj){
+				calendarTable.selectedObj.style.backgroundColor="";
+				calendarTable.selectedObj.style.color="";
+			}
+			this.style.backgroundColor = 'highlight';
+			this.style.color = 'highlighttext';
+			calendarTable.selectedObj = this;
+			currDay = this.day;
+		}
+		oTD.innerHTML = j;
+		if ( (i%7) == 0 && j<dIm){
+			i=0;
+			oTR = calendarTable.insertRow();
+		}
+		i++;
+	}
+	if (calendarTable.rows.length < 7){
+		var oTR = calendarTable.insertRow();
+		var oTD = oTR.insertCell();
+		oTD.innerHTML = '&nbsp;';
+	}
+
+	if (currDay > dIm) currDay = 1;
+	document.getElementById("day"+currDay).click();
+}
+
+
+
+function getWeekDay(yyyy,mm,dd){
+	if (!dd) dd = 1;
+	var tYear = yyyy - 1970;
+	var tMonth = tYear*12 + mm;
+	var tDay = dd;
+	for (var i = 0; i<(mm-1); ++i){
+		tDay += mdArr[i];
+	}
+	tDay += tYear*365;
+	for (var i=1970; i<=yyyy; ++i){
+		if ((i%4) == 0 && (yyyy!=i || mm>2)) {tDay++;}
+	}
+	return (tDay%7);
+}
+
+
+function GetFormatDate(){
+	var date = ''
+	var Symbol = ''
+	var block = ''
+	for (var i = 0; i<parametrs.format.length; ++i){
+		var cs = parametrs.format.substr(i,1)
+
+		if (cs == 'y' || cs == 'M' || cs == 'd' || cs == 'H' || cs == 'm'){
+			if (cs == Symbol || Symbol == ''){
+				block += cs;
+			}else{
+				if (block != '') date += FormatDate(block);
+				block = cs;
+				Symbol = cs;
+			}
+		}else{
+			if (block != '') date += FormatDate(block);
+			block = '';
+			date += cs;
+		}
+	}
+	if (block != '') date += FormatDate(block);
+	return date;
+}
+
+function FormatDate(block){
+	switch (block.substr(0,1)){
+	case "y":
+		if (block.length > 2) return String(currYear);
+		else return String(currYear).substr(2,2);
+		break;
+	case "M":
+		if (block.length == 1 || (block.length ==2 && String(currMonth).length ==2) ) return String(currMonth);
+		if (block.length ==2) return "0"+String(currMonth);
+		break;
+	case "d":
+		if (block.length == 1 || (block.length ==2 && String(currDay).length ==2) ) return String(currDay);
+		if (block.length ==2) return "0"+String(currDay);
+		break;
+	case "H":
+		if (block.length == 1 || (block.length ==2 && String(currHour).length ==2) ) return String(currHour);
+		if (block.length ==2) return "0"+String(currHour);
+		break;
+	case "m":
+		if (block.length == 1 || (block.length ==2 && String(currMin).length ==2) ) return String(currMin);
+		if (block.length ==2) return "0"+String(currMin);
+		break;
+	}
+}
+
+function SubMit(){
+	var result = {'Date':GetFormatDate(), 'Millis' : Date.parse(mnths[currMonth-1] + "," + currDay + "," + currYear + " " + currHour + ":" + currMin)};
+	window.returnValue = result
+	window.close();
+}
+
+</script><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+%><body onload="start()">
+
+
+
+
+<table border=0 cellpadding=0 cellspacing=0 width=100% height=100%>
+	<tr>
+		<td></td>
+	</tr>
+	<tr>
+		<td height=100%>
+			<table border=0 cellpadding=0 cellspacing=0 width=100% height=100%>
+			<tr>
+				<td>
+					<table border=0 cellpadding=0 cellspacing=0 class=zakladka width=100% id=tabulator1>
+					<tr>
+						<td><script>document.write(app.Zakladki.tabSplitter3)</script></td>
+						<td class=TabOn id="holder" onclick="app.Zakladki.SwitchTab(this)" nowrap><div><%= intl(en="Date", ru="Дата") %></div></td>
+						<td><script>document.write(app.Zakladki.tabSplitter4)</script></td>
+						<td class=TabOff id="holder" onclick="app.Zakladki.SwitchTab(this)" nowrap><div><%= intl(en="Period", ru="Период") %></div></td>
+						<td><script>document.write(app.Zakladki.tabSplitter5)</script></td>
+						<td style="width:100%"></td>
+					</tr>
+					<tr class=border>
+						<td class=TabOffl><img width=0 height=0></td>
+						<td><img width=0 height=0></td>
+						<td class=TabOffr><img width=0 height=0></td>
+						<td class=TabOn><img width=0 height=0></td>
+						<td class=TabOn><img width=0 height=0></td>
+						<td class=TabOn><img width=0 height=0></td>
+						<td class=TabOn><img width=0 height=0></td>
+						<td class=TabOn><img width=0 height=0></td>
+					</tr>
+					</table>				
+				</td>
+			</tr>
+			<tr>
+				<td height=100%>
+					<table border=0 cellpadding=0 cellspacing=0 width=100% style="border-left: 1 solid buttonhighlight; border-right: 1 solid buttonshadow; border-bottom: 1 solid buttonshadow; padding:5; height:100%">
+					<tr>
+						<td valign=top>
+
+<center>
+<table border=0 cellpadding=0 cellspacing=0 style="width:150px; margin-top:5px;">
+<tr>
+	<td><SELECT onchange="currMonth = this.value; move();" class=input2 NAME=Month style="width:70px">
+	<%EXEC: Months = intl(
+		en="January,Febrary,March,April,May,June,July,August,September,Octouber,November,December",
+		ru = "Январь,Февраль,Март,Апрель,Май,Июнь,Июль,Август,Сентябрь,Октябрь,Ноябрь,Декабрь"
+	) %>
+	<%CALL:ForArray(split(Months.toString(),',')) %>
+		<option value=<%= CurrentIndex+1%>><%= Current %>
+	<%/CALL%>
+	</SELECT></td><td align=right><INPUT readonly class=input2 style="width:50px" name=Year style="margin-right:2px"></td>
+	<td><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" 	onmousedown="currYear++;move();this.parentNode.previousSibling.firstChild.value=currYear">5</BUTTON><br><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" onmousedown="currYear--;move();this.parentNode.previousSibling.firstChild.value=currYear">6</BUTTON></td>
+</tr>
+</table>
+
+<table cellpadding=2 cellspacing=0 id=calendar style="width:150px; margin-top:3px; background-color:window; border-width:1px; border-style:solid; border-left-color:buttonshadow; border-top-color:buttonshadow; border-right-color:buttonhighlight; border-bottom-color:buttonhighlight; ">
+<tr class=t3 style="text-align:center; background-color:buttonface">
+<%= intl( en="<td>M</td><td>T</td><td>W</td><td>T</td><td>F</td><td>S</td><td>S</td>",
+		ru="<td>Пн</td><td>Вт</td><td>Ср</td><td>Чт</td><td>Пт</td><td>Сб</td><td>Вс</td>") %>
+</tr>
+</table>
+
+<table border=0 cellpadding=0 cellspacing=0 style="margin-top:5px;">
+<tr>
+	<td class=t3><%= intl( en="HH:mm", ru="ЧЧ:мм") %>&nbsp;</td>
+	<td><INPUT readonly class=input2 style="width:22px" name=Hour style="margin-right:2px"></td>
+	<td><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" onmousedown="currHour=(currHour==23)?0:currHour+1;this.parentNode.previousSibling.firstChild.value=currHour">5</BUTTON><br><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" onmousedown="currHour=(currHour==0)?23:currHour-1;this.parentNode.previousSibling.firstChild.value=currHour">6</BUTTON></td>
+
+	<td class=t3>&nbsp;:&nbsp;</td>
+
+	<td><INPUT readonly class=input2 style="width:22px" name=Min style="margin-right:2px"></td>
+	<td><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" onmousedown="currMin=(currMin==59)?0:currMin+1;this.parentNode.previousSibling.firstChild.value=currMin">5</BUTTON><br><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" onmousedown="currMin=(currMin==0)?59:currMin-1;this.parentNode.previousSibling.firstChild.value=currMin">6</BUTTON></td>
+</tr>
+</table>
+
+<table border=0 cellpadding=0 cellspacing=0 style="margin-top:10px; width:150px">
+<tr>
+	<td><select style="width:100%" onchange="periodType = this.value;">
+		<option value=year><%= intl( en="Сurrent year", ru="Текущий год") %>
+		<option value=month><%= intl( en="Сurrent month", ru="Текущий месяц") %>
+		<option value=day selected><%= intl( en="Сurrent day", ru="Текущий день") %>
+		<option value=hour><%= intl( en="Сurrent hour", ru="Текущий час") %>
+		<option value=minute><%= intl( en="Сurrent minute", ru="Текущая минута") %>
+	</select></td>
+<tr>
+</table>
+
+</center>
+
+
+						</td>
+					</tr>
+					<tr style="display:none">
+						<td valign=top><%
+							%><%EXEC: requireJs.add('fields/Date') %><%
+
+							%><table border=0 cellpadding=0 cellspacing=1 width=100% style="margin-bottom:5px"><%
+								%><tr><%
+									%><td class=th nowrap style="text-align:left"><%
+										%><%= intl(en="From", ru="Дата начала") %>:<%
+									%></td><%
+								%></tr><%
+								%><tr><%
+									%><td valign=top width=100%><%
+										%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+											%><tr><%
+												%><td width=100%><%
+													%><input type=text name="periodSDate" style="width:100%"><%
+												%></td><%
+												%><td style="padding-left:2px"><%
+													%><button class=button1 width=20 onclick="fields.Date.getCalendarDate('periodSDate')"><%
+														%>...<%
+													%></button><%
+												%></td><%
+											%></tr><%
+										%></table><%
+									%></td><%
+								%></tr><%
+								%><tr><%
+									%><td class=th nowrap style="text-align:left"><%
+										%><%= intl(en="To", ru="Дата окончания") %>:<%
+									%></td><%
+								%></tr><%
+								%><tr><%
+									%><td valign=top width=100%><%
+										%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+											%><tr><%
+												%><td width=100%><%
+													%><input type=text name="periodEDate" style="width:100%"><%
+												%></td><%
+												%><td style="padding-left:2px"><%
+													%><button class=button1 width=20 onclick="fields.Date.getCalendarDate('periodEDate')"><%
+														%>...<%
+													%></button><%
+												%></td><%
+											%></tr><%
+										%></table><%
+									%></td><%
+								%></tr><%
+							%></table><%
+						%></td>
+					</tr>
+					</table>
+				</td>
+			</tr>
+			</table>
+
+		
+		</td>
+	</tr>
+	<tr>
+		<td align=right style="padding:10px 0 4px 0"><BUTTON onclick="submit()">&nbsp;<B><%= intl(en="OK", ru="OK") %></B>&nbsp;</BUTTON>&nbsp;<BUTTON ONCLICK="window.close();">&nbsp;<%= intl(en="Cancel", ru="Отмена") %>&nbsp;</BUTTON></td>
+	</tr>
+</table>
+
+
+<iframe name=buffer id=buffer border=0 frameborder=no width=1 height=1 scrolling=no src="" style="position:absolute; left:0; top: -20; visibility:hidden;"></iframe>
+
+</body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: intl(en="date / period", ru="дата / период"),
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

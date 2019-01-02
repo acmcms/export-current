@@ -1,0 +1,100 @@
+BODY,TD {
+	cursor: default;
+	background-color: window;
+	color: windowtext;
+}
+
+A {
+	color: windowtext;
+	text-decoration: underline;
+}
+
+.dtab TD {
+	height: 15px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding: 0 15px 0 4px;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.dtab .listTDselect {
+	border-bottom: solid 1px buttonshadow;
+	border-right: solid 1px buttonshadow;
+	border-top: solid 1px buttonhighlight;
+	border-left: solid 1px buttonhighlight;
+	background-color: buttonface;
+	color: buttontext;
+	padding: 0;
+}
+
+.dtab .icon,.dtab .icon img,.dtab .icon img:hover {
+	padding: 0;
+	border: 0;
+	width: 16px;
+	height: 16px;
+}
+
+.dtab .title {
+	padding: 0 0 0 4px;
+	border: 0;
+}
+
+.listTDheader {
+	border-bottom: solid 1px buttonshadow;
+	border-right: solid 1px buttonshadow;
+	border-top: solid 1px buttonhighlight;
+	border-left: solid 1px buttonhighlight;
+	background-color: buttonface;
+	color: buttontext;
+	height: 16px;
+	padding-left: 4px;
+	padding-right: 4px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+}
+
+.listTDheader TD {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	background-color: buttonface;
+	color: buttontext;
+}
+
+.listTDheader .switch {
+	font-family: Webdings;
+	font-size: 10px;
+	line-height: 6px;
+}
+
+.listTDheader .title {
+	padding-right: 4px;
+}
+
+.listTDheader .titleSelect {
+	padding-right: 4px;
+	font-weight: bold;
+}
+
+.listTDheaderWOborder {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	background-color: buttonface;
+	color: buttontext;
+	border: 0;
+}
+
+INPUT,SELECT {
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+	border: 0;
+	background-color: ActiveCaption;
+	color: CaptionText;
+}
+
+.filter {
+	padding: 1px;
+	margin-top: -1px;
+	margin-bottom: -1px;
+	width: 100%;
+}

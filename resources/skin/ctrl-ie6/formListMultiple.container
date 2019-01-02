@@ -1,0 +1,65 @@
+<LINK HREF="frames.css" REL=stylesheet>
+
+
+<script>
+eventMethods = parent.eventMethods;
+
+<%INCLUDE: 'ListFieldFrame.js' %>
+
+function callSearch(name){
+	var isAuthor = false
+	try{
+		if(parent.document.forms.usersForm.elements.authors.value)
+			isAuthor = true;
+	}catch(Error){}
+
+	var obj = eval(name);
+	var value = {};
+	if(isAuthor){
+		value.authors = obj.returnValue[0].id.substr(3);
+	}else{
+		value.users = obj.returnValue[0].id.substr(3);
+	}
+	parent.callSearch(value);
+}
+</script>
+
+
+
+<BODY BGCOLOR="buttonface" scroll="no" style="cursor:default; margin:0">
+<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+<TR>
+	<TD width=100%>
+
+		<TABLE border=0 cellpadding=0 cellspacing=0 width=100% height=100% id="itemsList" path="<%= path %>">
+		<TR>
+			<TD class=FrameBorder2>
+
+				<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%">
+				<TR>
+					<TD style="padding:2" cla2ss=FrameBorder2 width=100%>
+						<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%">
+						<TR>
+							<TD width=100% class=SubmenuFrame nowrap id=TDPaging>&nbsp;</TD>
+						</TR>
+						</TABLE>
+					</TD>
+					
+					<TD style="padding:1px"><button class=iconText onclick="refreshSetList('itemsList');">Refresh</button></TD>
+
+				</TR>
+				</TABLE>
+			</TD>
+		</TR>
+
+		<TR>
+			<TD height=100%>
+				<iframe name="itemsListFrm" src="formListMultiple.list?<%=Request.getParameterString()%>" style="width:100%; height:100%" frameborder=0></iframe>
+			</TD>
+		</TR>
+		</TABLE>
+
+	</TD>
+</TR>
+</TABLE>
+</BODY>

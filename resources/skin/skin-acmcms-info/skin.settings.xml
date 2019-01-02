@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<!--  
+		<type>EXACT</type>
+		<type>PLAIN</type>
+	-->
+	<type>PLAIN</type>
+	<title>ACM.CMS documentation / information</title>
+	<abstract>false</abstract>
+	
+	<prototype>skin-standard-html</prototype>
+	
+	<default>acmcms.htm</default>
+	<charset>UTF-8</charset>
+	
+	<keywords>documentation, acm, acm.cms, docs, doc, installation, administration, development</keywords>
+	
+	<renderer>ACM.TPL</renderer>
+</settings>

@@ -1,0 +1,6 @@
+{
+	type : "ae3/Factory",
+	name : "psgr",
+	description : "PostgreSQL S4 Local Driver",
+	reference : "ru.myx.ae3.vfs.s4.lcl.psgr/FactoryS4PSGR"
+}

@@ -1,0 +1,65 @@
+<html><body><h1>Developer Info</h1><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<ul>
+			<li>
+				Manual
+				<ul>
+					<li><a href="/!/public/resources/doc/acm.cms-ru.pdf">Manual (PDF format), Russian</a></li>
+				</ul>
+			</li>
+			<li>
+				JAVA
+				<ul>
+					<li><a href="/!/skin/skin-ae3-info/jdoc-ae3.api/index.html">AE3.API</a> (java-doc)</li>
+					<li><a href="/!/skin/skin-ae3-info/jdoc-ae3.sdk/index.html">AE3.SDK</a> /plus AE3.API/ (java-doc)</li>
+					<li><a href="java/favourites.htm">Staff favourites</a> (java-doc)</li>
+				</ul>
+			</li>
+			<li>
+				ACM.CMS
+				<ul>
+					<li><a href="acm/sapis.htm">developer: SAPIs</a> 
+						- static APIs - objects accessible through thread's global 
+						context provided by system as an execution environment 
+						helpers, factories and API's.
+					</li>
+					<li><a href="acm/libs.htm">developer: libraries</a> 
+						- <a href="http://wiki.commonjs.org/wiki/Modules/1.1.1">CommonJS</a> style libraries which can be dynamically loaded
+						to enable specific functionality.
+					</li>
+					<li><a href="/!/skin/skin-ae3.impl.language.tpl/">Language: ACM.TPL</a> 
+						- one of the languages used to write templates and scripts in ACMCMS.
+					</li>
+					<li><a href="/!/skin/skin-ae3.plug.xstore.s3/">Storage: S3</a> 
+						- main-stream version of RDBMS-based object storage used in ACMCMS.
+					</li>
+					<li><a href="/!/skin/skin-developer-tools/"><b>Developer tools</b></a>
+						- various developer tools and utilities.
+					</li>
+					<li><a href="acm/upgrade.htm"><b>Upgrade path</b></a>
+						- changes that need to be done on existing ACMCMS sites in order to be 
+						able to upgrade without problems.
+					</li>
+				</ul>
+			</li>
+			<li>
+				Other
+				<ul>
+					<li><a href="/!/skin/skin-jsclient/">SKIN: JS Client</a></li>
+					<li><a href="/!/skin/skin-standard-html/">SKIN: Standard HTML</a></li>
+					<li><a href="/!/skin/skin-acmcms-info/">SKIN: ACM.CMS Info</a> (this one... its root, actually.)</li>
+					<li><a href="parts/Evaluate.LanguageImpl.txt">parts: Evaluate</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Developer Information',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

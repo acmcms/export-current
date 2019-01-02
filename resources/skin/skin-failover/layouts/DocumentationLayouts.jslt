@@ -1,0 +1,10 @@
+//
+//
+// Arguments:
+//	layout - current layout
+//
+// Description:
+//	Returns documentation for layouts.
+//
+
+return context.resolveToObject( "absolute:public/resources/doc/layouts/layouts.jsld" );

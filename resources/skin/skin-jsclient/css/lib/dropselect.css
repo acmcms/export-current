@@ -1,0 +1,68 @@
+.drop-select-window{
+	border: solid 1px #AAAAAA;
+}
+.drop-select-container{
+	cursor: default;
+	font-family: arial, sans-serif;
+	font-size: 12px;
+	line-height: 15px;
+	min-height: 18px;
+	height: 20px;
+	min-width: 80px;
+	max-width: 100%;
+	width: 100%;
+	color: black;
+	background-color: #fafafa;
+	vertical-align: middle;
+	-moz-user-select: none;
+	white-space: nowrap;
+	text-align: left;
+}
+.drop-select-plane{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	overflow: hidden;
+}
+.drop-select-item TD, .drop-select-item-active TD{
+	padding: 4px 3px 3px 3px;
+	vertical-align: top;
+	height: 15px;
+}
+.drop-select-item{
+	background-color: #f5f5f5;
+	color: black;
+}
+.drop-select-item-active{
+	background-color: #3875D7;
+	color: white;
+}
+.drop-select-plane img{
+	margin: -1px 0 -1px 0;
+	border: none;
+	width: 16px;
+	height: 16px;
+}
+.bold{
+	font-weight: bold;
+}
+.underline{
+	text-decoration: underline;
+}
+.italic{
+	font-style: italic;
+}
+.drop-select-item-active .red{
+	color: #FFAA99;
+}
+.drop-select-item .red{
+	color: #771111;
+}
+.drop-select-arrow{
+	background-color: #fafafa;
+	vertical-align: middle;
+	border-left: 1px solid #AAAAAA;
+	padding: 2px 2px 0 2px;
+	height: 100%;
+	overflow: hidden;
+}

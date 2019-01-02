@@ -1,0 +1,4 @@
+{
+	type : "ae3.Test",
+	file : 'resources/data/tests/v8/splay.js'
+}

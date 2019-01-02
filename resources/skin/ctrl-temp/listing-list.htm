@@ -1,0 +1,674 @@
+<%
+%><%EXEC: cNode = Request.mode == "link" 
+	? Runtime.getLinkageRootNode() 
+	: ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+%><%EXEC: check = '' %><%
+%><%IF: Request.mode == "link" %><%
+	%><%IF: Request.path %><%
+		%><%ITERATE: item : split(Request.path,'/') %><%
+			%><%IF: item && cNode %><%
+				%><%EXEC: newNode = cNode.getChildByName(item) %><%
+				%><%IF: newNode %><%
+					%><%EXEC: cNode = newNode %><%
+					%><%EXEC: check = (cNode.getLocationControl() || (check + cNode.getKey())) + '/' %><%
+				%><%/IF%><%
+			%><%/IF%><%
+		%><%/ITERATE%><%
+	%><%/IF%><%
+%><%ELSE%><%
+	%><%IF: Request.path %><%
+		%><%EXEC: newNode = ControlAPI.childForPath(cNode, Request.path) %><%
+		%><%EXEC: check = Request.path %><%
+		%><%WHILE: !newNode %><%
+			%><%EXEC: check = check.substring(0,check.lastIndexOf('/')) %><%
+			%><%EXEC: newNode = ControlAPI.childForPath(cNode, check) %><%
+			%><%EXEC: flag = true %><%
+		%><%/WHILE%><%
+		%><%IF: flag %><%
+			%><%FINAL: ' text/html' %><%
+				%><script><%
+					%>Listing.changeLocationSetList('<%= check %>');<%
+				%></script><%
+			%><%/FINAL%><%
+		%><%/IF%><%
+		%><%EXEC: cNode = newNode %><%
+	%><%/IF%><%
+%><%/ELSE%><%
+%><%/IF%><%
+
+%><%IF: ControlAPI.isAccessiblePermission(check, "$view_contents") %><%
+	%><%EXEC: children = ControlAPI.filterAccessibleHierarchy(check, cNode.getChildrenExternal() ) %><%
+	%><%EXEC: childrenLength = ArrayLength(children) %><%
+	%><%EXEC: contents = cNode.getContents() %><%
+	%><%EXEC: definition = cNode.getContentFieldset() %><%
+%><%ELSE%><%
+	%><%CHOOSE: Request.mode %><%
+		%><%MATCH: "link" %><%
+			%><%EXEC: children = cNode.getChildren() %><%
+			%><%EXEC: childrenLength = ArrayLength(children) %><%
+			%><%EXEC: contents = cNode.getContents() %><%
+		%><%MATCH%><%
+			%><%EXEC: children = ControlAPI.filterAccessibleHierarchy(check, cNode.getChildren() ) %><%
+	%><%/CHOOSE%><%
+%><%/ELSE%><%
+%><%/IF%><%
+
+%><%EXEC: childrenLength = ArrayLength(children) %><%
+%><%EXEC: contentsLength = ArrayLength(contents) %><%
+
+%><%EXEC: FilterField = Request.filterfield %><%
+%><%EXEC: FilterValue = Request.filtervalue %><%
+%><%EXEC: SortField = Request.sortfield %><%
+%><%EXEC: SortValue = Int(Integer(Request.sortvalue,0)) %><%
+
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add('frames') %><%
+%><%EXEC: requireCss.add('forms') %><%
+%><%EXEC: requireCss.add('listing-list') %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add("require") %><%
+%><%EXEC: requireJs.add("app/Dom") %><%
+%><%EXEC: requireJs.add("app/Router") %><%
+%><%EXEC: requireJs.add("app/Listing") %><%
+
+%><%OUTPUT: head %><%
+	%><!-- version: 1 --><%
+	%><script><%
+		%>router = parent.router || parent.parent.router || new Router("listing-list");<%
+		
+		%>var blockParent;<%
+		%>var blockHeader;<%
+		
+		%>var selectedObjects = [];<%
+
+		%>var listing = parent.listing;<%
+		
+		%>document.oncontextmenu = function(){<%
+			%>return true;<%
+		%>};<%
+		
+		%>document.onselectstart = function(){<%
+			%>return false;<%
+		%>};<%
+		
+		%>var keySelectFlag = false;<%
+		
+		%>document.onkeydown = function(e){<%
+			%>e || (e = window.event);<%
+			%>keySelectFlag = e.shiftKey<% 
+								%>? 'shift'<% 
+								%>: e.ctrlKey<% 
+									%>? 'ctrl'<% 
+									%>: false;<%
+			%>if(keySelectFlag == 'ctrl' && e.keyCode == 67){<%
+				%>copyListToClipBoard();<%
+			%>}<%
+		%>};<%
+		
+		%>document.onkeyup = function(){<%
+			%>keySelectFlag = false;<%
+		%>};<%
+		
+		%>function copyListToClipBoard(){
+			if(selectedObjects < 1){
+				return;
+			}
+			var txt = ''
+			for(var i = 0; i < selectedObjects.length; ++i){
+				oTR = selectedObjects[i];
+				for(var j = 0; j < oTR.cells.length; j++){
+					txt += oTR.cells[j].innerText + '\t';
+				}
+				txt += '\n';
+			}
+			window.clipboardData.setData('Text',txt)
+		}
+		
+		document.ondblclick = function(e){
+			e || (e = window.event);
+			var obj = (e.srcElement || e.target);
+			var selectParent = Dom.searchParentByAttribute(obj, "selectParent");
+			if(!selectParent){
+				if(selectedObjects.length > 0){
+					for (var i=0; i < selectedObjects.length; ++i){
+						Dom.unSelectBlock(selectedObjects[i].Childs);
+						selectedObjects[i].select = false;
+					}
+					selectedObjects = [];
+					router.fire('SetListUnselected', listing.id, false);
+				}
+				return;
+			}
+			if(!selectParent.isEntry){
+				return;
+			}
+			selectParent.Childs || (selectParent.Childs = Dom.getSelectParentChild(selectParent));
+			for (var i=0; i < selectedObjects.length; ++i){
+				Dom.unSelectBlock(selectedObjects[i].Childs);
+				selectedObjects[i].select = false;
+			}
+			selectedObjects = [];
+			Dom.selectBlock(selectParent.Childs);
+			selectedObjects[0] = selectParent;
+			selectParent.select = true;
+			if(selectedObjects.length > 0){
+				router.fire('ItemActivate', listing.id, selectedObjects);
+			}
+		};
+		
+		document.onclick = function(e){
+			e || (e = window.event);
+			var obj = (e.srcElement || e.target);
+			var multipleFlag = (obj.selectFlag || keySelectFlag);
+			var selectParent = Dom.searchParentByAttribute(obj, "selectParent");
+			blockHeader.currentInput && blockHeader.clearForm();
+			if(!selectParent){
+				if(!selectedObjects.length){
+					return;
+				}
+				for (var i=0; i < selectedObjects.length; ++i){
+					Dom.unSelectBlock(selectedObjects[i].Childs);
+					selectedObjects[i].select = false;
+				}
+				selectedObjects = [];
+				router.fire('ItemUnselect', listing.id, false);
+				return;
+			}
+			router.fire('SetListActive', listing.id, {
+				path : <%= Format.jsString( cNode.getLocationControl() ) %>/* + selectParent.id.substr(3)*/
+			});
+			selectParent.Childs || (selectParent.Childs = Dom.getSelectParentChild(selectParent));
+			if(multipleFlag){
+				switch(keySelectFlag){
+				case 'shift':
+					var startIndex = selectedObjects[selectedObjects.length-1].sourceIndex;
+					var endIndex = selectParent.sourceIndex;
+					var endFlag = false;
+					var cObj;
+					if(startIndex <= endIndex){
+						cObj = selectedObjects[selectedObjects.length-1];
+						endObj = selectParent;
+					}else{
+						cObj = selectParent;
+						endObj = selectedObjects[selectedObjects.length-1];
+					}
+		
+					while(!endFlag){
+						if(cObj){
+							if(!cObj.select){
+								cObj.Childs || (cObj.Childs = Dom.getSelectParentChild(cObj));
+								Dom.selectBlock(cObj.Childs);
+								selectedObjects[selectedObjects.length] = cObj;
+								cObj.select = true;
+							}
+						}
+						endFlag = cObj == endObj || !cObj;
+						cObj = cObj.nextSibling;
+					}
+					break;
+				default:
+					var allreadySelected = false;
+					for (var i=0; i < selectedObjects.length; ++i){
+						if(selectedObjects[i] == selectParent){
+							allreadySelected = true;
+							Dom.unSelectBlock(selectParent.Childs);
+							selectedObjects[i].select = false;
+							selectedObjects[i] = null;
+						}
+					}
+					selectedObjects = clearArrFromNull(selectedObjects);
+					if(!allreadySelected){
+						Dom.selectBlock(selectParent.Childs);
+						selectedObjects[selectedObjects.length] = selectParent;
+						selectParent.select = true;
+					}
+					break;
+				}
+			}else{
+				if(selectParent.select && selectedObjects.length == 1){
+					return;
+				}
+				for (var i=0; i < selectedObjects.length; ++i){
+					Dom.unSelectBlock(selectedObjects[i].Childs);
+					selectedObjects[i].select = false;
+				}
+				selectedObjects = [];
+				Dom.selectBlock(selectParent.Childs);
+				selectedObjects[0] = selectParent;
+				selectParent.select = true;
+			}
+			if(selectedObjects.length == 0){
+				router.fire('ItemUnselect', listing.id, false);
+			}else
+			if(selectedObjects.length == 1){
+				router.fire('ItemSelect', listing.id, selectedObjects);
+			}else
+			if(selectedObjects.length > 1){
+				router.fire('ItemsSelect', listing.id, selectedObjects);
+			}
+		};
+		
+		function clearArrFromNull(arr){
+			var narr = [];
+			for (var i=0; i<arr.length; ++i){
+				arr[i] != null && (narr[narr.length] = arr[i]);
+			}
+			return narr;
+		}
+		
+		function setColumnWidth(head, list, data){
+			var hrow = head.rows[0];
+			var drow;
+			var total = 10; // table border + selector cell
+			var target = [10];
+			if(data.rows.length < 1 || data.rows[0].cells.length < 1){
+				window.top.debug && window.top.debug("listing-list: resizing caption columns (no data)...");
+				for (var i = 1; i < hrow.cells.length - 1; ++i){
+					total += target[target.length] = Math.max(100, hrow.cells[i].offsetWidth);
+				}
+			}else{
+				window.top.debug && window.top.debug("listing-list: resizing caption columns...");
+				for(var row = 0; row < data.rows.length - 1; row++){
+					drow = data.rows[row];
+					if(!drow.cells[2].colSpan || drow.cells[2].colSpan == 1){
+						for (var i = 1; i < drow.cells.length; ++i){
+							total += target[target.length] = Math.max(
+								Math.min((drow.cells[i].width || data.offsetWidth) + 20, drow.cells[i].offsetWidth),
+								Math.min((hrow.cells[i].width || head.offsetWidth) + 3, hrow.cells[i].offsetWidth)
+							);
+						}
+						break;
+					}
+				}
+			}
+			var clientWidth = (list.clientWidth || list.offsetWidth);
+			if(clientWidth > total + 3){
+				var padding = clientWidth - total;
+				hrow.cells[hrow.cells.length - 1].style.padding = "0 0 0 " + (padding - 3) + "px";
+				hrow.cells[hrow.cells.length - 1].style.display = "";
+				total = clientWidth;
+			}else{
+				hrow.cells[hrow.cells.length - 1].style.display = "none";
+			}
+			for (var i = 1; i < target.length; ++i){
+				var width = target[i];
+				if(drow){
+					var dcell = drow.cells[i];
+					if(dcell.offsetWidth < width){
+						var div = document.createElement("div");
+						div.style.width = (width - 1 - 15 - 4) + "px";
+						div.style.height = "1px";
+						div.style.marginTop = "-1px";
+						div.style.overflow = "hidden";
+						dcell.appendChild(div);
+						window.top.debug && dcell.offsetWidth != width && window.top.debug("listing-list: resize: invalid data row width: target=" + width + ", result=" + dcell.offsetWidth);
+					}
+				}
+				var hcell = hrow.cells[i];
+				if(hcell.offsetWidth < width){
+					var div = document.createElement("div");
+					div.style.width = (width - 1 - 2) + "px";
+					div.style.height = "1px";
+					div.style.marginTop = "-1px";
+					div.style.overflow = "hidden";
+					hcell.appendChild(div);
+					window.top.debug && hcell.offsetWidth != width && window.top.debug("listing-list: resize: invalid header row width: target=" + width + ", result=" + hcell.offsetWidth);
+				}
+			}
+			window.top.debug && window.top.debug("listing-list: resize: total=" + total + ", head=" + head.offsetWidth + " data=" + data.offsetWidth);
+		}
+
+		function setPreviousValue(){
+			if(!listing.container || !listing.container.returnValue){
+				return;
+			}
+			var arr = listing.container.returnValue;
+			var flag = false;
+			for (var i=0; i < arr.length; ++i){
+				try{
+					var id = String(arr[i].id)
+					var obj = document.getElementById(id);
+					Dom.firstElement(obj).click();
+					flag = true;
+				}catch(Error){
+					//
+				}
+			}
+			flag || router.fire('ItemUnselect', listing.id, false);
+		}
+		
+		function sortTimerSubmit(fieldID,value){
+			window.document.forms[0].sortfield.value = fieldID;
+			window.document.forms[0].sortvalue.value = value;
+			window.document.forms[0].submit();
+		}
+	</script><%
+	
+	%><script><%
+		%>function onScroll(){<%
+			%>var cols = document.getElementById("blockHeader");<%
+			%>var list = document.getElementById("list");<%
+			%>cols.style.left = (- list.scrollLeft) + "px";<%
+		%>}<%
+		
+		%>function onResize(){<%
+			%>var head = document.getElementById("head");<%
+			%>var list = document.getElementById("list");<%
+			%>head.style.width = (list.clientWidth) + "px";<%
+			%>blockHeader && blockParent && setColumnWidth(blockHeader, list, blockParent);<%
+		%>}<%
+	%></script>%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body scroll="no"><%
+		%><div id="head" style="width:100%;overflow:hidden;height:18px;position:absolute;top:0;left:0;z-index:1000"><%
+			%><form method="POST" name="filter"><%
+				%><table id=blockHeader class=blockHeader style="border-collapse:collapse;position:absolute;top:0;left:0" selectParent=1><%
+					%><tr><%
+						%><th><%
+						%></th><%
+						%><%IF: !definition%><%
+							%><td fieldID="key" editor="string" class="listTDheader" nowrap="nowrap"><%
+								%><table border="0" cellpadding="0" cellspacing="0"><%
+									%><tr><%
+										%><td class=switch><%
+											%>4<%
+										%></td><%
+										%><td class=title nowrap><%
+											%><%= intl(en = "Name", ru = "Имя" ) %><%
+										%></td><%
+									%></tr><%
+								%></table><%
+							%></td><%
+							%><td fieldID="title" editor="string" class=listTDheader nowrap><%
+								%><table border=0 cellpadding=0 cellspacing=0><%
+									%><tr><%
+										%><td class=switch><%
+											%>4<%
+										%></td><%
+										%><td class=title nowrap><%
+											%><%= intl(en = "Title", ru = "Заголовок" ) %><%
+										%></td><%
+									%></tr><%
+								%></table><%
+							%></td><%
+						%><%/IF%><%
+						%><%EXEC: FieldsID = [] %><%
+						%><%EXEC: FieldsLookup = {} %><%
+						%><%EXEC: SortTitles = ('c','5','6') %><%
+						%><%IF: definition %><%
+							%><%ITERATE: currentField : definition %><%
+								%><%EXEC: attributes = currentField.attributes %><%
+								%><%EXEC: id = currentField.getKey() %><%
+								%><%EXEC: title = currentField.getTitle() %><%
+								%><%EXEC: Editor = attributes.type %><%
+								%><%EXEC: Hint = attributes.hint %><%
+								%><%IF: attributes.lookup || attributes.lookup_expression %><%
+									%><%INCLUDE: 'lookupPrepare.inc' %><%
+									%><%EXEC: type = attributes.lookup_expression ? 'expression' : 'lookup' %><%
+									%><%EXEC: FieldsLookup[id] = {
+										type : type,
+										lookup : lookup
+									} %><%
+								%><%/IF%><%
+								%><%EXEC: ArrayAppend(FieldsID,id) %><%
+								%><%EXEC: i = i + 1 %><%
+								%><%IF: Editor %><%
+									%><%IF: FilterField == id %><%
+										%><%CHOOSE: Editor %><%
+											%><%MATCH: 'string' %><%
+												%><%EXEC: ignorePrefix = !StartsWith(FilterValue,'^') %><%
+												%><%EXEC: FilterValue = ignorePrefix ? FilterValue : substr(FilterValue,1) %><%
+												%><%EXEC: contents = ControlAPI.filterByFieldString(contents, FilterField, FilterValue, true, ignorePrefix, true) %><%
+											%><%MATCH: 'select' %><%
+												%><%EXEC: contents = ControlAPI.filterByFieldString(contents, id, FilterValue, true, false, false) %><%
+										%><%/CHOOSE%><%
+									%><%/IF%><%
+									%><%IF: SortField == id %><%
+										%><%EXEC: descending = SortValue != 1 %><%
+										%><%CHOOSE: Editor %><%
+											%><%MATCH: 'string', 'select' %><%
+												%><%IF: Integer(SortValue,0) > 0 %><%
+													%><%EXEC: contents = ControlAPI.sortByFieldString(contents, SortField, true, descending) %><%
+												%><%/IF%><%
+											%><%MATCH: 'number' %><%
+												%><%IF: Integer(SortValue,0) > 0 %><%
+													%><%EXEC: contents = ControlAPI.sortByFieldNumeric(contents, SortField, descending) %><%
+												%><%/IF%><%
+											%><%MATCH: 'date' %><%
+												%><%IF: Integer(SortValue,0) > 0 %><%
+													%><%EXEC: contents = ControlAPI.sortByFieldDate(contents, SortField, descending) %><%
+												%><%/IF%><%
+										%><%/CHOOSE%><%
+									%><%/IF%><%
+									%><%EXEC: FieldTitle = title %><%
+									%><td<%
+										%> fieldID="<%= id %>"<%
+										%> editor="<%= Editor %>"<%
+										%> title="<%= Format.xmlAttributeFragment( Hint || FieldTitle ) %> (<%= Editor %>)"<%
+										%> class="listTDheader"<%
+										%> nowrap<%
+										%><%IF: FilterField == id %><%
+											%> filterValue="<%= Format.xmlAttributeFragment(FilterValue) %>"<%
+										%><%/IF%><%
+										%><%CHOOSE: Editor %><%
+											%><%MATCH: 'select', 'viewString' %><%
+												%> editorValue = ":;:All<%
+												%><%EXEC: lookup = attributes.lookup %><%
+												%><%IF: lookup %><%
+													%> <%
+													%><%ITERATE: key : lookup.keySet() %><%
+														%>;<%= StringToXml(key) %>:<%= StringToXml(lookup[key]) %><%
+													%><%/ITERATE%><%
+												%><%/IF%>"<%
+										%><%/CHOOSE%><%
+										%><%IF: SortField == id %><%
+											%> sortValue=<%= SortValue %><%
+										%><%/IF%><%
+										%>><%
+										%><table border=0 cellpadding=0 cellspacing=0><%
+											%><tr><%
+												%><td class="switch<%IF: FilterField == id %> select<%/IF%>"><%
+													%>4<%
+												%></td><%
+												%><td class="title<%IF: FilterField == id %> select<%/IF%>" nowrap><%
+													%><%= FieldTitle %><%
+												%></td><%
+												%><td class="switch<%IF: FilterField == id %> select<%/IF%>" disabled id=sort><%
+													%><%= SortField == id ? SortTitles[SortValue] : 'c' %><%
+												%></td><%
+											%></tr><%
+										%></table><%
+									%></td><%
+								%><%ELSE%><%
+									%><td title="<%= Format.xmlAttributeFragment( Hint || title ) %>" class=listTDheader nowrap><%
+										%><%= title %> (<%= Editor %>)<%
+									%></td><%
+								%><%/ELSE%><%
+								%><%/IF%><%
+							%><%/ITERATE%><%
+						%><%/IF%><%
+						%><td class=listTDheader><%
+						%></td><%
+					%></tr><%
+				%></table><%
+				%><input type="hidden" name="filterfield" value=""><%
+				%><input type="hidden" name="sortfield" value=""><%
+				%><input type="hidden" name="sortvalue" value=""><%
+			%></form><%
+		%></div><%
+	
+		%><div id="list" style="width:100%;height:100%;overflow:auto"><%
+			%><table id="blockParent" class=blockParent style="BORDER-COLLAPSE:collapse"><%
+				%><%EXEC: RetrieveString='' %><%
+				%><%EXEC: MaxLength=Int(User.getUser().getProfile('mwmAdmin',true).TitleLimit,60) %><%
+				%><%EXEC: Count=Int(User.getUser().getProfile('mwmAdmin',true).ListingLimit,50) %><%
+				%><%IF: Request.Page == 'all' || (FilterField && FilterValue) %><%
+					%><%EXEC: Page = Request.Page %><%
+					%><%EXEC: Start = 0 %><%
+					%><%EXEC: End = childrenLength + contentsLength %><%
+				%><%ELSE%><%
+					%><%EXEC: Page = Integer(Request.Page) %><%
+					%><%EXEC: Start = Page * Count %><%
+					%><%EXEC: End = (Start + Count) > (childrenLength + contentsLength) ? childrenLength + contentsLength : Start + Count %><%
+				%><%/ELSE%><%
+				%><%/IF%><%
+				%><%EXEC: i = 0 %><%
+				%><%EXEC: cnt = 0 %><%
+				%><%CALL: For(Start, End) %><%
+					%><%IF: CurrentIndex < childrenLength %><%
+						%><%EXEC: Current = children[CurrentIndex] %><%
+						%><%EXEC: isEntry = ControlAPI.isEntry(Current) %><%
+						%><%EXEC: Icon = ControlAPI.getIcon(Current) %><%
+						%><%EXEC: cnt ++ %><%
+						%><%EXEC: i == 0 && (i = 1) %><%
+						%><tr id="zzz<%= Format.xmlAttributeFragment( Current.getKey() ) %>" type="node" selectParent=1<%= isEntry ? ' isEntry=1' : '' %>><%
+							%><th canBeSelected=1 selectFlag=1><%
+							%></th><%
+							%><%IF: !definition %><%
+								%><td canBeSelected=1><%
+									%><table border=0 cellpadding=0 cellspacing=0><%
+										%><tr><%
+											%><td class=icon canBeSelected=1><%
+												%><img src="icons/<%= Icon %>.16.gif"><%
+											%></td><%
+											%><td class=title noWrap canBeSelected=1><%
+												%><%= Format.xmlNodeValue( LimitString( Current.getKey(), MaxLength, '...' ) ) %><%
+											%></td><%
+										%></tr><%
+									%></table><%
+								%></td><%
+								%><td canBeSelected=1><%
+									%><%= Format.xmlNodeValue( LimitString( Current.getTitle(), MaxLength, '...' ) ) %><%
+								%></td><%
+								%><%ITERATE: fieldId : FieldsID %><%
+									%><td canBeSelected=1><%
+									%></td><%
+								%><%/ITERATE%><%
+							%><%ELSE%><%
+								%><td canBeSelected=1><%
+									%><table border=0 cellpadding=0 cellspacing=0><%
+										%><tr><%
+											%><td class=icon canBeSelected=1><%
+												%><img src="icons/<%= Icon %>.16.gif"><%
+											%></td><%
+											%><td class=title noWrap canBeSelected=1><%
+												%><%= Format.xmlNodeValue( LimitString( Current.getKey(), MaxLength, '...' ) ) %><%
+											%></td><%
+										%></tr><%
+									%></table><%
+								%></td><%
+								%><td canBeSelected=1 colspan=<%= ArrayLength(FieldsID) - 1 %>><%
+									%><%= Format.xmlNodeValue( LimitString( Current.getTitle(), MaxLength, '...' ) ) %><%
+								%></td><%
+							%><%/ELSE%><%
+							%><%/IF%><%
+						%></tr><%
+					%><%ELSE%><%
+						%><%EXEC: Current = contents[CurrentIndex - childrenLength] %><%
+						%><%EXEC: isEntry = ControlAPI.isEntry(Current) %><%
+						%><%EXEC: Record = Current.getData() %><%
+						%><%EXEC: Icon = ControlAPI.getIcon(Current) %><%
+						%><%EXEC: cnt = cnt + 1 %><%
+						%><%EXEC: i == 0 && (i = 1) %><%
+						%><tr id="zzz<%= Format.xmlAttributeFragment( Current.getKey() ) %>" type="content" selectParent=1<%= isEntry ? ' isEntry=1' : '' %>><%
+							%><th canBeSelected=1 selectFlag=1><%
+							%></th><%
+							%><%IF: !definition %><%
+								%><td canBeSelected=1><%
+									%><table border=0 cellpadding=0 cellspacing=0><%
+										%><tr><%
+											%><td class=icon canBeSelected=1><%
+												%><img src="icons/<%= Icon %>.16.gif"><%
+											%></td><%
+											%><td class=title noWrap canBeSelected=1><%
+												%><%= Format.xmlNodeValue( LimitString( Current.getKey(), MaxLength, '...' ) ) %><%
+											%></td><%
+										%></tr><%
+									%></table><%
+								%></td><%
+								%><td canBeSelected=1><%
+									%><%= Format.xmlNodeValue( LimitString( Current.getTitle(), MaxLength, '...' ) ) %><%
+								%></td><%
+							%><%/IF%><%
+							%><%CALL: ForArray(FieldsID) %><%
+								%><%EXEC: value = FieldsLookup[Current]
+													? (Record[Current] === undefined
+														? "" 
+														: (FieldsLookup[Current].type == 'lookup'
+															? FieldsLookup[Current].lookup[Record[Current]]
+															: FieldsLookup[Current].lookup[String(Record[Current])])
+													)
+													: Record[Current] %><%
+								%><%IF: definition && First %><%
+									%><td canBeSelected=1><%
+										%><table border=0 cellpadding=0 cellspacing=0><%
+											%><tr><%
+												%><td class=icon canBeSelected=1><%
+													%><img src="icons/<%= Icon %>.16.gif"><%
+												%></td><%
+												%><td class=title noWrap canBeSelected=1><%
+													%><%= Format.xmlNodeValue( LimitString( value, MaxLength, '...' ) ) %><%
+												%></td><%
+											%></tr><%
+										%></table><%
+									%></td><%
+								%><%ELSE%><%
+									%><td noWrap canBeSelected=1><%
+										%><%= Format.xmlNodeValue( LimitString( value, MaxLength, '...' ) ) %><%
+									%></td><%
+								%><%/ELSE%><%
+								%><%/IF%><%
+							%><%/CALL%><%
+						%></tr><%
+					%><%/ELSE%><%
+					%><%/IF%><%
+				%><%/CALL%><%
+			%></table><%
+		%></div><%
+		%><script><%
+			%>onResize();<%
+			%>blockHeader = document.getElementById("blockHeader");<%
+			%>blockParent = document.getElementById("blockParent");<%
+			
+			%>function onLoad(){<%
+				%>router.fire(<%
+					%>'setListPaging',<%
+					%>listing.id,<%
+					%>{<%
+						%><%IF: !FilterField || !FilterValue %><%
+							%>size : <%= childrenLength + contentsLength %>,<%
+							%>page : <%= Page == "all" ? "'all'" : Page + 1 %>,<%
+							%>count: <%= Count %><%
+						%><%ELSE%><%
+							%>size : <%= cnt %>,<%
+							%>title : '<%= intl(en = "Find", ru = "Найдено") %>'<%
+						%><%/ELSE%><%
+						%><%/IF%><%
+					%>}<%
+				%>);<%
+				%>window.top.debug && window.top.debug("listing-list: onload event - initializing everything");<%
+				%>window.onresize = onResize;<%
+				%>var head = document.getElementById("head");<%
+				%>var list = document.getElementById("list");<%
+				%>list.onscroll = onScroll;<%
+				%>setColumnWidth(blockHeader, list, blockParent);<%
+				%>listing.container && (Dom.parentElement(blockParent).scrollTop = listing.container.lastScrollPosition);<%
+				%>setPreviousValue();<%
+				%>window.onLoad = undefined;<%
+			%>}<%
+			%>onLoad();<%
+		%></script><%
+	%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: "Listing List",
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

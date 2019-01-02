@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Image - Графическое изображение</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>publish</state>
+	<statelist>
+		<state>publish</state>
+		<state>draft</state>
+	</statelist>
+	<folder>false</folder>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var image = Imaging.imageForBinary( this.image );
+					return Imaging.encodePng( image );
+				}
+				case "remove":{
+					if( registered ){
+						var redirect = this.getParent().getLocation();
+						this.remove();
+						return $default.redirect( redirect );
+					}	
+					return $default.redirect( this.getLocation() );
+				}
+				default:{
+					return $default.redirect( this.getParent().getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>remove</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.delete();
+		]]></script>
+	</command>
+
+	<command>
+		<key>create</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+			<field id="parent" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName || !data.image ) return false;
+			try{
+				var change = parent.createChild();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.$type = "Image";
+				change.$state = Storage.STATE_PUBLISH;
+				change.image = data.image;
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>getCreateForm</key>
+		<static>true</static>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = [{
+				title: "Название",
+				name: "titleName",
+				type: "text",
+				required: true
+			},{
+				title: "Картинка",
+				name: "image",
+				type: "file",
+				required: true
+			},{
+				title: "",
+				name: "submit",
+				type: "submit",
+				value: "Опубликовать"
+			}];
+			return {
+				id: "form",
+				title: 'Добавление страницы',
+				info: '',
+				focus: "titleName",
+				action: "/addinfo",
+				method: "post",
+				legend: "",
+				fields: fields
+			};
+		]]></script>
+	</command>
+</type>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>vCard</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+	</statelist>
+	<folder>true</folder>
+	<extends>$Site</extends>
+	<modify>
+		<form> 
+			<fields class="fieldset">
+				<field class="string" id="nname" title="nick name"/>
+				<field class="string" id="fname" title="first name"/>
+				<field class="string" id="lname" title="last name"/>
+				<field class="string" variant="email" id="email" title="email"/>
+				<field class="string" variant="link" id="url" title="URL"/>
+				<field class="string" id="gaid" title="Google Analytics ID"/>
+			</fields>
+		</form>
+	</modify>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var asrc = require("gravatar").getUrl(this.email);
+					var card = {
+						fname : this.fname,
+						lname : this.lname,
+						nname : this.nname,
+						email : this.email,
+						asrc : asrc,
+						url : this.url
+					};
+					var content = {
+						title : afterPoint( this.getTitle() ),
+						card : card,
+						gaid : this.gaid
+					};
+					return this.fillSelection( content );
+				}
+				case "style":{
+					var profile = User.getUser().getProfile();
+					if( Request.v1 ) profile.style = 'v1';
+					if( Request.v2 ) profile.style = 'v2';
+					User.getUser().setProfile( profile );
+					return $default.redirect( this.getLocation() );
+				}
+				case "auth":{
+					User.requestAuthorization();
+					User.requestHighAuthorization();
+					var referer = Request.getAttributes().Referer;
+					return $default.redirect( referer ? referer : this.getLocation() );
+				}
+				default:{
+					if( target.endsWith(".png") ) return $base.getSecImage();
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+</type>

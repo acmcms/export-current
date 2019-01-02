@@ -1,0 +1,60 @@
+<html><body><h1>Developer Tools: CommonJS libraries</h1><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<p>
+			<a href="http://wiki.commonjs.org/wiki/Modules/1.1.1">CommonJS</a> libraries - objects accessible through thread's global 
+			context provided by system as an execution environment 
+			helpers, factories and API's.
+		</p>
+		<ul>
+			<li>
+				<h3>Usage</h3>
+				<p>There is <samp>require</samp> function available in global context. 
+				You call it like <samp>require( __package_name__ + '/' + __module_name__ )</samp> 
+				to load the module specified and get an instance of API for module loaded.
+				</p>
+				<p>Module will be searched in following locations:
+					<ol>
+						<li>server's <samp>lib/</samp> folder</li>
+						<li>acmcms instance's %protected% <samp>resources/lib/</samp> folder</li>
+						<li>acmcms %public% <samp>resources/lib/</samp> folder</li>
+					</ol>
+					Module file is a '.js' file with module name placed in folder 
+					with package name. For example, ru.acmcms/dbi module is located
+					in <samp>%public%/resources/lib/ru.acmcms/dbi.js</samp> file.
+				</p>
+				<p>
+					Example:
+					<code>
+<%FORMAT: 'js' %>		var dbi = require('ru.acmcms/dbi');
+						dbi.executeTransaction(.....);
+<%/FORMAT%>			</code>
+				</p>
+			</li>
+			<li>
+				<h3>List of libraries bundled with ACM.CMS:</h3>
+				For obvious reasons we can list only ones bundled with ACM.CMS in 
+				its %public% folder. Other libraries could be added instance-wide 
+				by server administrator or server-wide (ACMCMS internal domain) by
+				site developer.
+				<ul>
+					<li><a href="lib-dbi.htm">ru.acmcms/dbi</a> - SQL database interface</li>
+				</ul>
+			</li>
+			<li>
+				<h3>Other</h3>
+				<ul>
+					<li><a href="/!/skin/skin-acmcms-info/">SKIN: ACM.CMS Info</a> (this one... its root, actually.)</li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'CommonJS libraries',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

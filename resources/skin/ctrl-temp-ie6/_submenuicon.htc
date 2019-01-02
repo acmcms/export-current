@@ -1,0 +1,22 @@
+<%FINAL: 'text/x-component' %>
+<PUBLIC:ATTACH EVENT="onmouseover" ONEVENT="Hilite()" />
+<PUBLIC:ATTACH EVENT="onmouseout"  ONEVENT="Restore()" />
+<PUBLIC:ATTACH EVENT="onclick"  ONEVENT="Click()" />
+
+<SCRIPT LANGUAGE="JScript">
+function Hilite(){
+	runtimeStyle.backgroundColor	= "buttontext";
+	runtimeStyle.color		= "buttonface";
+}
+
+function Restore(){
+	runtimeStyle.backgroundColor	= "buttonface";
+	runtimeStyle.color		= "buttontext";
+}
+
+function Click(){
+	this.blur()
+}
+
+</SCRIPT>
+<%/FINAL%>

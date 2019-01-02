@@ -1,0 +1,113 @@
+$output(body){
+	%>
+	<h1>Rich Editors Example Page</h1>
+
+	<h2>TOC</h2>
+	<ul>
+		<li><a href="#about">About</a></li>
+		<li><a href="#integrate">Integrate</a></li>
+		<li><a href="#iform">Integrate as field</a></li>
+		<li><a href="#imodal">Integrate as modal window</a></li>
+		<li><a href="#pkgs">Other packages</a></li>
+	</ul>
+
+	<h2 id="about">About</h2>
+	<p>This package is wrapper of several Rich Text Editors (RTE)</p>
+	<p>For more information click on RTE link below:</p>
+	<ul class="horizontal">
+		<li><a href="ckeditor/">CKEditor</a></li>
+		<li><a href="tinymce/">TinyMCE</a></li>
+		<li><a href="yui/">YUI</a></li>
+		<li><a href="yuisimple/">YUISimple</a></li>
+		<li><a href="markitup/">markItUp!</a></li>
+	</ul>
+	
+	<h2 id="integrate">Integrate</h2>
+	<ul class="list">
+		<li>import "vlapan-richedit" package to your skin.settings.xml</li>
+	</ul>
+
+	<div class="yui3-g"> 
+		<div class="yui3-u-1-2">
+			<h2 id="iform">Integrate as field</h2>
+			<ul class="list">
+				<li>
+					get RTE object <b>var rte = new VlapanRichEdit( editor = "ckeditor" )</b>
+					<br/>
+					editor argument can be: &quot;ckeditor&quot; &quot;tinymce&quot;, &quot;yui&quot;, &quot;yuisimple&quot;, &quot;markitup&quot;
+				</li>
+				<li>initalize RTE with <b>rte.init()</b>, use only once</li>
+				<li>replace textarea with <b>rte.replace( id = "editorId" )</b></li>
+			</ul>
+			<p>Example:</p>
+			<%
+			$output(example1){
+				%>
+				var rte = new VlapanRichedit( editorName = &quot;yui&quot; );
+				= rte.init();
+				&lt;textarea id=&quot;editorId&quot;&gt;text&lt;/textarea&gt;
+				= rte.replace( id = &quot;editorId&quot; );<%
+			}
+			= VlapanSyntaxHighlighter.insert( example1 );
+			%>
+			<p>To integrate any YUI editor you need to assign class=&quot;yui-skin-sam&quot; to parent container like in example below:</p>
+			<%
+			$output(example2){
+				%>
+				&lt;p class=&quot;yui-skin-sam&quot;&gt;&lt;textarea id=&quot;editorId&quot;&gt;text&lt;/textarea&gt;&lt;/p&gt;<%
+			}
+			= VlapanSyntaxHighlighter.insert( example2 );
+			%>
+			<p>To set width or height use style or CSS:</p>
+			<%
+			$output(example3){
+				%>
+				&lt;textarea id=&quot;editorId&quot; style=&quot;width:520px;height:260px;&quot;&gt;text&lt;/textarea&gt;<%
+			}
+			= VlapanSyntaxHighlighter.insert( example3 );
+			%>
+			<p><b>Demonstration</b></p>
+			<ul class="horizontal">
+				<li><a href="form.htm?editor=ckeditor">CKEditor</a></li>
+				<li><a href="form.htm?editor=tinymce">TinyMCE</a></li>
+				<li><a href="form.htm?editor=yui">YUI</a></li>
+				<li><a href="form.htm?editor=yuisimple">YUISimple</a></li>
+				<li><a href="form.htm?editor=markitup">markItUp!</a></li>
+				<li><a href="form.htm?editor=ckeditor&editor=tinymce&editor=yui&editor=yuisimple&editor=markitup">All in one form</a></li>
+			</ul>
+		</div>
+		<div class="yui3-u-1-2" style="margin-left:5px;">
+			<h2 id="imodal">Integrate as modal window</h2>
+			<p>To send data to editor in modal window use 'arguments' from window.showModalDialog( uri[, arguments][, options] ), you can specify it as text or ElementID</p>
+			<%
+			$output(example4){
+				%>
+				&lt;a href=&quot;#&quot; onclick=&quot;returnValue = window.showModalDialog( 'ckeditor/?modal=1', 'Text or ElementID' );return false;&quot;&gt;CKEditor in modal window&lt;/a&gt;<%
+			}
+			= VlapanSyntaxHighlighter.insert( example4 );
+			%>
+			<p><b>Demonstration</b></p>
+			<ul class="horizontal">
+				<li><a href="#" onclick="showModal('ckeditor/modal.htm',document.getElementById('parentText'));return false;">CKEditor</a></li>
+				<li><a href="#" onclick="showModal('tinymce/modal.htm',document.getElementById('parentText'));return false;">TinyMCE</a></li>
+				<li><a href="#" onclick="showModal('yui/?modal=1',document.getElementById('parentText'));return false;">YUI</a></li>
+				<li><a href="#" onclick="showModal('yuisimple/?modal=1',document.getElementById('parentText'));return false;">YUISimple</a></li>
+				<li><a href="#" onclick="showModal('markitup/modal.htm',document.getElementById('parentText'));return false;">markItUp!</a></li>
+			</ul>
+			<p>
+				Use this text area to send data to modal window, it will also filled with return value<br/>
+				<textarea id="parentText" rows="5" cols="40" style="width:100%;">Data data data data data data data data data data...</textarea>
+			</p>
+		</div>
+	</div>
+	<%
+}
+
+return {
+	title: "vlapan-richedit",
+	template: "vlapan-example",
+	requireCss: null,
+	requireJs: null,
+	head: head,
+	body: body
+};

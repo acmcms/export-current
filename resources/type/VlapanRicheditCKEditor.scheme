@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>CKEditor</title>
+	<visibility>hidden</visibility>
+	<command>
+		<key>VlapanRicheditCKEditor</key>
+		<arguments class="fieldset">
+			<field id="finder" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			this.finder = finder;
+			return this;
+		]]></script>
+	</command>
+	<command>
+		<key>init</key>
+		<arguments class="fieldset">
+			<field id="version" class="string" default="4.4.1"/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><script type="text/javascript" src="http://ckeditor.com/apps/ckeditor/<%= version %>/ckeditor.js"></script><%
+		%>]]></script>
+	</command>
+	<command>
+		<key>replace</key>
+		<arguments class="fieldset">
+			<field id="id" class="string" default="editor"/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[
+			<script type="text/javascript">
+				CKEDITOR.replace( '<%= id %>', {
+					filebrowserBrowseUrl : '/!/skin/ctrl-ie6-linkchooser-modal/?mode=open',
+					<%IGNORE%>
+					filebrowserBrowseUrl1 : '/!/skin/vlapan-hierarchy-<%= this.finder ? this.finder : "simple-finder" %>/ckeditor.html?editor=ckeditor',
+					filebrowserImageBrowseUrl1 : '/!/skin/ctrl-ie6-linkchooser-modal/?mode=open',
+					filebrowserImageBrowseUrl1 : '/!/skin/vlapan-hierarchy-<%= this.finder ? this.finder : "simple-finder" %>/ckeditor.html?editor=ckeditor&type=Images',
+					filebrowserUploadUrl1 : '/uploader/upload.php',
+					filebrowserImageUploadUrl1 : '/uploader/upload.php?type=Images',
+					<%/IGNORE%>
+					toolbar : 'MyToolbar',
+					toolbar_MyToolbar : [
+						{ name: 'control', items : [ 'Save' ] },
+						{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
+						{ name: 'editing', items : [ 'Find','Replace','-','SelectAll','-','Scayt' ] },
+						{ name: 'insert', items : [ 'Image','HorizontalRule','SpecialChar' ] },
+						{ name: 'links', items : [ 'Link','Unlink','Anchor' ] },
+						'/',
+						{ name: 'styles', items : [ 'Format','Font','FontSize' ] },
+						{ name: 'basicstyles', items : [ 'Bold','Italic','Strike','-','RemoveFormat' ] },
+						{ name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote' ] },
+						{ name: 'tools', items : [ 'Maximize','Source','-','About' ] }
+					]
+				});
+			</script>
+		]]></script>
+	</command>
+</type>

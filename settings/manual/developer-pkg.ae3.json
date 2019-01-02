@@ -1,0 +1,6 @@
+{
+	type : "ae3.Manual",
+	title : "Core AE3 Packages",
+	name : "developer-pkg.ae3",
+	group : "developer"
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Layout: FormDate</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawLayout</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="day" class="integer" default="01"/>
+			<field id="month" class="integer" default="01"/>
+			<field id="year" class="integer" default="1980"/>
+			<field id="fromYear" class="integer" default="1920"/>
+			<field id="tillYear" class="integer" default="2000"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			= { 	$layout 	: "layout-form-select",
+					options 	: $base.getIntervalNumeric( 1, 31 ),
+					name 		: 'bd',
+					selected 	: day > 9 ? day : "0" + day,
+					withNull	: true
+				};
+			= { 	$layout 	: "layout-form-select",
+					options 	: $base.getIntervalNumeric( 1, 12 ),
+					name 		: 'bm',
+					selected 	: month > 9 ? month : "0" + month,
+					withNull	: true
+				};
+			= { 	$layout 	: "layout-form-select",
+					options 	: $base.getIntervalNumeric( tillYear, fromYear ),
+					name 		: 'by',
+					selected 	: year > 9 ? year : "0" + year,
+					withNull	: true
+				};
+		]]></script>
+	</command>
+</type>

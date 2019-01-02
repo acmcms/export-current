@@ -1,0 +1,14 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+
+return {
+	layout	:	"final",
+	// optional
+	code	:	layout.code,
+	type	:	"text/html",
+	content	:	layout.content,
+	cache	:	layout.cache,
+};

@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?>
+<section namespacePrefix="global::" layout="documentation">
+	<anchor>ctx-global</anchor>
+	<title>Context Global Objects</title>
+	
+	<section namespacePrefix="global::std::" layout="section">
+		<anchor>std-global</anchor>
+		<title>Standard Global (Built-In) Objects</title>
+	
+		<paragraph>
+			The JavaScript standard specifies some number of standard global 
+			objects that should be supported. Check some of the links for a good and 
+			detailed description of standard built-in objects available globally
+			by being defined in the global context of JavaScript execution:<ul>
+				<li><link layout="formatted" variant="link">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects</link></li>
+				<li><link layout="formatted" variant="link">http://msdn.microsoft.com/en-us/library/ie/htbw4ywd(v=vs.94).aspx</link></li>
+			</ul>
+		</paragraph>
+		
+		<paragraph>
+			The following properties are defined on the 'global' object according to the standard:
+			<fields layout="list">
+				<columns>
+					<column id="n" title="Name"/>
+					<column id="d" title="Summary"/>
+				</columns>
+				<item n="NaN"><d>
+					This property contains the <i>Not-a-Number</i> numeric value.
+				</d></item>
+				<item n="Infinity"><d>
+					This property contains the <i>Positive Infinity</i> value.
+				</d></item>
+				<item n="undefined"><d>
+					This property contains the <i>undefined</i> value.
+				</d></item>
+				<item n="encodeURI"><d>
+					<code>encodeURI(x:String):String</code>
+				</d></item>
+				<item n="encodeURIComponent"><d>
+					<code>encodeURIComponent(x:String):String</code>
+				</d></item>
+				<item n="eval"><d>
+					<code>eval(x:String):Object</code>
+					<code>eval(x:Object):Object</code>
+				</d></item>
+				<item n="isFinite"><d>
+					<code>isFinite(x:Object):Boolean</code>
+				</d></item>
+				<item n="isNaN"><d>
+					<code>isNaN(x:Object):Boolean</code>
+				</d></item>
+				<item n="parseFloat"><d>
+					<code>parseFloat(x:Object):Number</code>
+				</d></item>
+				<item n="parseInt"><d>
+					<code>parseInt(x:Object):Number</code>
+				</d></item>
+				<item n="Array"><d>
+					This property contains the global Array constructor object.
+				</d></item>
+				<item n="ArrayBuffer"><d>
+					This property contains the global ArrayBuffer constructor object.
+				</d></item>
+				<item n="Boolean"><d>
+					This property contains the global Boolean constructor object.
+				</d></item>
+				<item n="Date"><d>
+					This property contains the global Date constructor object.
+				</d></item>
+				<item n="Function"><d>
+					This property contains the global Function constructor object.
+				</d></item>
+				<item n="JSON"><d>
+					This property contains the global <a href="#JavaScript-JSON">JSON</a> object.
+				</d></item>
+				<item n="Math"><d>
+					This property contains the global <a href="#JavaScript-Math">Math</a> object.
+				</d></item>
+				<item n="Number"><d>
+					This property contains the global Number constructor object.
+				</d></item>
+				<item n="String"><d>
+					This property contains the global Number constructor object.
+				</d></item>
+			</fields>
+		</paragraph>
+
+		<section>
+			<anchor>JavaScript-JSON</anchor>
+			<title>Object: JSON</title>
+			<text>
+				<paragraph>
+					<b>JSON</b> object provides several methods for parsing and 
+					formatting JSON notation.
+				</paragraph>
+				<paragraph>
+					See following links for a reference:<ul>
+						<li><link layout="formatted" variant="link">https://en.wikipedia.org/wiki/Json</link></li>
+						<li><link layout="formatted" variant="link">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON</link></li>
+						<li><link layout="formatted" variant="link">http://msdn.microsoft.com/en-us/library/bb299886.aspx</link></li>
+					</ul>
+				</paragraph>
+				<paragraph>
+					The following set of properties is defined on the object 
+					representing the API:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item n="parse"><d>
+							<code>parse(x:String):Object</code>
+							<code>parse(x:String,reviver:Function):Object</code>
+							<code>parse(x:Binary):Object</code>
+							<code>parse(x:File):Object</code>
+						</d></item>
+						<item n="stringify"><d>
+							<code>stringify(x:Object):String</code>
+							<code>stringify(x:Object,replacer:Function):String</code>
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</section>
+
+		
+		<section>
+			<anchor>JavaScript-Math</anchor>
+			<title>Object: Math</title>
+			<text>
+				<paragraph>
+					<b>Math</b> object provides implementations of some useful 
+					mathematical functions and constants.
+				</paragraph>
+				<paragraph>
+					See following links for a reference:<ul>
+						<li><link layout="formatted" variant="link">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math</link></li>
+					</ul>
+				</paragraph>
+				<paragraph>
+					The following set of properties is defined on the object 
+					representing the API:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item n="PI"><d>
+							PI constant value
+						</d></item>
+						<item n="E"><d>
+							E constant value
+						</d></item>
+						<item n="abs"><d>
+							<code>abs(x:Number):Number</code>
+						</d></item>
+						<item n="acos"><d>
+							<code>acos(x:Number):Number</code>
+						</d></item>
+						<item n="asin"><d>
+							<code>asin(x:Number):Number</code>
+						</d></item>
+						<item n="atan"><d>
+							<code>atan(x:Number):Number</code>
+						</d></item>
+						<item n="ceil"><d>
+							<code>ceil(x:Number):Number</code>
+						</d></item>
+						<item n="cos"><d>
+							<code>cos(x:Number):Number</code>
+						</d></item>
+						<item n="exp"><d>
+							<code>exp(x:Number):Number</code>
+						</d></item>
+						<item n="floor"><d>
+							<code>floor(x:Number):Number</code>
+						</d></item>
+						<item n="log"><d>
+							<code>log(x:Number):Number</code>
+						</d></item>
+						<item n="max"><d>
+							<code>max(a:Number, b:Number):Number</code>
+						</d></item>
+						<item n="min"><d>
+							<code>min(a:Number, b:Number):Number</code>
+						</d></item>
+						<item n="rand"><d>
+							<code>rand():Number</code>
+						</d></item>
+						<item n="random"><d>
+							<code>random():Number</code>
+							<code>random(intMax:Integer):Integer</code>
+						</d></item>
+						<item n="rint"><d>
+							<code>rint(x:Number):Number</code>
+						</d></item>
+						<item n="round"><d>
+							<code>round(x:Number):Number</code>
+						</d></item>
+						<item n="sin"><d>
+							<code>sin(x:Number):Number</code>
+						</d></item>
+						<item n="sqrt"><d>
+							<code>sqrt(x:Number):Number</code>
+						</d></item>
+						<item n="tan"><d>
+							<code>tan(x:Number):Number</code>
+						</d></item>
+						<item n="toDegrees"><d>
+							<code>toDegrees(x:Number):Number</code>
+						</d></item>
+						<item n="toRadians"><d>
+							<code>toRadians(x:Number):Number</code>
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</section>
+	</section>
+
+	
+	<section namespacePrefix="global::ext::" layout="section">
+		<anchor>ext-global</anchor>
+		<title>Extra Global (Built-In) Objects</title>
+
+		
+		<paragraph>
+			The following properties are also defined on the 'global':
+			<fields layout="list">
+				<columns>
+					<column id="n" title="Name"/>
+					<column id="d" title="Summary"/>
+				</columns>
+				<item n="___ECMA_IMPL___"><d>
+					This property contains string value with the name of the ECMA-262 (JavaScript) implementation name.
+				</d></item>
+				<item n="___ECMA_IMPL_VERSION_NUMBER___"><d>
+					This property contains the numeric value of ECMA-262 (Javascript) implementation version.
+				</d></item>
+				<item n="___ECMA_IMPL_VERSION_STRING___"><d>
+					This property contains the string value of ECMA-262 (Javascript) implementation version.
+				</d></item>
+				<item n="___ECMA_IMPL_HOST_NAME___"><d>
+					This property contains string value with the UTF-8 charset encoding name.
+				</d></item>
+				<item n="require"><d>
+					<code>require(moduleName:String):Object</code>
+					This property contains the global <a href="#require">require</a> method.
+				</d></item>
+				<item n="console"><d>
+					This property contains the global <a href="#console">console</a> object.
+				</d></item>
+				<item n="setTimeout"><d>
+					<code>setTimeout(f:Function,delay:Number):Object</code>
+				</d></item>
+			</fields>
+		</paragraph>
+	
+		<article>
+			<anchor>require</anchor>
+			<title>Method: require(moduleName)</title>
+			<text>
+				<paragraph>
+					Loads CommonJS-alike module and returns its <i>exports</i>. The module 
+					loaded once and cached in such way, that all following calls to
+					<i>require</i> method with the same moduleName argument will return
+					the same <i>export</i> object unless module file is modified.
+				</paragraph>
+				<paragraph>
+					The <i>require</i> method call is like in the following example:
+					<code>const ae3 = require('ae3');</code>
+				</paragraph>
+				<paragraph>
+					The moduleName denotes a module file that is located in the 'lib' 
+					folder and have '.js' suffix added. For example, when calling like:
+					<code>var MyClass = require('org.example.test/classes/MyClass');</code>
+					the module file's pathname is:
+					<code>lib/org.example.test/classes/MyClass.js</code>
+				</paragraph>
+				<paragraph>
+					When the requested module is located in the same directory as the
+					current module (the module which code is being executed), the 
+					<i>require</i> method may be called like:
+					<code>var MyClass2 = require('./MyClass2');</code>
+					which will be the same as:
+					<code>var MyClass2 = require('org.example.test/classes/MyClass2');</code>
+				</paragraph>
+				<paragraph>
+					The module file is a JS file that is executed by <i>require</i> method
+					when it is loaded. The following set of globals is added to the context 
+					of module execution:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item n="require"><d>
+							The special <i>require</i> method that will be able to resolve
+							local (in the same directory) modules using the './' syntax.
+						</d></item>
+						<item n="exports"><d>
+							The default / initial map for exporting module's API. Use: 
+							<code>exports.myMethod = function(){ return false; };</code> to provide
+							simple API, 
+							Or use:
+							<code>module.exports = myCustomExportObject;</code> to replace 
+							the module's <i>exports</i> object.
+						</d></item>
+						<item n="module"><d>
+							The <i>module</i> object. This object is not exported, it is 
+							used in context of module execution and kept in memory afterwards.
+							The properties of the module object are:
+							<fields layout="list">
+								<columns>
+									<column id="n" title="Name"/>
+									<column id="d" title="Summary"/>
+								</columns>
+								<item n="exports" hl=""><d>
+									The object that will be actually returned to all of the
+									callers requiring given module.
+								</d></item>
+								<item n="id" hl="true"><d>
+									The full (not './' but always expanded) <i>moduleName</i> for the given module.
+								</d></item>
+								<item n="vfs" hl="true"><d>
+									The vfs entry object of the module's source file.
+								</d></item>
+							</fields>
+						</d></item>
+					</fields>
+				</paragraph>
+				<paragraph>
+					Module example #1:
+					<code><![CDATA[
+module.exports = {
+	myNumber : 5,
+	myString : 'test',
+	myMethod : function(a, b){
+		return a + b;
+	}
+};
+					]]></code>
+				</paragraph>
+				<paragraph>
+					Module example #2:
+					<code><![CDATA[
+exports.myNumber = 5;
+exports.myString = 'test';
+exports.myMethod = function(a, b){
+	return a + b;
+};
+					]]></code>
+				</paragraph>
+				<paragraph>
+					Module example #3 (Class, Simple):
+					<code><![CDATA[
+function MyClass(a){
+	this.a = a;
+	return this;
+}
+
+MyClass.prototype = Object.create(Object.prototype, {
+	MyClass : {
+		value : MyClass
+	},
+	myNumber : {
+		value : 5,
+		enumerable : true
+	},
+	myString : {
+		value : 'test'
+	},
+	myA : {
+		get : function(){
+			return this.a || 'unknown';
+		}
+	},
+	toString : {
+		value : function(){
+			return "[MyClass, a=" + this.a + "]";
+		}
+	}
+});
+
+module.exports = MyClass;
+					]]></code>
+				</paragraph>
+				<paragraph>
+					Module example #4 (Class, Derived):
+					<code><![CDATA[
+function MyClass(a, b, c){
+	this.AbstractClass(b, c);
+	this.a = a;
+	return this;
+}
+
+MyClass.prototype = Object.create(require('example/AbstractClass').prototype, {
+	MyClass : {
+		value : MyClass
+	},
+	myNumber : {
+		value : 5,
+		enumerable : true
+	},
+	myString : {
+		value : 'test'
+	},
+	myA : {
+		get : function(){
+			return this.a || 'unknown';
+		}
+	},
+	toString : {
+		value : function(){
+			return "[MyClass, a=" + this.a + "]";
+		}
+	}
+});
+
+module.exports = MyClass;
+					]]></code>
+				</paragraph>
+			</text>
+		</article>
+		
+	</section>
+
+	
+	<section namespacePrefix="global::ae3::" layout="section">
+		<anchor>ae3-global</anchor>
+		<title>AE3 Specific Global (Built-In) Objects</title>
+
+		<paragraph>
+			The following properties are additionally defined on the 'global' object:
+			<fields layout="list">
+				<columns>
+					<column id="n" title="Name"/>
+					<column id="d" title="Summary"/>
+				</columns>
+				<item n="HOST_NAME"><d>
+					This property contains string value with the name of the host running this instance of ae3.
+				</d></item>
+				<item n="STARTED"><d>
+					This property contains the numeric value of unix-time in milliseconds at the moment when
+					this instance of ae3 was started.
+				</d></item>
+				<item n="UTF8"><d>
+					This property contains string value with the UTF-8 charset encoding name.
+				</d></item>
+				<item n="Format"><d>
+					This property contains reference to a <a href="#ae3-Format">Format API</a> of ae3.
+				</d></item>
+				<item n="Imaging"><d>
+					This property contains reference to a <a href="#ae3-Imaging">Imaging API</a> of ae3.
+				</d></item>
+				<item n="Random"><d>
+					This property contains reference to a <a href="#ae3-Random">Random API</a> of ae3.
+				</d></item>
+			</fields>
+		</paragraph>
+
+		<article>
+			<anchor>ae3-Format</anchor>
+			<title>Object: Format</title>
+			<text>
+				<paragraph>
+					The <b>Format</b> object provides some useful methods for
+					generic formatting and parsing of the most commonly used 
+					formats and types of representation.
+				</paragraph>
+				<paragraph>
+					The following set of properties is defined on the object 
+					representing the API:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item n="binaryAsHex"><d>
+							<code>binaryAsHex(x:ByteBuffer):String</code>
+							<code>binaryAsHex(x:Binary):String</code>
+						</d></item>
+						<item n="bytesCompact"><d>
+							<code>bytesCompact(x:Number):String</code>
+						</d></item>
+						<item n="bytesExact"><d>
+							<code>bytesExact(x:Number):String</code>
+						</d></item>
+						<item n="bytesRound"><d>
+							<code>bytesRound(x:Number):String</code>
+						</d></item>
+						<item n="date"><d>
+							<code>date(x:Number):String</code>
+							<code>date(x:Date):String</code>
+							<code>date(x:Number,fmt:String):String</code>
+							<code>date(x:Date,fmt:String):String</code>
+						</d></item>
+						<item n="dateISO"><d>
+							<code>dateISO(x:Number):String</code>
+							<code>dateISO(x:Date):String</code>
+						</d></item>
+						<item n="dateUTC"><d>
+							<code>dateUTC(x:Number,fmt:String):String</code>
+							<code>dateUTC(x:Date,fmt:String):String</code>
+						</d></item>
+						<item n="decimalCompact"><d>
+							<code>decimalCompact(x:Number):String</code>
+						</d></item>
+						<item n="decimalRounded"><d>
+							<code>decimalRounded(x:Number):String</code>
+						</d></item>
+						<item n="enhanceHtml"><d>
+							<code>enhanceHtml(text:String):String</code>
+							<code>enhanceHtml(text:String,hrefAttrs:String):String</code>
+						</d></item>
+						<item n="hexAsBinary"><d>
+							<code>hexAsBinary(hex:String):Binary</code>
+						</d></item>
+						<item n="htmlAsPlainText"><d>
+							<code>htmlAsPlainText(html:String):String</code>
+						</d></item>
+						<item n="jsDescribe"><d>
+							<code>jsDescribe(x:Object):String</code>
+						</d></item>
+						<item n="jsInlineExpressionString"><d>
+							<code>jsInlineExpressionString(x:String):String</code>
+						</d></item>
+						<item n="jsObject"><d>
+							<code>jsObject(x:Object):String</code>
+						</d></item>
+						<item n="jsObjectReadable"><d>
+							<code>jsObjectReadable(x:Object):String</code>
+						</d></item>
+						<item n="jsString"><d>
+							<code>jsString(x:String):String</code>
+							<code>jsString(x:Object):String</code>
+						</d></item>
+						<item n="jsStringFragment"><d>
+							<code>jsStringFragment(x:String):String</code>
+							<code>jsStringFragment(x:Object):String</code>
+						</d></item>
+						<item n="plainTextAsHtml"><d>
+							<code>plainTextAsHtml(text:String):String</code>
+							<code>plainTextAsHtml(text:String,hrefAttrs:String):String</code>
+						</d></item>
+						<item n="plainTextDescribe"><d>
+							<code>plainTextDescribe(x:Object):String</code>
+						</d></item>
+						<item n="plistObject"><d>
+							<code>plistObject(x:Object):String</code>
+						</d></item>
+						<item n="queryStringParameters"><d>
+							<code>queryStringParameters(params:Map):String</code>
+							<code>queryStringParameters(params:Map,override:Map):String</code>
+						</d></item>
+						<item n="sprintf"><d>
+							<code>sprintf(x:String):String</code>
+							<code>sprintf(fmt:String,argN:Object...):String</code>
+						</d></item>
+						<item n="sqlString"><d>
+							<code>sqlString(x:String):String</code>
+						</d></item>
+						<item n="sqlStringFragment"><d>
+							<code>sqlStringFragment(x:String):String</code>
+						</d></item>
+						<item n="throwableAsPlainText"><d>
+							<code>throwableAsPlainText(x:Error):String</code>
+						</d></item>
+						<item n="uniqueWords"><d>
+							<code>uniqueWords(text:String,joiner:String):String</code>
+						</d></item>
+						<item n="utcDate"><d>
+							<code>utcDate(x:Number):String</code>
+							<code>utcDate(x:Date):String</code>
+							<code>utcDate(x:Number,fmt:String):String</code>
+							<code>utcDate(x:Date,fmt:String):String</code>
+						</d></item>
+						<item n="xmlAttribute"><d>
+							<code>xmlAttribute(name:String,value:String):String</code>
+						</d></item>
+						<item n="xmlAttributeFragment"><d>
+							<code>xmlAttributeFragment(x:String):String</code>
+						</d></item>
+						<item n="xmlAttributes"><d>
+							<code>xmlAttributes(attrs:Map):String</code>
+						</d></item>
+						<item n="xmlAttributeValue"><d>
+							<code>xmlAttributeValue(x:Object):String</code>
+						</d></item>
+						<item n="xmlElement"><d>
+							<code>xmlElement(name:String,tree:Map):String</code>
+							<code>xmlElement(name:String,attrs:Map,value:Object):String</code>
+						</d></item>
+						<item n="xmlElements"><d>
+							<code>xmlElements(name:String,tree:Map):String</code>
+						</d></item>
+						<item n="xmlNodeValue"><d>
+							<code>xmlNodeValue(x:Object):String</code>
+						</d></item>
+						<item n="xmlTextAsHtml"><d>
+							<code>xmlTextAsHtml(text:String):String</code>
+							<code>xmlTextAsHtml(text:String,hrefAttrs:String):String</code>
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
+
+		<article>
+			<anchor>ae3-Imaging</anchor>
+			<title>Object: Imaging</title>
+			<text>
+				<paragraph>
+					The <b>Imaging</b> object provides some useful methods to
+					generate different objects filled with random input.
+				</paragraph>
+				<paragraph>
+					The <b>Imaging</b> API likely to be moved to separate library.
+				</paragraph>
+				<paragraph>
+					The following set of properties is defined on the object 
+					representing the API:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item n="bitmapResize"><d>
+							<code>bitmapResize(img:Image,width:Number,height:Number):Image</code>
+						</d></item>
+						<item n="bitmapResizeCanvas"><d>
+							<code>bitmapResizeCanvas(img:Image,color:Integer,width:Number,height:Number):Image</code>
+						</d></item>
+						<item n="bitmapResizeCrop"><d>
+							<code>bitmapResizeCrop(img:Image,width:Number,height:Number):Image</code>
+						</d></item>
+						<item n="bitmapResizeFit"><d>
+							<code>bitmapResizeFit(img:Image,width:Number,height:Number):Image</code>
+						</d></item>
+						<item n="colorForComponents"><d>
+							<code>colorForComponents(red:Integer,green:Integer,blue:Integer):Image</code>
+						</d></item>
+						<item n="createImage"><d>
+							<code>createImage(width:Number,height:Number):Image</code>
+							<code>createImage(width:Number,height:Number,model:ColorModel):Image</code>
+						</d></item>
+						<item n="encodeGif"><d>
+							<code>encodeGif(img:Image):Message</code>
+							<code>encodeGif(img:Image[],delayMillis:Integer,loop:Boolean):Message</code>
+						</d></item>
+						<item n="encodeGifBinary"><d>
+							<code>encodeGifBinary(img:Image):Binary</code>
+							<code>encodeGifBinary(img:Image[],delayMillis:Integer,loop:Boolean):Binary</code>
+						</d></item>
+						<item n="encodeJpeg"><d>
+							<code>encodeJpeg(img:Image):Message</code>
+							<code>encodeJpeg(img:Image,progressive:Boolean,quality:Number):Message</code>
+						</d></item>
+						<item n="encodeJpegBinary"><d>
+							<code>encodeJpegBinary(img:Image):Binary</code>
+							<code>encodeJpegBinary(img:Image,progressive:Boolean,quality:Number):Binary</code>
+						</d></item>
+						<item n="encodePng"><d>
+							<code>encodePng(img:Image):Message</code>
+						</d></item>
+						<item n="encodePngBinary"><d>
+							<code>encodePngBinary(img:Image):Binary</code>
+						</d></item>
+						<item n="getColorCode"><d>
+							<code>getColorCode(rgb24:Integer):String</code>
+						</d></item>
+						<item n="getImageDimensions"><d>
+							<code>getImageDimensions(image:Image):ImageSize</code>
+							<code>getImageDimensions(image:Message):ImageSize</code>
+							<code>getImageDimensions(imageBinary:Binary):ImageSize</code>
+							<code>getImageDimensions(imageBytes:ArrayBuffer):ImageSize</code>
+						</d></item>
+						<item n="graphicsDrawImage"><d>
+							<code>graphicsDrawImage(g:Graphics,image:Image,x:Number,y:Number):Image</code>
+						</d></item>
+						<item n="graphicsDrawLine"><d>
+							<code>graphicsDrawLine(g:Graphics,x1:Number,y1:Number,x2:Number,y2:Number):Image</code>
+						</d></item>
+						<item n="graphicsDrawOval"><d>
+							<code>graphicsDrawLine(g:Graphics,x:Number,y:Number,w:Number,h:Number):Image</code>
+						</d></item>
+						<item n="graphicsDrawRect"><d>
+							<code>graphicsDrawRect(g:Graphics,x:Number,y:Number,w:Number,h:Number):Image</code>
+						</d></item>
+						<item n="graphicsDrawText"><d>
+							<code>graphicsDrawText(g:Graphics,text:String,x:Number,y:Number,face:String,bold:Boolean,italic:Boolean,fontSize:Number,w:Number,h:Number):Image</code>
+							<b>w</b> and <b>h</b> specify alignment and each can have one of 3 logical values: <i>0</i>, <i>less than 0</i> and <i>more than 0</i>.
+						</d></item>
+						<item n="graphicsFillOval"><d>
+							<code>graphicsFillOval(g:Graphics,x:Number,y:Number,w:Number,h:Number):Image</code>
+						</d></item>
+						<item n="graphicsFillRect"><d>
+							<code>graphicsFillRect(g:Graphics,x:Number,y:Number,w:Number,h:Number):Image</code>
+						</d></item>
+						<item n="graphicsSetColor"><d>
+							<code>graphicsSetColor(g:Graphics,rgb:Integer):Void</code>
+						</d></item>
+						<item n="graphicsSetXorMode"><d>
+							<code>graphicsSetXorMode(g:Graphics,rgb:Integer):Void</code>
+						</d></item>
+						<item n="imageForBinary"><d>
+							<code>imageForBinary(imageBinary:Binary):Image</code>
+							<code>imageForBinary(imageBinary:Message):Image</code>
+							<code>imageForBinary(imageBinary:ArrayBuffer):Image</code>
+						</d></item>
+						<item n="makeWatermarks"><d>
+							<code>makeWatermarks(image:Image,text:String):Image</code>
+							<code>makeWatermarks(image:Image,text:String,backgroungRgb:Integer,textRgb:Integer):Image</code>
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+			
+			<article>
+				<anchor>ae3-Imaging-examples</anchor>
+				<title>Some examples</title>
+				<text>
+					<paragraph>
+					</paragraph>
+				</text>
+			</article>
+
+		</article>
+
+		<article>
+			<anchor>ae3-Random</anchor>
+			<title>Object: Random</title>
+			<text>
+				<paragraph>
+					The <b>Random</b> object provides some useful methods to
+					generate different objects filled with random input.
+				</paragraph>
+				<paragraph>
+					The following set of properties is defined on the object 
+					representing the API:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item n="binary"><d>
+							<code>binary(length:Number):Binary</code>
+						</d></item>
+						<item n="formattedString"><d>
+							<code>formattedString(format:String):String</code>
+						</d></item>
+						<item n="fromList"><d>
+							<code>fromList(x:Array):Object</code>
+						</d></item>
+						<item n="integer"><d>
+							<code>integer(cap:Number):Number</code>
+						</d></item>
+						<item n="reformat55to27"><d>
+							<code>reformat55to27(x:String):String</code>
+						</d></item>
+						<item n="subList"><d>
+							<code>subList(x:Array,count:Number):Array</code>
+						</d></item>
+						<item n="subMap"><d>
+							<code>subMap(x:Map,count:Number):Map</code>
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+			
+			<article>
+				<anchor>ae3-Random-examples</anchor>
+				<title>Some examples</title>
+				<text>
+					<paragraph>
+						<code>var rnd = Random.formattedString('mmmmmzzzDDDD-EEE');</code>
+						<code>var hex = Random.formattedString('\\0\\xhhhh');</code>
+						<code>var hex = '0x' + Random.formattedString('hhhh');</code>
+						<code>var eat = Random.fromList(['apple','orange','plum','tomato','meat']);</code>
+						<code>var key = Random.binary(32);</code>
+						<code>var ads = Random.subMap(catalogue, 4);</code>
+					</paragraph>
+				</text>
+			</article>
+
+		</article>
+	</section>
+
+</section>

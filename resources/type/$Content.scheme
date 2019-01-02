@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<type>
+
+	<!--
+
+
+		Do NOT update this file directly!
+		It is updated automatically - you changes will be overwritten! 
+
+
+	-->
+
+	<visibility>hidden</visibility>
+	<replacement>$content</replacement>
+</type>

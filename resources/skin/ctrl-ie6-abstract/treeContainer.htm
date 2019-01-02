@@ -1,0 +1,112 @@
+<%
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add('frames') %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add('require') %><%
+
+%><%EXEC: source = "treePlane.htm?mode=" + (Request.mode || "none") %><%
+
+%><%OUTPUT: head %><%
+	%><script><%
+		%>router = parent.router || parent.parent.router || require("app.Router") && new app.Router("tree-container");<% // frameset adds one
+		%>function refreshTree(collapse){<%
+			%>var obj = document.getElementById("tree");<%
+			%>obj.src = <%= Format.jsString( source ) %> + (collapse ? 'collapse=true' : '');<%
+		%>}<%
+	%></script><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body class="FrameBorder BorderBox" style="position:relative;overflow:hidden;"><%
+		%><div class="FrameBorder2 BorderBox" style="width:100%;height:100%;position:relative;overflow:hidden"><%
+			%><table border=0 cellpadding=0 cellspacing=0 width=100% height=100%><%
+				%><tr><%
+					%><td width=100%><%
+						%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+							%><tr><%
+								%><td nowrap style="padding:2px" width=100%><%
+									%><div class="FrameHeader"><%
+										%><%= intl(en = "Site tree", ru = "Дерево сайта") %><%
+									%></div><%
+								%></td><%
+								%><td align="right" style="padding:1px;white-space:nowrap;"><%
+									%><button <%
+											%>style="height:21px; width:21px" <%
+											%>class="FrameButton" <%
+											%>onmouseover="this.className='FrameButtonOn'" <%
+											%>onmouseout="this.className='FrameButton'" <%
+											%>onclick="refreshTree(true);this.blur();" <%
+											%>title="<%= intl(en="Collapse all", ru="Свернуть всё") %>"<%
+										%>><%
+										%><img src="icons/command-collapse.16.gif"><%
+									%></button><%
+									%><button <%
+											%>style="height:21px; width:21px" <%
+											%>class="FrameButton" <%
+											%>onmouseover="this.className='FrameButtonOn'" <%
+											%>onmouseout="this.className='FrameButton'" <%
+											%>onclick="refreshTree();this.blur();" <%
+											%>title="<%= intl(en="Refresh", ru="Обновить") %>"<%
+										%>><%
+										%><img src="icons/command-reload.16.gif"><%
+									%></button><%
+									%><button <%
+											%>style="height:21px; width:21px" <%
+											%>class="FrameButton" <%
+											%>onmouseover="this.className='FrameButtonOn'" <%
+											%>onmouseout="this.className='FrameButton'" <%
+											%>onclick="parent.hideLeftFrame()" <%
+											%>title="<%= intl( en="Close", ru="Закрыть" ) %>"<%
+										%>><%
+										%><img src="$files/window-close.gif"><%
+									%></button><%
+								%></td><%
+							%></tr><%
+						%></table><%
+					%></td><%
+				%></tr><%
+				%><tr><%
+					%><td width=100% height=100% class="BorderBox" style="position:relative;overflow:hidden;"><%
+						%><div class="BorderBox" style="position:relative;padding:0 2px;width:100%;height:100%;overflow:hidden"><%
+							%><div style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden"><%
+								%><div class="FrameBorder BorderBox" style="position:relative;width:100%;height:100%;overflow:hidden"><%
+									%><div style="width:100%;height:100%;background-color:window;position:relative;overflow:hidden"><%
+										%><iframe<%
+											%> id="tree"<%
+											%> name="tree"<%
+											%> src="<%= Format.xmlAttributeFragment( source ) %>"<%
+											%> frameborder="0"<%
+											%> style="<%
+												%>position:absolute;<%
+												%>left:0;<%
+												%>top:0;<%
+												%>border:0;<%
+												%>margin:0;<%
+												%>padding:0;<%
+												%>width:100%;<%
+												%>height:100%;<%
+											%>"<%
+										%>><%
+										%></iframe><%
+									%></div><%
+								%></div><%
+							%></div><%
+						%></div><%
+					%></td><%
+				%></tr><%
+				%><tr><%
+				%></tr><%
+			%></table><%
+		%></div><%
+	%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: "Tree Container",
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

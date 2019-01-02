@@ -1,0 +1,110 @@
+<%FINAL: 'text/xml' %><%
+%><body onload="alert(3)"><%
+%><XML ID="oMetaData" base="" entryname="entry" type="menu"><%
+
+%><%CHOOSE: Request.type %><%
+	%><%MATCH: 'node' %><%
+		%><%EXEC: node = ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+		%><%EXEC: Request.path && (node = ControlAPI.childForPath(node, Request.path + Request.key)) %><%
+		%><%EXEC: commands = ControlAPI.filterAccessibleCommands(Request.path + Request.key, node.getCommands()) %><%
+		%><%EXEC: entry = node %><%
+		%><%EXEC: forms = ControlAPI.filterAccessibleCommands(Request.path + Request.key, node.getForms())%><%
+
+	%><%MATCH: 'content' %><%
+		%><%EXEC: node = ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+		%><%EXEC: Request.path && (node = ControlAPI.childForPath(node, Request.path)) %><%
+		%><%IF: node %><%
+			%><%EXEC: entry = node.getChildByName( Request.key ) || node.getContentEntry( Request.key ) %><%
+			%><%IF: ControlAPI.isEntry(entry) %><%
+				%><%EXEC: entryCommands = ControlAPI.filterAccessibleCommands(
+					Request.path + Request.key, 
+					entry.getCommands()
+				) %><%
+				%><%EXEC: forms = ControlAPI.filterAccessibleCommands(
+					Request.path + Request.key, 
+					entry.getForms()
+				) %><%
+			%><%/IF%><%
+			%><%EXEC: commands = ControlAPI.filterAccessibleCommands(
+				Request.path + Request.key, 
+				node.getContentCommands( Request.key )
+			) %><%
+		%><%/IF%><%
+
+	%><%MATCH: 'content_multi' %><%
+		%><%EXEC: node = ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+		%><%EXEC: Request.path && (node = ControlAPI.childForPath(node, Request.path)) %><%
+		%><%IF: node %><%
+			%><%EXEC: commands = ControlAPI.filterAccessibleCommands(Request.path, node.getContentMultipleCommands( split(Request.key,',') ))%><%
+			%><%EXEC: actor = node %><%
+			%><%EXEC: form = null %><%
+		%><%/IF%><%
+%><%/CHOOSE%><%
+
+%><%IF: Array.isFilled(commands) || Array.isFilled(entryCommands) %><%
+	%><%OUTPUT: menu %><%
+		%><%ITERATE: command : entryCommands %><%
+			%><%IF: command.getKey() %><%
+				%><entry<%
+					%> path="<%= StringToUrl(Request.path) + StringToUrlHard(Request.key) %>"<%
+					%> key="<%= StringToUrlHard(Request.key) %>"<%
+					%> cmd="<%= StringToUrl(command.getKey()) %>"<%
+					%> description="<%= command.commandDescription() || '' %>"<%
+					%> icon="<%= ControlAPI.getIcon(command) %>"<%
+					%> title="<%= command.getTitle() %>"<%
+				%> /><%
+			%><%/IF%><%
+		%><%/ITERATE%><%
+		
+		%><%ITERATE: command : commands %><%
+			%><%IF: command.getKey() %><%
+				%><entry<%
+					%> path="<%= StringToUrl(Request.path) %>"<%
+					%> key="<%= StringToUrlHard(Request.key) %>"<%
+					%> cmd="<%= StringToUrl(command.getKey()) %>"<%
+					%> description="<%= command.commandDescription() || '' %>"<%
+					%> icon="<%= ControlAPI.getIcon(command) %>"<%
+					%> title="<%= command.getTitle() %>"<%
+				%> /><%
+			%><%/IF%><%
+		%><%/ITERATE%><%
+	%><%/OUTPUT%><%
+	%><entry<%
+		%> id="ContentCommands"<%
+		%> title="<%= intl( en = "Object", ru = "Объект" ) %>"<%
+		%> status="true"<%
+		%> group="ContentCommands"<%
+		%> CommandType="<%= Request.type %>"><%
+		%><%= menu %><%
+	%></entry><%
+%><%/IF%><%
+
+%><%IF:Array.isFilled(forms)%><%
+	%><%OUTPUT:menu%><%
+		%><%ITERATE: command : forms %><%
+			%><%IF: command.getKey() %><%
+				%><entry<%
+					%> path="<%= StringToUrl(Request.path) + StringToUrlHard(Request.key) %>"<%
+					%> key="<%= StringToUrl(Request.key) %>"<%
+					%> cmd="<%= StringToUrl(command.getKey()) %>"<%
+					%> description="<%= command.commandDescription() || '' %>"<%
+					%> icon="<%= ControlAPI.getIcon(command) %>"<%
+					%> title="<%= command.getTitle() %>" /><%
+			%><%/IF%><%
+		%><%/ITERATE%><%
+	%><%/OUTPUT%><%
+	%><entry<%
+		%> id="ContentForms"<%
+		%> title="<%= intl( en = "Object Forms", ru = "Формы объекта" ) %>"<%
+		%> status="true"<%
+		%> group="ContentForms"<%
+		%> CommandType="node_form_open"><%
+		%><%= menu %><%
+	%></entry><%
+%><%/IF%><%
+
+
+%></XML><%
+%></body><%
+
+%><%/FINAL%>

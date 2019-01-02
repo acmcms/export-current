@@ -1,0 +1,65 @@
+<%IF:!styleSheets.contains('zakladka.css')%>
+	<style>
+		<%INCLUDE: 'zakladki.css' %>
+	</style>
+	<%EXEC:styleSheets.add('zakladka.css')%>
+<%/IF%>
+
+<%IF:!scripts.contains('zakladki.splitters.js')%>
+	<script>
+		<%INCLUDE: 'zakladki.splitters.js' %>
+	</script>
+	<%EXEC:scripts.add('zakladki.splitters.js')%>
+<%/IF%>
+
+
+
+<tr id="fld<%=prefix%>__<%=name%>">
+<td colspan=2 style="height:<%=singleField || oneBigField ? '100%' : '196px'%>; padding:5 0 5 0">
+	<TABLE border=0 cellpadding=0 cellspacing=0 width=100% height=100% id="fld<%=prefix%>__<%=name%>_obj">
+	<TR>
+		<TD>
+			<TABLE border=0 cellpadding=0 cellspacing=0 class=zakladka width=100%>
+			<TR>
+				<TD><script>document.write(tabSplitter3)</script></TD>
+
+				<%CHOOSE:attributes.variant%>
+					<%MATCH:'html'%>
+						<TD class=TabOn id="holder" nowrap<%IF:!attributes.constant%> onclick="getHtmlText('<%=prefix%>__<%=name%>')"<%/IF%>><div>
+							<TABLE border=0 cellpadding=0 cellspacing=0 width=100%><TR><TD nowrap><%=title%></TD>
+							<TD style="padding:0 5 0 5"><img src = "$files/toolbar/button.script.gif" width=21 height=20  style="margin-bottom:-2"></TD>
+							</TR></TABLE>
+						</div></TD>
+					<%MATCH%>
+						<TD class=TabOn id="holder" nowrap onclick="mForm.switchWholeWindowMode('fld<%=prefix%>__<%=name%>')"><div>
+							<TABLE border=0 cellpadding=0 cellspacing=0 width=100%><TR><TD nowrap><%=title%></TD><TD style="font-family:Webdings; padding:0 10 0 10">5</TD>
+							</TR></TABLE>
+						</div></TD>
+				<%/CHOOSE%>
+				<TD><script>document.write(tabSplitter4)</script></TD>
+				<TD style="width:100%"></TD>
+			</TR>
+			<TR class=border>
+				<TD class=TabOffl><img width=0 height=0></TD>
+				<TD><img width=0 height=0></TD>
+				<TD class=TabOffr><img width=0 height=0></TD>
+				<TD class=TabOn><img width=0 height=0></TD>
+			</TR>
+			</TABLE>
+		</TD>
+	</TR>
+	<TR>
+		<TD height=100%>
+			<TABLE border=0 cellpadding=0 cellspacing=0 width=100% style="border-left: 1 solid buttonhighlight; border-right: 1 solid buttonshadow; border-bottom: 1 solid buttonshadow; padding:5; height:100%">
+			<TR>
+				<TD valign=top><iframe src="formFields.inc.calendar-view" name="<%=prefix%>__<%=name%>preview" id="<%=prefix%>__<%=name%>preview" style="width:100%; height:100%;" frameborder=0 class=F2rameBorder></iframe></TD>
+				<input type=hidden name="<%=prefix%>__<%=name%>" value="<%= Format.xmlAttributeFragment(value) %>">
+			</TR>
+			</TABLE>
+		</TD>
+	</TR>
+	</TABLE>
+
+
+</td>
+</tr>

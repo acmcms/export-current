@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>vlapan GWT Finder</title>
+	<charset>UTF-8</charset>
+	<prototype>skin-standard-html</prototype>
+	<renderer>ACM.TPL</renderer>
+	<secure>true</secure>
+	<auth>true</auth>
+	<default>Finder.html</default>
+	<import namespace="example" package="vlapan-example"/>
+	<import namespace="data-json" package="vlapan-hierarchy-data-json"/>
+</settings>

@@ -1,0 +1,4 @@
+{
+	type : "ae3/Executable",
+	reference : "ru.acmcms.internal/shell/AcmShellCommand"
+}

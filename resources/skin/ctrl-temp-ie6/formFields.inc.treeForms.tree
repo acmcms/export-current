@@ -1,0 +1,166 @@
+<%
+%><%EXEC: requireCss = [] %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add("require") %><%
+%><%EXEC: requireJs.add("app/Containers") %><%
+%><%EXEC: requireJs.add("app/Tree") %><%
+
+%><%OUTPUT: head %><%
+%><style id=Tree>
+BODY {
+	background-color: window;
+	margin:2px;
+}
+
+.fldImg {
+	height: 16px;
+	width: 16px;
+	border-width:0;
+	border:0;
+}
+
+.thread1 {
+	height: 16px;
+	width: 16px;
+	background-image: URL(/$files/thread1.gif);
+}
+
+.thread2 {
+	height: 16px;
+	width:16px;
+	background-image: URL(/$files/thread2.gif);
+}
+
+.thread3 {
+	height: 16px;
+	width:16px;
+	background-image: URL(/$files/thread3.gif);
+}
+
+.thread4 {
+	height: 16px;
+	width:16px;
+	background-image: URL(/$files/thread4.gif);
+}
+
+.thread5 {
+	height: 16px;
+	width:16px;
+	background-image: URL(/$files/thread5.gif);
+}
+
+.table {
+	border: 0;
+	border-width: 0;
+}
+
+.fldTxt {
+	font-family:Tahoma;
+	font-size:8pt;
+	padding-left:3pt;
+	padding-right:3pt;
+	color:windowtext;
+}
+
+.fldTxtOn {
+	font-family:Tahoma;
+	font-size:8pt;
+	padding-left:3pt;
+	padding-right:3pt;
+	background-color: highlight;
+	color: highlighttext;
+}
+
+</style>
+
+
+<script>
+	buildTreeReloadPeriod = <%= Number(User.getUser().getProfile('mwmAdmin',true).TreeReloadPeriod) || 60000 %>;
+	buildTreeDataSource = "tree-data.xml";
+
+	
+	function selectOn(obj){
+		var o = Dom.getSelectParent(obj);
+		if(document.body.currentSelect && o){
+			document.body.currentSelect.TD['title'].className = 'fldTxt';
+			document.body.currentSelect = null;
+		}
+		if(!o) return false;
+		o.parent.TD['title'].className = 'fldTxtOn';
+		document.body.currentSelect = o.parent;
+		document.body.returnValue['path'] = o.parent.path;
+		setTimeout("correctScrollY()",800);
+		return document.body.currentSelect;
+	}
+
+	document.onclick = function(e){
+		var o = ((e || (e = event)).srcElement || e.target);
+		if(selectOn(o)) {
+			document.body.putResult();
+			return false;
+		}
+	};
+	document.oncontextmenu = function(e){
+		((e || (e = event)).srcElement || e.target).click();
+		return false;
+	};
+	document.onselectstart = new Function("return false;");
+	
+	
+	
+	
+	
+	function correctScrollY(){
+		var cy = getTopY(document.body.currentSelect);
+		if(document.body.scrollTop > cy) document.body.scrollTop = cy -16;
+		if( (cy + 16) > (document.body.scrollTop + document.body.offsetHeight) ) document.body.scrollTop = cy + 32 - document.body.offsetHeight;
+	}
+	
+	function getTopY(obj){
+		y = 0;
+		while(obj.offsetParent){
+			y += obj.offsetTop;
+			obj = obj.offsetParent;
+		}
+		return y;
+	}
+</script>
+
+</head><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+%><body><%
+	%><script><%
+		%>router = parent.router;<%
+		%>Tree.prototype.reloadPeriod = <%= User.getUser().getProfile('mwmAdmin',true).TreeReloadPeriod || '60000' %>;<%
+		%>tree = new Tree(document.body, "tree-data.xml", '/');<%
+
+		%>document.oncontextmenu = function(e){<%
+			%>e || (e = window.event);<%
+			%>var o = (e.srcElement || e.target);<%
+			%>o.click();<%
+			%>return true;<%
+		%>};<%
+		
+		%>document.onselectstart = function(){<%
+			%>return false;<%
+		%>};<%
+		
+		%>document.ondblclick = function(){<%
+			%>tree.searchOpenThreads();<%
+		%>};<%
+	%></script><%
+%></body><%
+%><%/OUTPUT%><%
+
+%><%RETURN: {
+		title		: "Tree Form WTF",
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

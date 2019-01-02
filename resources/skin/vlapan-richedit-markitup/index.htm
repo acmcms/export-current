@@ -1,0 +1,32 @@
+<%
+
+%><%CODE: 'ACM.ECMA' %>
+	editor = new VlapanRichedit( editorName = "markitup" );
+	editorName = "editor";
+	requireCss = editor.editor.getCss();
+	requireJs = editor.editor.getJs();
+	requireCss.unshift('http://yui.yahooapis.com/3.0.0/build/cssreset/reset-min.css');
+<%/CODE%><%
+
+%><%OUTPUT: head %><%
+	%><%= editor.replace( id = editorName, init = false ) %><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %>
+	<body>
+		<form method="post">
+			<p><textarea id="<%= editorName %>" name="<%= editorName %>"style="width:100%;height:200px;"></textarea></p>
+			<p><input type="submit" value="Send"/></p>
+		</form>
+	</body>
+<%/OUTPUT%><%
+
+%><%RETURN: {
+		title		: "markItUp!",
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		insertInHead: head,
+		body		: body
+	} %><%
+%>

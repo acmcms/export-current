@@ -1,0 +1,65 @@
+.border TD {
+	height: 1px
+}
+
+.border .TabOn {
+	background-color: buttonhighlight;
+}
+
+.border .TabOffl {
+	border-left: solid 1px buttonhighlight;
+}
+
+.border .offr {
+	border-right: solid 1px buttonhighlight;
+}
+
+.zakladka .TabOff DIV {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-top: solid 1px buttonhighlight;
+	height: 16px;
+	padding: 2px 4px 0 4px;
+	white-space: nowrap;
+}
+
+.zakladka .TabOn DIV {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-top: solid 1px buttonhighlight;
+	height: 19px;
+	padding: 4px 0 0 4px;
+	width: 100px;
+	white-space: nowrap;
+}
+
+.zakladka .TabOn DIV .title {
+	padding: 0 10px 0 0;
+}
+
+.zakladka .submenu {
+	padding: 2px;
+}
+
+.zakladka .submenu SPAN {
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+	font-weight: bold;
+	padding: 1px 3px 0 3px;
+	behavior: url(_submenuicon.htc);
+}
+
+.zakladka .submenu SPAN.symbol {
+	font-family: Webdings;
+	line-height: 5px;
+	font-size: 11px;
+	height: 10px;
+}
+
+.zakladka .submenu IMG {
+	height: 12px;
+	width: 0;
+	margin: 0 1px 0 1px;
+	border-right: solid 1px buttonhighlight;
+	border-left: solid 1px buttonshadow;
+}

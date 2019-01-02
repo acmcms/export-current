@@ -1,0 +1,345 @@
+{
+	padding:0;
+	margin:0;
+}
+html{
+	font-family:Tahoma,Arial;
+	font-size:9pt;
+	width:100%;
+	height:100%;
+	background-color:ButtonFace;
+}
+
+.ui-padding{
+	padding:2px;
+}
+
+.ui-input, .ui-popup{
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	box-shadow: 2px 2px 5px #777;
+	-moz-box-shadow: 2px 2px 5px #777;
+	-webkit-box-shadow: 2px 2px 5px #777;
+}
+
+.ui-menu{
+	background-color:Window;
+	border:solid 1px ButtonShadow;
+	cursor: default;
+}
+
+.ui-option-container{
+	position: relative;
+	overflow: hidden;
+}
+
+.ui-option-icon{
+	position: absolute;
+	top: 4px;
+	left: 3px;
+	height: 16px;
+	width: 16px;
+	overflow: hidden;
+}
+
+.ui-option-text{
+	padding: 4px 2px 3px 24px;
+	min-height: 16px;
+}
+
+
+ui-drop-panel, .ui-drop-panel{
+	opacity:0.9;
+}
+
+
+ui-tabbar, .ui-tabbar{
+	background-color:ButtonFace;
+	overflow:hidden;
+}
+
+
+ui-menu .ui-spacer, .ui-menu .ui-spacer{
+	margin:5px;
+	padding:1px 1px 0 0;
+	background-color:ButtonShadow;
+}
+ui-toolbar .ui-spacer, .ui-toolbar .ui-spacer{
+	margin:2px;
+	padding:1px 1px 0 0;
+	background-color:ButtonShadow;
+}
+ui-button .ui-spacer, .ui-button .ui-spacer{
+	margin:1px;
+	padding:1px 1px 0 0;
+	background-color:ButtonShadow;
+}
+ui-attachment .ui-spacer, .ui-attachment .ui-spacer{
+	margin:0;
+	padding:2px 2px 0 0;
+	background-color:ButtonFace;
+}
+
+
+
+.ui-normal{
+	border:solid 1px ButtonFace;
+	background-color:ButtonFace;
+	color:ButtonText;
+}
+.ui-active, .ui-focus{
+	border:solid 1px Highlight;
+	background-color:Highlight;
+	color:HighlightText;
+}
+.ui-hover, .ui-button:HOVER{
+	border:solid 1px ButtonShadow;
+	border-top-color:ButtonHighlight;
+	border-left-color:ButtonHighlight;
+}
+
+
+ui-menu .ui-normal, .ui-menu .ui-normal{
+	background-color:Window;
+}
+
+ui-menu .ui-button, .ui-menu .ui-button, ui-menu .ui-button:HOVER, .ui-menu .ui-button:HOVER{
+	border:none;
+	padding:3px 0;
+}
+
+
+
+.ui-attachment-inner-default, .ui-attachment-inner-normal{
+}
+
+
+.ui-outset, .ui-attachment-inner-decorated{
+	border:solid 1px ButtonShadow;
+	border-top-color:ButtonHighlight;
+	border-left-color:ButtonHighlight;
+}
+
+.ui-attachment-outer-default, .ui-attachment-outer-normal{
+}
+
+.ui-inset, .ui-attachment-outer-decorated{
+	border:solid 1px ButtonShadow;
+	border-bottom-color:ButtonHighlight;
+	border-right-color:ButtonHighlight;
+}
+
+.ui-toolbar{
+	vertical-align:middle;
+}
+.ui-header{
+	font-family:Tahoma, Arial;
+	font-size:11px;
+	line-height:13px;
+	background-color:ActiveCaption;
+	color:CaptionText;
+	font-weight:bold;
+	height:14px;
+	padding:2px 4px;
+}
+
+.ui-window{
+	width:100%;
+	height:100%;
+	background-color:Window;
+	color:WindowText;
+	overflow:auto;
+	position: relative; 
+}
+
+
+.ui-document{
+	margin: 9pt 5%; 
+	padding: 9pt 9pt 35pt 9pt; 
+	position: relative; 
+	background-color: #fff;
+	color:black;
+}
+
+
+
+
+
+
+
+
+
+.ui-button{
+	min-height:1em;
+	min-width:4px;
+	text-decoration:none;
+	vertical-align:middle;
+}
+.ui-button IMG{
+	padding:1px;
+	width:16px;
+	height:16px;
+	border:none;
+}
+.ui-button SPAN{
+}
+
+
+
+.ui-button-self, .ui-button-self-inactive, .ui-button-self-active{
+	padding:0;
+	text-decoration:none;
+	white-space:nowrap;
+	vertical-align:middle;
+	cursor:hand;
+}
+.ui-button-self, .ui-button-self-inactive{
+	border:solid 1px ButtonFace;
+	background-color:ButtonFace;
+	color:ButtonText;
+}
+.menu-self .ui-button-self, .menu-self .ui-button-self-inactive{
+	background-color:Window;
+}
+.ui-button-self:HOVER{
+	border:solid 1px ButtonShadow;
+	border-top-color:ButtonHighlight;
+	border-left-color:ButtonHighlight;
+}
+.ui-button-self-active, .menu-self .ui-button-self:HOVER{
+	border:solid 1px Highlight;
+	background-color:Highlight;
+	color:HighlightText;
+}
+
+.menu-self .ui-button-self, .menu-self .ui-button-self-inactive, .menu-self .ui-button-self:HOVER, .menu-self .ui-button-self-active{
+	border:none;
+	padding:3px 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.ActiveBorder{
+	background-color: ActiveBorder;
+}
+.ActiveCaption{
+	background-color: ActiveCaption;
+}
+.AppWorkspace{
+	background-color: AppWorkspace;
+}
+.Background{
+	background-color: Background;
+}
+.ButtonFace{
+	background-color: ButtonFace;
+}
+.ButtonHighlight{
+	background-color: ButtonHighlight;
+}
+.ButtonShadow{
+	background-color: ButtonShadow;
+}
+.ButtonText{
+	background-color: ButtonText;
+}
+.CaptionText{
+	background-color: ButtonText;
+}
+.GrayText{
+	background-color: GrayText;
+}
+.Highlight{
+	background-color: Highlight;
+}
+.HighlightText{
+	background-color: HighlightText;
+}
+.InactiveBorder{
+	background-color: InactiveBorder;
+}
+.InactiveCaption{
+	background-color: InactiveCaption;
+}
+.InactiveCaptionText{
+	background-color: InactiveCaptionText;
+}
+.InfoBackground{
+	background-color: InfoBackground;
+}
+.InfoText{
+	background-color: InfoText;
+}
+.Menu{
+	background-color: Menu;
+}
+.MenuText{
+	background-color: MenuText;
+}
+.Scrollbar{
+	background-color: Scrollbar;
+}
+.ThreeDDarkShadow{
+	background-color: ThreeDDarkShadow;
+}
+.ThreeDFace{
+	background-color: ThreeDFace;
+}
+.ThreeDHighlight{
+	background-color: ThreeDHighlight;
+}
+.ThreeDLightShadow{
+	background-color: ThreeDLightShadow;
+}
+.ThreeDShadow{
+	background-color: ThreeDShadow;
+}
+.Window{
+	background-color: Window;
+}
+.WindowFrame{
+	background-color: WindowFrame;
+}
+.WindowText{
+	background-color: WindowText;
+}
+
+
+
+.CaptionTextOnActiveCaption{
+	color: CaptionText;
+	background-color: ActiveCaption;
+}
+.InactiveCaptionTextOnInactiveCaption{
+	color: InactiveCaptionText;
+	background-color: InactiveCaption;
+}
+.ButtonTextOnButtonFace{
+	color: ButtonText;
+	background-color: ButtonFace;
+}
+.WindowTextOnWindow{
+	color: WindowText;
+	background-color: WindowCaption;
+}
+.HighLightTextOnHighLight{
+	color: HighLightText;
+	background-color: HighLight;
+}
+.MenuTextOnMenu{
+	color: MenuText;
+	background-color: Menu;
+}
+.InfoTextOnInfoBackground{
+	color: InfoText;
+	background-color: InfoBackground;
+}

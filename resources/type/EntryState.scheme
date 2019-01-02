@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Static: Entry State Switcher</title>
+	<visibility>hidden</visibility>
+	<icon>types</icon>
+
+	<command>
+		<type>publish</type>
+		<key>stateDraft</key>
+		<title>State: Draft</title>
+		<icon>command-run</icon>
+		<export>true</export>
+		<enable class="expression"><![CDATA[
+			this.getType().isInstance('$Content') 
+			/* $Content.isInstance(this) */
+			&& (this.getState() != 0) 
+			&& this.getType().isValidState("draft")
+		]]></enable>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.setState(0);
+			change.setCommitLogged();
+			change.commit();
+			return "State changed to Draft.";
+		]]></script>
+	</command>
+	
+	<command>
+		<type>publish</type>
+		<key>stateReady</key>
+		<title>State: Ready</title>
+		<icon>command-run</icon>
+		<export>true</export>
+		<enable class="expression"><![CDATA[
+			this.getType().isInstance('$Content') 
+			/* $Content.isInstance(this) */
+			&& (this.getState() != 1) 
+			&& this.getType().isValidState("ready")
+		]]></enable>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.setState(1);
+			change.setCommitLogged();
+			change.commit();
+			return "State changed to Ready.";
+		]]></script>
+	</command>
+	
+	<command>
+		<type>publish</type>
+		<key>stateSystem</key>
+		<title>State: System</title>
+		<icon>command-run</icon>
+		<export>true</export>
+		<enable class="expression"><![CDATA[
+			this.getType().isInstance('$Content') 
+			/* $Content.isInstance(this) */
+			&& (this.getState() != 4) 
+			&& this.getType().isValidState("system")
+		]]></enable>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.setState(4);
+			change.setCommitLogged();
+			change.commit();
+			return "State changed to System.";
+		]]></script>
+	</command>
+	
+	<command>
+		<type>publish</type>
+		<key>statePublish</key>
+		<title>State: Publish</title>
+		<icon>command-run</icon>
+		<export>true</export>
+		<enable class="expression"><![CDATA[
+			this.getType().isInstance('$Content') 
+			/* $Content.isInstance(this) */
+			&& (this.getState() != 2) 
+			&& this.getType().isValidState("publish")
+		]]></enable>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.setState(2);
+			change.setCommitLogged();
+			change.commit();
+			return "State changed to Published.";
+		]]></script>
+	</command>
+	
+	<command>
+		<type>publish</type>
+		<key>stateArchive</key>
+		<title>State: Archive</title>
+		<icon>command-run</icon>
+		<export>true</export>
+		<enable class="expression"><![CDATA[
+			this.getType().isInstance('$Content') 
+			/* $Content.isInstance(this) */
+			&& (this.getState() != 5) 
+			&& this.getType().isValidState("archive")
+		]]></enable>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.setState(5);
+			change.setCommitLogged();
+			change.commit();
+			return "State changed to Archive.";
+		]]></script>
+	</command>
+	
+	<command>
+		<type>publish</type>
+		<key>stateDead</key>
+		<title>State: Dead</title>
+		<icon>command-run</icon>
+		<export>true</export>
+		<enable class="expression"><![CDATA[
+			this.getType().isInstance('$Content') 
+			/* $Content.isInstance(this) */
+			&& (this.getState() != 3) 
+			&& this.getType().isValidState("dead")
+		]]></enable>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.setState(3);
+			change.setCommitLogged();
+			change.commit();
+			return "State changed to Dead.";
+		]]></script>
+	</command>
+
+</type>

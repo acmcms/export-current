@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>vlapan site</title>
+	<charset>UTF-8</charset>
+	<personalized>true</personalized>
+	<vlapansite>true</vlapansite>
+
+	<prototype>vlapan-default</prototype>
+
+	<import namespace="richedit" package="vlapan-richedit"/>
+
+	<renderer>
+		<type>ACM.ECMA</type>
+		<suffix>.ecma</suffix>
+	</renderer>
+</settings>

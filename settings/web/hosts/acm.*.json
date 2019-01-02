@@ -1,0 +1,7 @@
+{
+	"type"	: "ae3.web/Share",
+	"reference"	: {
+		"type" : "alias",
+		"alias" : "acm.local"
+	}
+}

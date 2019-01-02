@@ -1,0 +1,5 @@
+$output( body ){
+	%>.body{min-height:600px;}<%
+	%>.clear{clear:both;}<%
+}
+return $base.final( "text/css", body );

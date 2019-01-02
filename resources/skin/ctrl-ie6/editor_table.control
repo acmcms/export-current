@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE>Table</TITLE>
+
+<style>
+<%INCLUDE: 'editor_style.css' %>
+<%INCLUDE: 'editor_popup-style.css' %>
+</style>
+
+<SCRIPT>
+var params = window.dialogArguments;
+var table = params['object'];
+
+function SetDefaults(){
+	if(table){
+		Rows.value    = table.rows.length ;
+		Rows.disabled    = true;
+		Columns.value = table.rows[0].cells.length ;
+		Columns.disabled = true;
+		Width.value			= (table.style.width  || table.width);
+		Height.value		= (table.style.height || table.height);
+		Border.value		= table.border;
+		Cellpadding.value	= table.cellPadding;
+		Cellspacing.value	= table.cellSpacing;
+		Align.value		= table.align;
+		Classname.value		= table.className;
+		if (table.caption) Caption.value = table.caption.innerText ;
+	}
+}
+
+function Return(){
+	var result;
+	if (!table){
+		var sTableAtt = "" ;
+		if (Width.value != '')		sTableAtt += 'width="' + Width.value + '"' ;
+		if (Height.value != '')		sTableAtt += 'height="' + Height.value + '"' ;
+		if (Border.value != '')		sTableAtt += 'border="' + Border.value + '"' ;
+		if (Align.value != '')		sTableAtt += 'align="' + Align.value + '"' ;
+		if (Cellspacing.value != '')	sTableAtt += 'cellspacing="' + Cellspacing.value + '"' ;
+		if (Cellpadding.value != '')	sTableAtt += 'cellpadding="' + Cellpadding.value + '"' ;
+		if (Classname.value != '')	sTableAtt += 'class="' + Classname.value + '"' ;
+
+		var oTableParms = new ActiveXObject("DEInsertTableParam.DEInsertTableParam") ;
+		
+		if (Rows.value != '')		oTableParms.NumRows    = Rows.value ;
+		if (Columns.value != '')	oTableParms.NumCols    = Columns.value ;
+		if (sTableAtt != '')		oTableParms.TableAttrs = sTableAtt ;
+		if (Caption.value != '')	oTableParms.Caption    = Caption.value ;
+
+		result = {"tableParams":oTableParms};
+	}else{
+		if ( table.style.width )	table.style.removeAttribute("width") ;
+		if ( table.style.height )	table.style.removeAttribute("height") ;
+		table.width		= Width.value;
+		table.height		= Height.value ;
+		table.border		= Border.value ;
+		table.align		= Align.value ;
+		table.cellPadding	= Cellpadding.value ;
+		table.cellSpacing	= Cellspacing.value ;
+		table.className		= Classname.value ;
+		
+		if (Caption.value != ''){
+			if (!table.caption) table.createCaption();
+			table.caption.innerText = Caption.value ;
+		}else{
+			table.deleteCaption();
+		}
+		result = {"resultType":"modify"};
+
+	}
+	window.returnValue = result;
+	window.close();
+}
+
+
+
+function IsDigit(){
+  return ((event.keyCode >= 48) && (event.keyCode <= 57))
+}
+</SCRIPT>
+
+<SCRIPT FOR=window EVENT=onload>
+	SetDefaults();
+</SCRIPT>
+
+<SCRIPT FOR=Ok EVENT=onclick>
+	Return();
+</SCRIPT>
+
+</HEAD>
+
+<BODY>
+<TABLE border=0 cellpadding=0 cellspacing=1 width=100% style="margin-bottom:5px">
+ </TR>
+  <TD class=th nowrap>Caption</TD>
+  <TD width=100%><INPUT TYPE=TEXT NAME=Caption style="width:100%"></TD>
+ </TR>
+</TABLE>
+
+<TABLE border=0 cellpadding=0 cellspacing=0 width=100%>
+<TR>
+	<TD width=150 valign=top style="height:100%">
+		<FIELDSET style="padding:10 3 10 3; margin-right:1px; height:100%">
+			<TABLE border=0 cellpadding=0 cellspacing=1 width=100%>
+			<TR>
+				<TD class=th>Columns</TD>
+				<TD width=100%><INPUT TYPE=TEXT NAME=Columns ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%" value=3></TD>
+			</TR>
+			<TR>
+				<TD class=th>Rows</TD>
+				<TD><INPUT TYPE=TEXT NAME=Rows ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%" value=2></TD>
+			</TR>
+			<TR>
+				<TD class=th>Width</TD>
+				<TD><INPUT TYPE=TEXT NAME=Width style="width:100%"></TD>
+			</TR>
+			<TR>
+				<TD class=th>Height</TD>
+				<TD><INPUT TYPE=TEXT NAME=Height style="width:100%"></TD>
+			</TR>
+			</TABLE>
+		</FIELDSET>
+	</TD>
+	<TD valign=top style="height:100%">
+		<FIELDSET style="padding:10px 3px; height:100%">
+			<TABLE border=0 cellpadding=0 cellspacing=1 width=100%>
+			<TR>
+				<TD class=th>Border</TD>
+				<TD width=100%><INPUT TYPE=TEXT NAME=Border ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%"></TD>
+			</TR>
+			<TR>
+				<TD class=th>Cellpadding</TD>
+				<TD><INPUT TYPE=TEXT NAME=Cellpadding ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%"></TD>
+			</TR>
+			<TR>
+				<TD class=th>Cellspacing</TD>
+				<TD><INPUT TYPE=TEXT NAME=Cellspacing ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%"></TD>
+			</TR>
+			<TR>
+				<TD class=th>ClassName</TD>
+				<TD><INPUT TYPE=TEXT NAME=Classname style="width:100%"></TD>
+			</TR>
+			<TR>
+				<TD class=th>Align</TD>
+				<TD>
+					<SELECT Name=Align style="width:100%">
+						<option>
+						<option value=left>left
+						<option value=right>right
+						<option value=center>center
+					</SELECT>
+				</TD>
+			</TR>
+			</TABLE>
+		</FIELDSET>
+	</TD>
+</TR>
+</TABLE>
+
+<div align=right style="margin-top:5px"><BUTTON ID=Ok TYPE=SUBMIT>&nbsp;<B>OK</B>&nbsp;</BUTTON><BUTTON ONCLICK="window.close();">&nbsp;Cancel&nbsp;</BUTTON></div>
+
+</BODY>
+</HTML>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>LAYOUT</type>
+	<title>failover skin</title>
+	<abstract>true</abstract>
+	<charset>UTF-8</charset>
+	<renderer>ACM.TPL</renderer>
+</settings>

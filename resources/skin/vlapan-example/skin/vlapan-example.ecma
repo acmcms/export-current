@@ -1,0 +1,42 @@
+var content = Object.create(content);
+
+var packages = content.packages || new VlapanRequire();
+packages.add('jquery');
+packages.add('yuicss', {resources:['reset', 'base', 'fonts', 'grids']});
+packages.css.add('/!/skin/vlapan-example/$build/css/vlapan-example');
+//packages.js.add('/$files/vcard.js');
+//<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?2.8.1/build/reset-fonts-grids/reset-fonts-grids.css">
+//<link rel="stylesheet" type="text/css" href="$build/css/vlapan-example.css">
+$output(head){
+	= VlapanSyntaxHighlighter.init();
+	%>
+	<script type="text/javascript">
+	<!--
+		function showModal(uri, object){
+			var returnVal = window.showModalDialog(uri,object,"dialogWidth:800px; dialogHeight:540px; help:no; scroll:no; status:no; resizable:yes;");
+			if(returnVal == undefined){
+				return false;
+			}
+			object.value = returnVal;
+		}
+	//-->
+	</script>
+	<link rel="shortcut icon" type="image/x-icon" href="/$files/favicon.ico"/>
+	<%
+}
+packages.head.push(head);
+content.packages = packages;
+
+$output(body){
+	%><body>
+		<%= content.body %>
+		<h2 id="pkgs">Other packages</h2>
+		<ul class="horizontal">
+			<li><a href="/!/skin/vlapan-richedit/">vlapan-richedit</a></li>
+			<li><a href="/!/skin/vlapan-syntaxhighlighter/">vlapan-syntaxhighlighter</a></li>
+		</ul>
+	</body><%
+}
+content.body = body;
+content.template = "vlapan-default";
+return content;

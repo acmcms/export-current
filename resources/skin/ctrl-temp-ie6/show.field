@@ -1,0 +1,109 @@
+<%
+%><%EXEC: fieldname = Request.fieldname %><%
+
+%><%CHOOSE: Request.type %><%
+	%><%MATCH: 'node' %><%
+		%><%EXEC: owner = ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+		%><%EXEC: Request.path && (owner = ControlAPI.childForPath(owner, Request.path)) %><%
+		%><%EXEC: data = owner.getData() %><%
+
+	%><%MATCH: 'node_form' %><%
+		%><%EXEC: node = ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+		%><%EXEC: Request.path && (node = ControlAPI.childForPath(node, Request.path)) %><%
+		%><%IF: !node %><%
+			%><%RETURN: {
+				template	: '500',
+				title		: 'Error',
+				body		: 'Node (path=' + Request.path + ') was not found while trying to execute a command.'
+			}%><%
+		%><%/IF%><%
+		%><%EXEC: forms = node.getForms() %><%
+		%><%IF: !forms %><%
+			%><%RETURN: {
+				template	: '500',
+				title		: 'Error',
+				body		: 'Node (path=' + Request.path + ') has no forms.'
+			}%><%
+		%><%/IF%><%
+		%><%EXEC: form = forms.getByKey( Request.form ) %><%
+		%><%IF: !form %><%
+			%><%RETURN: {
+				template	: '500',
+				title		: 'Error',
+				body		: 'Node (path=' + Request.path + ') has no form \'' + Request.form + '\'.'
+			}%><%
+		%><%/IF%><%
+		%><%EXEC: owner = node.getCommandResult(form, null) %><%
+		%><%EXEC: data = owner.getData() %><%
+
+	%><%MATCH: 'form' %><%
+		%><%EXEC: session_form = Session[Request.id] %><%
+		%><%IF: !session_form %><%
+			%><%RETURN: {
+				template	: '500',
+				title		: 'Error',
+				body		: 'No form available, please retry.'
+			} %><%
+		%><%/IF%><%
+		
+		%><%EXEC: data = session_form.data.getData() %><%
+		%><%EXEC: mapPaths = split(fieldname,'/') %><%
+		%><%EXEC: fieldset = session_form.data.fieldset %><%
+
+		%><%IF: mapPaths.size() > 1%><%
+			%><%ITERATE: path : mapPaths %><%
+				%><%EXEC: field = fieldset.getField(path) %><%
+				%><%EXEC: fieldset = field.attributes.fieldset %><%
+				%><%EXEC: data = (value || data) %><%
+				%><%EXEC: value = data[path] %><%
+				%><%EXEC: fieldname = path %><%
+			%><%/ITERATE%><%
+		%><%/IF%><%
+
+	%><%MATCH%><%
+		%><%RETURN: {
+			template	: '500',
+			title		: 'Error',
+			body		: 'Unknown owner type: ' + Request.type + '.'
+		} %><%
+%><%/CHOOSE%><%
+
+%><%IF: Request.frommap %><%
+	%><%EXEC: mapPaths = split(Request.frommap,'/') %><%
+	%><%ITERATE: path : mapPaths %><%
+		%><%EXEC: data = data[path] %><%
+	%><%/ITERATE%><%
+	%><% // already set: EXEC: fieldname = Request.fieldname %><%
+%><%/IF%><%
+
+%><%IF: Request.fromlist %><%
+	%><%EXEC: list = owner[ Request.fromlist ] %><%
+	%><%EXEC: fieldname = 'object' %><%
+	%><%EXEC: data = {} %><%
+	%><%EXEC: data[ fieldname ] = list[ Integer(Request.index) ] %><%
+%><%/IF%><%
+
+%><%IF: Request.fromdata %><%
+	%><%EXEC: data[ fieldname ] = data[ fieldname ][ Request.fromdata ] %><%
+%><%/IF%><%
+
+%><%EXEC: type = data[ fieldname + "_contenttype" ]; %><%
+%><%EXEC: name = data[ fieldname + "_contentname" ] %><%
+%><%EXEC: width = data[ fieldname + "_width"] || '' %><%
+%><%EXEC: height = data[ fieldname + "_height"] || '' %><%
+%><%IF: type %><%
+	%><%EXEC: isImage = type.startsWith("image/") %><%
+	%><%EXEC: replyAttributes = {
+		"Content-Type" : type,
+		"Content-Disposition" : 'attachment; filename="' + (name || fieldname) + '"'
+	} %><%
+	%><%IF: Request.gwidth && Request.gheight && isImage && Integer(Request.gwidth,0) == Integer(Request.gwidth,-1) && Integer(Request.gheight,0) == Integer(Request.gheight,-1) && Request.gwidth < width && Request.gheight < height %><%
+		%><%EXEC: image = Imaging.imageForBinary(data[ fieldname ]) %><%
+		%><%EXEC: image = Imaging.bitmapResize(image,Request.gwidth,Request.gheight) %><%
+		%><%EXEC: image = Imaging.encodeGif(image) %><%
+		%><%RETURN: image %><%
+	%><%/IF%><%
+	%><%RETURN: Runtime.Return(data[ fieldname ], replyAttributes) %><%
+%><%/IF%><%
+%><%RETURN: Runtime.Return(data[ fieldname ], null) %><%
+%>

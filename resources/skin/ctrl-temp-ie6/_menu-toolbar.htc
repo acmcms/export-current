@@ -1,0 +1,141 @@
+<%FINAL: 'text/x-component' %>
+<PUBLIC:ATTACH EVENT="onload"		ONEVENT="menuToolbarIni()" FOR="window"/>
+
+<SCRIPT LANGUAGE="JScript">
+
+function menuToolbarGroupIni(group){
+	group.clearAll = function(){
+		var childNodesLength = this.childNodes.length;
+		try{
+			for(var j=0; j<childNodesLength; j++){
+				this.childNodes[childNodesLength-1 - j].removeNode(true);
+			}
+		}catch(Error){}
+	}
+
+	group.pointsIni = function(){
+		var items = this.getElementsByTagName("BUTTON");
+		for (var i = 0; i<items.length; ++i){
+			var cItem = items[i];
+			cItem.parent = this;
+
+			cItem.onclick = function(){
+				if(this.myCmd){
+					switch(this.myCmd){
+					case 'dialog':
+						var w = window.showModalDialog(this.path, {'sender':this.parent.parent.sender}, "dialogWidth:500px; dialogHeight:145px; scroll:no; status:no; resizable:yes; help:no");
+						return;
+					}
+				}
+				var src = '/execute.xml?type=form' + (this.parent.parent.formID ? '&key=' + this.parent.parent.formID : '') + (this.cmd ? '&'+this.cmd+'=1' : '');
+				Containers.executeXmlQuery(this,src,router);
+			}
+
+			cItem.executed = function(xmlData){
+				var currentNode = (requireScript("app/Dom.js"), Dom.firstElement(xmlData));
+				var type = currentNode.getAttribute("type")
+				switch(type){
+					case 'error':
+						alert(currentNode.text);
+						alert(xmlData.innerHTML)
+						break;
+					case 'form':
+						var W = 600, H = 400;
+						var winSize = (window.require && require("Utils.Cookies").read("winSize", ""));
+						if(winSize){
+							W = winSize.split(',')[0];
+							H = winSize.split(',')[1];
+						}
+						var src = '/form.htm?id=' + currentNode.getAttribute("id");
+						var arg = [];
+						arg['sender'] = this.parent.parent.sender;
+						Windows.open(src,arg,"","height="+H+",width="+W);
+//						var w = window.showModalDialog(src,arg,"dialogWidth:"+W+"px; dialogHeight:"+H+"px;");
+						break;
+					case 'done':
+						this.parent.parent.sender.refresh();
+						router.fire("ApplyDone",oMenu.id,currentNode,oMenu);
+						break;
+				}
+			}
+
+		}
+	}
+}
+
+function menuToolbarIni(){
+	this.sender = this.offsetParent.offsetParent.offsetParent;
+
+	this.onFire = function(eType,eValue,eObj){
+		switch (eType){
+			case 'ItemSelect':
+				router.fire('FieldItemSelectBegin','form');
+				if(this.groups.FieldContentCommands) this.groups.FieldContentCommands.clearAll();
+				var path = 'menu-form-fields-item.xml?key=' + this.formID + '&fieldName=' + this.fieldName + '&index=' + eValue.id;
+				break;
+			case 'ItemUnselect':
+				router.fire('FieldItemUnselect', 'form');
+				if(this.groups.FieldContentCommands) this.groups.FieldContentCommands.clearAll();
+				break;
+		}
+		if(path)
+			Containers.executeXmlQuery(this,path);
+	}
+
+	function buildPoints(xmlData){
+		if(!Dom.firstElement(xmlData)){
+			return '';
+		}
+		var str = '';
+		for (var j=0; j<xmlData.childNodes.length; j++){
+			var currentNode = xmlData.childNodes[j];
+			if(currentNode.nodeType != 1){<% // not an element
+				%>continue;<%
+			%>}
+			str +='<button';
+			str += currentNode.getAttribute("cmd")		? ' cmd="' +currentNode.getAttribute("cmd")+'"' : '';
+			str += currentNode.getAttribute("myCmd")	? ' myCmd="'+currentNode.getAttribute("myCmd")+'"' : '';
+			str += currentNode.getAttribute("path")		? ' path="'+currentNode.getAttribute("path")+'"' : '';
+			str += currentNode.getAttribute("key")		? ' key="'+currentNode.getAttribute("key")+'"' : '';
+			str += '><img src="icons/'+currentNode.getAttribute("icon")+'.16.gif" title="'+currentNode.getAttribute("title")+'" width=16 height=16></button>';
+		}
+		return str;
+	}
+
+	this.build = function(xmlData,oObj){
+		router.fire('FieldItemSelect','form',{
+			xmlData : xmlData
+		}, this.sender);
+		var childNodes = xmlData.childNodes;
+		for (var j = 0; j < childNodes.length; j++){
+			var currentNode = childNodes[j];
+			if(!this.groups[currentNode.getAttribute("id")]){
+				var oDiv = document.createElement("SPAN");
+				oDiv.id = currentNode.getAttribute("id");
+				this.insertAdjacentElement("afterBegin",oDiv);
+				this.groups[oDiv.id] = oDiv;
+				this.groups[oDiv.id].parent = this;
+				menuToolbarGroupIni(this.groups[oDiv.id]);
+			}
+			this.groups[currentNode.getAttribute("id")].innerHTML = buildPoints(currentNode) + '<img align=absmiddle src="/__i/1.gif" width=1 height=18 style="background-color:buttonshadow"><img align=absmiddle src="/__i/1.gif" width=1 height=18 style="background-color:buttonhighlight">';
+			this.groups[currentNode.getAttribute("id")].pointsIni();
+			this.groups[currentNode.getAttribute("id")].group = currentNode.getAttribute("group");
+		}
+	}
+
+	router.register(this, this, this.sender.id);
+
+	this.groups = [];
+	divs = this.getElementsByTagName("SPAN");
+	for(var i = 0; i<divs.length; ++i){
+		var oDiv = divs[i]
+		menuToolbarGroupIni(oDiv);
+		oDiv.parent = this;
+		oDiv.pointsIni();
+		this.groups[oDiv.id] = oDiv;
+	}
+}
+
+
+</SCRIPT>
+<%/FINAL%>

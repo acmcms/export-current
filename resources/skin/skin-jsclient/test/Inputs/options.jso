@@ -1,0 +1,78 @@
+[
+	{	
+		"icon"		: "/!/public/resources/data/images/famfamfam.com/silk/house.png",
+		"cssClass"	: "bold",
+		"value"		: "home1",
+		"title"		: "Home1" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/house.png",
+		value		: "home2",
+		title		: "Home2" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/chart_curve.png",
+		cssClass	: "bold italic",
+		value		: "trafficdetail",
+		title		: "Detail" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/chart_line.png",
+		value		: "traffichistogram",
+		title		: "Trend11" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/application_view_detail.png",
+		value		: "floodactivity",
+		title		: "Activity" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/chart_line.png",
+		cssClass	: "italic",
+		value		: "floodhistogram",
+		title		: "Trend22" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/chart_bar.png",
+		value		: "flooddistribution",
+		title		: "Distribution Distribution" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/report.png",
+		cssClass	: "underline",
+		value		: "floodreport1",
+		title		: "Report1" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/report.png",
+		cssClass	: "red",
+		cssStyle	: "font-size: 18px;font-family:courier",
+		value		: "floodreport2",
+		title		: "Report2" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/report.png",
+		cssClass	: "red",
+		cssStyle	: "font-size: 18px;font-family:times",
+		value		: "floodreport3",
+		title		: "Report3" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/report.png",
+		cssClass	: "red",
+		cssStyle	: "font-size: 18px;font-family:arial",
+		value		: "floodreport4",
+		title		: "Report4" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/medal_gold_1.png",
+		cssClass	: "bold italic underline",
+		value		: "floodsources",
+		title		: "Sources" 
+	},
+	{	
+		icon		: "/!/public/resources/data/images/famfamfam.com/silk/weather_lightning.png",
+		value		: "floodtargets",
+		title		: "Targets" 
+	}
+]

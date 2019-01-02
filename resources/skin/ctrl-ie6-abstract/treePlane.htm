@@ -1,0 +1,109 @@
+<%
+
+%><%EXEC: lastPath = Request.path || Session.getParameters().path || '/' %><%
+
+%><%EXEC: requireCss = [] %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add("require") %><%
+%><%EXEC: requireJs.add("app/Router") %><%
+%><%EXEC: requireJs.add("app/Containers") %><%
+%><%EXEC: requireJs.add("app/Dom") %><%
+%><%EXEC: requireJs.add("app/Tree") %><%
+
+%><%OUTPUT: head %><%
+	%><style><%
+		%><%FORMAT: 'css' %>
+			HTML, BODY {
+				width: 100%;
+				height: 100%;
+				padding: 0;
+				margin: 0;
+				border: 0;
+				cursor: default;
+				overflow: hidden;
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+				-ms-box-sizing: border-box;
+				box-sizing: border-box;
+			}
+			BODY {
+				background-color: window;
+				padding: 2px;
+				overflow: auto;
+			}
+			
+			.thread1 {
+				height: 16px;
+				width: 16px;
+				background-image: URL(/$files/thread1.gif);
+			}
+			
+			.thread2 {
+				height: 16px;
+				width:16px;
+				background-image: URL(/$files/thread2.gif);
+			}
+			
+			.thread3 {
+				height: 16px;
+				width:16px;
+				background-image: URL(/$files/thread3.gif);
+			}
+			
+			.thread4 {
+				height: 16px;
+				width:16px;
+				background-image: URL(/$files/thread4.gif);
+			}
+			
+			.thread5 {
+				height: 16px;
+				width:16px;
+				background-image: URL(/$files/thread5.gif);
+			}
+			
+			.fldTxt {
+				font-family:Tahoma;
+				font-size:8pt;
+				padding-left:3pt;
+				padding-right:3pt;
+				color:windowtext;
+			}
+			
+			.fldTxtOn {
+				font-family:Tahoma;
+				font-size:8pt;
+				padding-left:3pt;
+				padding-right:3pt;
+				background-color: highlight;
+				color: highlighttext;
+			}
+		<%/FORMAT%><%
+	%></style><%
+	%><script><%
+		%><%FORMAT: 'js' %>
+			buildTreeReloadPeriod = <%= Number(User.getUser().getProfile('mwmAdmin',true).TreeReloadPeriod) || 60000 %>;
+			buildTreeDataSource = "tree-data.xml<%= Request.mode == 'link' ? '?mode=link' : '' %>";
+			router = parent.router || parent.parent.router || require("app.Router") && new app.Router("tree");
+		<%/FORMAT%><%
+	%></script><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+%><body><%
+	%><script><%
+			%>Tree.prototype.reloadPeriod = buildTreeReloadPeriod;<%
+			%>tree = new Tree(document.body, buildTreeDataSource, "<%= lastPath %>");<%
+	%></script><%
+%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: intl( en = "Tree", ru = "Дерево" ),
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

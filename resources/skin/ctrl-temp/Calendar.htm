@@ -1,0 +1,254 @@
+<HTML><%
+%><HEAD><%
+	%><TITLE>Date/Time</TITLE><%
+	%><style><%
+		%><%INCLUDE: 'editor_style.css' %><%
+		%><%INCLUDE: 'editor_popup-style.css' %><%
+	%></style><%
+	%><script>
+	var currYear = false;
+	var currMonth = false;
+	var currDay = false;
+	var currHour = false;
+	var currMin = false;
+	
+	var d = new Date();
+	var parametrs = window.dialogArguments || {};
+	
+	parametrs.millis || (parametrs.millis = d);
+	(!parametrs.format || parametrs.format == 'null') && (parametrs.format = 'yyyy.MM.dd HH:mm');
+	
+	var t = d.setTime(parametrs.millis);
+	SetDate(t);
+	
+	function SetDate(t){
+		var ndate = new Date(t);
+		currYear = ndate.getFullYear();
+		currMonth = ndate.getMonth() + 1;
+		currDay = ndate.getDate();
+		currHour = ndate.getHours();
+		currMin = ndate.getMinutes();
+	}
+	
+	var mnths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+	
+	var mdArr = [31,28,31,30,31,30,31,31,30,31,30,31];
+	var wdArr = [3,4,5,6,0,1,2];
+	
+	var calendarTable = {};
+	
+	function move(){
+		for (var i=calendarTable.rows.length-1; i>0; --i) {
+			calendarTable.rows[i].removeNode(true);
+		}
+		drawCalendar();
+	}
+	
+	function start(){
+		calendarTable = document.getElementById('calendar');
+		document.getElementById('Year').value = currYear;
+		document.getElementById('Month').options[currMonth-1].selected = true;
+		document.getElementById('Hour').value = currHour;
+		document.getElementById('Min').value = currMin;
+		drawCalendar();
+	}
+	
+	function drawCalendar(){
+		var startDay = getWeekDay(currYear,currMonth);
+		var i=1;
+		var oTR = calendarTable.insertRow(-1);
+		if (wdArr[startDay]!=1){
+			for ( i=1; i<(wdArr[startDay]!=0?wdArr[startDay]:7); ++i){
+				var oTD = oTR.insertCell(-1);
+			}
+		}
+		var dIm = mdArr[currMonth-1];
+		if ( (currYear%4 == 0) && currMonth == 2 ) dIm++;
+		for (var j=1; j<=dIm; j++){
+			var oTD = oTR.insertCell(-1);
+			oTD.className = 't';
+			oTD.day = j;
+			oTD.id = 'day'+j;
+			oTD.style.textAlign = 'center';
+			oTD.onclick = function(){
+				if(calendarTable.selectedObj){
+					calendarTable.selectedObj.style.backgroundColor="";
+					calendarTable.selectedObj.style.color="";
+				}
+				this.style.backgroundColor = 'highlight';
+				this.style.color = 'highlighttext';
+				calendarTable.selectedObj = this;
+				currDay = this.day;
+			}
+			oTD.innerHTML = j;
+			if ( (i%7) == 0 && j<dIm){
+				i=0;
+				oTR = calendarTable.insertRow(-1);
+			}
+			i++;
+		}
+		if (calendarTable.rows.length < 7){
+			var oTR = calendarTable.insertRow(-1);
+			var oTD = oTR.insertCell(-1);
+			oTD.innerHTML = '&nbsp;';
+		}
+	
+		if (currDay > dIm) currDay = 1;
+		document.getElementById("day"+currDay).click();
+	}
+	
+	function getWeekDay(yyyy,mm,dd){
+		dd || (dd = 1);
+		var tYear = yyyy - 1970;
+		var tMonth = tYear*12 + mm;
+		var tDay = dd;
+		for (var i=0; i<(mm-1); ++i){
+			tDay += mdArr[i];
+		}
+		tDay += tYear*365;
+		for (var i=1970; i<=yyyy; ++i){
+			((i%4) == 0 && (yyyy!=i || mm>2)) && tDay++;
+		}
+		return tDay % 7;
+	}
+	
+	function GetFormatDate(){
+		var date = ''
+		var Symbol = ''
+		var block = ''
+		for (var i=0; i<parametrs.format.length; ++i){
+			var cs = parametrs.format.substr(i,1)
+	
+			if (cs == 'y' || cs == 'M' || cs == 'd' || cs == 'H' || cs == 'm'){
+				if (cs == Symbol || Symbol == ''){
+					block += cs;
+				}else{
+					(block != '') && (date += FormatDate(block));
+					block = cs;
+					Symbol = cs;
+				}
+			}else{
+				(block != '') && (date += FormatDate(block));
+				block = '';
+				date += cs;
+			}
+		}
+		(block != '') && (date += FormatDate(block));
+		return date;
+	}
+	
+	function FormatDate(block){
+		switch (block.substr(0,1)){
+		case "y":
+			return block.length > 2 ? String(currYear) : String(currYear).substr(2,2);
+		case "M":
+			return block.length == 2 && String(currMonth).length == 1 ? "0"+String(currMonth) : String(currMonth);
+		case "d":
+			return block.length == 2 && String(currDay).length == 1 ? "0"+String(currDay) : String(currDay);
+		case "H":
+			return block.length == 2 && String(currHour).length == 1 ? "0"+String(currHour) : String(currHour);
+		case "m":
+			return block.length == 2 && String(currMin).length == 1 ? "0"+String(currMin) : String(currMin);
+		}
+	}
+	
+	function SubMit(){
+		var result = {'Date':GetFormatDate(), 'Millis' : Date.parse(mnths[currMonth-1] + "," + currDay + "," + currYear + " " + currHour + ":" + currMin)};
+		window.returnValue = result
+		window.close();
+	}
+	
+	</script><%
+%></head><%
+%><body style="cursor:default" topmargin=0 leftmargin=0 class=popup1><%
+	
+	%><table border=0 cellpadding=0 cellspacing=0 style="width:100%;margin-top:5px;"><%
+		%><tr><%
+			%><td><%
+				%><SELECT onchange="currMonth = this.value; move();" class=input2 NAME=Month style="width:70px"><%
+					%><%EXEC: Months = intl(
+						en = "January,Febrary,March,April,May,June,July,August,September,Octouber,November,December",
+						ru = "Январь,Февраль,Март,Апрель,Май,Июнь,Июль,Август,Сентябрь,Октябрь,Ноябрь,Декабрь"
+					) %><%
+					%><%CALL: ForArray(split(Months.toString(),',')) %><%
+						%><option value=<%= CurrentIndex + 1 %>><%= Current %><%
+					%><%/CALL%><%
+				%></SELECT><%
+			%></td><%
+			%><td align=right><%
+				%><INPUT readonly class=input2 style="width:50px" name=Year style="margin-right:2px"><%
+			%></td><%
+			%><td><%
+				%><BUTTON style="font-family:Webdings;height:9px;width:12px;line-height:2px;font-size:9px;" onmousedown="currYear++;move();this.parentNode.previousSibling.firstChild.value=currYear"><%
+					%>5<%
+				%></BUTTON><%
+				%><br><%
+				%><BUTTON style="font-family:Webdings;height:9px;width:12px;line-height:2px;font-size:9px;" onmousedown="currYear--;move();this.parentNode.previousSibling.firstChild.value=currYear"><%
+					%>6<%
+				%></BUTTON><%
+			%></td><%
+		%></tr><%
+	%></table><%
+	
+	%><table cellpadding=2 cellspacing=0 id=calendar style="width:100%; margin-top:3px; background-color:window; border-width:1px; border-style:solid; border-left-color:buttonshadow; border-top-color:buttonshadow; border-right-color:buttonhighlight; border-bottom-color:buttonhighlight; "><%
+	%><tr class=t3 style="text-align:center; background-color:buttonface"><%
+	%><%=intl(
+			en="<td>M</td><td>T</td><td>W</td><td>T</td><td>F</td><td>S</td><td>S</td>",
+			ru="<td>Пн</td><td>Вт</td><td>Ср</td><td>Чт</td><td>Пт</td><td>Сб</td><td>Вс</td>") %><%
+	%></tr><%
+	%></table><%
+	
+	%><center><%
+		%><table border=0 cellpadding=0 cellspacing=0 style="margin-top:5px;"><%
+			%><tr><%
+				%><td class=t3><%
+					%><%= intl( en = "HH:mm", ru = "ЧЧ:мм" ) %><%
+					%>&nbsp;<%
+				%></td><%
+				%><td><%
+					%><INPUT readonly class=input2 style="width:22px;margin-right:2px" name=Hour><%
+				%></td><%
+				%><td><%
+					%><BUTTON style="font-family:Webdings;height:9px;width:12px;line-height:2px;font-size:9px;" onmousedown="currHour=(currHour==23)?0:currHour+1;this.parentNode.previousSibling.firstChild.value=currHour"><%
+						%>5<%
+					%></BUTTON><%
+					%><br><%
+					%><BUTTON style="font-family:Webdings;height:9px;width:12px;line-height:2px;font-size:9px;" onmousedown="currHour=(currHour==0)?23:currHour-1;this.parentNode.previousSibling.firstChild.value=currHour"><%
+						%>6<%
+					%></BUTTON><%
+				%></td><%
+			
+				%><td class=t3>&nbsp;:&nbsp;</td><%
+			
+				%><td><%
+					%><INPUT readonly class=input2 style="width:22px" name=Min style="margin-right:2px"><%
+				%></td><%
+				%><td><%
+					%><BUTTON style="font-family:Webdings;height:9px;width:12px;line-height:2px;font-size:9px;" onmousedown="currMin=(currMin==59)?0:currMin+1;this.parentNode.previousSibling.firstChild.value=currMin"><%
+						%>5<%
+					%></BUTTON><%
+					%><br><%
+					%><BUTTON style="font-family:Webdings;height:9px;width:12px;line-height:2px;font-size:9px;" onmousedown="currMin=(currMin==0)?59:currMin-1;this.parentNode.previousSibling.firstChild.value=currMin"><%
+						%>6<%
+					%></BUTTON><%
+				%></td><%
+			%></tr><%
+		%></table><%
+	%></center><%
+	
+	%><div align=right style="margin:4px; margin-top:8px;"><%
+		%><button class=button3 onclick="SubMit()"><%
+			%><%= intl( en = "Apply", ru = "Выбрать" ) %><%
+		%></button><%
+		%>&nbsp;<%
+		%><button class=button3 onclick="window.returnValue='';window.close()"><%
+			%><%= intl( en = "Cancel", ru = "Отмена" ) %><%
+		%></button><%
+	%></div><%
+	
+	%><script><%
+		%>start();<%
+	%></script><%
+	
+%></body><%
+%></HTML>

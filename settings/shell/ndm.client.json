@@ -1,0 +1,5 @@
+{
+	type : "ae3/Executable",
+	reference : "com.ndmsystems.ndm.client/Command",
+	requires : ['request-target','request-source']
+}

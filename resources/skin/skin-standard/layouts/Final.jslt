@@ -1,0 +1,25 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+
+
+import ru.myx.ae3.answer.Reply;
+import ru.myx.ae3.act.Context;
+
+var reply = Reply.object( "LAYOUT_FINAL", Context.getRequest(), layout.content ) //
+			.setCode( layout.code || 200 ) //
+			.setContentType( layout.type || 'text/plain' ) //
+			.setFinal();
+
+if(false === layout.cache){
+	reply.setNoCaching();
+}
+
+if(undefined !== layout.delay){
+	reply.setAttribute('X-Delay', layout.delay);
+}
+
+// return reply;
+throw Reply.exception(reply);

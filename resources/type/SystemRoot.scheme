@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+
+	<!-- 
+		This type is assigned to storage root automatically by default, you 
+		can change it to another type in ctrl interface or you can override this 
+		type in your domain. 
+	-->
+
+	<title>Корень системы</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<folder>true</folder>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+	</statelist>
+
+	<children>
+		<type>$Root</type>
+		<type>$Site</type>
+	</children>
+
+</type>

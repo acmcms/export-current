@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+
+	%><%EXEC: form = Session[Request.id] %><%
+	%><%IF: !form %><%
+		%><%RETURN: {
+			template	: '500',
+			title		: 'Error',
+			body		: 'No form available, please retry.'
+		} %><%
+	%><%/IF%><%
+	%><%EXEC: data = form.data %><%
+	%><%EXEC: errors = form.errors %><%
+	
+	%><%EXEC: fieldset = data.getFieldset() %><%
+	%><%EXEC: errors || (errors = {}) %><%
+	
+	
+	%><TITLE><%=data.getTitle()%></TITLE><%
+	
+	%><style>
+<%INCLUDE: 'frames.css' %>
+<%INCLUDE: 'forms.css' %>
+</style>
+</HEAD>
+
+<script>
+
+<%IF:Int(User.getUser().getProfile('mwmAdmin',true).ShowFieldMenu,1) > 0%>
+document.onactivate = function(){
+	var obj = event.srcElement;
+	var aObj = getSelectParent(obj, 'activate');
+	var menu = getSelectParent(obj, 'ContextMenu');
+	if(!menu && !aObj){
+		eventMethods.fire('FieldDeactivate','form',false,false);
+		document.aObj = false;
+		window.status = window.status + ' e';
+		return;
+	}
+	if(menu) return;
+	if(aObj != document.aObj){
+		document.aObj = aObj;
+		var sender = (aObj.valueObject) ? eval(aObj.valueObject) : aObj;
+		eventMethods.fire('FieldActivate','form',{'path':aObj.activate},sender);
+		window.status = window.status + ' n';
+	}else{
+		window.status = window.status + ' o';
+	}
+}
+<%/IF%>
+
+
+var dialogArguments = opener ? opener.Windows[window.name].dialogArguments : window.dialogArguments;
+var resizeTimer = false;
+
+function keepWinSize(){
+	clearTimeout(resizeTimer);
+	resizeTimer = setTimeout("putWinSizeInCookies()",1000);
+}
+
+function putWinSizeInCookies(){
+	setCookie('winSize',document.body.offsetWidth+","+document.body.offsetHeight);
+}
+
+function setCookie (name,content,path){
+	var domain='';
+	var expDate='expires=Wednesday, 09-Aug-2020 00:00:00 GMT';
+	path = (path) ? 'path='+path+'; ' : '';
+	document.cookie = name+'='+content+'; '+path+expDate+domain;
+}
+
+</script>
+
+<script id="Containers" src="Containers.js"></script>
+<SCRIPT id="EventsMethods" src="EventsMethods.js"></script>
+<script id="Cookies" src="Cookies.js"></script>
+<script id="WindowsMethods.js" src="WindowsMethods.js"></script>
+<script id="SystemWindows" src="SystemWindows.js"></script>
+<script id="Form" src="Form.js"></script>
+<script id="DomMethods" src="DomMethods.js"></script>
+
+<BODY BGCOLOR="buttonface" scroll="no" style="cursor:default; margin:3px" class=FrameBorder onresize="keepWinSize()">
+
+
+
+<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+<TR>
+	<%EXEC: source = data.getData() %>
+	<%EXEC: target = {} %>
+	<%EXEC: fieldset.dataRetrieve(source, target) %>
+	<%EXEC: data.setData(target) %>
+
+	<%IF: fieldset %>		
+		<%EXEC:normalFieldsCount = fieldset.size()%>
+		<%EXEC:bigFieldsCount = 0%>
+		<%EXEC:zoomingFieldsCount = 0%>
+			<%RECURSION: fieldset = fieldset, target = target, prefix=""%>
+			<%CALL: ForArray( fieldset ) %>
+				<%EXEC: value = target[ Current.getKey() ]%>
+				<%EXEC: attributes = Current.getAttributes() %>
+				<%IF:Current.getAttributes().type == 'transparent'%>
+					<%EXEC:normalFieldsCount = normalFieldsCount - 1%>
+				<%/IF%>
+				<%IF:attributes.variant != 'fieldset'%>
+					<%CHOOSE: Current.getAttributes().type%>
+						<%MATCH: 'list','map','set','text','binary','drawing'%>
+							<%EXEC:bigFieldsCount = bigFieldsCount + 1%>
+							<%EXEC:bigFieldName = prefix+Current.getKey()%>
+					<%/CHOOSE%>
+					<%CHOOSE: Current.getAttributes().type%>
+						<%MATCH: 'list','map','set','text','drawing'%>
+							<%EXEC:zoomingFieldsCount = zoomingFieldsCount + 1%>
+							<%EXEC:zoomingFieldName = prefix+Current.getKey()%>
+					<%/CHOOSE%>
+				<%ELSE%>
+					<%EXEC: fieldfieldset = attributes.fieldset %>
+					<%EXEC: newTarget = {} %>
+					<%EXEC: fieldfieldset.dataRetrieve( value , newTarget ) %>
+					<%DEEPER: fieldset = fieldfieldset, target = newTarget, prefix = "tomap_"+Current.getKey()+"___"%>
+				<%/ELSE%>
+				<%/IF%>
+			<%/CALL%>
+			<%/RECURSION%>
+		<%EXEC: singleField = normalFieldsCount <= 1 %>
+		<%EXEC: oneBigField = (bigFieldsCount == 1 && normalFieldsCount < 9 && zoomingFieldsCount == 1) %>
+
+
+
+		<%EXEC:fieldsetFlag = true%>
+		<%OUTPUT:tabHolders%>
+			<TR>
+				<TD height=100%>
+					<TABLE border=0 cellpadding=0 cellspacing=0 width=100% height=100%>
+					<TR>
+						<TD>
+							<TABLE border=0 cellpadding=0 cellspacing=0 class=zakladka width=100%>
+							<TR>
+								<TD><script>document.write(tabSplitter3)</script></TD>
+								<%CALL: ForArray( fieldset ) %>
+									<%EXEC: attributes = Current.getAttributes() %>
+									<%EXEC:title = Current.getTitle()%>
+									<%IF:attributes.type == 'map' && attributes.variant == 'fieldset'%>
+										<%IF:First%>
+											<TD class=TabOn id="holder" onclick="SwitchTab(this)" 	nowrap><div><%=title%></div></TD>
+											<TD><script>document.write(tabSplitter4)</script></TD>
+										<%ELSE%>
+											<TD class=TabOff id="holder" onclick="SwitchTab(this)" 	nowrap><div><%=title%></div></TD>
+											<%IF:Last%>
+												<TD><script>document.write(tabSplitter5)</script></TD>
+											<%ELSE%>
+												<TD><script>document.write(tabSplitter1)</script></TD>
+											<%/ELSE%>
+											<%/IF%>
+										<%/ELSE%>
+										<%/IF%>
+									<%ELSE%>
+										<%EXEC:fieldsetFlag = false%>
+									<%/ELSE%>
+									<%/IF%>
+								<%/CALL%>
+								<TD style="width:100%"></TD>
+							</TR>
+
+							<TR class=border>
+								<TD class=TabOffl><img width=0 height=0></TD>
+								<%CALL:ForArray(fieldset)%>
+									<%IF:First%>
+										<TD><img width=0 height=0></TD>
+										<TD class=TabOffr><img width=0 height=0></TD>
+									<%ELSE%>
+										<TD class=TabOn><img width=0 height=0></TD>
+										<TD class=TabOn><img width=0 height=0></TD>
+									<%/ELSE%>
+									<%/IF%>
+								<%/CALL%>
+								<TD class=TabOn><img width=0 height=0></TD>
+							</TR>
+							</TABLE>
+						</TD>
+					</TR>
+					<TR>
+						<TD height=100%>
+							<TABLE border=0 cellpadding=0 cellspacing=0 width=100% style="border-left: 1 solid buttonhighlight; border-right: 1 solid buttonshadow; border-bottom: 1 solid buttonshadow; padding:5; height:100%">
+
+		<%/OUTPUT%>
+
+		<%IF:fieldsetFlag%>
+			<TD width=100% valign=top>
+			<div style="height:100%;" keyDown='OnKeyDownList(this)'>
+		<%ELSE%>
+			<TD width=100% valign=top class=FrameBorder>
+			<div style="height:100%; overflow:auto" class=FrameBorder2 style="padding:3" keyDown='OnKeyDownList(this)'>
+		<%/ELSE%>
+		<%/IF%>
+		
+		<table border=0 cellpadding=0 cellspacing=1 width=100%<%IF:(singleField || oneBigField) || fieldsetFlag%> style="height:100%" height=100%<%/IF%> object=formTable>
+		<FORM id=FBODY target=formBuffer method=POST enctype=multipart/form-data class=form1>
+		<%IF: Object.isFilled(errors) %>
+		<TR ondblclick="this.style.display='none'">
+			<TD colspan=2 style="padding:0">
+				<TABLE border=0 cellpadding=0 cellspacing=0 width=100%>
+				<TR>
+					<TD valign=top><img src=icons/status-error.32.gif style="margin:3"></TD>
+					<TD width=100%>
+					<TEXTAREA class=DescriptionPlain style="height:32; width:100%; overflow:hidden; overflow-Y:auto; margin:0"><%
+					%><%CALL: ForHash(errors) %><%
+						%><%=fieldset.getField(CurrentKey).getTitle() %>: <%= Format.xmlNodeValue(Current)%><%
+					%><%/CALL%><%
+					%></TEXTAREA>
+					</TD>
+				</TR>
+				</TABLE>
+			</TD>
+		</TR>
+		<%/IF%>
+		<%IF:!singleField%>
+			<TR style="display:none;" id="wholeWindow">
+				<TD><div id=wholeWindowNode></div></TD>
+			</TR>
+		<%/IF%>
+
+
+		<%IF:fieldsetFlag%>
+			<%INCLUDE: 'zakladki.inc' %>
+			<%=tabHolders%>
+		<%/IF%>
+
+			<%INCLUDE: 'formFields.inc' %>
+
+		<%IF:fieldsetFlag%>
+							</TABLE>				
+						</TD>
+					</TR>
+					</TABLE>
+				</TD>
+			</TR>
+		<%/IF%>
+
+		</FORM>
+		</table>
+		</div>
+	<%/IF%>		
+
+
+
+
+
+	</TD>
+	<TD><img width=4 height=0></TD>
+	<TD class=FrameBorder>
+		<div class=FrameBorder2 style="height:100%">
+			<%OUTPUT: contextMenuFormCommands %>
+				<div class=FrameBorder style="width:100%; margin-bottom:2px" id="FormCommands" status="true" CommandType="form">
+					<TABLE border=0 cellpadding=0 cellspacing=0 width=100%>
+					<TR><TD class=SubMenuHeader><TABLE border=0 cellpadding=0 cellspacing=0 width=100%><TR><TD><%=intl(en="Form commands", ru="Команды формы")%></TD><TD align=right style="font-family:Webdings; line-height:0">5</TD></TR></TABLE></TD></TR>
+					<TR>
+						<TD class=SubmenuButton style="background-color:threedhighlight">
+							<TABLE border=0 cellpadding=2 cellspacing=0 width=100%>
+							<%EXEC:commands = ControlAPI.filterAccessibleCommands( data.getAttributes().path || '',data.getCommands())%>
+							<%IF:Array.isFilled(commands)%>
+								<%CALL: ForArray(commands) %>
+									<%CHOOSE: Current.getKey() %>
+									<%MATCH: ''%>
+									<%MATCH%>
+										<%EXEC: icon = ControlAPI.getIcon(Current)%>
+										<TR cmd="<%=Current.getKey()%>" key="<%=Request.id%>" title="<%= Current.commandDescription() || '' %>">
+											<TD valign=top><img src="icons/<%=icon%>.32.gif" width=32 height=32></TD>
+											<td width=100%><%=Current.getTitle()%></td>
+										</TR>
+									<%/CHOOSE%>
+								<%/CALL%>
+							<%/IF%>
+							<TR myCmd="close" key="<%=Request.id%>">
+								<TD valign=top><img src="icons/command-close.32.gif" width=32 height=32 alt="close"></TD>
+								<td width=100%><%= intl(en = "Close", ru = "Закрыть")%></td>
+							</TR>
+							</TABLE>
+						</TD>
+					</TR>
+					</TABLE>
+				</div>
+			<%/OUTPUT%>
+			<%INCLUDE: 'Menu.htm' %>
+		</div>
+	</TD>
+</TR>
+
+<TR>
+	<TD colspan=3 style="height:20px; padding-top:2px">
+
+		<TABLE border=0 cellpadding=0 cellspacing=0 width=100% style="padding:0 2 0 2" height=100% id=FormStatusBar>
+		<TR>
+			<TD class=FrameBorder width=220px>
+
+				<TABLE border=0 cellpadding=0 cellspacing=0 style="padding:1px" height=100%>
+				<TR>
+					<TD nowrap></TD>
+					<TD width=100%></TD>
+					<TD nowrap></TD>
+				</TR>
+				</TABLE>
+			
+			
+			</TD>
+
+			<TD class=FrameBorder>&nbsp;</TD>
+		</TR>
+		</TABLE>
+
+	</TD>
+</TR>
+
+</TABLE>
+
+<script>
+	mForm.ini();
+</script>
+
+</BODY>
+</HTML>

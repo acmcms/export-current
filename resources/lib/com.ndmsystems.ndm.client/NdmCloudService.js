@@ -1,0 +1,144 @@
+const ae3 = require('ae3');
+const Concurrent = ae3.Concurrent;
+const vfs = ae3.vfs;
+const Client = require('./Client');
+
+const SETTINGS_PATH = "settings/ndm.ndss-client";
+
+
+const f = {
+	Settings : ae3.Util.Settings,
+	reduceClientsToMap : function(result, clientKey){
+		result[clientKey] = clientObjects[clientKey];
+		return result;
+	},
+	reduceClientDescriptorsToMap : function(targetMap, file) {
+		targetMap[file.key] || (targetMap[file.key] = new Client(file));
+		return targetMap;
+	},
+	checkClients : function(){
+		this.udpService || Object.defineProperty(this, "udpService", {
+			writable : true,
+			value : require('./UdpCloudService')
+		});
+
+		const clients = f.Settings.SettingsBuilder.builderSimple()//
+			.setInputFolderPath(SETTINGS_PATH)//
+			.setDescriptorReducer(function(settings, description){
+				if (description.type !== "ndm.client/Connection") {
+					return settings;
+				}
+				var name = description.name;
+				if(!name){
+					throw "Client 'name' is expected!";
+				}
+				var service = description.service;
+				var file = clientsFolder.relativeFolder(name);
+				settings[name] = new Client(file, service.host, service.port, service.key, service.pass);
+				return settings;
+			})//
+			.get()
+		;
+		
+		clientsFolder.getContentCollection(null).filter(vfs.isContainer).reduce(f.reduceClientDescriptorsToMap, clients);
+		
+		console.log(">>>>>> NdmCloudService: checkClients start, clients folder: ", clientsFolder);
+		for(var key of Object.keys(clients)){
+			if(!clientObjects[key]){
+				clientObjects[key] = clients[key];
+				clientObjects[key].start();
+			}
+		}
+		for(var key of Object.keys(clientObjects)){
+			if(!clients[key]){
+				clientObjects[key].destroy();
+				delete clientObjects[key];
+			}
+		}
+		console.log(">>>>>> NdmCloudService: checkClients done");
+	}
+};
+
+var stopped = true;
+
+const clientsFolder = ae3.vfs.ROOT.relativeFolderEnsure("storage/data/ndm.client/clients");
+
+const clientObjects = {};
+
+
+Object.defineProperties(exports, {
+	udpService : {
+		writable : true,
+		value : null
+	},
+	description : {
+		enumerable : true,
+		value : "'ndm.client' service: cloud registration and UDP push notifications support."
+	},
+	
+	
+	
+	getClient : {
+		value : function(key){
+			return clientObjects[key];
+		}
+	},
+	getClients : {
+		value : function(){
+			return Object.keys(clientObjects).reduce(f.reduceClientsToMap, {});
+		}
+	},
+	updateClient : {
+		value : function(clientId, ndssHost, ndssPort, licenseNumber, serviceKey){
+			const clientFolder = clientsFolder.relativeFolderEnsure(clientId); // clientsFolder.relativeFolder(clientId);
+			if(!Client.storeRaw(clientFolder, clientId, ndssHost, ndssPort, licenseNumber, serviceKey)){
+				return false;
+			}
+			const clientCurrent = clientObjects[clientId];
+			const clientUpdated = new Client(clientFolder);
+			if(clientCurrent){
+				if(clientCurrent.equals(clientUpdated)){
+					return clientCurrent;
+				}
+				clientCurrent.destroy();
+			}
+			clientObjects[clientId] = clientUpdated;
+			clientUpdated.start();
+			return clientUpdated;
+		}
+	},
+	
+	
+	
+	start : {
+		value : Concurrent.wrapSync(function(){
+			if(!stopped){
+				throw "already started";
+			}
+			stopped = false;
+			
+			setTimeout(f.checkClients.bind(this), 500);
+		})
+	},
+	stop : {
+		value : Concurrent.wrapSync(function(){
+			if(stopped){
+				throw "already stopped";
+			}
+			stopped = true;
+			
+			if(this.udpService !== null){
+				this.udpService.destroy && this.udpService.destroy();
+				Object.defineProperty(this, "udpService", {
+					writable : true,
+					value : null
+				});
+			} 
+		})
+	},
+	toString : {
+		value : function(){
+			return "[NdmClientService, started: " + (!stopped) + "]";
+		}
+	}
+});

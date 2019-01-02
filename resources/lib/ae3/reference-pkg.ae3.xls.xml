@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?>
+<xml namespacePrefix="" layout="documentation">
+	<anchor>pkg-ae3.xls</anchor>
+	<title>Package: ae3.xls</title>
+
+	<article>
+		<name>XLS API Reference</name>
+		<text>
+			<paragraph>ae3.xls package provides the API to create XLS (MS Excel) documents.</paragraph>
+			<paragraph>Obtain the instance of XLS API.</paragraph>
+			<code>const XLS = require('ae3/xls');</code>
+			<paragraph>
+				API provides these methods and properties:
+				<fields layout="list">
+					<columns>
+						<column id="n" title="Name"/>
+						<column id="d" title="Summary"/>
+					</columns>
+					<item><n>
+						createWorkbook
+					</n><d>
+						Creates new empty <a href="#pkg-ae3.xls.WorkbookChange">WorkbookChange</a> object to construct the XLS document.
+					</d></item>
+					<item><n>
+						createWorkbookChange
+					</n><d>
+						Creates new <a href="#pkg-ae3.xls.WorkbookChange">WorkbookChange</a> object to modify the existing XLS document.
+					</d></item>
+					<item><n>
+						getWorkbook
+					</n><d>
+						Opens existing <a href="#pkg-ae3.xls.Workbook">Workbook</a> object from the existing XLS document.
+					</d></item>
+					<item><n>
+						createBinaryFromLayout
+					</n><d>
+						Creates a binary object containing the PDF file generated using 'layout' argument.
+					</d></item>
+					<item><n>
+						makeDataTableBinary
+					</n><d>
+					</d></item>
+					<item><n>
+						makeDataTableMessage
+					</n><d>
+					</d></item>
+					<item><n>
+						makeDataTableReply
+					</n><d>
+					</d></item>
+					<item><n>
+						makeFormBinary
+					</n><d>
+					</d></item>
+					<item><n>
+						makeFormMessage
+					</n><d>
+					</d></item>
+					<item><n>
+						makeFormReply
+					</n><d>
+					</d></item>
+				</fields>
+			</paragraph>
+		</text>
+	</article>
+
+	<article>
+		<anchor>pkg-ae3.xls.Workbook</anchor>
+		<title>Workbook object</title>
+		<text>
+			<paragraph>
+				The instance of DocumentBuilder class is created when 
+				you building a new PDF document. It provides a set of methods to
+				work on document's content and meta-data. Each instances of 
+				DocumentBuilder has following methods and properties:
+				<fields layout="list">
+					<columns>
+						<column id="n" title="Name"/>
+						<column id="d" title="Summary"/>
+					</columns>
+					<item n="flushPage"><d>
+						Starts new page.
+					</d></item>
+					<item n="appendHtml"><d>
+						Appends document's content using html text provided by 'html' argument.
+					</d></item>
+					<item n="appendXhtml"><d>
+						Appends document's content using xhtml text provided by 'xhtml' argument.
+					</d></item>
+					<item n="toBinary"><d>
+						Finalizes the document and returns the binary object in PDF format.
+					</d></item>
+				</fields>
+			</paragraph>
+		</text>
+	</article>
+
+	<article>
+		<anchor>pkg-ae3.xls.WorkbookChange</anchor>
+		<title>WorkbookChange object</title>
+		<text>
+			<paragraph>
+				The instance of DocumentBuilder class is created when 
+				you building a new PDF document. It provides a set of methods to
+				work on document's content and meta-data. Each instances of 
+				DocumentBuilder has following methods and properties:
+				<fields layout="list">
+					<columns>
+						<column id="n" title="Name"/>
+						<column id="d" title="Summary"/>
+					</columns>
+					<item n="buildWorkbook"><d>
+					</d></item>
+					<item n="createCellFormat"><d>
+					</d></item>
+					<item n="createCellFormatDate"><d>
+					</d></item>
+					<item n="createCellFormatFloating"><d>
+					</d></item>
+					<item n="createCellFormatInteger"><d>
+					</d></item>
+					<item n="createCellFormatPrice"><d>
+					</d></item>
+					<item n="createCellFormatText"><d>
+					</d></item>
+					<item n="createSheet"><d>
+						Creates new <a href="#pkg-ae3.xls.WorkbookSheetChange">WorkbookSheetChange</a> object.
+					</d></item>
+					<item n="createSheetChange"><d>
+						Creates <a href="#pkg-ae3.xls.WorkbookSheetChange">WorkbookSheetChange</a> object for an existing sheet in the workbook.
+					</d></item>
+					<item n="moveSheet"><d>
+					</d></item>
+				</fields>
+			</paragraph>
+		</text>
+	</article>
+
+
+	<article>
+		<anchor>pkg-ae3.xls.WorkbookSheetChange</anchor>
+		<title>WorkbookSheetChange object</title>
+		<text>
+			<paragraph>
+				The instance of DocumentBuilder class is created when 
+				you building a new PDF document. It provides a set of methods to
+				work on document's content and meta-data. Each instances of 
+				DocumentBuilder has following methods and properties:
+				<fields layout="list">
+					<columns>
+						<column id="n" title="Name"/>
+						<column id="d" title="Summary"/>
+					</columns>
+					<item n="isHidden"><d>
+					</d></item>
+					<item n="isProtected"><d>
+					</d></item>
+					<item n="mergeCells"><d>
+					</d></item>
+					<item n="setCellDate"><d>
+					</d></item>
+					<item n="setCellFloating"><d>
+					</d></item>
+					<item n="setCellHyperlink"><d>
+					</d></item>
+					<item n="setCellInteger"><d>
+					</d></item>
+					<item n="setCellLabel"><d>
+					</d></item>
+					<item n="setCellPrice"><d>
+					</d></item>
+					<item n="setHidden"><d>
+					</d></item>
+					<item n="setName"><d>
+					</d></item>
+					<item n="setProtected"><d>
+					</d></item>
+				</fields>
+			</paragraph>
+		</text>
+	</article>
+
+
+	<article>
+		<anchor>pkg-ae3.xls.WorkbookCellFormat</anchor>
+		<title>WorkbookCellFormat object</title>
+		<text>
+			<paragraph>
+				The instance of DocumentBuilder class is created when 
+				you building a new PDF document. It provides a set of methods to
+				work on document's content and meta-data. Each instances of 
+				DocumentBuilder has following methods and properties:
+				<fields layout="list">
+					<columns>
+						<column id="n" title="Name"/>
+						<column id="d" title="Summary"/>
+					</columns>
+					<item n="setAlignmentBottom"><d>
+					</d></item>
+					<item n="setAlignmentCenter"><d>
+					</d></item>
+					<item n="setAlignmentFill"><d>
+					</d></item>
+					<item n="setAlignmentGeneral"><d>
+					</d></item>
+					<item n="setAlignmentJustify"><d>
+					</d></item>
+					<item n="setAlignmentLeft"><d>
+					</d></item>
+					<item n="setAlignmentMiddle"><d>
+					</d></item>
+					<item n="setAlignmentRight"><d>
+					</d></item>
+					<item n="setAlignmentTop"><d>
+					</d></item>
+					<item n="setBackgroundColor"><d>
+					</d></item>
+					<item n="setBorderBottom"><d>
+					</d></item>
+					<item n="setBorderBottomDotted"><d>
+					</d></item>
+					<item n="setBorderLeft"><d>
+					</d></item>
+					<item n="setBorderLeftDotted"><d>
+					</d></item>
+					<item n="setBorderNone"><d>
+					</d></item>
+					<item n="setBorderRight"><d>
+					</d></item>
+					<item n="setBorderRightDotted"><d>
+					</d></item>
+					<item n="setBorderTop"><d>
+					</d></item>
+					<item n="setBorderTopDotted"><d>
+					</d></item>
+					<item n="setFont"><d>
+					</d></item>
+					<item n="setWrap"><d>
+					</d></item>
+				</fields>
+			</paragraph>
+		</text>
+	</article>
+
+	<article>
+		<anchor>ae3.xsl-examples</anchor>
+		<title>Examples</title>
+		<text>
+			<paragraph>
+				Creating an XLS file:
+				<code><![CDATA[
+var workbook = require('ae3/xls').createWorkbook();
+
+var formatShopTitle = workbook.createCellFormatText();
+formatShopTitle.setFont("Arial", 28, true, true, 0);
+formatShopTitle.setAlignmentLeft();
+
+var formatShopComment = workbook.createCellFormatText();
+formatShopComment.setFont("Arial", 8, false, false, 0);
+formatShopComment.setWrap(true);
+formatShopComment.setAlignmentLeft();
+formatShopComment.setBorderNone();
+
+var formatInfoName = workbook.createCellFormatText();
+formatInfoName.setFont("Arial", 8, false, false, 0);
+formatInfoName.setAlignmentRight();
+formatInfoName.setBorderNone();
+
+var formatInfoValueText = workbook.createCellFormatText();
+formatInfoValueText.setFont("Arial", 8, false, false, 0);
+formatInfoValueText.setAlignmentLeft();
+formatInfoValueText.setBorderNone();
+
+var formatInfoValueDate = workbook.createCellFormatDate("yyyy/MM/dd HH:mm");
+formatInfoValueDate.setFont("Arial", 8, false, false, 0);
+formatInfoValueDate.setAlignmentLeft();
+formatInfoValueDate.setBorderNone();
+
+var formatCatalogueGroup = workbook.createCellFormat();
+formatCatalogueGroup.setFont("Arial", 14, true, false, 0);
+formatCatalogueGroup.setAlignmentLeft();
+
+var formatCatalogueHeader1 = workbook.createCellFormat();
+formatCatalogueHeader1.setFont("Arial", 8, true, false, 0);
+formatCatalogueHeader1.setAlignmentLeft();
+formatCatalogueHeader1.setBorderRightDotted();
+
+var formatCatalogueHeader3 = workbook.createCellFormat();
+formatCatalogueHeader3.setFont("Arial", 8, true, false, 0);
+formatCatalogueHeader3.setAlignmentRight();
+
+var formatCatalogueKey = workbook.createCellFormatText();
+formatCatalogueKey.setFont("Arial", 10, false, false, 0);
+formatCatalogueKey.setAlignmentLeft();
+formatCatalogueKey.setBorderRightDotted();
+formatCatalogueKey.setBorderTopDotted();
+
+var formatCatalogueText = workbook.createCellFormatText();
+formatCatalogueText.setFont("Arial", 10, false, false, 0);
+formatCatalogueText.setWrap( true );
+formatCatalogueText.setAlignmentLeft();
+formatCatalogueText.setBorderRightDotted();
+formatCatalogueText.setBorderTopDotted();
+
+var formatCataloguePrice2 = workbook.createCellFormatInteger();
+formatCataloguePrice2.setFont("Arial", 10, false, false, 0);
+formatCataloguePrice2.setAlignmentRight();
+formatCataloguePrice2.setBorderTopDotted();
+
+var sheet = workbook.createSheet("Прайс-лист");
+
+sheet.setColumnWidth( 0, 10 );
+sheet.setColumnWidth( 1, 175 );
+sheet.setColumnWidth( 2, 325 );
+sheet.setColumnWidth( 3, 100 );
+
+var rowIndex = 0;
+sheet.mergeCells(0, rowIndex, 3, rowIndex);
+sheet.setCellHyperlink(0, rowIndex, settings.siteHref, settings.siteName, formatShopTitle );
+
+++ rowIndex;
+sheet.mergeCells(0, rowIndex, 3, rowIndex);
+sheet.setCellLabel(0, rowIndex, settings.siteComment, formatShopComment );
+
+++ rowIndex;
+sheet.mergeCells(0, rowIndex, 2, rowIndex);
+sheet.setCellLabel(0, rowIndex, "дата:", formatInfoName );
+sheet.setCellDate(3, rowIndex, Date.now(), null, formatInfoValueDate );
+
+++ rowIndex;
+sheet.mergeCells(0, rowIndex, 2, rowIndex);
+sheet.setCellLabel(0, rowIndex, "web:", formatInfoName );
+sheet.setCellHyperlink(3, rowIndex, settings.siteHref, null, formatInfoValueText );
+
+++ rowIndex;
+sheet.mergeCells(0, rowIndex, 2, rowIndex);
+sheet.setCellLabel(0, rowIndex, "email:", formatInfoName );
+sheet.setCellHyperlink(3, rowIndex, "mailto:" + settings.contactEmail, settings.contactEmail, formatInfoValueText );
+
+++ rowIndex;
+sheet.mergeCells(0, rowIndex, 2, rowIndex);
+sheet.setCellLabel(0, rowIndex, "тел.:", formatInfoName );
+sheet.setCellLabel(3, rowIndex, settings.contactPhone, formatInfoValueText );
+
+for(var level1 in data.source.catalogueTree.entrySet()){
+	++ rowIndex;
+	sheet.mergeCells(0, rowIndex, 4, rowIndex);
+
+	++ rowIndex;
+	sheet.mergeCells(0, rowIndex, 4, rowIndex);
+	sheet.setCellLabel(0, rowIndex, level1.key, formatCatalogueGroup );
+
+	++ rowIndex;
+	sheet.setCellLabel(1, rowIndex, "наименование", formatCatalogueHeader1 );
+	sheet.setCellLabel(2, rowIndex, "комментарий", formatCatalogueHeader1 );
+	sheet.setCellLabel(3, rowIndex, "цена, руб.", formatCatalogueHeader3 );
+
+	for(var level2 in level1.value.entrySet()){
+		var hyperlink = baseLocation + File.niceNameNotation( level2.key );
+		for(var level3 in level2.value.values()){
+			++ rowIndex;
+			sheet.setCellHyperlink(1, rowIndex, hyperlink, level3.key, formatCatalogueKey );
+			sheet.setCellLabel(2, rowIndex, level3.comment, formatCatalogueText );
+			sheet.setCellFloating(3, rowIndex, settings.rate * level3.price, formatCataloguePrice2 );
+		}
+	}
+}
+
+return workbook.buildWorkbook();
+				]]></code>
+				Reading data from zipped xls file:
+				<code><![CDATA[
+var xlsFile = require('ae3.util/Codecs').unzipToMap( change.zip )["regions.xls"];
+var workbook = require('ae3/xls').getWorkbook( xlsFile );
+var sheet = workbook.getSheet(0);
+var rows = sheet.getRows();
+
+var regionList = [];
+change.regionMap = {};
+
+// zero row is header, we need data
+for( var row = 1; row < rows; row ++ ){
+	regionList.push({
+		code : sheet.getCell( 0, row ).contents,
+		name : sheet.getCell( 1, row ).contents,
+		city : sheet.getCell( 2, row ).contents,
+		courier : !! sheet.getCell( 3, row ).contents,
+		pochta : !! sheet.getCell( 4, row ).contents
+	});
+}
+
+return regionList;
+				]]></code>
+			</paragraph>
+		</text>
+	</article>
+
+	<article>
+		<anchor>ae3.xls-references</anchor>
+		<title>References</title>
+		<text>
+			<paragraph>
+				The 'xls' package is using the jXL (JExcel) library version 2.6.12. 
+				It is published under the terms of LGPL2 license.
+			</paragraph>
+			<paragraph>
+				See:<ul>
+					<li><a href="http://jexcelapi.sourceforge.net">http://jexcelapi.sourceforge.net</a> for general info;</li>
+					<li><a href="http://sourceforge.net/projects/jexcelapi/">http://sourceforge.net/projects/jexcelapi/</a> for project page and download links.</li>
+				</ul>
+			</paragraph>
+		</text>
+	</article>
+
+</xml>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<type>
+
+	<title>Object: Рассылка</title>
+	<visibility>default</visibility>
+	<icon>document</icon>
+	<state>draft</state>
+	<statelist>
+		<state>ready</state>
+		<state>system</state>
+		<state>draft</state>
+	</statelist>
+	<folder>false</folder>
+
+	<parents>
+		<type>SendMail</type>
+	</parents>
+
+	<create>
+		<form>
+			<prepare class="script" type="ACM.ECMA"><![CDATA[
+				data["$key"] = Create.guid();
+				var parent = this.getParent();
+				if(parent){
+					data.groupfilter = parent.rcpt;
+				}
+			]]></prepare>
+		</form>
+	</create>
+
+	<modify>
+		<form> 
+			<title>Свойства рассылки</title>
+
+			<prepare class="script" type="ACM.ECMA"><![CDATA[
+				var parent = this.getParent();
+				if(parent){
+					data.groupfilter = parent.rcpt;
+				}
+			]]></prepare>
+
+			<fields class="fieldset">
+				<field  type="transparent"
+					id="groupfilter"
+					class="set"/>
+				<field	type="transparent"
+					id="$folder"/>
+				<field	type="transparent"
+					id="$state"/>
+				<field	class="set"
+					id="rcpt"
+					title="Адресат(ы)"
+					variant="multiselect"
+					lookup_expression="Recipients.getGroups( filter = data.groupfilter )"
+					max="512"/>
+				<field	class="string"
+					id="rcpt2"
+					title="Адресат(ы) еще"
+					max="512"/>
+				<field	class="string"
+					type="text"
+					id="text"
+					title="Текст сообщения"
+					max="128k"/>
+				<field	class="binary"
+					type="binary"
+				 	id="file1" 
+					title="Файл №1"
+					max="10m"/>
+				<field	class="string"
+					type="string"
+					id="file1name"
+					title="Имя файла №1"
+					hint="желательно англ. буквами и без спец. символов"
+					max="256"/>
+				<field	class="binary"
+					type="binary"
+				 	id="file2" 
+					title="Файл №2"
+					max="10m"/>
+				<field	class="string"
+					type="string"
+					id="file2name"
+					title="Имя файла №2"
+					hint="желательно англ. буквами и без спец. символов"
+					max="256"/>
+				<field	class="binary"
+					type="binary"
+				 	id="file3" 
+					title="Файл №3"
+					max="10m"/>
+				<field	class="string"
+					type="string"
+					id="file3name"
+					title="Имя файла №3"
+					hint="желательно англ. буквами и без спец. символов"
+					max="256"/>
+				<field	class="binary"
+					type="binary"
+				 	id="file4" 
+					title="Файл №4"
+					max="10m"/>
+				<field	class="string"
+					type="string"
+					id="file4name"
+					title="Имя файла №4"
+					hint="желательно англ. буквами и без спец. символов"
+					max="256"/>
+			 </fields>
+
+			<submit class="script" type="ACM.ECMA"><![CDATA[
+				var schedule = change.getSchedule();
+				schedule.schedule("send draft", true, Date.now() + 2000L, "sendDraft", null);
+				schedule.commit();
+			]]></submit>
+		</form>
+		<trigger class="script" type="ACM.ECMA"><![CDATA[
+			change.files = {};
+			var names = ["file1", "file2", "file3", "file4"];
+			for( Current in names ){
+				var file = change.getData()[ Current ];
+				if( file ){
+					var name = change.getData()[ Current + "name" ];
+					if( !name ){
+						try{
+							name = replace( Request.getMessageSubAttribute(file, 'Content-Disposition', 'filename', 'unknown.bin'), '\\', '/');
+							name = name.substring( name.lastIndexOf('/') + 1 );
+						}catch(exception){
+							name = change.getData()[ Current+"_contentname" ];
+						}
+						if( !name ){
+							name = Create.guid() + ".txt";
+						}
+						change.getData()[ Current + "name" ] = name;
+					}
+					change.files[ name ] = { variable : Current };
+				}
+			}
+			if( !change.keyCode && !this.keyCode ){
+				change.keyCode = Create.guid();
+			}
+		]]></trigger>
+	</modify>
+
+	<respond>
+		<behaviour>
+			<handle>any</handle>
+			<public>true</public>
+			<ttl>24h</ttl>
+			<cache>24h</cache>
+		</behaviour>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var name = Request.getResourceIdentifier();
+			if(name == '' || name == '/'){
+				content = {};
+				content.title = this.getTitle();
+				content.body = this.getMessageBody();
+				content.bodyType = "text/plain";
+				content = this.fillSelection( content );
+				return content;
+			}
+
+			if( name.startsWith("startIt") ){
+				keyCode = name.substring("startIt".length());
+				if( keyCode != this.keyCode ){
+					return null;
+				}
+				if( this.getState() == 0 ){
+					this.sendMessage();
+					content = {};
+					content.title = this.getTitle();
+					content.body = "Отправлено";
+					content.bodyType = "text/plain";
+					return content;
+				}
+
+				content = {};
+				content.title = this.getTitle();
+				content.body = "Уже было отправлено";
+				content.bodyType = "text/plain";
+				return content;
+			}
+
+			var data = this.files[ name ];
+			if( !data ){
+				return null;
+			}
+			var file = this.getData()[ data.variable ];
+			if( !file ){
+				return null;
+			}
+			var attributes = {
+				"Content-Type" : this.getData()[ data.variable + "_contenttype" ],
+				"Content-Name" : name,
+				"Content-Disposition" : "attachment; filename=" + name
+			};
+			return Runtime.Return( file, attributes );
+		]]></script>
+	</respond>
+
+	<command>
+		<type>publish</type>
+		<key>sendDraft</key>
+		<title>Отослать пробное письмо</title>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%OUTPUT: body %><%
+				%><%= this.getMessageBody() %><%
+				%><%= "\r\n\r\n" %><%
+				%>----------------------------------------------------<%
+				%><%= "\r\n" %><%
+				%>Это пробное письмо. Чтобы начать рассылку необходимо выполнить соотвествуюшую команду в backoffice или перейти по адресу: <%= this.getLocationAbsolute() %>/startIt<%= this.keyCode %><%
+			%><%/OUTPUT%><%
+			%><%EXEC: Runtime.SendMail(
+				From = User.getUser().getEmail(),
+				To = User.getUser().getEmail(),
+				Subject = this.getTitle(),
+				Body = body,
+				Format = "Plain",
+				Plain = true,
+				Encoding2 = "utf-8"
+				) %><%
+			%><%RETURN: "Пробное письмо отправлено на адрес: " + User.getUser().getEmail() %><%
+		%>]]></script>
+	</command>
+	<command>
+		<type>publish</type>
+		<key>sendMessage</key>
+		<title>Отослать письмо адресатам</title>
+		<enable>this.getState() == this.STATE_DRAFT</enable>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.setState( change.STATE_READY );
+			change.commit();
+			this.sendMessageImpl();
+			return "Письмо отправлено на адрес(а): " + this.rcpt + " / " + this.rcpt2;
+		]]></script>
+	</command>
+	<command>
+		<type>hidden</type>
+		<key>sendMessageImpl</key>
+		<execute>buffered</execute>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var recipients = Create.set();
+			if(this.rcpt){
+				if(Array.isArray( this.rcpt )){
+					recipients.addAll( this.rcpt );
+				}else{
+					recipients.add( this.rcpt );
+				}
+			}
+			this.rcpt2 && recipients.add( this.rcpt2 );
+			Runtime.SendMail(
+				From = User.getUser().getEmail(),
+				To = recipients,
+				Subject = this.getTitle(),
+				Body = this.getMessageBody(),
+				Format = "Plain",
+				Plain = true,
+				Encoding2 = "utf-8"
+				);
+		]]></script>
+	</command>
+	<command>
+		<type>hidden</type>
+		<key>getMessageBody</key>
+		<execute>always</execute>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%= this.text %><%
+			%><%IF: Object.isFilled( this.files ) %><%
+				%><%= "\r\n\r\n" %><%
+				%>Список ссылок:<%
+				%><%= "\r\n" %><%
+				%><%ITERATE: Current : this.files.entrySet() %><%
+					%><%= this.getLocationAbsolute() %>/<%= Current.key %> [<%= formatByteSize( Int( this.getData()[ Current.value.variable + "_size" ] ) ) %>байт]<%= "\r\n\r\n" %><%
+				%><%/ITERATE%><%
+			%><%/IF%><%
+		%>]]></script>
+	</command>
+</type>

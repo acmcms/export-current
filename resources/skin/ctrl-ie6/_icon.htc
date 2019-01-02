@@ -1,0 +1,23 @@
+<%FINAL: 'text/x-component' %>
+<PUBLIC:ATTACH EVENT="onmouseover" ONEVENT="Hilite()" />
+<PUBLIC:ATTACH EVENT="onmouseout"  ONEVENT="Restore()" />
+<PUBLIC:ATTACH EVENT="onclick"  ONEVENT="Click()" />
+
+<SCRIPT LANGUAGE="JScript">
+function Hilite(){
+	runtimeStyle.borderBottom	= "solid 1px buttonshadow";
+	runtimeStyle.borderRight	= "solid 1px buttonshadow";
+	runtimeStyle.borderTop		= "solid 1px buttonhighlight";
+	runtimeStyle.borderLeft		= "solid 1px buttonhighlight";
+}
+
+function Restore(){
+	runtimeStyle.border = "solid 1px buttonface";
+}
+
+function Click(){
+	this.blur()
+}
+
+</SCRIPT>
+<%/FINAL%>

@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE> BLANK </TITLE><%
+%></head><%
+%><body onload = "start()"><%
+	%>BLANK<%
+	%><script><%
+		%>function start(){<%
+			%>try{<%
+				%>var oName = String(window.frameElement.name).split('preview')[0];<%
+				%>document.body.innerHTML = parent.document.all[oName].value;<%
+			%>}catch(Error){<%
+			%>}<%
+		%>}<%
+	%></script><%
+%></body><%
+%></html>

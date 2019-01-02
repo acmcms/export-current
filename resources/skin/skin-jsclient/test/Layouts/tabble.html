@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>TABBLE</title>
+	<script src="../../js/require.js"></script>
+	<script src="../../js/debug.js"></script>
+	<script src="../../js/Layouts/Layout.js"></script>
+	<script src="../../js/Layouts/TabbedPanel.js"></script>
+	<style>
+		.test{
+			opacity:0.8;
+			filter:alpha(opacity=80);
+		}
+	</style>
+</head>
+<body style="background-color:blue">
+	<div id=layout1 style="width:500px;height:300px;overflow:hidden"></div>
+	<div id=layout2 style="position:absolute;left:550px;top:16px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=layout3 style="position:absolute;left:550px;top:186px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=layout4 style="position:absolute;left:750px;top:16px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=layout5 style="position:absolute;left:750px;top:186px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=layout6 style="position:absolute;left:950px;top:16px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=layout7 style="position:absolute;left:950px;top:186px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=content class=test style="display:none;position:relative;height:100%">
+		<div style="height:10px;overflow:hidden;border:solid 20px black"></div>
+		<div style="position:absolute;width:100%;height:100%">
+			<div style="border:solid 15px yellow;position:absolute;left:0;top:0;width:100%;height:100%">
+				<div style="border:solid 15px magenta;height:100%">
+				</div>
+			</div>
+		</div>
+		<span style="white-space: nowrap">
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+		</span>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN*<br>
+	</div>
+	<script>
+		var alert = function(message){
+			top.debug && top.debug("ALERT: " + message);
+		};
+	
+//		Layouts.setTheme("operax");
+		Layouts.setTheme("crazy1");
+		require("Layouts.Icon").prototype.defaultIconBase = "images/icons/";
+		
+		var layout1 = new Layouts.Layout(document.getElementById("layout1") || document.body, {
+			layout : "screen",
+			cssStyle	: "background-color:#f5f",
+			content: {
+				layout		: "padding",
+				cssStyle	: "background-color:#5f5",
+				comment		: "Green padding panel",
+				content		: {
+					layout		: "outset",
+					cssStyle	: "padding:8px;background-color:#55f",
+					comment		: "Blue Border/Padding panel",
+					content		: {
+						layout		: "inset",
+						cssStyle	: "background-color:red",
+						comment		: "border/scroller panel",
+						content		: {
+							layout		: "tabble",
+							cssStyle	: "background-color:green;overflow:auto",
+							content	: [
+								{
+									layout		: "string",
+									title		: "firstTab",
+									cssStyle	: "background-color:yellow",
+									value		: "1) TEST - all borders should be 100% size"
+								},
+								{
+									layout		: "string",
+									title		: "secondTab",
+									cssStyle	: "background-color:white",
+									value		: "2) TEST - all borders should be 100% size"
+								},
+								{
+									layout		: "string",
+									title		: "thirdTab",
+									value		: "3) TEST - all borders should be 100% size"
+								},
+								{
+									layout		: "string",
+									value		: "4) TEST - all borders should be 100% size"
+								},
+								{
+									layout		: "string",
+									value		: "5) TEST - all borders should be 100% size"
+								},
+								{
+									layout		: "frame",
+									title		: "myx.ru",
+									location	: "http://myx.ru"
+								}
+							]
+						}
+					}
+				}
+			}
+		});
+
+		var layout2 = new Layouts.Layout(document.getElementById("layout2") || document.body, {
+			layout : "screen",
+			cssStyle	: "background-color:#f5f",
+			content		: {
+				layout		: "string",
+				value		: "screen"
+			}
+		});
+
+		var layout3 = new Layouts.Layout(document.getElementById("layout3") || document.body, {
+			layout		: "padding",
+			zoom		: "compact",
+			cssStyle	: "background-color:#f5f",
+			content		: {
+				layout		: "string",
+				value		: "padding"
+			}
+		});
+
+		var layout4 = new Layouts.Layout(document.getElementById("layout4") || document.body, {
+			layout		: "inset",
+			zoom		: "compact",
+			cssStyle	: "background-color:#f5f",
+			content		: {
+				layout		: "string",
+				value		: "inset"
+			}
+		});
+
+		var layout5 = new Layouts.Layout(document.getElementById("layout5") || document.body, {
+			layout		: "outset",
+			zoom		: "compact",
+			cssStyle	: "background-color:#f5f",
+			content		: {
+				layout		: "string",
+				value		: "ouset"
+			}
+		});
+
+		var layout6 = new Layouts.Layout(document.getElementById("layout6") || document.body, {
+			layout : "screen",
+			cssStyle	: "background-color:#f5f",
+			content	: {
+				layout : "inset",
+				cssStyle	: "background-color:#f5f",
+				content		: {
+					layout		: "string",
+					value		: "screen/inset"
+				}
+			}
+		});
+
+		var layout7 = new Layouts.Layout(document.getElementById("layout7") || document.body, {
+			layout : "screen",
+			cssStyle	: "background-color:#f5f",
+			content	: {
+				layout : "outset",
+				cssStyle	: "background-color:#f5f",
+				content		: {
+					layout		: "string",
+					value		: "screen/ouset"
+				}
+			}
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<LINK HREF="frames.css" REL=stylesheet>
+<script id="Cookies" src="Cookies.js"></script>
+<BODY BGCOLOR="buttonface" topmargin=0 leftmargin=0 marginwidth=0 marginheight=0 scroll="no" style="cursor:default" class=FrameBorder>
+
+<div class=FrameBorder2 style="height:100%">
+
+	<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+	<TR>
+		<TD>
+			<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%;">
+			<TR>
+				<TD nowrap style="padding:2px" width=100%><div class="FrameHeader"><%= intl(en = "Site tree", ru = "Дерево сайта")%></div></TD>
+				<TD align=right style="padding:1px"><button style="height:21px; width:21px" class=FrameButton onmouseover="this.className='FrameButtonOn'" onmouseout="this.className='FrameButton'" onclick="refreshTree(true);this.blur();" title="<%=intl(en="Collapse all", ru="Свернуть всё")%>"><img src="icons/command-collapse.16.gif"></button><button style="height:21; width:21" class=FrameButton onmouseover="this.className='FrameButtonOn'" onmouseout="this.className='FrameButton'" onclick="refreshTree();this.blur();" title="<%=intl(en="Refresh", ru="Обновить")%>"><img src="icons/command-reload.16.gif"></button><button style="height:21; width:21" class=FrameButton onmouseover="this.className='FrameButtonOn'" onmouseout="this.className='FrameButton'" onclick="parent.hideLeftFrame()" title="<%=intl(en="Close", ru="Закрыть")%>"><img src="$files/window-close.gif"></button></TD>
+			</TR>
+			</TABLE>
+		</TD>
+	</TR>
+	<TR>
+		<TD style="height:100%; padding:0 2px 0 2px">
+			<div class=FrameBorder style="height:100%">
+				<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+				<TR>
+					<TD style="height:100%; background-color:window">
+						<SCRIPT>
+							document.write('<iframe name="'+window.name+'" src="tree.htm" style="width:100%; height:100%" frameborder=0></iframe>');
+						</SCRIPT>
+					</TD>
+				</TR>
+				</TABLE>
+			</div>
+		
+		
+		</TD>
+	</TR>
+	<TR>
+	</TR>
+	</TABLE>
+
+</div>
+
+<script>
+
+eventMethods = parent.eventMethods;
+
+function refreshTree(collapse){
+	var obj = document.all(window.name);
+	obj.src = "tree.htm" + (collapse ? '?collapse=true' : '');
+}
+
+</script>
+
+
+</BODY>
+

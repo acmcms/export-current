@@ -1,0 +1,7 @@
+{
+	type : "ae3.Manual",
+	title : "Exit Code 0 - success, normal shutdown",
+	name : "admin-exit-code-0",
+	group : "admin-exit-codes",
+	vfs : "/resources/lib/ru.myx.ae3.manual/docs/admin-exit-code-0.xml"
+}

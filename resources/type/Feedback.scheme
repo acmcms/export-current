@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>System: Feedback</title>
+	<visibility>default</visibility>
+	<icon>document</icon>
+	<state>ready</state>
+	<statelist>
+		<state>system</state>
+		<state>ready</state>
+	</statelist>
+	<folder>true</folder>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var request = Request.getCurrentRequest();
+			var target = request.resourceIdentifier;
+			switch( target ){
+				case "":{
+					var content = Create.map( content );
+					content.title = afterPoint( this.getTitle() );
+					content.robots = "noindex,nofollow";
+					content.noindex = true;
+					content.nofollow = true;
+					content.form = Feedback.getFormMap( location = this.getLocation() + "send" );
+					return this.fillSelection( content = content );
+				}
+				case "send":{
+					var parameters = request.parameters,
+						profile = User.getUser().getProfile();
+					if( parameters.secNumber && profile.secNumber == parameters.secNumber && parameters.body ){
+						profile.remove("secNumber");
+						User.getUser().setProfile( profile );
+						var subject = parameters.subject ? parameters.subject.trim() : "";
+						var body = parameters.body.trim();
+
+						if( this.sendMessage ){
+							var admins = Create.set();
+							admins.add("vlapan");
+							admins.add("va109");
+							this.sendMessage( to = admins, from = this.getUserRoot( User.getUser().getLogin() ), subject = "FeedBack - " + subject, body = body );
+						}
+
+						var siteRoot = this.getSiteRoot();
+						if( siteRoot ){
+							var email = siteRoot.email || request.settings && request.settings.responsible || Application.responsible;
+							if( email ){
+								Runtime.SendMail( 
+									From = parameters.contact 
+										? parameters.contact 
+										: (parameters.settings && parameters.settings.robot), 
+									To = email, 
+									Subject = "Обратная связь - " + subject, 
+									Body = body 
+								);
+							}
+						}
+						return $default.redirect( this.getParent().getLocation() );
+					}
+					return $default.redirect( this.getLocation() + "error=1" );
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>getIconLocation</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return "/$files/icon_contact.png";
+		]]></script>
+	</command>
+
+	<command>
+		<key>create</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="parent" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = parent.createChild();
+			change.$title = "Обратная связь";
+			change.$key = "feedback";
+			change.$type = "Feedback";
+			change.$state = Storage.STATE_READY;
+			change.commit();
+			return Storage.getByGuid( change.getGuid() );
+		]]></script>
+	</command>
+
+	<command>
+		<key>remove</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.delete();
+		]]></script>
+	</command>
+
+	<command>
+		<key>getFormMap</key>
+		<static>true</static>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var fields = [];
+			if(!registered){
+				fields.add({
+					title: "Ваш email",
+					name: "contact",
+					type: "text",
+					value: "",
+					hint: "необходимо заполнить для возможности ответа вам"
+				});
+			}
+			fields.add({
+				title: intl(en = "Subject", ru = "Тема"),
+				name: "subject",
+				type: "text",
+				value: ""
+			});
+			fields.add({
+				title: intl(en = "Body", ru = "Текст"),
+				name: "body",
+				type: "textarea",
+				value: "",
+				required: true
+			});
+			fields.add({
+				type: "secNumber"
+			});
+			fields.add({
+				title: "",
+				name: "submit",
+				type: "submit",
+				value: intl(en = "Publish", ru = "Опубликовать")
+			});
+			return {
+				id: "form",
+				action: data.location,
+				method: "post",
+				legend: "",
+				fields: fields
+			};
+		]]></script>
+	</command>	
+</type>

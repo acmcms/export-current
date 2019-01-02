@@ -1,0 +1,202 @@
+%><%
+if( content.null ) return "";
+if( content.string ) return content.string;
+$output( form ){
+	= content.form ? {
+		$layout : "layout-form",
+		data : content.form
+	} : "";
+}
+if( Request.ajax ) return form;
+
+var content = Object.create(content);
+
+var root = Request.getAttachment();
+var pageKey = content.key;
+
+var settings = Request.getSettings();
+var siteName = root.getKey();
+var siteTitle = Format.xmlAttributeFragment( root.getTitle() );
+var title = Format.xmlAttributeFragment( content.title == siteTitle ? siteTitle : content.title + " - " + siteTitle );
+content.title = title;
+
+var menu = root.getFoldersListable && root.getFoldersListable();
+
+var login = User.getUser().getLogin();
+
+var keywords = content.keywords ? content.keywords : title + ( root.keywords ? " " + root.keywords : "" );
+keywords = Format.uniqueWords( keywords, " " );
+
+var description = Format.xmlAttributeFragment( content.description ? content.description : ( root.description ? root.description : "" ) );
+
+var robots = "";
+robots += content.noindex ? "noindex" : "";
+robots += content.nofollow ? ", nofollow" : "";
+
+var registered = User.getUser().isInGroup("def.registered");
+
+var logoSrc = root.logotype ? "/logo.png" : (content.logo ? content.logo : "/$files/logo.jpg");
+
+var selected = content.selected;
+// asd = selected + ":" + content.selected;
+// = a.null( selected );
+
+var layout = content.layout ? $sitebuilder.build( content.layout ) : "";
+
+var profile = User.getUser().getProfile();
+var toolbarOpened = profile.toolbarOpened;
+var editorId = "editor";
+
+var packages = content.packages || new VlapanRequire();
+packages.add("jquery");
+packages.add("yuicss",{resources:["reset"]});
+packages.add("cluetip");
+packages.css || (packages.css = []);
+packages.css.push("/$build/css/form");
+packages.css.push("/$build/css/siteMenu");
+
+if( registered ){
+	packages.add("jqmodal");
+
+	packages.js.push("/$build/js/toolbar");
+	packages.css.push("/$build/css/toolbar");
+
+	packages.js.push("/$files/jquery-ui-1.8.1.custom.draggable.min");
+}
+
+if(content.thickbox){
+	packages.add("colorbox");
+}
+
+packages.css.push("/$build/" + siteName);
+packages.js.push("/$build/" + siteName);
+
+var editor;
+$output( head ){
+	= $skin.getSeoHeaders( keywords, description, robots );
+	if( registered ){
+		%><script type="text/javascript"><%
+			%>$().ready(function(){<%
+				if( toolbarOpened ){
+					%>toolbarOpened=true;<%
+				}else{
+					%>toolbarOpened=false;<%
+					%>$(".toolbar .menu").hide(0);<%
+				}
+			%>});<%
+		%></script><%
+		if( content.editor ){
+			editor = new VlapanRichedit( editorName = "ckeditor", finder = "gwt-finder" );
+			= editor.init();
+		}
+	}
+	if( content.faviconLocation ){
+		%><link rel="shortcut icon" type="image/x-icon" href="<%= content.faviconLocation %>"/><%
+	}else{
+		%><link rel="shortcut icon" type="image/x-icon" href="/$files/favicon.ico"/><%
+	}
+}
+packages.head.push(head);
+content.packages = packages;
+
+$output( content.body ){
+	%><body<%= pageKey ? ' id="' + pageKey + '"' : '' %>><%
+		if( registered ){
+			%><div class="status"><%
+				%><span>Название сайта - <%= siteTitle %></span> <%
+				%><span>Пользователь - <%= login %></span> <%
+			%></div><%
+		}
+		if( content.gbody ){
+			= content.gbody;
+		}else{
+			%><div class="body"><%
+				%><div id="debug"></div><%
+				%><div class="head"><%
+					%><div class="logo"><%
+						%><a href="/"><%
+							%><img<%
+								if(root.logotype){
+									var logoSize = Imaging.getImageDimensions(root.logotype);
+									%> width="<%= logoSize.width %>"<%
+									%> height="<%= logoSize.height %>"<%
+								}
+							%> src="<%= logoSrc %>" alt="<%= siteTitle %>" title="<%= siteTitle %>"><%
+						%></a><%
+						if(siteName == "ru.roii"){
+							%><div style="cursor:help;margin:12px 12px;line-height:100%;font-size:72px;background:#777;float:right;"><%
+								%><a id="logoText" title="РОИИ | Российское Общество интеллектуальной истории" style="color:#fff;text-decoration:none;">&#8592;РОИИ</a><%
+							%></div><%
+						}
+					%></div><%
+
+					var systemMenu = Create.list( root.systemMenu );
+					if( ArrayFilled( systemMenu ) ){
+						%><div class="buttons"><%
+							%><a href="/"><img src="/%24files/icon_home.png" height="41" width="70" alt="Главная страница" title="Главная страница"></a><%
+							for( var item in systemMenu ){
+								if( !item ) break;
+								%><a href="<%= item.getLocation() %>"><%
+									%><img src="<%= item.getIconLocation() %>" height="41" width="70" alt="<%= item.getTitle() %>" title="<%= item.getTitle() %>"><%
+								%></a><%
+							}
+						%></div><%
+					}
+					%><div class="clear"></div><%
+				%></div><%
+				if( root.showSiteMenu ){
+					= {
+						$layout			: "layout-menu",
+						menu			: menu,
+						selected		: selected,
+						siteMenuIcons	: content.siteMenuIcons,
+						control			: true
+					};
+				}
+				%><div class="gradient"><%
+				%><h1><%= root.hideSiteTitleFromTitle != false ? content.title : title %></h1><%
+				= {
+					$layout : "layout-path",
+					data : selected
+				};
+				%><div class="content"><%
+					= content.body ? content.body : "";
+					if( content.editor ){
+						%><form method="post" action="<%= content.editorAction %>"><%
+							var value = content.editor === true ? "" : Format.xmlNodeValue( content.editor );
+							%><textarea name="xhtml" id="<%= editorId %>" cols="80" rows="40" style="height:400px;"><%= value %></textarea><%
+							%><input type="submit" value="Сохранить"/><%
+						%></form><%
+						= editor.replace( id = editorId );
+					}
+					= form;
+					= layout;
+					if( content.layout3 ) {
+						= $sitebuilder.parse2( content.layout3, obj );
+					}else{
+						= content.layout2 ? $sitebuilder.parse( content.layout2, null ) : "";
+					}
+				%></div><%
+				if( root.bottomText ){
+					%><div class="bottom"><%
+						%><%= root.bottomText %><%
+					%></div><%
+				}
+				%></div><%
+			%></div><%
+		}
+		if( registered ){
+			= {
+				$layout		: "layout-toolbar",
+				abilities	: content.abilities,
+				opened		: toolbarOpened
+			};
+		}
+		var uacct = root.uacct;
+		if( uacct && !( attributes.testing || content.private ) && Request.getProtocolName() == "HTTP" ){
+			= $base.drawGoogleAnalytics( uacct );
+		}
+	%></body><%
+}
+content.template = "vlapan-default";
+return content;

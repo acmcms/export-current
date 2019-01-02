@@ -1,0 +1,380 @@
+###########################################################################
+#
+# File encoding is UTF-8 (used for any localized characters), tab size: 4
+#
+# File format is: 
+#   line starting with '#' sign is a comment line - this lines, as well as empty lines are ignored
+#   data line format is one of:
+#           define    <main-type-name> <compressible> <extension-list>
+#           alias    <main-type-name> <alias-type-name>
+#           super    <inherited-type-name> <supertype-name>
+#
+#   where:
+#     <compressible> takes one of 'no', 'may', 'try', 'yes' values;
+#                     'no' means that transfer and storage compression 
+#                              should be disabled for this mime type;
+#                     'may' means that storage compression may
+#                              be applied for this mime type, default
+#                              compression settings for given media-type
+#                              should be applied if media-type is
+#                              defined (application, image, text...);
+#                     'try' means that storage compression should
+#                              be applied for this mime type;
+#                     'yes' means that transfer and storage compression
+#                              should be applied for this mime type;
+#
+#     <extension-list> is space separated list of extensions - if present, 
+#                     first extension is default for given mime type.
+#                     Each extension in this list should start with '.'
+#
+#   if optional part of compressible and expression list is skipped entry
+#     will specify mapping of main-type-name for alias-type-name
+#
+
+###########################################################################
+#
+#  'application' media type, default compression is 'may'
+#
+define    application/octet-stream                  try    .bin .uu .exe .com .dms .lha .lzh .a
+define    application/zip                           no     .zip
+define    application/pdf                           try    .pdf
+
+define    application/xhtml+xml                     yes    .xhtm .xhtml
+super     application/xhtml+xml                     text/html
+
+define    application/xml                           yes    .xsd
+super     application/xml                           text/xml
+
+define    application/msword                        yes    .doc .dot
+define    application/vnd.ms-excel                  yes    .xls .xla .xlc .xlm .xlt .xlw
+define    application/vnd.ms-powerpoint             yes    .ppt .pot .pps
+define    application/vnd.ms-outlook                may    .msg
+define    application/vnd.ms-pkicertstore           may    .sst
+define    application/vnd.ms-fontobject             may    .eot
+define    application/vnd.ms-pkiseccat              may    .cat
+define    application/vnd.ms-pkistl                 may    .stl
+define    application/vnd.ms-project                yes    .mpp
+define    application/vnd.ms-works                  yes    .wcm .wdb .wks .wps
+define    application/vnd.ms-pkipko                 try    .pko
+
+define    application/json                          yes    .json
+super     application/json                          text/javascript
+
+define    application/oda                           yes    .oda
+define    application/olescript                     may    .axs
+define    application/pics-rules                    may    .prf
+define    application/pkcs10                        may    .p10
+define    application/pkix-crl                      may    .crl
+define    application/postscript                    may    .ai .eps .ps
+define    application/rtf                           may    .rtf
+define    application/set-payment-initiation        may    .setpay
+define    application/set-registration-initiation   may    .setreg
+define    application/hdf                           try    .hdf
+define    application/mac-binhex40                  try    .hqx
+
+define    application/java-archive                  try    .jar
+super     application/java-archive                  application/zip
+
+define    application/java-vm                       try    .class
+super     application/java-vm                       application/octet-stream
+
+define    application/java-serialized-object        try    .ser
+super     application/java-serialized-object        application/octet-stream
+
+define    application/x-java-jnlp-file              try    .jnlp
+super     application/x-java-jnlp-file              text/xml
+
+define    application/envoy                         may    .evy
+define    application/futuresplash                  may    .spl
+define    application/hta                           yes    .hta
+define    application/internet-property-stream      may    .acx
+define    application/winhlp                        may    .hlp
+
+define    application/x-msaccess                    may    .mdb
+define    application/x-mscardfile                  may    .crd
+define    application/x-msclip                      may    .clp
+define    application/x-msdownload                  may    .dll
+define    application/x-msmediaview                 may    .m13 .m14 .mvb
+define    application/x-msmetafile                  may    .wmf
+define    application/x-msmoney                     may    .mny
+define    application/x-mspublisher                 may    .pub
+define    application/x-msschedule                  may    .scd
+define    application/x-msterminal                  may    .trm
+define    application/x-mswrite                     may    .wri
+define    application/x-perl                        yes    .pl
+define    application/x-pn-realaudio                no     .ra .ram
+define    application/x-cpio                        no     .cpio
+define    application/x-stuffit                     no     .sit .sea
+define    application/x-shar                        no     .shar
+define    application/x-tar                         try    .tar
+define    application/x-shockwave-flash             no     .swf
+define    application/fractals                      no     .fif
+define    application/x-bcpio                       no     .bcpio
+define    application/x-gtar                        no     .gtar
+define    application/x-ustar                       no     .ustar
+define    application/x-cdf                         may    .cdf
+define    application/x-compress                    no     .z
+define    application/x-compressed                  no     .tgz
+define    application/x-bzip                        no     .tbz
+define    application/x-csh                         try    .csh
+define    application/x-director                    may    .dcr .dir .dxr
+define    application/x-dvi                         no     .dvi
+define    application/x-gzip                        no     .gz
+define    application/x-internet-signup             may    .ins .isp
+define    application/x-iphone                      may    .iii
+define    application/x-latex                       try    .latex
+define    application/x-netcdf                      may    .cdf .nc
+define    application/x-perfmon                     try    .pma .pmc .pml .pmr .pmw
+define    application/x-pkcs12                      may    .p12 .pfx
+define    application/x-pkcs7-certificates          may    .p7b .spc
+define    application/x-pkcs7-certreqresp           may    .p7r
+define    application/x-pkcs7-mime                  may    .p7c .p7m
+define    application/x-pkcs7-signature             may    .p7s
+define    application/x-sh                          yes    .sh
+define    application/x-shar                        no     .shar
+define    application/x-sv4cpio                     no     .sv4cpio
+define    application/x-sv4crc                      no     .sv4crc
+define    application/x-tcl                         try    .tcl
+define    application/x-tex                         try    .tex
+define    application/x-texinfo                     try    .texi .texinfo
+define    application/x-troff                       may    .roff .t .tr
+define    application/x-troff-man                   may    .man
+define    application/x-troff-me                    may    .me .ms
+define    application/x-ustar                       may    .ustar
+define    application/x-wais-source                 may    .src
+define    application/x-x509-ca-cert                try    .cer .crt .der .cacert
+define    application/x-x509-server-cert            try    .scert
+define    application/x-x509-user-cert              try    .ucert
+define    application/x-x509-email-cert             try    .ecert
+define    application/x-rar-compressed              no     .rar
+
+###########################################################################
+#
+#  'audio' media type, default compression is 'no'
+#
+define    audio/mpeg                                no     .mp3 .mpa .abs .mpega
+define    audio/wav                                 try    .wav
+define    audio/mid                                 yes    .mid .rmi
+
+define    audio/x-pls                               yes    .pls
+define    audio/basic                               try    .au .snd
+define    audio/x-aiff                              no     .aif .aifc .aiff .aiffc
+define    audio/voxware                             no     .vox
+define    audio/x-mpegurl                           yes    .m3u
+define    audio/x-mpeg-2                            no     .mp2a .mpa2
+
+define    audio/x-pn-realaudio                      no     .ra .ram
+
+###########################################################################
+#
+#  'example' media type, default compression is 'may'
+#
+
+###########################################################################
+#
+#  'image' media type, default compression is 'no'
+#
+define    image/jpeg                                no     .jpg .jpe .jpeg
+define    image/png                                 no     .png
+define    image/gif                                 try    .gif
+define    image/bmp                                 try    .bmp
+define    image/tiff                                try    .tif .tiff
+
+define    image/cis-cod                             may    .cod
+define    image/ief                                 may    .ief
+define    image/pipeg                               no     .jfif
+
+define    image/svg+xml                             try    .svg
+super     image/svg+xml                             text/xml
+
+define    image/x-xbitmap                           yes    .xbm
+define    image/x-xpixmap                           try    .xpm
+define    image/x-dxf                               yes    .dxf
+define    image/x-icon                              try    .ico
+define    image/x-cmu-raster                        may    .ras
+define    image/x-cmx                               may    .cmx
+define    image/x-icon                              may    .ico
+define    image/x-portable-anymap                   may    .pnm
+define    image/x-portable-bitmap                   may    .pbm
+define    image/x-portable-graymap                  may    .pgm
+define    image/x-portable-pixmap                   may    .ppm
+define    image/x-rgb                               may    .rgb
+define    image/x-xwindowdump                       may    .xwd
+
+###########################################################################
+#
+#  'message' media type, default compression is 'try'
+#
+define    message/rfc822                            try    .mht .mhtml .nws
+
+
+###########################################################################
+#
+#  'model' media type, default compression is 'try'
+#
+
+
+###########################################################################
+#
+#  'multipart' media type, default compression is 'try'
+#
+
+
+###########################################################################
+#
+#  'text' media type, default compression is 'yes'
+#
+define    text/plain                                yes    .txt .ini .c .cc .h .bas .text .c++
+
+define    text/xml                                  yes    .xml
+super     text/xml                                  text/plain
+
+define    text/dns                                  yes    .dns
+super     text/dns                                  text/plain
+
+define    text/xsl                                  yes    .xsl .xslt
+super     text/xsl                                  text/xml
+
+define    text/x-java                               yes    .java
+super     text/x-java                               text/plain
+
+define    text/javascript                           yes    .js
+super     text/javascript                           text/plain
+
+define    text/vbscript                             yes    .vbs .vb
+super     text/vbscript                             text/plain
+
+define    text/html                                 yes    .html .htm .shtm .shtml .asp .cfm .stm .acgi
+super     text/html                                 text/plain
+
+define    text/css                                  yes    .css
+super     text/css                                  text/plain
+
+define    text/richtext                             yes    .rtx
+define    text/h323                                 try    .323
+define    text/iuls                                 may    .uls
+define    text/scriptlet                            try    .sct
+define    text/tab-separated-values                 yes    .tsv
+define    text/webviewhtml                          try    .htt
+define    text/x-component                          yes    .htc
+define    text/x-setext                             try    .etx
+define    text/x-vcard                              yes    .vcf
+define    text/vnd.sun.j2me.app-descriptor          yes    .jad
+
+define    text/cache-manifest                       yes    .appcache
+
+###########################################################################
+#
+#  'video' media type, default compression is 'no'
+#
+define    video/x-la-asf                            may    .lsf .lsx
+define    video/x-ms-asf                            may    .asf .asx .asr
+define    video/quicktime                           no     .mov .qt
+define    video/vivo                                no     .viv
+define    video/vdo                                 no     .vdo
+define    video/x-msvideo                           no     .avi
+define    video/mpeg                                no     .mpg .mpeg .mpe .mp2 .mpa .mpv2 .mp2v
+define    video/x-sgi-movie                         no     .movie
+
+###########################################################################
+#
+#  'vnd' media type, default compression is 'try'
+#
+
+###########################################################################
+#
+#  other media types, default compression is 'may'
+#
+define    x-music/x-midi                            yes    .mmid
+define    x-world/x-3dmf                            try    .3dmf .3dm
+define    x-world/x-vrml                            try    .flr .vrml .wrl .wrz .xaf .xof
+
+###########################################################################
+#
+#  replacement types
+#
+alias    application/msword                         application/ms-word
+alias    application/msword                         application/x-msword
+alias    application/vnd.ms-excel                   application/excel
+alias    application/vnd.ms-excel                   application/msexcel
+alias    application/vnd.ms-excel                   application/ms-excel
+alias    application/vnd.ms-excel                   application/x-msexcel
+alias    application/vnd.ms-powerpoint              application/powerpoint
+alias    application/vnd.ms-powerpoint              application/mspowerpoint
+alias    application/vnd.ms-powerpoint              application/ms-powerpoint
+alias    application/vnd.ms-powerpoint              application/x-mspowerpoint
+alias    application/hdf                            application/x-hdf
+
+alias    audio/wav                                  audio/x-wav
+alias    audio/mpeg                                 audio/x-mpeg
+
+alias    image/jpeg                                 image/pjpeg
+alias    image/png                                  image/x-png
+alias    image/bmp                                  image/x-ms-bmp
+alias    image/tiff                                 image/x-tiff
+
+alias    text/javascript                            application/javascript
+alias    text/javascript                            application/ecmascript
+alias    text/javascript                            text/ecmascript
+alias    text/javascript                            text/javascript1.0
+alias    text/javascript                            text/javascript1.1
+alias    text/javascript                            text/javascript1.2
+alias    text/javascript                            text/javascript1.3
+alias    text/javascript                            text/javascript1.4
+alias    text/javascript                            text/javascript1.5
+alias    text/javascript                            text/jscript
+alias    text/javascript                            text/livescript
+alias    text/javascript                            text/x-javascript
+alias    text/javascript                            text/x-ecmascript
+alias    text/javascript                            application/x-javascript
+alias    text/javascript                            application/x-ecmascript
+alias    text/xsl                                   application/xsl+xml
+alias    text/xsl                                   application/xslt+xml
+alias    text/xsl                                   application/xsl
+
+alias    video/mpeg                                 video/mpeg-2
+alias    video/x-msvideo                            video/msvideo
+alias    video/x-msvideo                            video/avi
+alias    video/x-msvideo                            application/x-troff-msvideo
+
+
+
+
+###########################################################################
+#
+#  ACM types
+#
+
+define    application/x-ae3-js-layout-data           yes    .jsld
+super     application/x-ae3-js-layout-data           text/javascript
+
+define    application/x-ae3-js-layout-transform      yes    .jslt
+super     application/x-ae3-js-layout-transform      text/javascript
+
+define    application/x-ae3-js-service-handler       yes    .jssh
+super     application/x-ae3-js-service-handler       text/javascript
+
+define    application/x-ae3-js-object                yes    .jsob
+super     application/x-ae3-js-object                text/javascript
+
+define    application/x-ae3-js-object                yes    .jso
+super     application/x-ae3-js-object                text/javascript
+
+define    application/x-ae3-js-class                 yes    .jscl
+super     application/x-ae3-js-class                 text/javascript
+
+define    application/x-ae3-js-class                 yes    .jsc
+super     application/x-ae3-js-class                 text/javascript
+
+define    application/x-ae3-js-expression            yes    .jsep
+super     application/x-ae3-js-expression            text/javascript
+
+define    application/x-ae2-tpl                      yes    .tpl
+alias     application/x-ae2-tpl                      text/tpl
+super     application/x-ae2-tpl                      text/plain
+
+define    application/x-acm-scheme                   yes    .scheme
+alias     application/x-acm-scheme                   text/xml-acm-scheme
+alias     application/x-acm-scheme                   application/x-xml-acm-scheme
+super     application/x-xml-acm-scheme               text/xml
+

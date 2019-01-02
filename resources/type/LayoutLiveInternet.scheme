@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Layout: LiveInternet</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawLayout</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="width" class="integer" default="88"/>
+			<field id="height" class="integer" default="15"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><script type="text/javascript"><!--
+				document.write("<%
+					%><a href='http://www.liveinternet.ru/click' target=_blank><%
+						%><img src='http://counter.yadro.ru/hit?t26.6;r"+escape(document.referrer)+((typeof(screen)=="undefined")?"":";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+";"+Math.random()+"' <%
+						%>alt='' title='LiveInternet: показано число посетителей за сегодн\я' <%
+						%>width='<%= width %>' height='<%= height %>' border='0' /><%
+					%><\/a><%
+				%>")<%
+			%>//--></script><%
+		]]></script>
+	</command>
+</type>

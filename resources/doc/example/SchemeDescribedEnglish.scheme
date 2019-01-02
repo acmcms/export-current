@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<!-- 
+		Human readable title name 
+	-->
+	<title>common title</title>
+
+	<!-- 
+		Final types are not allowed to extend. 
+	-->
+	<final>false</final>
+
+	<!-- 
+		Optional ($default used when omitted).
+		Name of the type of which this type should become a sub-type. 
+		
+		Error will be thrown if type specified in 'extends' element has 'final' 
+		element set to TRUE.
+	-->
+	<extends>type_key</extends>
+
+	<!-- 
+		Control interface type visibility: 'default' or 'hidden'.
+		
+		When 'hidden' specified, this type won't be shown as a choice for
+		'Create' or 'Change type' operations.
+	-->
+	<visibility>default</visibility>
+
+	<!--
+		Specific icon to associate with this type of objects in control interface.
+	-->
+	<icon>document</icon>
+
+	<!-- optional (false by default) use versioning by default -->
+	<versioning>false</versioning>
+
+	<!-- optional (draft by default) default instance state, arguments:
+		'draft', 'ready', 'system', 'publish', 'archive' or 'dead' -->
+	<state>publish</state>
+
+	<!-- optional (all by default) state list of all valid states for 
+		an instance object of this type -->
+	<statelist>
+		<state>ready</state>
+		<state>publish</state>
+		<state>draft</state>
+	</statelist>
+
+	<!-- optional (false by default) default instance type -->
+	<folder>true</folder>
+
+	<!-- 
+		Additional aliases for this type to associate with. 
+	-->
+	<replacement>type_key1</replacement>
+	<replacement>type_key2</replacement>
+
+	<!-- optional, content listing fields definition -->
+	<listing>$key, $title, typeName:fieldName</listing>
+
+	<!-- 
+		Optional. 
+		Accepted children types specification, this option 
+		describes control interface behaviour:
+		
+		- children of any type allowed if 'children' element omitted and there is
+				no prototype.
+		- prototype's set of children used when 'children' element ommited otherwise.
+		- nothing would be allowed to create in control interface by default
+		- when you specify a type here all types in it's hierarchy (all subtypes, 
+				see: extends) will be allowed as well. -->
+	<children>
+		<type>type1</type>
+		<type>type2</type>
+	</children>
+
+	<!-- 
+		Optional.
+		'Accepted' parent types specification. This option describes control 
+		interface behaviour:
+		
+		- parents of any type allowed if 'parents' element omitted and there is 
+				no prototype.
+		- prototype's set of parents used when 'parents' element ommited otherwise.
+		- nowhere would be allowed to create in control interface when 
+				empty list provided.
+		- when you specify a type here all types in it's hierarchy (all subtypes, 
+				see: extends) will be allowed as well. 
+	-->
+	<parents>
+		<type>type1</type>
+		<type>type2</type>
+	</parents>
+
+	<!-- optional, ('modify' used when omitted) object constructor 
+		definition -->
+	<create>
+		<!-- optional ('modify' form used when omitted) form to 
+			show in control interface -->
+		<form> 
+			<title>Form title.</title>
+
+			<!-- optional script to execute before form is shown, 
+				parameters:
+					'data' - form data -->
+			<prepare class="script" type="ACM.TPL"> <![CDATA[
+			]]> </prepare>
+			
+			<!-- optional fieldset for a form to show -->
+			<fields class="fieldset">
+			</fields>
+
+			<!-- optional script to execute on submission, parameters:
+					'change' - current change object
+					'data' - form data
+				Default script is equivalent to: 
+					change.getData().putAll( data )  -->
+			<submit class="script" type="ACM.TPL"> <![CDATA[
+				<%EXEC: change.getData().putAll( data ) %>
+			]]> </submit>
+			
+		</form>
+		
+		<!-- optional ('modify' script used when omitted) script 
+				to execute prior commit, parameters:
+				'this' - dummy entry to make commands accessible
+				'change' - current change object -->
+		<trigger class="script" type="ACM.TPL"> <![CDATA[
+		]]> </trigger>
+	</create>
+
+	<!-- property modification definition -->
+	<modify>
+		<!-- form to show in control interface -->
+		<form> 
+			<title>Form title.</title>
+
+			<!-- optional script to execute before form is shown, 
+				parameters:
+					'this' - current storage object
+					'data' - form data -->
+			<prepare class="script" type="ACM.TPL"> <![CDATA[
+			]]> </prepare>
+			
+			<!-- optional fieldset for a form to show -->
+			<fields class="fieldset">
+			</fields>
+
+			<!-- optional script to execute on submission, parameters:
+					'this' - current storage object
+					'change' - current change object
+					'data' - form data
+				Default script is equivalent to: 
+					change.getData().putAll( data )  -->
+			<submit class="script" type="ACM.TPL"> <![CDATA[
+				<%EXEC: change.getData().putAll( data ) %>
+			]]> </submit>
+		</form>
+
+		<!-- optional script to execute prior commit, parameters:
+				'change' - current change object
+				'this' - current storage object -->
+		<trigger class="script" type="ACM.TPL"> <![CDATA[
+		]]> </trigger>
+	</modify>
+
+	<!-- optional, one or more static type fields initialization.
+		NOTE: this section is initialized before type commands, so you cannot use this type's 
+			commands within constant expression.
+		-->
+	<static class="fieldset">
+	</static>
+
+	<!-- optional, fieldset to retrieve fields when loading an object instance.
+		Use it to specify evaluable, externally-accessible and non-indexable fields.
+		Field attribute respond='true' - enable respond handler
+			response is disabled for all fields by default.
+		Field attribute indexing='false' - disable field indexing
+			all fields are indexable by default.
+		-->
+	<load class="fieldset">
+	</load>
+
+	<!-- 
+		Optional.
+		Describes object reaction to an incoming event, usually: user request.
+	-->
+	<respond>
+
+		<!-- optional: default behavior for response -->
+		<behavior>
+			<!-- what requests to handle:
+					'this' - only own requests (default)
+					'parent' - all own requests are redirected to parent
+					'any' - any requests passing through this
+							object and not pointing to existing
+							child objects
+					'all' - all requests passing through this 
+							object -->
+			<handle>this</handle>
+
+			<!-- is authorization required to access this kind of objects? default
+					value is 'true'. This feature doesn't specify any 
+					security permissions, but implies GUEST permissions 
+					indirectly since there are no way for real GUEST to 
+					pass authorization. -->
+			<anonymous>true</anonymous>
+			
+			<!-- public or private response, default value is
+					'true' but response still may be private
+					depending on access rights and so on.
+					The main idea is that public responses
+					may be safely cached by caches\proxies between
+					server and client for public access acceleration
+					in contrast with private responses with some 
+					user-specific data. -->
+			<public>true</public>
+			
+			<!-- client cache expiration time (2h by default), time to keep the 
+				response in the user-side caches. The actual time the response 
+				is kept may vary depending on user settings and browser's
+				caching algorithm. -->
+			<ttl>2h</ttl>
+			
+			<!-- server cache expiration time (2h by default), time to keep the 
+				response in the server-side caches. The actual time the response 
+				is kept may vary depending on available memory amount and system 
+				load. -->
+			<cache>2h</cache>
+		</behavior>
+
+		<!-- filter to finish content generated by a 
+			child's respond script. All filters are applied in 
+			order from just responded entry’s parent till 
+			share root. Content, or any other response should be returned
+			in the same way as in respond scripts. Parameters:
+			'this' - current storage object 
+			'Request' - current request object
+			'content' - upper content to filter -->
+		<filter class="script" type="ACM.TPL"> <![CDATA[
+			return content;
+			/**
+			 * if you going to do something more complicated, you'll need to make
+			 * sure that you passing through all unsupported type of responses.
+			 * kind of using <code>if( !Object.isMap( content ) ) return content;</code>
+			 * if you only going to handle Maps.
+			 */
+		]]> </filter>
+
+		<!-- script to render, parameters:
+			'this' - current storage object
+			'Request' - current request object  -->
+		<script class="script" type="ACM.TPL"> <![CDATA[
+		]]> </script>
+		
+	</respond>
+
+	<!--
+		Optional.
+		Describes object behaviour while being deleted.
+	 -->
+	<delete>
+		<!-- form to show in control interface if required -->
+		<form> 
+			<title>Form title.</title>
+
+			<!-- optional script to execute before form is shown, 
+				parameters:
+					'this' - current storage object
+					'data' - form data -->
+			<prepare class="script" type="ACM.TPL"> <![CDATA[
+			]]> </prepare>
+			
+			<!-- optional fieldset for a form to show -->
+			<fields class="fieldset">
+			</fields>
+
+			<!-- optional script to execute on submission, parameters:
+					'this' - current storage object
+					'change' - current change object
+					'data' - form data  -->
+			<submit class="script" type="ACM.TPL"> <![CDATA[
+			]]> </submit>
+		</form>
+
+		<!-- 
+			Optional.
+			Script to execute prior deletion is completed. 
+			
+			Parameters:
+				'this' - current object 
+		-->
+		<trigger class="script" type="ACM.TPL"> <![CDATA[
+		]]> </trigger>
+	</delete>
+
+	<!-- one or more type commands -->
+	<command>
+		<!-- command type for access checks, one of:
+			'view' - command is intended to view some query result.
+			'execute' - command is intended to update an object.
+			'modify' - command is intended to modify an object.
+			'publish' - command is intended to change object state.
+			'hidden' - command is hidden.
+			-->
+		<type>view</type>
+
+		<!-- command key 
+			Initial command key, used to add commands to a type and not
+			required to reflect actual property name from where this command
+			is referenced at the moment.
+			Usage example:
+				var key = o.method.key;
+			-->
+		<key class="string">cmd_key</key>
+
+		<!-- optional (key used when omitted) command title
+			Usage example:
+				var title = obj.method.title || “command-run”;
+			-->
+		<title class="string">Command title</title>
+		
+		<!-- optional ('command-run' used when omitted) command icon 
+			Usage example:
+				var icon = obj.method.icon || “command-run”;
+			-->
+		<icon class="string">command-run</icon>
+		
+		<!-- command availability expression, 'true' by default. 
+			Serves as a hint for user interfaces to hide commands that will
+			make no sense or produce errors in current state.
+
+			Current storage object is passed as 'this' parameter.
+
+			Usage example: 
+	 	 	 	var show = !obj.method.enable || obj.method.enable(obj);
+				var hide = obj.method.enable && !obj.method.enable(obj);
+			Implementation example: 
+				<enable class=”expression”>!this.image</enable>
+			 -->
+		<enable class="expression">true</enable>
+
+		<!-- command belonging, one of:
+			'false' - command belongs to an instance (default), instance
+					is being passed as 'this' in context of execution.
+			'true' - command belongs to a type, no 'this' reference
+					accessible in context, slightly faster.
+			-->
+		<static>false</static>
+
+		<!-- command export, one of:
+			'false' - normal command (default).
+			'true' - command will be applied to all types in given TypeRegistry.
+			-->
+		<export>false</export>
+
+		<!-- command result holdability and execution type, one of:
+			'always' - command execution occurs every time command called (default)
+			'buffered' - executed asynchronously, immediately returns null, data
+						passed as an array of maps.
+			'deferred' - executed asynchronously, immediately returns null, called
+						serially thereafter.
+			'once' - command result may be constantly cached till next type reload.
+						Such commands should not use any arguments.
+			'cache' - command results are cached for current parameters.
+			'auto' - called automatically in a loop, no explicit calls possible. No
+						'data' passed to this method and this method cannot 
+						be an instance method (static only).
+						Such commands should not use any arguments.
+			-->
+		<execute>always</execute>
+		
+		<!-- cache expiration, when execution type is 'cache', 15m is default -->
+		<expire>15m</expire>
+
+		<!-- first call in sequence delay, when execution type is 'buffered' or 
+			'auto', 0 is default - starts immediately -->
+		<delay>0</delay>
+
+		<!-- next call in sequence delay, when execution type is 'buffered' or 
+			'auto', 0 is default for 'buffered', 10m is default for 'auto',
+			when this parameter is 0 for an 'auto' type - only first call
+			will be performed. -->
+		<period>10m</period>
+
+		<!-- form to show in control interface if required -->
+		<form>
+			<!-- optional (command title user when omitted) title
+					for a form -->
+			<title>Form title.</title>
+
+			<!-- optional script to execute before form is shown, 
+				parameters:
+					'this' - current storage object
+					'data' - form data -->
+			<prepare class="script" type="ACM.TPL"> <![CDATA[
+			]]> </prepare>
+			
+			<!-- optional fieldset for a form to show -->
+			<fields class="fieldset">
+			</fields>
+
+			<!-- optional script to execute on submission, parameters:
+					'this' - current storage object
+					'data' - form data -->
+			<submit class="script" type="ACM.TPL"> <![CDATA[
+			]]> </submit>
+		</form>
+
+		<!-- command result type:
+				Void
+				Object
+				Boolean
+				Integer
+				Number
+				String... -->
+		<result>Object</result>
+
+		<!-- command arguments fieldset, identifies type and default values
+			for every command parameter to be accessibe like ordinary
+			local variables. 
+			Arguments feature is not applicable to 'once' or 'auto' method 
+			execution type. There no arguments for 'once' and 'auto' 
+			execution types at all.
+			For 'buffered' methods an array of maps with arguments will
+			be accessible via 'arguments' local variable in the same
+			manner as passed parameters accessible via 'data' variable, i.e.
+			in the form of array of maps.
+			-->
+		<arguments class="fieldset">
+		</arguments>
+
+		<!-- script to execute, parameters:
+				'this' - current storage object
+				'data' - command parameters or form data
+							(not present when arguments described)
+				... every command argument desribed in 'arguments' fieldset block -->
+		<script class="script" type="ACM.TPL"> <![CDATA[
+		]]> </script>
+	</command>
+</type>

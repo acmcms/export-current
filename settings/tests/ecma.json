@@ -1,0 +1,4 @@
+{
+	type : "ae3.Test",
+	java : "ru.myx.ae3.test.ecma.TestEcma"
+}

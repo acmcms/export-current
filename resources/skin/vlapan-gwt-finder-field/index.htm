@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="http://yui.yahooapis.com/combo?2.8.0r4/build/reset-fonts-grids/reset-fonts-grids.css">
+<link rel="stylesheet" type="text/css" href="example/style.css">
+<script type="text/javascript" language="javascript">
+<!--
+	var treeWidget = <%= VlapanTreeData.get( example = true ) %>;
+	var settings = {requestUrl:"/!/skin/vlapan-hierarchy-gwt-finder/data.json?cNode=",fullscreen:false,
+			callback:function mycallback(url){
+				alert("You selected: "+url);
+			}
+	};
+//-->
+</script>
+<script type="text/javascript" language="javascript">
+<!--
+	function showModal(uri, inputId){
+		var returnVal = window.showModalDialog(uri,inputId,"dialogWidth:800px; dialogHeight:700px; help:no; scroll:no; status:no; resizable:yes;");
+		document.getElementById(inputId).value = returnVal;
+	}
+//-->
+</script>
+<link type="text/css" rel="stylesheet" href="Finder.css">
+<script type="text/javascript" language="javascript"
+	src="/!/skin/vlapan-hierarchy-gwt-finder/$files/finder/finder.nocache.js"></script>
+<%= VlapanSyntaxHighlighter.init() %>
+<link rel="shortcut icon" type="image/x-icon" href="/$files/favicon.ico" />
+</head>
+<body>
+<h1>GWT Finder Field Example Page</h1>
+
+<h2>TOC</h2>
+<ul>
+	<li><a href="#about">About</a></li>
+	<li><a href="#demo">Demonstration</a></li>
+	<li><a href="#integrate">Integrate</a></li>
+	<li><a href="#rpkgs">Related packages</a></li>
+	<li><a href="#pkgs">Other packages</a></li>
+</ul>
+
+<h2 id="about">About</h2>
+<p>I'm wrap <a href="/!/skin/vlapan-hierarchy-gwt-finder/index.htm">GWT Finder</a> into field. Use me in forms like natural field with ample of potential.</p>
+<p>
+<h2 id="integrate">Integrate</h2>
+<p></p>
+<ul class="list">
+	<li>import "vlapan-hierarchy-gwt-finder-field" package to your skin.settings.xml</li>
+	<li>use <b>VlapanGwtFinderField.insert()</b></li>
+</ul>
+<h2 id="demo">Demonstration</h2>
+<form>
+	<label for="testInput">URL:</label>
+	<input value="" name="testInput" id="testInput" />
+	<a href="#" onclick="showModal('gwt-finder/modal.html','testInput');return false;">Browse</a>
+</form>
+<h2 id="rpkgs">Related packages</h2>
+<ul class="horizontal">
+	<li><a href="/!/skin/vlapan-hierarchy-gwt-finder/index.htm">GWT Finder</a></li>
+</ul>
+<h2 id="pkgs">Other packages</h2>
+<ul class="horizontal">
+	<li><a href="http://richedit.test.vlapan.com">RichEdit</a></li>
+	<li><a href="http://syntaxhighlighter.test.vlapan.com">SyntaxHighlighter</a></li>
+</ul>
+</body>
+</html>

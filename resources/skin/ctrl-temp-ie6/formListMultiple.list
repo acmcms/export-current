@@ -1,0 +1,290 @@
+<HTML><HEAD><TITLE></TITLE><%
+	%><%INCLUDE: 'include-head' %><%
+	
+	%></HEAD>
+
+<%EXEC: Icon = 'item-unknown' %>
+
+<%EXEC: fieldname = Request.fieldname %>
+<%EXEC: session_form = Session[Request.id] %>
+<%EXEC: data = session_form.data.getData() %>
+<%EXEC: mapPaths = split(fieldname,'/') %>
+<%EXEC: fieldset = session_form.data.fieldset %>
+
+<%IF: mapPaths.size() > 1%>
+	<%CALL:ForArray(mapPaths) %>
+		<%EXEC: field = fieldset.getField(Current) %>
+		<%EXEC: fieldset = field.attributes.fieldset %>
+		<%EXEC: data = (value || data) %>
+		<%EXEC: value = data[Current] %>
+		<%EXEC: fieldname = Current %>
+	<%/CALL%>
+<%/IF%>
+
+<%EXEC: field = fieldset.getField(fieldname) %>
+<%EXEC: attributes = field.attributes %>
+
+<%INCLUDE: 'lookupPrepare.inc' %>
+
+<style>
+BODY, TD{
+	cursor:default;
+	background-color:window;
+	color:windowtext;
+}
+
+
+.dtab TD{
+	height:15px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding:0 15px 0 4px;
+	border-style:solid;
+	border-width:1px;
+}
+
+.dtab .listTDselect{
+	border-bottom:solid 1px buttonshadow;
+	border-right:solid 1px buttonshadow;
+	border-top:solid 1px buttonhighlight;
+	border-left:solid 1px buttonhighlight;
+	background-color:buttonface;
+	color:buttontext;
+	padding:0;
+}
+
+.dtab .icon{
+	padding:0;
+	border:0px;
+	vertical-align:top;
+}
+
+.dtab .title{
+	padding:1px 0 0 4px;
+	border:0;
+	vertical-align:top;
+}
+
+
+
+
+.listTDheader{
+	border-bottom:solid 1px buttonshadow;
+	border-right:solid 1px buttonshadow;
+	border-top:solid 1px buttonhighlight;
+	border-left:solid 1px buttonhighlight;
+	background-color:buttonface;
+	color:buttontext;
+	height:16px;
+	padding-left:4px;
+	padding-right:4px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+}
+
+.listTDheader TD{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	background-color:buttonface;
+	color:buttontext;
+}
+
+.listTDheader .switch{
+	font-family: Webdings;
+	font-size: 10px;
+	line-height: 6px;
+}
+
+.listTDheader .title{
+	padding-right:4px;
+}
+
+.listTDheader .titleSelect{
+	padding-right:4px;
+	font-weight: bold;
+}
+
+.listTDheaderWOborder{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	background-color:buttonface;
+	color:buttontext;
+	border:0;
+}
+
+INPUT, SELECT{
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+	border: 0;
+	background-color: ActiveCaption;
+	color:CaptionText;
+}
+
+.filter{
+	padding:1px;
+	margin-top:-1px;
+	margin-bottom:-1px;
+	width:100%;
+}
+</style>
+
+
+<script>
+
+router = parent.router;
+var myList = {};
+myList.id = window.name;
+myList.entryType = 'setlist';
+
+
+myList.target = parent.document.getElementById( window.name.split('Frm')[0] );
+if(myList.target){
+	myList.target.onFire = parent.setListFire;
+	router.register(myList.target, myList.target, window.name);
+}
+
+var selectedObjects = [];
+
+document.oncontextmenu = function(e){
+//	((e || (e = event)).srcElement || e.target).click();
+//	return false;
+}
+
+document.onclick = function(e){
+	var obj = ((e || (e = event)).srcElement || e.target);
+	var multipleFlag = !!(obj.selectFlag);
+	var selectParent = Dom.getSelectParent(obj,"selectParent");
+
+	var htab = document.getElementById("htab");
+	if(htab.currentInput) htab.clearForm();
+
+	if (!selectParent){
+		if (selectedObjects.length > 0){
+			for (var i = 0; i < selectedObjects.length; ++i){
+				Dom.unSelectBlock(selectedObjects[i].Childs);
+				selectedObjects[i].select = false;
+			}
+			selectedObjects = [];
+		}else{
+			return;
+		}
+		router.fire('ItemUnselect',myList.id);
+		return;
+	}
+	selectParent.Childs || (selectParent.Childs = Dom.getSelectParentChild(selectParent));
+
+	if (multipleFlag){
+		var alreadySelected = false;
+		for (var i = 0; i < selectedObjects.length; ++i){
+			if(selectedObjects[i] == selectParent){
+				alreadySelected = true;
+				Dom.unSelectBlock(selectParent.Childs);
+				selectedObjects[i].select = false;
+				selectedObjects[i] = null;
+			}
+		}
+		selectedObjects = clearArrFromNull(selectedObjects);
+		if (!alreadySelected){
+			Dom.selectBlock(selectParent.Childs);
+			selectedObjects[selectedObjects.length] = selectParent;
+			selectParent.select = true;
+		}
+	}else{
+		if (selectParent.select && selectedObjects.length == 1) return;
+		for (var i = 0; i < selectedObjects.length; ++i){
+			Dom.unSelectBlock(selectedObjects[i].Childs);
+			selectedObjects[i].select = false;
+		}
+		selectedObjects = [];
+		Dom.selectBlock(selectParent.Childs);
+		selectedObjects[0] = selectParent;
+		selectParent.select = true;
+	}
+
+	if (selectedObjects.length == 0){
+		router.fire('ItemUnselect', myList.id);
+	}else
+	if (selectedObjects.length == 1){
+		router.fire('ItemSelect', myList.id, selectedObjects);
+	}else
+	if (selectedObjects.length > 1){
+		router.fire('ItemsSelect', myList.id, selectedObjects);
+	}
+}
+
+
+
+function clearArrFromNull(arr){
+	var narr = [];
+	for (var i = 0; i<arr.length; ++i){
+		if(arr[i]!=null) narr[narr.length] = arr[i];
+	}
+	return narr;
+}
+
+
+
+function sortTimerSubmit(fieldID,value){
+	window.document.forms[0].sortfield.value=fieldID;
+	window.document.forms[0].sortvalue.value=value;
+	window.document.forms[0].submit();
+}
+
+</script>
+
+
+<%EXEC: rLetter = UpperCase(Request.letter) %>
+<%EXEC: Count=50%>
+
+<%EXEC: contentsLength = lookupOrder.length %>
+
+<%EXEC: pages = ArraySplit(lookupOrder,Count) %>
+<%IF: Request.Page != 'all' %>
+	<%EXEC: Page = Int(Request.Page,0) %>
+<%ELSE%>
+	<%EXEC: Page = Request.Page %>
+<%/ELSE%>
+<%/IF%>
+
+<%EXEC: itemsPage = pages[Page] %>
+
+<%FORMAT: 'xml' %>
+<body scroll="no" style="margin:0;cursor:default">
+	<div style="overflow:hidden; position:relative">
+		<table id=htab style="BORDER-COLLAPSE: collapse" width="100%" selectParent=1>
+		<form method="POST" name=filter>
+		<tr>
+			<td fieldID="title" editor="string" class=listTDheader nowrap><%= field.getTitle() %></td>
+		</tr>
+		</form>
+		</table>
+	</div>
+
+	<div style="height:expression(document.body.clientHeight-this.previousSibling.firstChild.clientHeight); width:100%; overflow:auto;">
+		<table id=dtab class=dtab style="BORDER-COLLAPSE: collapse" width=100%><%
+		%><script><%
+			%>myList.target.onFire('setListPaging',['<%= contentsLength %>','<%= Page != 'all' ? Page + 1 : Page %>','<%= Count %>']);<%
+		%></script><%
+
+		%><%CALL:ForArray(itemsPage) %><%
+			%><tr id="zzz<%= Format.xmlAttributeFragment( Current ) %>" selectParent=1 title="<%= Format.xmlAttributeFragment( lookup[Current] ) %>"><%
+				%><td canBeSelected=1 style="padding-left:2px;"><%
+					%><table border=0 cellpadding=0 cellspacing=0><%
+						%><tr><%
+							%><td class=icon canBeSelected=1><%
+								%><img src="icons/<%= Icon %>.16.gif" height=16 width=16><%
+							%></td><%
+							%><td class=title noWrap canBeSelected=1><%
+								%><%= lookup[Current] %><%
+							%></td><%
+						%></tr><%
+					%></table><%
+				%></td><%
+			%></tr><%
+		%><%/CALL%>
+
+		</table>
+	</div>
+</body>
+<%/FORMAT%>
+</HTML>

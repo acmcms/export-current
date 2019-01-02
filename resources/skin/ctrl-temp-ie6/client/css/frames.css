@@ -1,0 +1,332 @@
+BODY,HTML {
+	font-family: Tahoma, Arial;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	cursor: default;
+	overflow: hidden;
+	background-color: buttonface;
+}
+
+H1 {
+	font-family: Tahoma, Arial;
+	font-size: 14pt;
+	margin: 0;
+}
+
+
+.BorderBox {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.FrameBorder {
+	border-bottom: solid 1px buttonhighlight;
+	border-right: solid 1px buttonhighlight;
+	border-top: solid 1px buttonshadow;
+	border-left: solid 1px buttonshadow;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+.FrameBorder2 {
+	border-bottom: solid 1px buttonshadow;
+	border-right: solid 1px buttonshadow;
+	border-top: solid 1px buttonhighlight;
+	border-left: solid 1px buttonhighlight;
+	background-color: buttonface;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-ms-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+}
+
+.FrameHeader {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	background-color: ActiveCaption;
+	color: CaptionText;
+	padding: 2px 4px 2px 4px;
+	font-weight: bold;
+	border-bottom: solid 1px buttonhighlight;
+	border-right: solid 1px buttonhighlight;
+	border-top: solid 1px buttonshadow;
+	border-left: solid 1px buttonshadow;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-ms-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+}
+
+.TopMenu {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border: solid 1px buttonface;
+	text-align: center;
+	padding: 0 10px 0 10px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.Menu {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding: 0;
+	margin: 0;
+	border: solid 1px buttonface;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.MenuOn {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	margin-right: 10px;
+	padding: 0;
+	margin: 0;
+	border-bottom: solid 1px buttonshadow;
+	border-right: solid 1px buttonshadow;
+	border-top: solid 1px buttonhighlight;
+	border-left: solid 1px buttonhighlight;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.MenuHighlight {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	margin-right: 10px;
+	padding: 0;
+	margin: 0;
+	background-color: threedhighlight;
+	border-bottom: solid 1px buttonshadow;
+	border-right: solid 1px buttonshadow;
+	border-top: solid 1px buttonhighlight;
+	border-left: solid 1px buttonhighlight;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.MenuHighlightActive {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	margin-right: 10px;
+	padding: 0;
+	margin: 0;
+	background-color: threedhighlight;
+	border-bottom: solid 1px buttonhighlight;
+	border-right: solid 1px buttonhighlight;
+	border-top: solid 1px buttonshadow;
+	border-left: solid 1px buttonshadow;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.Menu IMG,.MenuOn IMG {
+	margin: 0 3px 0 0;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.SubmenuFrame {
+	background-color: ActiveCaption;
+	color: CaptionText;
+	padding: 3px;
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+	border-bottom: solid 1px buttonhighlight;
+	border-right: solid 1px buttonhighlight;
+	border-top: solid 1px buttonshadow;
+	border-left: solid 1px buttonshadow;
+}
+
+.SubmenuFrame TD,.SubmenuFrame DIV {
+	color: CaptionText;
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+}
+
+.SubmenuFrame INPUT {
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+	border: 0;
+	background-color: ActiveCaption;
+	color: CaptionText;
+}
+
+.SubmenuFrame A {
+	color: CaptionText;
+	text-decoration: none;
+}
+
+.SubmenuFrame A:hover {
+	color: CaptionText;
+	text-decoration: underline;
+}
+
+.SubMenuHeader {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-bottom: solid 1px buttonshadow;
+	border-right: solid 1px buttonshadow;
+	border-top: solid 1px buttonhighlight;
+	border-left: solid 1px buttonhighlight;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.SubMenuHeaderActive {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-bottom: solid 1px appworkspace;
+	background-color: appworkspace;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.SubMenuHeaderActive TD {
+	padding: 2px 3px 2px 3px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	color: highlighttext;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.SubMenuHeader TD {
+	padding: 2px 3px 2px 3px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.SubmenuButton TD {
+	color: buttontext;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+}
+
+.SubmenuButton .on {
+	background-color: highlight;
+}
+
+.SubmenuButton .on TD {
+	color: highlighttext;
+}
+
+.Description {
+	background-color: infobackground;
+	color: infotext;
+	border-bottom: solid 1px buttonhighlight;
+	border-right: solid 1px buttonhighlight;
+	border-top: solid 1px buttonshadow;
+	border-left: solid 1px buttonshadow;
+	padding: 1px 5px 1px 5px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.Description,.Description TD,.Description DIV {
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+}
+
+.Description A {
+	color: infotext;
+	text-decoration: underline;
+}
+
+.Description UL {
+	margin: 4pt 12pt 4pt 12pt;
+}
+
+.Description LI {
+	margin: 2pt;
+}
+
+.DescriptionPlain {
+	color: buttontext;
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+}
+
+.FrameButton {
+	font-family: Webdings;
+	font-size: 8pt;
+	color: buttontext;
+	border: solid 1px buttonface;
+	height: 16px;
+	padding: 0;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.FrameButtonOn {
+	font-family: Webdings;
+	font-size: 8pt;
+	color: buttontext;
+	height: 16px;
+	padding: 0;
+	border-bottom: solid 1px buttonshadow;
+	border-right: solid 1px buttonshadow;
+	border-top: solid 1px buttonhighlight;
+	border-left: solid 1px buttonhighlight;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.iconSymbol {
+	font-family: Webdings;
+	font-size: 8pt;
+	border: solid 1px buttonface;
+	behavior: url(/_icon.htc);
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.iconText {
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+	border: solid 1px buttonface;
+	behavior: url(/_icon.htc);
+	height: 21px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}

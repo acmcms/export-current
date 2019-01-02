@@ -1,0 +1,60 @@
+.box-select-window{
+	border: solid 1px #AAAAAA;
+}
+.box-select-container{
+	cursor: default;
+	font-family: arial, sans-serif;
+	font-size: 12px;
+	line-height: 15px;
+	min-height: 90px;
+	height: 100%;
+	max-height: 100%;
+	min-width: 80px;
+	max-width: 100%;
+	width: 100%;
+	color: black;
+	background-color: #f5f5f5;
+	vertical-align: middle;
+	-moz-user-select: none;
+	white-space: nowrap;
+	text-align: left;
+}
+.box-select-plane{
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+.box-select-item TD, .box-select-item-active TD{
+	padding: 4px 3px 3px 3px;
+	vertical-align: top;
+	height: 15px;
+}
+.box-select-item{
+	background-color: #f5f5f5;
+	color: black;
+}
+.box-select-item-active{
+	background-color: #3875D7;
+	color: white;
+}
+.box-select-plane img{
+	margin: -1px 0 -1px 0;
+	border: none;
+	width: 16px;
+	height: 16px;
+}
+.bold{
+	font-weight: bold;
+}
+.underline{
+	text-decoration: underline;
+}
+.italic{
+	font-style: italic;
+}
+.box-select-item-active .red{
+	color: #FFAA99;
+}
+.box-select-item .red{
+	color: #771111;
+}

@@ -1,0 +1,5 @@
+{
+	type : "ae3/Executable",
+	name : "cache",
+	reference : "ru.myx.ae3.sys/cache/CacheShellCommand"
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>CTRL-IE6: Modal Link Chooser</title>
+	<abstract>true</abstract>
+	
+	<prototype>ctrl-ie6-abstract</prototype>
+	
+	<import package="skin-jsclient" namespace="client"/>
+
+	<default>linkchooser-modal.htm</default>
+	<charset>UTF-8</charset>
+	<renderer>ACM.TPL</renderer>
+
+	<!-- for skin-standard-html/html-page -->
+	<useRequire class="boolean">false</useRequire>
+</settings>

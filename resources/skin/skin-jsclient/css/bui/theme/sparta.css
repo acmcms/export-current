@@ -1,0 +1,158 @@
+body,html,td{
+	font-family:Tahoma,Arial;
+	font-size:12pt;
+}
+
+html{
+	width:100%;
+	height:100%;
+	padding:0;
+	margin:0;
+	overflow:hidden;
+	background-color:white;
+}
+
+
+.ui-document{
+	background-color:white;
+	color: black;
+}
+
+
+ui-menu, .ui-menu{
+	background-color:#FFFFFF;
+	border:solid 2px blue;
+	color:black;
+	cursor: default;
+}
+
+
+
+
+
+
+ui-attachment .ui-spacer, ui-attachment .ui-spacer-default{
+	padding:2px 2px 0 0;
+	background-color:blue;
+	border:solid 0.6em white;
+}
+ui-menu .ui-spacer{
+	margin:5px;
+	border:inset 1px blue;
+}
+ui-toolbar .ui-spacer{
+	margin:2px;
+	padding:1px 1px 0 0;
+	background-color:#838383;// ButtonShadow;
+}
+
+ui-button .ui-spacer{
+	margin:1px;
+	padding:1px 1px 0 0;
+	background-color:#838383;// ButtonShadow;
+}
+
+
+ui-menu .ui-button, .ui-menu .ui-button, ui-menu .ui-button:HOVER, .ui-menu .ui-button:HOVER{
+	border:none;
+	padding:3px 0;
+}
+
+
+
+.ui-outset{
+	border:solid 1px #939393;
+	border-top-color:#F0F0F0;
+	border-left-color:#F0F0F0;
+	padding:2px;
+}
+.ui-inset{
+	border:solid 1px #939393;
+	border-bottom-color:#F0F0F0;
+	border-right-color:#F0F0F0;
+	padding:2px;
+}
+.ui-padding{
+	padding:6px;
+	background-color:white;
+}
+.ui-normal{
+	background-color:white;
+	color: blue;
+}
+.ui-active{
+	background-color:#F0F0F0;
+	color: red;
+}
+
+A.ui-button SPAN{
+	text-decoration:underline;
+}
+
+.header{
+	font-family:Tahoma, Arial;
+	font-size:11px;
+	line-height:13px;
+	background-color:#739EE3;
+	color:CaptionText;
+	font-weight:bold;
+	height:14px;
+	padding:2px 4px;
+}
+.ui-window{
+	background-color:#FFFFFF;
+	overflow:auto;
+}
+
+
+.ui-tabbar{
+	border-top:solid 2px blue;
+	background-color:#FFFFFF;
+}
+.ui-tabbar-left{
+	width:1em;
+}
+.ui-tabbar .ui-normal{
+	margin-top:-2px;
+	background-color:#FFFFFF;
+	border-bottom:solid 2px #FFFFFF;
+	border-top:solid 2px blue;
+	border-bottom:none;
+	padding:0 2px;
+}
+.ui-tabbar .ui-active{
+	margin-top:-2px;
+	border:solid 2px blue;
+	border-top:solid 2px #F0F0F0;
+	border-top:none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.Window{
+	background-color:#FFFFFF;
+}
+.ButtonFace{
+	background-color:#C8C8C8;
+}
+.ButtonShadow{
+	background-color:#838383;
+}
+.ButtonHighlight{
+	background-color:#F0F0F0;
+}
+.ActiveCaption{
+	background-color:#739EE3;
+}
+.Highlight{
+	color:#B5D5FF
+}

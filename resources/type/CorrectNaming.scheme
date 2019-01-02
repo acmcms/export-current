@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<type>
+
+	<!--
+	
+		Set Application.disableCorrectNamingMenus to true if you want disable this feature.
+		
+		Application variables could be set in config.xml configuration file.
+		
+	-->
+
+
+	<title>Static: Correct Naming Conventions</title>
+	<visibility>hidden</visibility>
+
+	<command>
+		<type>publish</type>
+		<key>cnamingRenumerate</key>
+		<title>Перенумеровать элементы</title>
+		<icon>command-run</icon>
+		<export>true</export>
+		<enable class="expression"><![CDATA[ !Application.disableCorrectNamingMenus && Array.isFilled( this.getChildren(0, null) ) ]]></enable>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var children = this.getChildren(0, "alphabet" );
+			var updateCount = 0;
+			var index = 1;
+			for( var child in children ){
+				var oldTitle = child.getTitle();
+				var number = (index++) * 2;
+				var newTitle = (number < 10 ? "0" : "") + number + ". " + afterPoint( child.getTitle() );
+				Runtime.log("CNAMING", "RENUM", "action="+(oldTitle != newTitle)+"\nold="+oldTitle+"\nnew="+newTitle);
+				if( oldTitle != newTitle ){
+					var change = child.createChange();
+					change.setTitle( newTitle );
+					change.setCommitLogged();
+					change.setCommitActive();
+					change.commit();
+					updateCount++;
+				}
+			}
+			if( updateCount ){
+				%>произведено <%= updateCount %> изменений<%
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<type>publish</type>
+		<key>cnamingFixNames</key>
+		<title>Переименовать элементы</title>
+		<icon>command-run</icon>
+		<export>true</export>
+		<enable class="expression"><![CDATA[ !Application.disableCorrectNamingMenus && Array.isFilled( this.getChildren(0, null) ) ]]></enable>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var children = this.getChildren(0, "alphabet" );
+			var updateCount = 0;
+			for( var child in children ){
+				var oldName = child.getKey();
+				var newName = !oldName || !oldName.trim()
+								? child.getGuid()
+								: File.niceNameNotation( File.clearSlashes( oldName.trim().toLowerCase() ) );
+				Runtime.log("CNAMING", "RENAME", "action="+(oldName != newName)+"\nold="+oldName+"\nnew="+newName);
+				if( oldName != newName ){
+					var change = child.createChange();
+					change.setKey(newName);
+					change.setCommitLogged();
+					change.setCommitActive();
+					change.commit();
+					updateCount++;
+				}
+			}
+			if( updateCount ){
+				%>произведено <%= updateCount %> изменений<%
+			}
+		]]></script>
+	</command>
+	
+	<command>
+		<type>publish</type>
+		<key>cnamingSetImagesState</key>
+		<title>Установить статусы типа Image</title>
+		<icon>command-run</icon>
+		<export>true</export>
+		<enable class="expression"><![CDATA[ Image && Image.isInstance && Array.isFilled( this.getChildren(0, null) ) ]]></enable>
+		<arguments class="fieldset">
+			<field class="boolean" id="includeFolders"/>
+		</arguments>
+		<form>
+			<fields class="fieldset">
+				<field class="boolean" id="includeFolders" title="Проверить типы включая подкаталоги"/>
+			</fields>
+		</form>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var docs = this.getChildren(0, null);
+			for each(var doc in docs){
+				switch(doc.getTypeName()){
+				case 'Image':
+					var key = UpperCase(doc.getKey());
+					if( (EndsWith(key,'.JPG') || EndsWith(key,'.GIF') || EndsWith(key,'.PNG')) && doc.getState() > 1){
+						docChange = doc.createChange();
+						docChange.setState(1);
+						docChange.commit();
+					}
+					break;
+				default:
+					if(includeFolders) {
+						doc.cnamingSetImagesState(includeFolders);
+					}
+				}
+			}
+		]]></script>
+	</command>
+</type>

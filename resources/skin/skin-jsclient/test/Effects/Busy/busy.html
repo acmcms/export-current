@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>BUSY / PROGRESS</title>
+	<script src="../../../js/debug.js"></script>
+	<script src="../../../js/require.js"></script>
+	<script src="../../../js/Effects/Busy.js"></script>
+	<script>
+		function onLoad(){
+			var layout = document.getElementById("layout") || document.body;
+			new Effects.Busy(layout);
+		}
+	</script>
+	<style>
+		body,html{
+			width:100%;
+			height:100%;
+			margin:0;
+			padding:0;
+			overflow:hidden;
+		}
+		.test{
+			opacity:0.8;
+			filter:alpha(opacity=80);
+		}
+	</style>
+	<script>
+		function test(target){
+			top.debug && top.debug("test: start");
+			target = target || window.document.body;
+			var Layout = require("Layouts.Layout");
+			top.debug && top.debug("test: layout loaded");
+			target = new Layout(target, {
+				layout	: "screen",
+				cssClass: "ButtonFace",
+				onClick : function(){
+					target.destroy();
+				}
+			});
+			top.debug && top.debug("test: layout created");
+			target.pushLayout("padding");
+			target.setBusy();
+			top.debug && top.debug("test: 20 seconds till auto-cancel, doubleclick to force 8-)");
+			setTimeout(function(){
+				target.setReady();
+				top.debug && top.debug("test: bye!");
+			}, 20000)
+		}
+	</script>
+</head>
+<body style="background-color:blue" onload="onLoad()">
+	<div id=layout style="width:500px;height:500px;overflow:hidden;background-color:green"></div>
+	<div id=content class=test style="display:none;position:relative;height:100%">
+		<div style="height:10px;border:solid 20px black"></div>
+		<div style="position:absolute;width:100%;height:100%">
+			<div style="border:solid 15px yellow;position:absolute;left:0;top:0;width:100%;height:100%">
+				<div style="border:solid 15px magenta;height:100%">
+				</div>
+			</div>
+		</div>
+		<span style="white-space: nowrap">
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+		</span>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN*<br>
+	</div>
+	<button onclick="test()">toggle</button>
+
+</body>
+</html>

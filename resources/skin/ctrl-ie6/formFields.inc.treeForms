@@ -1,0 +1,31 @@
+<%IF:!scripts.contains('formFields.treeForms.js')%>
+	<%EXEC:scripts.add('formFields.treeForms.js')%>
+	<%INCLUDE: 'formFields.treeForms.js' %>
+<%/IF%>
+
+
+<tr id="fld<%=prefix%>__<%=name%>">
+<td colspan=2 style="height:300px">
+
+	<table id="mapselect_<%=name%>" border=0 cellpadding=0 cellspacing=0 width=100% height=100%><tr>
+		<td valign=top height=100% style="width:200px" class=multiselectList>
+
+			<iframe name="treeform_<%=prefix%>__<%=name%>_tree" src="formFields.inc.treeForms.tree" style="width:100%; height:100%" frameborder=0></iframe>
+
+		</td>
+
+		<td valign=top style="padding:0 0 0 5">
+			<fieldset style="height:100%; width:100%">
+				<div id="treeform_<%=prefix%>__<%=name%>_container" style="height:100">
+			
+				</div>
+			</fieldset>
+		</td>
+	</tr></table>
+
+<script>
+treeFormIni('treeform_<%=prefix%>__<%=name%>');
+</script>
+
+</td>
+</tr>

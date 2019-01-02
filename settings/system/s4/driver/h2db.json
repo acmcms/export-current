@@ -1,0 +1,6 @@
+{
+	type : "ae3/Factory",
+	name : "h2db",
+	description : "H2Db S4 Local Driver",
+	reference : "java.class/ru.myx.ae3.vfs.s4.lcl.h2db.H2dbLocalS4"
+}

@@ -1,0 +1,78 @@
+<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+<TR>
+	<TD style="padding:0 0 4px 0"><%
+		%><div class=toolbar id=WysiwygEditorToolbar><%
+			%><%INCLUDE: 'editor_wysiwyg.toolbar' %><%
+		%></div><%
+	%></TD>
+</TR>
+<TR>
+	<TD style="height:100%;">
+		<OBJECT CLASSID="clsid:2D360201-FFF5-11d1-8D03-00A0C959BC0A" 
+			ID=WysiwygEditorElement
+			CLASS=EditorArea
+			WIDTH=100% 
+			HEIGHT=100%
+			BORDER=0>
+		</OBJECT>
+	</TD>
+</TR>
+</TABLE>
+
+
+<script LANGUAGE="javascript" FOR="WysiwygEditorElement" EVENT="DocumentComplete">
+	if(this.done) return;
+	this.done = true;
+	eventMethods.register(this,'TabsForm');
+	this.parentFrame = this.offsetParent.offsetParent.offsetParent.parentNode;
+	this.parentFrame.valueObject = this;
+	this.returnValue = function(){
+//		return this.DocumentHTML;
+		return this.DOM.body.innerHTML;
+	}
+
+
+	var txt = '<HTML><HEAD><BASE HREF="<%=Runtime.ENTRANCE%>"><TITLE></TITLE></HEAD><BODY>' + TabsForm.value + '</BODY></HTML>';
+	this.DocumentHTML = txt;
+	
+//	this.DOM.body.innerHTML = TabsForm.value;
+
+	this.onFire = function(eType,eValue,eObj){
+		switch (eType){
+			case 'SwitchTab':
+				if(eValue == 'WYSIWYG') this.setHtml(eObj.value);
+				break;
+		}
+	}
+
+	this.setHtml = function(html){
+//		this.DocumentHTML = html;
+		this.DOM.body.innerHTML = html;
+		this.SetFocus();
+	}
+
+	this.SetFocus = function(){
+		this.DOM.focus();
+	}
+	ToolbarIni(WysiwygEditorToolbar,this);
+
+	this.ShowContextMenu = showContextMenu;
+	this.ContextMenuAction = contextMenuAction;
+
+//	this.setHtml('<HTML><HEAD><META NAME="GENERATOR" Content="Microsoft DHTML Editing Control"><TITLE></TITLE></HEAD><BODY>=)</BODY></HTML>')
+</script>
+
+
+<script LANGUAGE="javascript" FOR="WysiwygEditorElement" EVENT="DisplayChanged">
+//	try{
+		eventMethods.fire('DisplayChanged',this.id,true,this);
+//	}catch(Error){}
+</script>
+
+<script LANGUAGE="javascript" FOR="WysiwygEditorElement" EVENT="ShowContextMenu">
+	this.ShowContextMenu();
+</script>
+
+<script language="javascript" FOR="WysiwygEditorElement" event="ContextMenuAction(itemIndex)">
+	this.ContextMenuAction(itemIndex);
+</script>

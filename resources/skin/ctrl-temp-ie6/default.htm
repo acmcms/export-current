@@ -1,0 +1,190 @@
+<%
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add('frames') %><%
+%><%EXEC: requireCss.add('forms') %><%
+
+%><%// EXEC: requireJs = [] %><%
+%><%// EXEC: requireJs.add("require") %><%
+
+%><%OUTPUT: head %><%
+	%><style><%
+		%>A:link, A:hover, A:active, A:visited {<%
+			%>color:buttontext;<%
+			%>text-decoration:underline;<%
+		%>}<%
+		
+		%>.dtab A:link, .dtab A:visited, .dtab A:active{<%
+			%>color:buttontext;<%
+			%>text-decoration:none;<%
+		%>}<%
+		
+		%>.dtab A:hover{<%
+			%>color:buttontext;<%
+			%>text-decoration:underline;<%
+		%>}<%
+		
+		%>.dtab TD{<%
+			%>height:17px;<%
+			%>font-family: Tahoma, Arial;<%
+			%>font-size: 8pt;<%
+			%>padding:0 15px 0 4px;<%
+			%>border-style:solid;<%
+			%>border-width:1px;<%
+			%>border-color:buttonface;<%
+		%>}<%
+		
+		%>.dtab TD.listTDheader{<%
+			%>border-bottom:solid 1px buttonshadow;<%
+			%>border-right:solid 1px buttonshadow;<%
+			%>border-top:solid 1px buttonhighlight;<%
+			%>border-left:solid 1px buttonhighlight;<%
+			%>background-color:buttonface;<%
+			%>color:buttontext;<%
+			%>height:16px;<%
+			%>padding-left:3px;<%
+			%>padding-right:1px;<%
+			%>font-family: Tahoma, Arial;<%
+			%>font-size: 8pt;<%
+			%>behavior2: url(_list-header.htc);<%
+		%>}<%
+		
+		%>.dtab .TDicon{<%
+			%>padding:0 0 0 4px;<%
+			%>border:0;<%
+		%>}<%
+		
+		%>.dtab .TDtitle{<%
+			%>padding:0 0 0 4px;<%
+			%>border:0px;<%
+		%>}<%
+	%></style><%
+	%><script><%
+		%>router = parent.router || parent.parent.router;<%
+		
+		%>function jumpToPath(path){<%
+			%>router.fire('SetListActive','form',{<%
+				%>path : path<%
+			%>});<%
+			%>router.fire('treeChange','tree',{<%
+				%>path : path<%
+			%>});<%
+		%>}<%
+	%></script><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body class="FrameBorder BorderBox" style="position: relative;"><%
+		%><div class="FrameBorder2" style="padding:10px; overflow:auto; position: relative; width: 100%; height: 100%"><%
+			%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+				%><tr><%
+					%><td valign=top width=50%><%
+						%><table border=0 cellpadding=0 cellspacing=0><%
+							%><tr><%
+								%><td style="padding:0 4px 0 0"><img src="icons/object-system.32.gif"></td><%
+								%><td valign=bottom style="padding:0 0 2px 0"><h1><%= intl(en = 'System info', ru = 'Системная информация') %></h1></td><%
+							%></tr><%
+							%><tr><%
+								%><td><%
+								%></td><%
+								%><td><%
+									%><table border=0 cellpadding=0 cellspacing=0><%
+										%><tr><%
+											%><td align=right class=fieldhead nowrap><%= intl(en = 'System build', ru = 'Версия системы') %>:&nbsp;</td><%
+											%><td nowrap><%= Runtime.getRuntimeVersion() + '/' + Runtime.getRuntimeBuild() %></td><%
+										%></tr><%
+										%><tr><%
+											%><td align=right class=fieldhead nowrap><%= intl(en = 'Interface build', ru = 'Версия интерфейса') %>:&nbsp;</td><%
+											%><td nowrap><%INCLUDE: 'Version.info' %></td><%
+										%></tr><%
+										%><tr><%
+											%><td align=right class=fieldhead nowrap><%= intl(en = 'User guide', ru = 'Руководство пользователя') %>:&nbsp;</td><%
+											%><td nowrap style="padding-top:3px"><%
+												%><a href="$files/userguide643.pdf" target=_blank><b>User guide</b></a> Adobe PDF (1.4 Mb)<br><%
+											%></td><%
+										%></tr><%
+									%></table><%
+								%></td><%
+							%></tr><%
+						%></table><%
+				
+				
+						%><hr style="text-align:left; margin:20px 0 20px 0"><%
+				
+						%><table border=0 cellpadding=0 cellspacing=0><%
+							%><tr><%
+								%><td style="padding:0 4px 0 0"><img src="icons/object-share.32.gif"></td><%
+								%><td valign=bottom style="padding:0 0 2px 0"><h1><%= intl(en = 'Root points', ru = 'Точки доступа') %></h1></td><%
+							%></tr><%
+						%></table><%
+				
+						%><div style="background-color:window; margin:4px 0 0 0" class=FrameBorder><%
+							%><table id=dtab class=dtab style="BORDER-COLLAPSE: collapse" width=100%><%
+								%><tr><%
+									%><td nowrap class=listTDheader><%
+										%><%= intl(en = 'domain', ru = 'домен') %><%
+									%></td><%
+									%><td nowrap class=listTDheader width=100%><%
+										%><%= intl(en = 'path', ru = 'путь') %><%
+									%></td><%
+								%></tr><%
+								%><%ITERATE: share : Application.getDomainSharePoints() %><%
+									%><tr><%
+										%><td nowrap><%
+											%><table border=0 cellpadding=0 cellspacing=0><%
+												%><tr><%
+													%><td class=TDicon><%
+														%><img <%
+																%>title="<%= intl( en = "Access type", ru = "Тип доступа" ) %>: <%= Capitalize(share.getAccessType().getIcon()) %>"<%
+																%>src="icons/<%= "share-" + share.getAccessType().getIcon() %>.16.gif"<%
+																%>width=16 <%
+																%>height=16><%
+													%></td><%
+													%><td class=TDicon><%
+														%><%EXEC: (language = share.language) && (language = language.countryCode) %><%
+														%><img <%
+																%>title="<%
+																		%><%= language
+																					? language.commonName + " / " + language.nativeName 
+																					: share.languageMode == 0 
+																							? intl( en = "Automatic language mode", ru = "Автоматический языковой режим" )
+																							: intl( en = "Language support disabled", ru = "Языковой режим отключен" ) %>"<%
+																%>src="<%
+																		%><%= language 
+																					? "/__f/16x16/" + language.toLowerCase() 
+																					: "/__i/1.gif" %>"<%
+																%>width=16 <%
+																%>height=16><%
+													%></td><%
+													%><td class=TDtitle><%
+														%><a href="http://<%= share.getAlias() %>" target=_blank><%
+															%><%= share.getAlias() %><%
+														%></a><%
+													%></td><%
+												%></tr><%
+											%></table><%
+										%></td><%
+										%><td nowrap><%
+											%><a href="<%= share.getPath() %>" onclick="jumpToPath('<%= share.getPath() %>'); return false"><%
+												%><%= share.getPath() %><%
+											%></a><%
+										%></td><%
+									%></tr><%
+								%><%/ITERATE%><%
+							%></table><%
+						%></div><%
+					%></td><%
+					%><td>&nbsp;</td><%
+				%></tr><%
+			%></table><%
+		%></div><%
+	%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: Runtime.getSystemName(),
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?>
+<xml namespacePrefix="" layout="documentation">
+	<anchor>pkg-ae3.vfs</anchor>
+	<title>Package: ae3.vfs</title>
+
+	<article>
+		<anchor>ae3.vfs-api-reference</anchor>
+		<title>VFS API Reference</title>
+		<text>
+			<paragraph>ae3.vfs package provides the API to work with AE3 Virtual File System.</paragraph>
+			<paragraph>Obtain the instance of VFS API.</paragraph>
+			<code>const vfs = require('ae3/vfs');</code>
+			<paragraph>
+				API provides these methods and properties:
+				<fields layout="list">
+					<columns>
+						<column id="n" title="Name"/>
+						<column id="d" title="Summary"/>
+					</columns>
+					<item><n>
+						createBinaryFromLayout
+					</n><d>
+						Creates a binary object containing the PDF file generated using 'layout' argument.
+					</d></item>
+					<item n="create" hl="true hl-hd-true"><d>
+						Deprecated. Alias for 'createBinaryFromLayout'.
+					</d></item>
+				</fields>
+			</paragraph>
+		</text>
+	</article>
+
+
+	<article>
+		<name>VFS Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of VFS API.</paragraph>
+			<code>const vfs = require('ae3/vfs');</code>
+			<paragraph>or</paragraph>
+			<code><![CDATA[
+const ae3 = require('ae3');
+const vfs = ae3.vfs;
+			]]></code>
+			<paragraph>VFS collection iteration methods:</paragraph>
+			<code>vfs.every( entryFolder, function cb(entry){...}, thisValue );</code>
+			<code>vfs.some( entryFolder, function cb(entry){...}, thisValue );</code>
+			<code>vfs.forEach( entryFolder, function cb(entry){...}, thisValue );</code>
+			<paragraph>VFS constants:</paragraph>
+			<code>vfs.SHARED;</code>
+			<code>vfs.ROOT;</code>
+			<code>vfs.PRIVATE;</code>
+			<code>vfs.PROTECTED;</code>
+			<code>vfs.PROTECTED_LIB;</code>
+			<code>vfs.PROTECTED_RESOURCES;</code>
+			<code>vfs.PROTECTED_SETTINGS;</code>
+			<code>vfs.PUBLIC;</code>
+			<code>vfs.PUBLIC_LIB;</code>
+			<code>vfs.PUBLIC_RESOURCES;</code>
+			<code>vfs.PUBLIC_SETTINGS;</code>
+			<code>vfs.UNION;</code>
+			<code>vfs.UNION_LIB;</code>
+			<code>vfs.UNION_RESOURCES;</code>
+			<code>vfs.UNION_SETTINGS;</code>
+			
+			<paragraph>VFS extra methods:</paragraph>
+			<code>vfs.setContentsFromMap( container, map );</code>
+			<code>container.relativeFolder( relativePath );</code>
+			<code>container.relativeFile( relativePath );</code>
+			<code>container.relativeFolderEnsure( relativePath );</code>
+			<code>container.relativeFileEnsure( relativePath );</code>
+
+			<code>vfs.copy( entry , target );</code>
+			<code>vfs.move( entry , target );</code>
+			<code>entryContainer.unlinkRecursive();</code>
+			
+			<paragraph>Some simple default array filters available:</paragraph>
+			<code>entries = entries.filter( vfs.isContainer );</code>
+			<code>entries = entries.filter( vfs.isExist );</code>
+			<code>entries = entries.filter( vfs.isFile );</code>
+			<code>entries = entries.filter( vfs.isHidden );</code>
+			<code>entries = entries.filter( vfs.isNotHidden );</code>
+			<code>entries = entries.filter( vfs.isPrimitive );</code>
+
+			<paragraph>Some simple default array sorters available:</paragraph>
+			<code>entries.sort( <b>vfs.SORTER_KEY_ASC</b> );</code>
+			<code>entries.sort( <b>vfs.SORTER_KEY_DESC</b> );</code>
+			
+			<paragraph>VFS Entry:</paragraph>
+			<code>var entryKey = entry.key;</code>
+			<code>var parentEntry = entry.parent;</code>
+			<code>var modifiedMillis = entry.lastModified;</code>
+			<code>var vfsPath = entry.location;</code>
+			<code>var object = entry.value;</code>
+			<code>var boolean = entry.isContainer();</code>
+			<code>var boolean = entry.isExist();</code>
+			<code>var boolean = entry.isFile();</code>
+			<code>var boolean = entry.isPrimitive();</code>
+			<code>var boolean = entry.isBinary();</code>
+			<code>var boolean = entry.isCharacter();</code>
+			
+			<code>var containerEntry = entry.toContainer();</code>
+
+			<code>var primitiveEntry = entry.toPrimitive();</code>
+			<code>var binaryEntry = entry.toBinary();</code>
+			<code>var characterEntry = entry.toCharacter();</code>
+
+			<code>var textOrFuture = entry.textContent;</code>
+			<code>var binaryOrFuture = entry.binaryContent;</code>
+
+			
+			<paragraph>Note that VFS Entry could be 'container' and hold value 
+			(one of 'primitive', 'binary' or 'character') at the same time. 
+			'isFile'/'isContainer' means representation in the tree and entries still
+			could have children entries, regardless of them being a 'file'.</paragraph>
+
+			<paragraph>VFS EntryPrimitive (primitive value):</paragraph>
+			<code>var primGuid = entryPrimitive.primitiveGuid;</code>
+			<code>var primValue = entryPrimitive.primitiveValue;</code>
+			
+			<paragraph>VFS EntryBinary (binary value):</paragraph>
+			<code>var binary = entryBinary.binary;</code>
+			<code>var binaryOrFuture = entryBinary.binaryContent;</code>
+			<code>var binaryLength = entryBinary.binaryContentLength;</code>
+			
+			<paragraph>VFS EntryCharacter (character value):</paragraph>
+			<code>var text = entryCharacter.text;</code>
+			<code>var textOrFuture = entryCharacter.textContent;</code>
+			<code>var textLength = entryCharacter.characterContentLength;</code>
+			
+			<paragraph>VFS EntryContainer (work with children):</paragraph>
+			<code>var isEmpty = entryContainer.isContainerEmpty();</code>
+			<code>var value = entryContainer.getContentValue(key);</code>
+			<code>var primitive = entryContainer.getContentPrimitive(key[, defaultValue]);</code>
+			<code>var task = entryContainer.setContentUndefined(key);</code>
+			
+			<paragraph>Some examples:</paragraph>
+			<code><![CDATA[
+	const map = Xml.toBase("xml-track", vfsTrack.textContent, null, null, null) || {};
+
+if(vfsTrack.isBinary()){
+	// enforce UTF-8
+	const content = vfsTrack.toBinary().binaryContent.toStringUtf8();
+	const map = Xml.toBase("xml-track", content, null, null, null) || {};
+}
+
+var folder = vfs.ROOT.relativeFolderEnsure("storage/data/pkg-db");
+			]]></code>
+		</text>
+	</article>
+
+</xml>

@@ -1,0 +1,17 @@
+{
+	onLayoutExecute : function(context, layout) {
+		/**
+		 * TODO: unfinished / unused
+		 */
+		switch(context.zoom) {
+		case null:
+		case undefined :
+		case 'document':
+			return require('ae3/html').makeDataFormReply(context.query, layout);
+		}
+		/**
+		 * pass to upper layout group
+		 */
+		return layout;
+	}
+}

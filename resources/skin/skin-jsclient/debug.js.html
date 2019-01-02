@@ -1,0 +1,44 @@
+<html><body><h1>debug.js</h1><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<p>Debug output console for easier script development.</p>
+		<code><!-- <%FORMAT: 'default' %> -->
+	// Usage like this:
+	//		window.debug && debug( &lt;message> );
+	//	or
+	//		top.debug && top.debug( &lt;message> );
+		<!-- <%/FORMAT%> --></code>
+		<ul>
+			<li><a href="/!/public/resources/skin/skin-jsclient/js/debug.js">debug</a>
+				 - script source code (for studying the code and comments).
+			</li>
+			<li><a href="/!/skin/skin-jsclient/js/debug.js">debug</a>
+				 - minified location (for actual usage in a web page).
+			</li>
+		</ul>
+		<h2>What does it look like?</h2>
+		<p>When collapsed it looks like small gray paragraph sign in a small light 
+		gray box in one of the window corners.</p>
+		<p><center><img src="$files/Screen shot 2011-01-13 at 20.26.37.png" border="1"><br>
+		fig1: console collapsed.</center></p>
+		<p>When you click on it - it expands to a half-window-width red colored 
+		console.</p>
+		<p><center><img src="$files/Screen shot 2011-01-13 at 22.46.37.png" border="1"><br>
+		fig2: console expanded.</center></p>
+		<p>This console have whole lot of controls to collapse it back, change 
+		transparency, clear output, choose one of the window corners, pause output 
+		(console becomes grey as well) and 'grep' (filter) output messages by a 
+		text filter string.</p>
+		<p><center><img src="$files/Screen shot 2011-01-13 at 22.59.15.png" border="1"><br>
+		fig3: console paused, transparent and docked top-left.</center></p>
+		<p>See also: <a href="test/debug.html">debug.js test page</a></p>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'debug.js',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

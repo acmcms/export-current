@@ -1,0 +1,30 @@
+<%FORMAT: 'default' %><%
+
+%><%OUTPUT: defaultSource %><%
+%><html>
+	<head>
+		<title>Test</title>
+		<style>
+			body { background-color: #eee; color: #000; }
+		</style>
+	</head>
+	<body>
+	
+	Hello World!!!
+	
+	</body>
+</html><%
+%><%/OUTPUT%><%
+
+%><%RETURN: {
+	title			: "Format.stringAsUtf8Base64( code )",
+	template		: "try.tpl",
+	useRequire		: true,
+	defaultSource	: defaultSource,
+	keywords		: "js string, format, escape",
+	previewFunction	: function(x){
+		return Format.stringAsUtf8Base64( x );
+	}
+} %><%
+
+%><%/FORMAT%>

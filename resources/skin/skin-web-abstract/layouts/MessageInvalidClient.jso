@@ -1,0 +1,14 @@
+{
+	onLayoutExecute : function( context, layout ) {
+		return {
+			layout	: 'message',
+			code	: 400,
+			title	: 'Invalid client',
+			text	: 'Sorry, your browser is incompatible with this system' + 
+						(layout.message 
+							? ': ' + message
+							: '') ,
+			detail	: layout.detail
+		};
+	}
+}

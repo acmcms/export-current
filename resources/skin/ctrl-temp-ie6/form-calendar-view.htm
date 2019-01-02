@@ -1,0 +1,83 @@
+<style>
+BODY{
+	padding:0;
+	margin:0;
+	cursor:default;
+	background-color:buttonface;
+	color:buttontext;
+}
+
+BODY, TD, DIV{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+}
+
+.listTDheader{
+	border-bottom:solid 1px buttonshadow;
+	border-right:solid 1px buttonshadow;
+	border-top:solid 1px buttonhighlight;
+	border-left:solid 1px buttonhighlight;
+	background-color:buttonface;
+	color:buttontext;
+	height:16px;
+	padding-left:4px;
+	padding-right:4px;
+	text-align:center;
+}
+
+.listTDheader TD{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	background-color:buttonface;
+	color:buttontext;
+}
+
+.calendar{
+	width:150px;
+	height:150px;
+	display:inline;
+	margin:2px;
+	background-color:window;	
+	border-bottom:solid 1px buttonhighlight;
+	border-right:solid 1px buttonhighlight;
+	border-top:solid 1px buttonshadow;
+	border-left:solid 1px buttonshadow;
+}
+
+.calendar .weekdays TD{
+	text-align:center;
+	width:20px;
+}
+
+</style>
+
+<body>
+
+<%EXEC: Months = intl(
+	en="January,Febrary,March,April,May,June,July,August,September,Octouber,November,December",
+	ru = "Январь,Февраль,Март,Апрель,Май,Июнь,Июль,Август,Сентябрь,Октябрь,Ноябрь,Декабрь"
+) %>
+
+<%CALL:ForArray(split(Months.toString(),',')) %>
+<div class=calendar>
+	<table border=0 callpadding=0 cellspacing=0 width=100% height=100%>
+	<tr>
+		<td class=listTDheader><%= Current %></td>
+	</tr>
+	<tr>
+		<td height=100% style="padding:3px" valign=top>
+			<table cellpadding=2 cellspacing=0 id=calendar style="width:100%;">
+			<tr class=weekdays>
+			<%= intl( en="<td>M</td><td>T</td><td>W</td><td>T</td><td>F</td><td>S</td><td>S</td>",
+					ru="<td>Пн</td><td>Вт</td><td>Ср</td><td>Чт</td><td>Пт</td><td>Сб</td><td>Вс</td>") %>
+			</tr>
+			<tr><td colspan=7><img src/__i/1.gif width=100% height=1 style="background-color:windowtext"></td></tr>
+			
+			</table>		
+		</td>
+	</tr>
+	</table>
+</div>
+<%/CALL%>
+
+</body>

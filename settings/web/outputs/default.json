@@ -1,0 +1,19 @@
+{
+	type		: "ae3.web/Output",
+	description	: "Default web output type",
+	ui			: {
+		title		: "Default Output",
+		abstract	: true,
+		download	: false,
+		preview		: false,
+		important	: false,
+		supports	: null
+	},
+	context		: {
+		reference	: "java.class/ru.myx.ae3.i3.web.WebContextType"
+	},
+	layouts		: {
+		parent		: null,
+		layouts		: ""
+	},
+}

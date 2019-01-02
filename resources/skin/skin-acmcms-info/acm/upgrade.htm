@@ -1,0 +1,64 @@
+<html><body><h1>Developer Tools: Upgrade Path</h1><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<p>
+			Changes you need to perform on your existing ACMCMS sites in order to 
+			make sure that everything sill works as you expected.
+		</p>
+		<ul>
+			<li>
+				<h3>678 -> 679</h3>
+				Changes:
+				<ol>
+					<li>New default MIME types added.</li>
+					<li>Directory structure for global skins in %protected% and %private% 
+						is changed to reflect directory structure for global public default
+						skins bundled with system.</li>
+					<li>Dropped support for obsolete alternative XML fieldset declaration.</li>
+				</ol>
+				Must do:
+				<ol>
+					<li>Ancient '&lt;group...' fieldset declaration is not supported anymore, 
+						make sure all fieldsets are declared in a recommended way.</li>
+					<li>Extra skins added to %protected%/skin/ directory must be moved 
+						to %protected%/resources/skin/ directory.</li>
+					<li>Extra skins added to %private%/skin/ directory must be moved 
+						to %private%/resources/skin/ directory.</li>
+				</ol>
+			</li>
+			<li>
+				<h3>677 -> 678</h3>
+				Must do:
+				<ol>
+					<li>For every DLS client registered in your site's config.xml file table 
+						<b>d1ChangeLog</b> needs to be dropped from database.</li>
+					<li>If you use <b>-Dserve.root</b> java parameter while launching ACMCMS, you 
+						need to change it to <b>-Dru.myx.ae1.path.web</b>.</li>
+					<li>Obsolete JavaScript array declarations like <b>a = (1, 2, 3)</b> 
+						are not supported anymore and must be replaced with <b>a = [1, 2, 3]</b>.</li>
+					<li>In all files you need to use global search/replace to get rid of 
+						'Preffix' (misspelled) to 'Prefix', in past there was support for both 
+						notations in system's APIs.</li>
+					<li>Make sure that all response filters in your types are starting 
+						with something like <b>if( !Object.isMap( content ) ) return content;</b>,
+						cause before this version only map-like responses were forwarded
+						through your response post-processing filters.</li>
+				</ol>
+			</li>
+			<li>
+				<h3>Other</h3>
+				<ul>
+					<li>Go to: <a href="../developer.htm">developer info</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Upgrade Path',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

@@ -1,0 +1,77 @@
+$output(body){
+	%>
+	<h1>SyntaxHighlighter Example Page</h1>
+	<h2>TOC</h2>
+	<ul>
+		<li><a href="#about">About</a></li>
+		<li><a href="#integrate">Integrate</a></li>
+		<li><a href="#demo">Example and demonstration</a></li>
+		<li><a href="#pkgs">Other packages</a></li>
+	</ul>
+
+	<h2 id="about">About</h2>
+	<p>This package is wrapper of <a href="http://alexgorbatchev.com/wiki/SyntaxHighlighter">SyntaxHighlighter</a></p>
+
+	<div class="yui-g">
+		<div class="yui-u first">
+			<h2 id="integrate">Integrate</h2>
+			<ul class="list">
+				<li>initalize SyntaxHighlighter with VlapanSyntaxHighlighter.init(), use only once</li>
+				<li>use VlapanSyntaxHighlighter.insert( code = code ) to insert code and highlight</li>
+				<li><b>or</b> use &lt;pre class=&quot;brush:js&quot;&gt;code&lt;pre&gt;</li>
+			</ul>
+			<p>You can find more information on developer page of <a href="http://alexgorbatchev.com/wiki/SyntaxHighlighter">SyntaxHighlighter</a></p>
+		</div>
+		<div class="yui-u">
+			<h2 id="demo">Example and demonstration</h2>
+			<p>
+				<b>Insert method</b>
+				<%
+				$output(example1){
+					%>
+					&lt;%= VlapanSyntaxHighlighter.insert( code = code ) %&gt;
+					<%
+				}
+				= VlapanSyntaxHighlighter.insert( example1 );
+				%>
+			</p>
+			
+			<p>
+				<b>Source of upper example</b>
+				<%
+				$output(example2){
+					%>
+					&lt;%OUTPUT: example1 %&gt;
+						&lt;%= VlapanSyntaxHighlighter.insert( code = code ) %&gt;
+					&lt;%/OUTPUT%&gt;
+					&lt;%= VlapanSyntaxHighlighter.insert( example1 ) %&gt;
+					<%
+				}
+				= VlapanSyntaxHighlighter.insert( example2 );
+				%>
+			</p>
+		
+			<p>
+				<b>Plain html</b>
+				<%
+				$output(example3){
+					%>
+					&lt;pre class=&quot;brush:js&quot;&gt;code&lt;pre&gt;
+					<%
+				}
+				= VlapanSyntaxHighlighter.insert( example3 );
+				%>
+			</p>
+		</div>
+	</div>
+	<%
+}
+
+return {
+	title: "vlapan-syntaxhighlighter",
+	template: "vlapan-example",
+	requireCss: null,
+	requireJs: null,
+	head: null,
+	body: body
+};

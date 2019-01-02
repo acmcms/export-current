@@ -1,0 +1,6 @@
+{
+	type : "ae3.Service",
+	name : "hello-world",
+	reference : "ru.myx.ae3.example/HelloWorldService",
+	requires : "hello-world"
+}

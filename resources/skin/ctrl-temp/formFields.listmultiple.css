@@ -1,0 +1,20 @@
+<style>
+.formListMultiple {
+	background-color:window;
+	cursor: default;
+	behavior: url(_form-list-multiple.htc);
+}
+.formList {
+	background-color:window;
+	cursor: default;
+	behavior: url(_form-list.htc);
+}
+.formListMultiple SPAN, .formList SPAN{
+	margin:0 2px 1px 2px;
+}
+.formListTable {
+	background-color:window;
+	cursor: default;
+	behavior: url(_form-list-table.htc);
+}
+</style>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+
+	<!--
+
+
+		Do NOT update this file directly!
+		It is updated automatically - you changes will be overwritten! 
+
+
+	-->
+
+	<visibility>hidden</visibility>
+	<extends>$System</extends>
+	<replacement>$root</replacement>
+</type>

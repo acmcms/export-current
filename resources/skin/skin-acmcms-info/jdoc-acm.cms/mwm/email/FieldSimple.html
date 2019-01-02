@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+<title>FieldSimple (AE3 ACM SAPI)</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="FieldSimple (AE3 ACM SAPI)";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar_top">
+<!--   -->
+</a><a href="#skip-navbar_top" title="Skip navigation links"></a><a name="navbar_top_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../mwm/email/FieldAddress.html" title="class in mwm.email"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../mwm/email/Header.html" title="class in mwm.email"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../index.html?mwm/email/FieldSimple.html" target="_top">Frames</a></li>
+<li><a href="FieldSimple.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">mwm.email</div>
+<h2 title="Class FieldSimple" class="title">Class FieldSimple</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li><a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">mwm.email.FieldAbstract</a></li>
+<li>
+<ul class="inheritance">
+<li>mwm.email.FieldSimple</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd>java.io.Serializable</dd>
+</dl>
+<dl>
+<dt>Direct Known Subclasses:</dt>
+<dd><a href="../../mwm/email/FieldAddress.html" title="class in mwm.email">FieldAddress</a></dd>
+</dl>
+<hr>
+<br>
+<pre>public class <span class="strong">FieldSimple</span>
+extends <a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a></pre>
+<div class="block">This class is a handler for email header fields. It extends the header field
+ class and provides additional encoding of it's content. Encoders used with
+ this class for use in email systems must conform to the rules set up by RFC
+ 1522.
+ <p>
+ 
+ Email headers for RFC 822 messages can not be encoded and should only consist
+ of "US-ASCII" characters. To achieve this implementors should call the
+ constructor without an encoder object or with an Bit7Encoder object.
+ <p>
+ 
+ If the Encoder object belonging to this class is set to null - the content
+ will be written to the output stream in pure "US-ASCII" characters.
+ <p>
+ 
+ This class encodes the full field value - it is up to the subclasses or the
+ encoder implementors to distinguish the encoding rules for the value. For
+ example, the encoded header fields used in RFC 1522 limits encoded word
+ length to 75 characters - thus encoders attempting the "B" or the "Q"
+ encoding must make sure that limit is followed.
+ 
+ This is a header field containing multiple subtype parameter name / value
+ pairs. The subtype parameter field is frequently used in multipart email
+ messages and header fields such as the "Content-Type" field.
+ <p>
+ 
+ The subtype parameter name / value pairs is presented by the
+ <code>write</code> method separated by a "=" character unlike the main field
+ which uses a colon and a space. Parameters pairs are separated by a
+ semicolon. The parameter value is also surrounded by qoutes. A complete field
+ with one parameter takes the form:
+ 
+ <pre>
+     &lt;i&gt;name&lt;/i&gt;: &lt;i&gt;value&lt;/i&gt;; &lt;i&gt;parameterName&lt;/i&gt;=&quot;&lt;i&gt;parameterValue&lt;/i&gt;&quot;
+ </pre>
+ 
+ The Parameter field is created with a header field object containing the
+ field name / value pair, and additional parameters are added separately
+ later. Use of this class for the "Content-Type" header field, may look like
+ this:
+ 
+ <pre>
+ HeaderField field = new HeaderField( &quot;Content-Type&quot;, &quot;text/plain&quot; );
+ ParameterField full_field = new ParameterField( field );
+ full_field.addParameter( &quot;charset&quot;, &quot;iso-8859-1&quot; );
+ </pre>
+ 
+ 
+ This field does not check for multiple occurences of parameter names. Users
+ will have to make sure they do not duplicate names themselves.
+ <p>
+ 
+ This field only supports US-ASCII characters according to the RFC rules.
+ <p></div>
+<dl><dt><span class="strong">Author:</span></dt>
+  <dd>Lars J. Nilsson</dd>
+<dt><span class="strong">See Also:</span></dt><dd><a href="../../serialized-form.html#mwm.email.FieldSimple">Serialized Form</a></dd></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../mwm/email/FieldSimple.html#FieldSimple(java.lang.String, java.lang.String)">FieldSimple</a></strong>(java.lang.String&nbsp;name,
+           java.lang.String&nbsp;value)</code>
+<div class="block">Construct a new email header field with a name and value but without an
+ Encoder.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><strong><a href="../../mwm/email/FieldSimple.html#FieldSimple(java.lang.String, java.lang.String, java.nio.charset.Charset)">FieldSimple</a></strong>(java.lang.String&nbsp;name,
+           java.lang.String&nbsp;value,
+           java.nio.charset.Charset&nbsp;charset)</code>
+<div class="block">Construct a new encoded header field with a name and a value.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/FieldSimple.html#addParameter(java.lang.String, java.lang.String)">addParameter</a></strong>(java.lang.String&nbsp;name,
+            java.lang.String&nbsp;value)</code>
+<div class="block">Add a parameter name and value.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/FieldSimple.html#getParameterValue(java.lang.String)">getParameterValue</a></strong>(java.lang.String&nbsp;name)</code>
+<div class="block">Get the value linked to the parameter name.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/FieldSimple.html#write(java.io.OutputStream)">write</a></strong>(java.io.OutputStream&nbsp;out)</code>
+<div class="block">Write the encoded content of this field to an output stream.</div>
+</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_mwm.email.FieldAbstract">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;mwm.email.<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a></h3>
+<code><a href="../../mwm/email/FieldAbstract.html#getName()">getName</a>, <a href="../../mwm/email/FieldAbstract.html#getValue()">getValue</a>, <a href="../../mwm/email/FieldAbstract.html#setName(java.lang.String)">setName</a>, <a href="../../mwm/email/FieldAbstract.html#setValue(java.lang.String)">setValue</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="FieldSimple(java.lang.String, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>FieldSimple</h4>
+<pre>public&nbsp;FieldSimple(java.lang.String&nbsp;name,
+           java.lang.String&nbsp;value)</pre>
+<div class="block">Construct a new email header field with a name and value but without an
+ Encoder.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - </dd><dd><code>value</code> - </dd></dl>
+</li>
+</ul>
+<a name="FieldSimple(java.lang.String, java.lang.String, java.nio.charset.Charset)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>FieldSimple</h4>
+<pre>public&nbsp;FieldSimple(java.lang.String&nbsp;name,
+           java.lang.String&nbsp;value,
+           java.nio.charset.Charset&nbsp;charset)</pre>
+<div class="block">Construct a new encoded header field with a name and a value.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - </dd><dd><code>value</code> - </dd><dd><code>charset</code> - </dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="addParameter(java.lang.String, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addParameter</h4>
+<pre>public&nbsp;void&nbsp;addParameter(java.lang.String&nbsp;name,
+                java.lang.String&nbsp;value)</pre>
+<div class="block">Add a parameter name and value.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - </dd><dd><code>value</code> - </dd></dl>
+</li>
+</ul>
+<a name="getParameterValue(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getParameterValue</h4>
+<pre>public&nbsp;java.lang.String&nbsp;getParameterValue(java.lang.String&nbsp;name)</pre>
+<div class="block">Get the value linked to the parameter name. Will return an empty string
+ if the parameter name is not mapped to a value. If the parameter is
+ overloaded and occurs multiple times, the first occurence will be
+ returned. Name search is case insensitive.</div>
+<dl>
+<dt><strong>Overrides:</strong></dt>
+<dd><code><a href="../../mwm/email/FieldAbstract.html#getParameterValue(java.lang.String)">getParameterValue</a></code>&nbsp;in class&nbsp;<code><a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a></code></dd>
+<dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>string</dd></dl>
+</li>
+</ul>
+<a name="write(java.io.OutputStream)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>write</h4>
+<pre>public&nbsp;void&nbsp;write(java.io.OutputStream&nbsp;out)
+           throws java.io.IOException</pre>
+<div class="block">Write the encoded content of this field to an output stream.</div>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../mwm/email/FieldAbstract.html#write(java.io.OutputStream)">write</a></code>&nbsp;in class&nbsp;<code><a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a></code></dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code>java.io.IOException</code></dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar_bottom">
+<!--   -->
+</a><a href="#skip-navbar_bottom" title="Skip navigation links"></a><a name="navbar_bottom_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../mwm/email/FieldAddress.html" title="class in mwm.email"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../mwm/email/Header.html" title="class in mwm.email"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../index.html?mwm/email/FieldSimple.html" target="_top">Frames</a></li>
+<li><a href="FieldSimple.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+<p class="legalCopy"><small><i>Copyright &#169; 2000-2011 -= MyX =- (http://myx.ru). All Rights Reserved.</i></small></p>
+</body>
+</html>

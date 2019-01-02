@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Abstract: sitebuilder</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>parse</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="layout" class="map"/>
+			<field id="obj" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var root = Request.getAttachment();
+
+			function parseItem( type, data ){
+				switch( type ){
+					case "box":{
+						%><div<%= data.className ? ' class="'+ data.className + '"' : '' %>><%
+							= $sitebuilder.parse( data, obj );
+						%></div><%
+						break;
+					}
+					case "list":{
+						var objPath = !data.source || data.source == "$this" ? Request.getResourcePrefix() : data.source; 
+						var obj = root.getChildByPath( objPath );
+						for( var item in obj.getChildrenListable( 0, "$title" ) ){
+							= $sitebuilder.parse( data, item );
+						}
+						break;
+					}
+					case "link":{
+						var href = !data.href || data.href == "$item" ? obj.getLocation() : data.href;
+						%><a href="<%= href %><%= data.hrefsuffix ? data.hrefsuffix : '' %>"<%= data.rel ? ' rel="' + data.rel + '"' : '' %>><%
+							= data.text ? data.text : $sitebuilder.parse( data, obj );
+						%></a><%
+						break;
+					}
+					case "string":{
+						%><span><%= data.string ? data.string : eval( "obj." + data.field ) %></span><%
+						break;
+					}
+					case "image":{
+						%><img<% 
+							= data.width ? ' width="' + data.width + '"' : '';
+							= data.height ? ' height="' + data.height + '"' : '';
+							%> src="<%= data.src ? data.src : obj.getLocation() + data.file %>"<%
+							%> alt="<%= data.alt ? data.alt : ( obj ? obj.getTitle() : "" ) %>"<%
+						%>><%
+						break;
+					}
+					case "tabpanel":{
+						%><div id="<%= data.id %>"><%
+							%><ul><%
+								for( var item in data.deeper ){
+									%><li><a href="#<%= item.id %>"><span><%= item.title %></span></a></li><%
+								}
+							%></ul><%
+							= $sitebuilder.parse( data, null );
+						%></div><%
+						break;
+					}
+					case "tab":{
+						%><div id="<%= data.id %>"><%
+							= $sitebuilder.parse( data, null );
+						%></div><%
+						break;
+					}
+					case "form":{
+						var objPath = !data.source || data.source == "this" ? Request.getResourcePrefix() : data.source; 
+						var obj = root.getChildByPath( objPath );
+						= { $layout : "layout-form", data : obj.getSeoForm() };
+					}
+					case "order":{
+						for( var item in data ){
+							= $sitebuilder.parse( item, obj );
+						}
+					}
+				}
+			}
+
+			var types = [
+				"box",
+				"list",
+				"link",
+				"string",
+				"image",
+				"tabpanel",
+				"tab",
+				"form",
+				"order"
+			];
+
+			var layoutKeys = layout.keySet();
+			
+			for( var item in layoutKeys ){
+				parseItem( item, layout.get( item ) );
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>parse2</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="layout" class="list"/>
+			<field id="obj" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var root = Request.getAttachment();
+
+			function parseItem( layout ){
+				switch( layout.type ){
+					case "box":{
+						%><div<%= layout.className ? ' class="'+ layout.className + '"' : '' %>><%
+							= $sitebuilder.parse2( layout.data, obj );
+						%></div><%
+						break;
+					}
+					case "list":{
+						var objPath = !layout.source || layout.source == "$this" ? Request.getResourcePrefix() : layout.source; 
+						var obj = root.getChildByPath( objPath );
+						for( var item in obj.getChildrenListable( 0, "$title" ) ){
+							= $sitebuilder.parse2( layout.data, item );
+						}
+						break;
+					}
+					case "link":{
+						var href = !layout.href || layout.href == "$item" ? obj.getLocation() : layout.href;
+						%><a href="<%= href %><%= layout.hrefsuffix ? layout.hrefsuffix : '' %>"<%= layout.rel ? ' rel="' + layout.rel + '"' : '' %>><%
+							= layout.text ? layout.text : $sitebuilder.parse2( layout.data, obj );
+						%></a><%
+						break;
+					}
+					case "string":{
+						= "<span" + (layout.className ? ' class="'+ layout.className + '"' : '') + ">";
+							= layout.field ? eval( "obj." + layout.field ) : layout.data;
+						%></span><%
+						break;
+					}
+					case "html":{
+						%><%= layout.field ? eval( "obj." + layout.field ) : layout.data %><%
+						break;
+					}
+					case "image":{
+						%><img<% 
+							= layout.width ? ' width="' + layout.width + '"' : '';
+							= layout.height ? ' height="' + layout.height + '"' : '';
+							%> src="<%= layout.src ? layout.src : obj.getLocation() + layout.file %>"<%
+						%>/><%
+						break;
+					}
+					case "tabpanel":{
+						%><div id="<%= layout.id %>"><%
+							%><ul><%
+								for( var item in layout.deeper ){
+									%><li><a href="#<%= item.id %>"><span><%= item.title %></span></a></li><%
+								}
+							%></ul><%
+							= $sitebuilder.parse2( layout.data, null );
+						%></div><%
+						break;
+					}
+					case "tab":{
+						%><div id="<%= layout.id %>"><%
+							= $sitebuilder.parse2( layout.data, null );
+						%></div><%
+						break;
+					}
+					case "form":{
+						var objPath = !layout.source || layout.source == "this" ? Request.getResourcePrefix() : layout.source; 
+						var obj = root.getChildByPath( objPath );
+						= { $layout : "layout-form", data : obj.getSeoForm() };
+					}
+					case "order":{
+						for( var item in layout ){
+							= $sitebuilder.parse2( item, obj );
+						}
+					}
+				}
+			}
+			
+			for( var item in layout ){
+				parseItem( item );
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>build</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="layout" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var o = {};
+			{
+				function box( layout ){
+					var className = layout.className ? layout.className : "default_box";
+					%><div class="<%= className %>"><%
+						if( layout.title ){
+							%><div class="title"><%= layout.title %></div><%
+						}
+						for( var element in layout.elements ){
+							if( HashFilled( element ) || ArrayFilled( element ) ){
+								builder( element );
+							}else{
+								builder( element.getBaseLayout() );
+							}
+						}
+					%></div><%
+				}
+				function list( layout ){
+					var className = layout.className ? layout.className : "default_list";
+					%><ul class="<%= className %>"><%
+						if( layout.title ){
+							%><div class="title"><%= layout.title %></div><%
+						}
+						for( var element in layout.elements ){
+							%><li><%
+								if( HashFilled( element ) || ArrayFilled( element ) ){
+									builder( element );
+								}else{
+									builder( element.getBaseLayout() );
+								}
+							%></li><%
+						}
+					%></ul><%
+				}
+				function table( layout ){
+					= {	
+						$layout : "layout-table",
+						layout : layout
+					};
+				}
+				function link( layout ){
+					%><a href="<%= layout.src %>"<%= layout.className ? ' class="' + layout.className + '"' : '' %><%= layout.rel ? ' rel="' + layout.rel + '"' : '' %><%= layout.title ? ' title="' + layout.title + '"' : '' %>><%
+						if( layout.string ){
+							= layout.string;
+						}else{
+							builder( layout.element );
+						}
+					%></a><%
+				}
+				function image( layout ){
+					%><img src="<%= layout.src %>" title="<%= layout.title %>" alt="<%= layout.title %>"<%= layout.height ? ' height="' + layout.height + '"' : '' %><%= layout.width ? ' width="' + layout.width + '"' : '' %><%= layout.align ? ' align="' + layout.align + '"' : '' %><%= layout.id ? ' id="' + layout.id + '"' : '' %>/><%
+				}
+				function string( layout ){
+					%><span class="<%= layout.className ? layout.className : "default_string" %>"><%
+						= layout.value;
+					%></span><%
+				}
+				function text( layout ){
+					%><div class="<%= layout.className ? layout.className : "default_text" %>"><%
+						if( layout.title ){
+							%><div class="title"><%= layout.title %></div><%
+						}
+						= layout.value;
+					%></div><%
+				}
+				function form( layout ){
+					%><div class="<%= layout.className ? layout.className : "default_text" %>"><%
+						= content.form;
+					%></div><%
+				}
+				function tags( layout ){
+					%><div class="<%= layout.className ? layout.className : "default_tags" %>"><%
+						= { 
+							$layout : "layout-tags",
+							title : layout.title,
+							tagsMap : item.tags,
+							max : layout.max,
+							type : layout.type,
+							userKey : layout.user
+						};
+					%></div><%
+				}
+				o.box = box;
+				o.list = list;
+				o.link = link;
+				o.image = image;
+				o.table = table;
+				o.string = string;
+				o.text = text;
+				o.tags = tags;
+			}
+
+			function builder( layout ){
+				if( HashFilled( layout ) ){
+					var type = o[ layout.layout ];
+					if( type ){ 
+						type( layout );
+					}
+				}else{
+					for( var layout in layout ){
+						var type = o[ layout.layout ];
+						if( type ){ 
+							type( layout );
+						}
+					}
+				}
+			}
+
+			builder( layout );
+		]]></script>
+	</command>
+</type>

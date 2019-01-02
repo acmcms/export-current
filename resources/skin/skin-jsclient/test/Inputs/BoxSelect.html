@@ -1,0 +1,222 @@
+<html><head><title>Inputs.BoxSelect</title><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: head %><%
+	%><%= '<!' + '-- ' + 'begin' %>-->
+	<script type="text/javascript" src="../../js/debug.js"></script>
+	<script type="text/javascript" src="../../js/require.js"></script>
+	<script type="text/javascript" src="../../js/lib/standard.js"></script>
+	
+	<script type="text/javascript" src="../../js/Utils/Coordinates.js"></script>
+	<script type="text/javascript" src="../../js/Utils/Event.js"></script>
+	<script type="text/javascript" src="../../js/Features/MouseCapture.js"></script>
+	<script type="text/javascript" src="../../js/Inputs/BoxSelect.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../css/web/default.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/lib/boxselect.css"/>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><% // -->
+</head>
+<body><h1>Inputs.BoxSelect</h1><!-- 
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+	<table style="height: 250px; margin: 3px">
+		<tr>
+			<td></td>
+			<td></td>
+			<th valign="bottom">
+				<h1>
+					<a href="" onclick="multiple=!multiple;makeInputs(contents);return false;">
+						&lt;select multiple="<span id="multiple-span">false</span>"/&gt;
+					</a>
+				</h1>
+				<a href="javascript:acquire()" onclick="return acquire()">
+					&gt; click to acquire system inputs &lt;
+				</a>, 
+				<a href="javascript:invert()" onclick="return invert()">
+					&gt; click to invert selection &lt;
+				</a>, 
+				<a href="../../tests.html">
+					&gt; click for tests.html &lt;
+				</a>
+			</th>
+		</tr>
+	</table>
+	<table width="100%" style="border: 3px solid cyan">
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<table width="33%" style="width:33%;height:40px;border: 3px solid blue">
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<div style="width:120px;height:120px;border: 3px solid red">
+	</div>
+	<div style="position:fixed;top:30px;right:10px;width:120px;height:120px;border: 3px solid black">
+	</div>
+	<div style="position:absolute;top:30px;right:150px;width:120px;height:120px;border: 3px solid black">
+	</div>
+	
+	<div skip="true" style="position:fixed;top:30px;right:300px;width:120px;height:120px;border: 3px solid black">
+		<select style="width:100%;height:100%">
+			<option><b>System</b></option>
+			<option><i>default</i></option>
+			<option><u>control</u></option>
+			<option><font color="red">implemen</font>tation</option>
+			<option>to</option>
+			<option>compare</option>
+			<option>with</option>
+			<option>........</option>
+			<option>Option 09</option>
+			<option>Option 10</option>
+			<option>Option 11</option>
+			<option>Option 12</option>
+			<option>Option 13</option>
+			<option>Option 14</option>
+			<option>Option 15</option>
+		</select>
+	</div>
+	
+	<div skip="true" style="position:absolute;top:30px;right:450px;width:120px;height:120px;border: 3px solid black">
+		<select style="width:100%;height:100%">
+			<option><b>System</b></option>
+			<option><i>default</i></option>
+			<option><u>control</u></option>
+			<option><font color="red">implemen</font>tation</option>
+			<option>to</option>
+			<option>compare</option>
+			<option>with</option>
+			<option>........</option>
+			<option>Option 09</option>
+			<option>Option 10</option>
+			<option>Option 11</option>
+			<option>Option 12</option>
+			<option>Option 13</option>
+			<option>Option 14</option>
+			<option>Option 15</option>
+		</select>
+	</div>
+	
+	<div skip="true" style="position:fixed;top:160px;right:300px;width:120px;height:2em;border: 3px solid black">
+		<select style="width:100%;height:100%">
+			<option><b>System</b></option>
+			<option><i>default</i></option>
+			<option><u>control</u></option>
+			<option><font color="red">implemen</font>tation</option>
+			<option>to</option>
+			<option>compare</option>
+			<option>with</option>
+			<option>........</option>
+			<option>Option 09</option>
+			<option>Option 10</option>
+			<option>Option 11</option>
+			<option>Option 12</option>
+			<option>Option 13</option>
+			<option>Option 14</option>
+			<option>Option 15</option>
+		</select>
+	</div>
+	
+	<div skip="true" style="position:absolute;top:160px;right:450px;width:120px;height:2em;border: 3px solid black">
+		<select style="width:100%;height:100%">
+			<option><b>System</b></option>
+			<option><i>default</i></option>
+			<option><u>control</u></option>
+			<option><font color="red">implemen</font>tation</option>
+			<option>to</option>
+			<option>compare</option>
+			<option>with</option>
+			<option>........</option>
+			<option>Option 09</option>
+			<option>Option 10</option>
+			<option>Option 11</option>
+			<option>Option 12</option>
+			<option>Option 13</option>
+			<option>Option 14</option>
+			<option>Option 15</option>
+		</select>
+	</div>
+	
+	<script>
+		// <%FORMAT: 'js' %>
+	
+		var multiple = false;
+		var selects = [];
+		var targets = [];
+		
+		var contents = {};
+		
+		var prepare = function(){
+			['td','div'].forEach(function(elementName){
+				var list = document.getElementsByTagName(elementName);
+				for( var i = 0; i < list.length; ++i ) {
+					list[i].getAttribute("skip") || targets.push( list[i] );
+				}
+			});
+		};
+		var clean = function(){
+			targets.forEach(function(target){
+				target.innerHTML = "";
+			});
+			selects = [];
+		};
+		var makeInputs = function(contents){
+			selects.length && clean();
+			document.getElementById("multiple-span").innerHTML = String(multiple);
+			for( var i = 0; i < targets.length; ++i ) {
+				selects.push(new Inputs.BoxSelect(targets[i], "sel" + i, contents, multiple));
+			}
+		};
+		
+		function invert(){
+			var select, j, i, option;
+			for(j = 0; j < selects.length; ++j) {
+				select = selects[j];
+				top.debug && top.debug("inverting: select: " + select);
+				for(i = 0; i < select.options.length; ++i){
+					option = select.options[i];
+					top.debug && top.debug("inverting: select: option: " + option);
+					(option.selected = !option.selected /* option.getAttribute("selected") !== "true" */)
+						? option.setAttribute("selected", true)
+						: option.removeAttribute("selected");
+				}
+				Utils.Event.fire(select, "change");
+			}
+			return false;
+		}
+		function acquire(){
+			var list = document.getElementsByTagName("select");
+			for( var i = 0; i < list.length; ++i ) {
+				var input = list[i];
+				if(input.BoxSelect || input.getAttribute("skip")){
+					continue;
+				}
+				selects.push(new Inputs.BoxSelect(input.parentNode, input, contents, multiple));
+				input.style.position = "absolute";
+			}
+			return false;
+		}
+
+		contents = {
+			icon	: "/!/public/resources/data/images/famfamfam.com/silk/anchor.png",
+			title	: "BoxSelect Input Field", 
+			list	: requireScript('../test/Inputs/options.jso')
+		};
+		prepare();
+		makeInputs(contents);
+		// <%/FORMAT%>
+	</script>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Inputs.BoxSelect',
+		template	: "html-document",
+		head		: head,
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

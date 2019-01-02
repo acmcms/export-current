@@ -1,0 +1,43 @@
+var params = Request.getParameters();
+
+$output(body){
+	%>
+	<body>
+		<h1>Example form</h1>
+		<form action="showargs.htm" method="POST">
+			<%
+			/*
+			<br/>P:<%= Request.getUrlBase() %>
+			<br/>P:<%= Request.getResourcePreffix() %>
+			<br/>P:<%= Request.getResourceIdentifier() %>
+			*/
+			for(var editorName in Array(params.editor)){
+				var editor = new VlapanRichedit(editorName = editorName, finder = Request.finder ? Request.finder : "");
+				%><p<%
+					if(editorName == 'yui' || editorName == 'yuisimple'){
+						= ' class="yui-skin-sam"';
+					}
+				%>><%
+					= editorName;
+					%>: <%
+					%><textarea id="<%= editorName + 'Id' %>" name="<%= editorName %>" style="width:100%;height:200px;"><%
+					%></textarea><%
+				%></p><%
+				= editor.replace( id = editorName + 'Id' );
+			}
+			%><p><input type="submit" value="Send"/></p>
+		</form>
+	</body>
+	<%
+}
+
+return {
+	title: "Example form",
+	template: "html-page",
+	pathPrefix: "/$build/",
+	requireCss: null,
+	requireJs: null,
+	useDebug: false,
+	head: null,
+	body: body
+};

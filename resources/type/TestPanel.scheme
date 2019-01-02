@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>TestPanel</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+	</statelist>
+	<folder>true</folder>
+	<extends>AbstractService</extends>
+	<children>
+		<type>Server</type>
+	</children>
+
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.body = "no response";
+					return this.fillSelection( content );
+				}
+				case "set":{
+					this.set();
+					return $default.redirect( this.getLocation() );
+				}
+				case "html":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.tests = this.tests;
+					return this.fillSelection( content );
+				}
+				case "delme":{
+					var change = this.createChange();
+					if( Request.key ){
+						var tests = this.tests;
+						tests.remove( Request.key );
+						change.tests = tests;
+					}else{
+						var tests = {};
+						change.tests = tests;
+					}
+					change.commit();
+					return $default.redirect( this.getLocation() );
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>getSiteRoot</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return this;
+		]]></script>
+	</command>
+
+	<command>
+		<key>set</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if ( Request.key && Request.type ){
+				var tests = Create.map( this.tests );
+				if( !tests.containsKey( Request.key ) ) tests.put( Request.key, {} );
+				var test = Create.map( tests.get( Request.key ) );
+				if( Request.urls ) type.urls = Request.urls;
+				if( Request.robots ){
+					var robots = Create.map(test.robots);
+					var type = Create.list( robots[ Request.type ] );
+					type.add( { rps : Request.rps, kb : Request.kb } );
+					robots.put( Request.type, type );
+					test.robots = robots;
+				}
+				if( Request.bootClean ){
+					var bootClean = Create.map(test.bootClean);
+					var type = Create.list( bootClean[ Request.type ] );
+					type.add( { sec : Request.sec } );
+					bootClean.put( Request.type, type );
+					test.bootClean = bootClean;
+				}
+				if( Request.boot ){
+					var boot = Create.map(test.boot);
+					var type = Create.list( boot[ Request.type ] );
+					type.add( { sec : Request.sec } );
+					boot.put( Request.type, type );
+					test.boot = boot;
+				}
+				if( Request.s3k ){
+					var s3k = Create.map(test.s3k);
+					var type = Create.list( s3k[ Request.type ] );
+					type.add( { rps : Request.rps, kb : Request.kb } );
+					s3k.put( Request.type, type );
+					test.s3k = s3k;
+				}
+				if( Request.s172k ){
+					var s172k = Create.map(test.s172k);
+					var type = Create.list( s172k[ Request.type ] );
+					type.add( { rps : Request.rps, kb : Request.kb } );
+					s172k.put( Request.type, type );
+					test.s172k = s172k;
+				}
+				if( Request.s1200k ){
+					var s1200k = Create.map(test.s1200k);
+					var type = Create.list( s1200k[ Request.type ] );
+					type.add( { rps : Request.rps, kb : Request.kb } );
+					s1200k.put( Request.type, type );
+					test.s1200k = s1200k;
+				}
+				if( Request.warmupClean ){
+					var warmupClean = Create.map(test.warmupClean);
+					var type = Create.list( warmupClean[ Request.type ] );
+					type.add( { ms : Request.ms, rps : Request.rps, kbps : Request.kbps, kb : Request.kb } );
+					warmupClean.put( Request.type, type );
+					test.warmupClean = warmupClean;
+				}
+				if( Request.warmup ){
+					var warmup = Create.map(test.warmup);
+					var type = Create.list( warmup[ Request.type ] );
+					type.add( { ms : Request.ms, rps : Request.rps, kbps : Request.kbps, kb : Request.kb } );
+					warmup.put( Request.type, type );
+					test.warmup = warmup;
+				}
+				if( Request.cached ){
+					var cached = Create.map(test.cached);
+					var type = Create.list( cached[ Request.type ] );
+					type.add( { ms : Request.ms, rps : Request.rps, kbps : Request.kbps, kb : Request.kb } );
+					cached.put( Request.type, type );
+					test.cached = cached;
+				}
+				tests.put( Request.key, test );
+				var change = this.createChange();
+				change.tests = tests;
+				change.commit();
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>json</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			= Format.jsObject( this.tests );
+			if( Request.callback ) = Request.callback + "(";
+			= "[";
+			var tests = Create.map( this.tests );
+			var i = 0;
+			for( var key in tests.keySet() ){
+				var test = tests.get(key);
+				if( i != 0 ) = ",";
+				= "{";
+				var robots = Create.list( test.robots );
+				var warmup = Create.list( test.warmup );
+				var cached = Create.list( test.cached );
+				= '"key":"'+key+'"';
+				= warmup.size()>0 || cached.size()>0 ? ',' : '';
+				if (robots.size()>0){
+					= '"warmup":[';
+					var j = 0;
+					for( var speed in warmup ){
+						if( j != 0 ) = ",";
+						= speed;
+						j++;
+					}
+					= ']';
+				}
+				if (warmup.size()>0){
+					= '"warmup":[';
+					var j = 0;
+					for( var speed in warmup ){
+						if( j != 0 ) = ",";
+						= speed;
+						j++;
+					}
+					= ']';
+				}
+				if (cached.size()>0){
+					= warmup.size()>0 ? ',' : '';
+					= '"cached":[';
+					var j = 0;
+					for( var speed in cached ){
+						if( j != 0 ) = ",";
+						= speed;
+						j++;
+					}
+					= ']';
+				}
+				= "}";
+				i++;
+			}
+			= "]";
+			if( Request.callback ) = ");";
+		]]></script>
+	</command>
+
+	<command>
+		<key>modify</key>
+		<arguments class="fieldset">
+			<field id="title" class="string"/>
+			<field id="email" class="string"/>
+			<field id="disabled" class="string"/>
+			<field id="showSiteMenu" class="string"/>
+			<field id="showTitle" class="string"/>
+			<field id="text" class="string"/>
+			<field id="bottomText" class="string"/>
+			<field id="logotype" class="binary"/>
+			<field id="bgtop" class="binary"/>
+			<field id="bgbottom" class="binary"/>
+			<field id="uacct" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			try{
+				var change = this.createChange();
+				change.$title = title;
+				change.email = email;
+				change.disabled = disabled;
+				change.showSiteMenu = showSiteMenu;
+				change.showTitle = showTitle;
+//				change.text = text;
+				change.bottomText = bottomText;
+				if( logotype ){
+					change.logotype = logotype;
+				}
+				if( bgtop ){
+					change.bgtop = bgtop;
+				}
+				if( bgbottom ){
+					change.bgbottom = bgbottom;
+				}
+				change.uacct = uacct;
+				change.commit();
+				return true;
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+</type>

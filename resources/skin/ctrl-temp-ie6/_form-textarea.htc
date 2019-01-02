@@ -1,0 +1,12 @@
+<%FINAL: 'text/x-component' %>
+<PUBLIC:ATTACH EVENT="onload" ONEVENT="fieldIni()" FOR="window"/>
+
+<SCRIPT LANGUAGE="JScript">
+
+function fieldIni(){
+	if (!this.getAttribute("tValue")) return;
+	this.value = this.getAttribute("tValue");
+}
+
+</SCRIPT>
+<%/FINAL%>

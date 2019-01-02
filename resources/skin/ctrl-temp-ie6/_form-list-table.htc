@@ -1,0 +1,149 @@
+<%FINAL: 'text/x-component' %>
+
+<PUBLIC:ATTACH EVENT="onload" ONEVENT="formListIni()" FOR="window"/>
+<PUBLIC:ATTACH EVENT="onclick" ONEVENT="formListClick()" />
+<PUBLIC:ATTACH EVENT="ondrag" ONEVENT="formListDrag()" />
+<PUBLIC:ATTACH EVENT="ondragstart" ONEVENT="formListDragStart()" />
+<PUBLIC:ATTACH EVENT="ondragenter" ONEVENT="formListDragEnter()" />
+<PUBLIC:ATTACH EVENT="ondragend" ONEVENT="formListDragEnd()" />
+
+<SCRIPT LANGUAGE="JScript">
+
+function formListIni(){
+	this.container = this.firstChild;
+	this.selectedObjects = [];
+
+	this.add = function(obj){
+		var ID = obj.id.substr(3);
+//		if(this.returnValue[ID]) return;
+//		this.returnValue[ID] = obj.getAttribute('title');
+		var oTR = this.container.insertRow();
+		oTR.id = ID;
+		oTR.title = obj.getAttribute('title');
+		oTR.selectParent = 1;
+		var oTD = oTR.insertCell();
+		oTD.canBeSelected=1;
+		oTD.innerHTML = '<div style="position:relative"><table border=0 cellpadding=0 cellspacing=0 width=100%><tr><td class=icon canBeSelected=1><img src="icons/item-unknown.16.gif" height=16 width=16></td><td width=100% noWrap class=title style="padding:0 4px 0 4px;" canBeSelected=1>'+obj.getAttribute('title')+'</td></tr></table><img style="position:absolute; left:0; top:0; width:100%; height:100%; padding:0" src="/__i/1.gif"></div>';
+		oTR.click();
+	}
+
+	this.set = function(array){
+		for(var i = this.container.rows.length - 1; i>=0; --i){
+			this.container.rows[i].removeNode(true);
+		}
+		for(var i = 0; i < array.length; ++i){
+			var Current = array[i];
+			if(Current){
+				var oTR = this.container.insertRow();
+				oTR.id = Current.key;
+				oTR.title = Current.title;
+				oTR.selectParent = 1;
+				var oTD = oTR.insertCell();
+				oTD.canBeSelected=1;
+				oTD.innerHTML = '<div style="position:relative"><table border=0 cellpadding=0 cellspacing=0 width=100%><tr><td canBeSelected=1 class=icon><img src="icons/item-unknown.16.gif" height=16 width=16></td><td width=100% noWrap canBeSelected=1 style="padding:0 4px 0 4px;" class=title>'+Current.title+'</td></tr></table><img style="position:absolute; left:0; top:0; width:100%; height:100%; padding:0" src="/__i/1.gif"></div>';
+			}
+		}
+	}
+
+	this.remove = function(indexes){
+		if(!indexes){
+			objs = this.selectedObjects;
+		}
+		for(var i = 0; i<objs.length; ++i){
+			var obj = objs[i];
+//			this.returnValue[obj.id] = false;
+			obj.removeNode(true);
+		}
+	}
+
+	this.getValue = function(){
+		var value = [];
+		for(var i = 0; i< this.container.rows.length; ++i){
+			var Current = this.container.rows[i];
+			value[value.length] = {"key":Current.id, "title":Current.title};
+		}
+		return value;
+	}
+
+	if(this.returnValue)
+		this.set(this.returnValue);
+//	else
+//		this.returnValue = {};
+}
+
+
+function formListDrag(){
+	if(this.dragdropObject){
+		this.dragdropObject.img.style.top = event.clientY - 1;
+		this.dragdropObject.img.style.left = event.clientX + 1;
+	}
+}
+
+function formListDragStart(){
+	var obj = event.srcElement;
+	var selectParent = Dom.getSelectParent(obj,"selectParent");
+	if(selectParent){
+		this.dragdropObject = selectParent;
+		var oDIV = document.createElement("DIV");
+		oDIV.style.position = 'absolute';
+		oDIV.innerHTML = selectParent.innerHTML;
+		oDIV.style.top = event.clientY - 1;
+		oDIV.style.left = event.clientX + 1;
+		oDIV.className = 'droppedItem';
+		this.insertAdjacentElement("beforeBegin",oDIV);
+		this.dragdropObject.img = oDIV;
+	}else{
+		this.dragdropObject = false;
+	}
+}
+
+function formListDragEnter(){
+	var obj = event.srcElement;
+	if(obj == this.dragenterObj) return;
+	this.dragenterObj && (this.dragenterObj.className = '');
+	var selectParent = Dom.getSelectParent(obj,"selectParent");
+	var iTarget = (selectParent || this.container.rows[this.container.rows.length - 1]);
+	this.dragenterObj = iTarget;
+	this.dragenterObj.className = 'dragTarget';
+}
+
+function formListDragEnd(){
+	if(!this.dragenterObj || !this.dragdropObject) return;
+	this.dragdropObject.img.removeNode(true);
+	Dom.unSelectBlock(Dom.getSelectParentChild(this.dragenterObj))
+	this.container.moveRow(this.dragdropObject.rowIndex,this.dragenterObj.rowIndex);
+}
+
+
+function formListClick(){
+	var obj = event.srcElement;
+	var selectParent = Dom.getSelectParent(obj,"selectParent");
+
+	if (!selectParent){
+		if (this.selectedObjects.length <= 0){
+			return;
+		}
+		for (var i = 0; i < this.selectedObjects.length; ++i){
+			Dom.unSelectBlock(selectedObjects[i].Childs);
+			selectedObjects[i].select = false;
+		}
+		selectedObjects = [];
+		return;
+	}
+	selectParent.Childs || (selectParent.Childs = Dom.getSelectParentChild(selectParent));
+
+	if (selectParent.select && this.selectedObjects.length == 1) return;
+	for (var i = 0; i < this.selectedObjects.length; ++i){
+		Dom.unSelectBlock(this.selectedObjects[i].Childs);
+		this.selectedObjects[i].select = false;
+	}
+	this.selectedObjects = [];
+	Dom.selectBlock(selectParent.Childs);
+	this.selectedObjects[0] = selectParent;
+	selectParent.select = true;
+	selectParent.focus();
+}
+
+
+</SCRIPT>
+<%/FINAL%>

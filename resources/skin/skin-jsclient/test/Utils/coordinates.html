@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Utils.Coordinates</title>
+	<script src="../../js/require.js"></script>
+	<script src="../../js/debug.js"></script>
+	<script src="../../js/Utils/Coordinates.js"></script>
+	<style>
+		.test{
+			opacity:0.8;
+			filter:alpha(opacity=80);
+		}
+		.BorderBox{
+			-moz-box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-ms-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+	</style>
+</head>
+<body style="background-color:blue">
+	<div id=absolute1 style="position:absolute;left:500;top:10;width:1100px;height:500px;overflow:hidden">
+		<div id=relative1 style="position:relative;width:100%;height:100%;overflow:hidden;border:1px dotted white" class="BorderBox">
+			<div id=layout2 style="position:absolute;left:550px;top:16px;width:150px;height:150px;overflow:hidden;background-color:green;"></div>
+			<div id=layout3 style="position:absolute;left:550px;top:186px;width:150px;height:150px;overflow:hidden;background-color:yellow;"></div>
+			<div id=layout4 style="position:absolute;left:750px;top:16px;width:150px;height:150px;overflow:hidden;background-color:cyan;"></div>
+			<div id=layout5 style="position:absolute;left:750px;top:186px;width:150px;height:150px;overflow:hidden;background-color:magenta;"></div>
+			<div id=layout6 style="position:absolute;left:950px;top:16px;width:150px;height:150px;overflow:hidden"></div>
+			<div id=layout7 style="position:absolute;left:950px;top:186px;width:150px;height:150px;overflow:hidden"></div>
+		</div>
+	</div>
+	<div id=layout1 style="position:relative;width:500px;height:300px;overflow:auto;font-size:8px;font-family:arial;background-color:red;"></div>
+	<div id=content class=test style="display:none;position:relative;height:100%">
+		<div style="height:10px;overflow:hidden;border:solid 20px black"></div>
+		<div style="position:absolute;width:100%;height:100%">
+			<div style="border:solid 15px yellow;position:absolute;left:0;top:0;width:100%;height:100%">
+				<div style="border:solid 15px magenta;height:100%">
+				</div>
+			</div>
+		</div>
+		<span style="white-space: nowrap">
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+		</span>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN*<br>
+	</div>
+	<script>
+		var alert = function(message){
+			top.debug && top.debug("ALERT: " + message);
+		};
+	
+		var element1 = document.getElementById("layout1");
+		var coordinates1 = new Utils.Coordinates(element1);
+
+		var element2 = document.getElementById("layout2");
+		var coordinates2 = new Utils.Coordinates(element2);
+		element2.innerHTML = 2;
+
+		var element3 = document.getElementById("layout3");
+		var coordinates3 = new Utils.Coordinates(element3);
+		element3.innerHTML = 3;
+		
+		var element4 = document.getElementById("layout4");
+		var coordinates4 = new Utils.Coordinates(element4);
+		element4.innerHTML = 4;
+		
+		var elementA1 = document.getElementById("absolute1");
+		var elementR1 = document.getElementById("relative1");
+		
+		element1.innerHTML = ""
+			+"c1=" + coordinates1 + "<br>"
+			+"c2=" + coordinates2 + "<br>"
+			+"c3=" + coordinates3 + "<br>"
+			+"<p>"
+			+"c2rtR1=" + coordinates2.relativeTo(elementR1) + "<br>"
+			+"c3rtR1=" + coordinates3.relativeTo(elementR1) + "<br>"
+			+"<p>"
+			+"c2rtA1=" + coordinates2.relativeTo(elementA1) + "<br>"
+			+"c3rtA1=" + coordinates3.relativeTo(elementA1) + "<br>"
+			+"<p>"
+			+"c1rtt=" + coordinates1.relativeToTopmost() + "<br>"
+			+"c2rtt=" + coordinates2.relativeToTopmost() + "<br>"
+			+"c3rtt=" + coordinates3.relativeToTopmost() + "<br>"
+//			+"<p>"
+//			+"c1rtC4=" + coordinates1.relativeTo(element4) + "<br>"
+//			+"c2rtC4=" + coordinates2.relativeTo(element4) + "<br>"
+//			+"c3rtC4=" + coordinates3.relativeTo(element4) + "<br>"
+			+"";
+	</script>
+</body>
+</html>

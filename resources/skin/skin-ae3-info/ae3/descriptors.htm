@@ -1,0 +1,309 @@
+<html><body><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<p>
+			Descriptor are used to specify properties to extensible interfaces. 
+			Some modules are allowing your functionality to be integrated by
+			having descriptor files in specific folders in /settings/ hierarchy.
+		</p>
+		<ul>
+			<li>
+				<h3>Contents</h3>
+				<ul>
+					<li><a href="#command">Shell Command descriptor</a></li>
+					<li><a href="#manual">Manual (documentation) descriptor</a></li>
+					<li><a href="#package">Package descriptor</a></li>
+					<li><a href="#periodic">Periodic Task descriptor</a></li>
+					<li><a href="#service">System Service descriptor</a></li>
+					<li><a href="#share">Web Share descriptor</a></li>
+				</ul>
+			</li>
+			<li><a name="command"></a>
+				<h3>Shell Command descriptor</h3>
+				<p>File &lt;module_name&gt;.json in /settings/shell/ folder.</p>
+				<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3/Executable",
+	reference : $require_reference,
+	requires : $array_requires
+}
+<%/FORMAT%>
+				</code>
+				<p>Methods:
+					<ol>
+						<li><b>$require_reference</b> string, reference for require(x) call.
+						Call to require($require_reference) must produce an object 
+						implementing <a href="interfaces.htm#executable">ae3/Executable 
+						interface</a>.</li>
+						<li><b>$array_requires</b> array of strings, optional, list of 
+						service names on which this particular service is dependent.</li>
+					</ol>
+				</p>
+				<p>
+					Example:
+					<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3/Executable",
+	name : "hello-world",
+	reference : "ru.myx.ae3.example/HelloWorldCommand"
+}
+<%/FORMAT%>
+					</code>
+				</p>
+			</li>
+			<li><a name="manual"></a>
+				<h3>Manual (documentation) descriptor</h3>
+				<p>File &lt;manual_name&gt;.json in /settings/manual/ folder, 
+				where $group is the name of documentation section, like 'administrator' or
+				'developer', and you can use your own, like 'com.vlapan' or 'acmcms', etc.</p>
+				<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3.Manual",
+	title : $title,
+	group : $group,
+	url : $url_entry_point
+}
+<%/FORMAT%>
+				</code>
+				<p>Properties:
+					<ol>
+						<li><b>$title</b> string, the title name for index page.</li>
+						<li><b>$group</b> string, the group name must match the $group folder
+						described above.</li>
+						<li><b>$url</b> string, the location of documentation entry point.</li>
+					</ol>
+				</p>
+				<p>There is an optional <b>name</b> property, when specified, the <b>$name</b> must 
+				match the manual_name from the descriptor filename.</p>
+				<p>
+					Example:
+					<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3.Manual",
+	title : "Hello World",
+	group : "example",
+	url : "/!/public/resources/lib/ru.myx.ae3.example/hello-world.xml"
+}
+<%/FORMAT%>
+					</code>
+				</p>
+			</li>
+			<li><a name="package"></a>
+				<h3>Package descriptor</h3>
+				<p>File package.json <!-- or package.xml --> located in root folder of your package.</p>
+				<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3.Package",
+	name : $package_name,
+	version : $package_version,
+	provides : $array_provides,
+	requires : $array_requires
+}
+<%/FORMAT%>
+				</code>
+				<p>
+					<ol>
+						<li><b>$package_name</b> string, mandatory, short name of the package</li>
+						<li><b>$package_version</b> string, mandatory, version string of the package</li>
+						<li><b>$array_requires</b> array of strings, optional, list of 
+						package names this particular package provides.</li>
+						<li><b>$array_requires</b> array of strings, optional, list of 
+						package names on which this particular package is dependent.</li>
+					</ol>
+				</p>
+				<p>
+					Example:
+					<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3.Package",
+	name : "ae3.HelloWorld",
+	version : "1.0",
+	requires : ['service', 'shell', 'periodic']
+}
+<%/FORMAT%>
+					</code>
+				</p>
+			</li>
+			<li><a name="periodic"></a>
+				<h3>Periodic Task descriptor</h3>
+				<p>File &lt;task_name&gt;.json in /settings/periodic/*/ folder (
+				where * is one of 'hourly', 'daily', 'weekly', 'monthly').</p>
+				<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3.Task",
+	reference : $require_reference,
+	requires : $array_requires
+}
+<%/FORMAT%>
+				</code>
+				<p>Methods:
+					<ol>
+						<li><b>$require_reference</b> string, mandatory, reference 
+						for a require(x) call. Call to require($require_reference) 
+						must produce an object implementing <a href="interfaces.htm#executable">ae3/Executable 
+						interface</a>.</li>
+						<li><b>$array_requires</b> array of strings, optional, list of 
+						service names on which this particular service is dependent.</li>
+					</ol>
+				</p>
+				<p>
+					Example:
+					<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3.Task",
+	name : "hello-world",
+	reference : "ru.myx.ae3.example/HelloWorldPeriodicTask"
+}
+<%/FORMAT%>
+					</code>
+				</p>
+			</li>
+			<li><a name="service"></a>
+				<h3>System Service descriptor</h3>
+				<p>File &lt;service_name&gt;.json in /settings/service/ folder.</p>
+				<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3.Service",
+	reference : $require_reference,
+	augments : $array_augments,
+	requires : $array_requires
+}
+<%/FORMAT%>
+				</code>
+				<p>Methods:
+					<ol>
+						<li><b>$require_reference</b> string, mandatory, reference 
+						for a require(x) call. Call to require($require_reference) 
+						must produce an object implementing ae3.Service 
+						<a href="interfaces.htm">interface</a>.</li>
+						<li><b>$array_augments</b> array of strings, optional, list of 
+						service names which this particular service is supposed to
+						augment. This service will start automatically when augmented
+						service is started.</li>
+						<li><b>$array_requires</b> array of strings, optional, list of 
+						service names on which this particular service is dependent. 
+						The system will start required services before this starting
+						this service.</li>
+					</ol>
+				</p>
+				<p>
+					Example:
+					<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3.Service",
+	name : "hello-world",
+	reference : "ru.myx.ae3.example/HelloWorldService"
+}
+<%/FORMAT%>
+					</code>
+				</p>
+			</li>
+			<li><a name="share"></a>
+				<h3>Web Share descriptor</h3>
+				<p>File &lt;share_descriptor_name&gt;.json in /settings/web/hosts/ folder.</p>
+				<p>You can use prefix of '*.' to allow one level nested sub-domains or
+				'**.' to allow deep-nested sub-domains to be routed to your handler.</p>
+				<p>If you add suffix of '.*' to your &lt;share_descriptor_name&gt; 
+				queries to specified sub-domain of any domain which is current server's 
+				hostname will be routed to your handler. For example, if your descriptor called
+				<b>hello-world.*.json</b> and your server's hostname is <b>server.example.org</b> 
+				then your handler will respond to requests to <b>hello-world.server.example.org</b>.</p>
+				<code>
+<%FORMAT: 'default' %>
+{
+	type : "ae3.web/Share",
+	reference : $require_reference,
+	requires : $array_requires
+}
+<%/FORMAT%>
+				</code>
+				<p>Properties:
+					<ol>
+						<li><b>$require_reference</b> string, reference for require(x) call.
+						Call to require($require_reference) must produce an object 
+						implementing <a href="interfaces.htm#share">ae3.web/Share interface</a>.</li>
+						<li><b>$array_requires</b> array of strings, optional, list of 
+						service names on which this particular service is dependent.</li>
+					</ol>
+				</p>
+				<p>
+					Example:
+					<code>
+<%FORMAT: 'default' %>
+{
+	type		: "ae3.web/Share",
+	reference	: "ru.myx.ae3.example/HelloWorldWebShare"
+}
+<%/FORMAT%>
+					</code>
+					or
+					<code>
+<%FORMAT: 'default' %>
+{
+	type		: "ae3.web/Share",
+	name		: "ae3-info",
+	aliases		: "ae3-info.*",
+	reference	: {
+		type : "skin",
+		skin : "skin-ae3-info"
+	}
+}
+<%/FORMAT%>
+					</code>
+					or
+					<code>
+<%FORMAT: 'default' %>
+{
+	type		: "ae3.web/Share",
+	name		: "test.example.org",
+	aliases		: "www.test.example.org",
+	reference	: {
+		type  : "alias",
+		alias : "example.org"
+	}
+}
+<%/FORMAT%>
+					</code>
+					or
+					<code>
+<%FORMAT: 'default' %>
+{
+	type		: "ae3.web/Share",
+	name		: "old.example.org",
+	aliases		: "www.old.example.org",
+	reference	: {
+		type  : "redirect",
+		target : "https://www.example.org"
+	}
+}
+<%/FORMAT%>
+					</code>
+				</p>
+			</li>
+			<li>
+				<h3>Other</h3>
+				<ul>
+					<li><a href="/!/skin/skin-ae3-info/">AE3 Information Center</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'AE3 Developer: Configuration Descriptors',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

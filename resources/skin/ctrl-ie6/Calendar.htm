@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+
+	%><TITLE>Date/Time</TITLE><%
+
+	%><style><%
+		%><%INCLUDE: 'editor_style.css' %><%
+		%><%INCLUDE: 'editor_popup-style.css' %><%
+	%></style><%
+%></HEAD>
+
+<BODY style="cursor:default" onload="start()" topmargin=0 leftmargin=0 class=popup1>
+
+<script>
+
+var currYear = false;
+var currMonth = false;
+var currDay = false;
+var currHour = false;
+var currMin = false;
+
+var d = new Date();
+try{
+	if(window.dialogArguments)
+		var parametrs = window.dialogArguments;
+	else
+		var parametrs = {};
+}catch(Error){
+	var parametrs = {};
+}
+
+if(!parametrs.millis)
+	parametrs.millis = d;
+if(!parametrs.format || parametrs.format == null || parametrs.format == 'null')
+	parametrs.format = 'yyyy.MM.dd HH:mm';
+
+var t = d.setTime(parametrs.millis);
+SetDate(t);
+
+function SetDate(t){
+	var ndate = new Date(t);
+	currYear = ndate.getFullYear();
+	currMonth = ndate.getMonth() + 1;
+
+	currDay = ndate.getDate();
+	currHour = ndate.getHours();
+	currMin = ndate.getMinutes();
+}
+
+var mnths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+var mdArr = [31,28,31,30,31,30,31,31,30,31,30,31];
+var wdArr = [3,4,5,6,0,1,2];
+
+var calendarTable = {};
+
+
+function move(){
+	for (var i=calendarTable.rows.length-1; i>0; --i) calendarTable.rows[i].removeNode(true);
+	drawCalendar();
+}
+
+
+function start(){
+	calendarTable = document.all.calendar;
+	document.all.Year.value = currYear;
+
+	document.all.Month.options[currMonth-1].selected = true;
+
+	document.all.Hour.value = currHour;
+	document.all.Min.value = currMin;
+	drawCalendar();
+}
+
+
+function drawCalendar(){
+	var startDay = getWeekDay(currYear,currMonth);
+
+	var i=1;
+	var oTR = calendarTable.insertRow();
+	if (wdArr[startDay]!=1){
+		for ( i=1; i<(wdArr[startDay]!=0?wdArr[startDay]:7); ++i){
+			var oTD = oTR.insertCell();
+		}
+	}
+
+	var dIm = mdArr[currMonth-1];
+	if ( (currYear%4 == 0) && currMonth == 2 ) dIm++;
+	for (var j=1; j<=dIm; j++){
+		var oTD = oTR.insertCell();
+		oTD.className = 't';
+		oTD.day = j;
+		oTD.id = 'day'+j;
+		oTD.style.textAlign = 'center';
+		oTD.onclick = function(){
+			if(calendarTable.selectedObj){
+				calendarTable.selectedObj.style.backgroundColor="";
+				calendarTable.selectedObj.style.color="";
+			}
+			this.style.backgroundColor = 'highlight';
+			this.style.color = 'highlighttext';
+			calendarTable.selectedObj = this;
+			currDay = this.day;
+		}
+		oTD.innerHTML = j;
+		if ( (i%7) == 0 && j<dIm){
+			i=0;
+			oTR = calendarTable.insertRow();
+		}
+		i++;
+	}
+	if (calendarTable.rows.length < 7){
+		var oTR = calendarTable.insertRow();
+		var oTD = oTR.insertCell();
+		oTD.innerHTML = '&nbsp;';
+	}
+
+	if (currDay > dIm) currDay = 1;
+	document.all["day"+String(currDay)].click();
+}
+
+
+
+function getWeekDay(yyyy,mm,dd){
+	if (!dd) dd = 1;
+	var tYear = yyyy - 1970;
+	var tMonth = tYear*12 + mm;
+	var tDay = dd;
+	for (var i=0; i<(mm-1); ++i){
+		tDay += mdArr[i];
+	}
+	tDay += tYear*365;
+	for (var i=1970; i<=yyyy; ++i){
+		if ((i%4) == 0 && (yyyy!=i || mm>2)) {tDay++;}
+	}
+	return (tDay%7);
+}
+
+
+function GetFormatDate(){
+	var date = ''
+	var Symbol = ''
+	var block = ''
+	for (var i=0; i<parametrs.format.length; ++i){
+		var cs = parametrs.format.substr(i,1)
+
+		if (cs == 'y' || cs == 'M' || cs == 'd' || cs == 'H' || cs == 'm'){
+			if (cs == Symbol || Symbol == ''){
+				block += cs;
+			}else{
+				if (block != '') date += FormatDate(block);
+				block = cs;
+				Symbol = cs;
+			}
+		}else{
+			if (block != '') date += FormatDate(block);
+			block = '';
+			date += cs;
+		}
+	}
+	if (block != '') date += FormatDate(block);
+	return date;
+}
+
+function FormatDate(block){
+	switch (block.substr(0,1)){
+	case "y":
+		if (block.length > 2) return String(currYear);
+		else return String(currYear).substr(2,2);
+		break;
+	case "M":
+		if (block.length == 1 || (block.length ==2 && String(currMonth).length ==2) ) return String(currMonth);
+		if (block.length ==2) return "0"+String(currMonth);
+		break;
+	case "d":
+		if (block.length == 1 || (block.length ==2 && String(currDay).length ==2) ) return String(currDay);
+		if (block.length ==2) return "0"+String(currDay);
+		break;
+	case "H":
+		if (block.length == 1 || (block.length ==2 && String(currHour).length ==2) ) return String(currHour);
+		if (block.length ==2) return "0"+String(currHour);
+		break;
+	case "m":
+		if (block.length == 1 || (block.length ==2 && String(currMin).length ==2) ) return String(currMin);
+		if (block.length ==2) return "0"+String(currMin);
+		break;
+	}
+}
+
+function SubMit(){
+	var result = {'Date':GetFormatDate(), 'Millis' : Date.parse(mnths[currMonth-1] + "," + currDay + "," + currYear + " " + currHour + ":" + currMin)};
+	window.returnValue = result
+	window.close();
+}
+
+</script>
+
+<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; margin-top:5px;">
+<TR>
+	<TD><SELECT onchange="currMonth = this.value; move();" class=input2 NAME=Month style="width:70px">
+	<%EXEC:Months = intl(
+		en="January,Febrary,March,April,May,June,July,August,September,Octouber,November,December",
+		ru = "Январь,Февраль,Март,Апрель,Май,Июнь,Июль,Август,Сентябрь,Октябрь,Ноябрь,Декабрь"
+	)%>
+	<%CALL:ForArray(split(Months.toString(),','))%>
+		<option value=<%=CurrentIndex+1%>><%=Current%>
+	<%/CALL%>
+	</SELECT></TD><TD align=right><INPUT readonly class=input2 style="width:50px" name=Year style="margin-right:2px"></TD>
+	<TD><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" 	onmousedown="currYear++;move();this.parentNode.previousSibling.firstChild.value=currYear">5</BUTTON><br><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" onmousedown="currYear--;move();this.parentNode.previousSibling.firstChild.value=currYear">6</BUTTON></TD>
+</TR>
+</TABLE>
+
+<table cellpadding=2 cellspacing=0 id=calendar style="width:100%; margin-top:3px; background-color:window; border-width:1px; border-style:solid; border-left-color:buttonshadow; border-top-color:buttonshadow; border-right-color:buttonhighlight; border-bottom-color:buttonhighlight; ">
+<TR class=t3 style="text-align:center; background-color:buttonface">
+<%=intl( en="<TD>M</TD><TD>T</TD><TD>W</TD><TD>T</TD><TD>F</TD><TD>S</TD><TD>S</TD>",
+		ru="<TD>Пн</TD><TD>Вт</TD><TD>Ср</TD><TD>Чт</TD><TD>Пт</TD><TD>Сб</TD><TD>Вс</TD>")%>
+</TR>
+</table>
+
+<center>
+<TABLE border=0 cellpadding=0 cellspacing=0 style="margin-top:5px;">
+<TR>
+	<TD class=t3><%=intl( en="HH:mm", ru="ЧЧ:мм")%>&nbsp;</TD>
+	<TD><INPUT readonly class=input2 style="width:22px" name=Hour style="margin-right:2px"></TD>
+	<TD><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" onmousedown="currHour=(currHour==23)?0:currHour+1;this.parentNode.previousSibling.firstChild.value=currHour">5</BUTTON><br><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" onmousedown="currHour=(currHour==0)?23:currHour-1;this.parentNode.previousSibling.firstChild.value=currHour">6</BUTTON></TD>
+
+	<TD class=t3>&nbsp;:&nbsp;</TD>
+
+	<TD><INPUT readonly class=input2 style="width:22px" name=Min style="margin-right:2px"></TD>
+	<TD><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" onmousedown="currMin=(currMin==59)?0:currMin+1;this.parentNode.previousSibling.firstChild.value=currMin">5</BUTTON><br><BUTTON style="font-family:Webdings; height:9px; width:12px; line-height: 2px; font-size:9px;" onmousedown="currMin=(currMin==0)?59:currMin-1;this.parentNode.previousSibling.firstChild.value=currMin">6</BUTTON></TD>
+</TR>
+</TABLE>
+</center>
+
+
+
+<div align=right style="margin:4px; margin-top:8px;"><button class=button3 onclick="SubMit()"><%=intl(en="Apply",ru="Выбрать")%></button>&nbsp;<button class=button3 onclick="window.returnValue='';window.close()"><%=intl(en="Cancel",ru="Отмена")%></button></div>
+

@@ -1,0 +1,16 @@
+{
+	onLayoutExecute : function( context, layout ) {
+		return {
+			layout	: 'message',
+			code	: 404,
+			title	: 'Not Found',
+			comment	: 'Produced by /skin-web-unknown/layouts/MessageShareUnknown',
+			text	: 'Share ' +
+						(layout.share 
+							? "'" + layout.share + "' " 
+							: '') +
+						'is not known!',
+			detail	: 'Requested resource: ' + context.query.url
+		};
+	}
+}

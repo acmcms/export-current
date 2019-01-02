@@ -1,0 +1,42 @@
+<%CODE: 'ACM.ECMA' %>
+	editor = new VlapanRichedit( editorName = "tinymce" );
+	editorName = "tinymce_editor1";
+	requireCss = Create.set();
+
+	requireJs = [];
+//	requireJs.add("");
+<%/CODE%>
+
+<%OUTPUT: head %>
+	<!-- YUI CSS Reset -->
+	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssreset/reset-min.css">
+	<%= editor.init() %>
+	<script type="text/javascript">
+		function getData(){
+			try{
+				return tinyMCE.get("<%= editorName %>").getContent();
+			}catch(err){
+				return null;
+			}
+		}
+	</script>
+	<style type="text/css">
+		html, body { height: 100%; }
+	</style>
+<%/OUTPUT%>
+
+<%OUTPUT: body %>
+	<body>
+		<%= VlapanRichedit.getModalForm( editorName ) %>
+		<%= editor.replace( id = editorName, fullscreen = "true" ) %>
+	</body>
+<%/OUTPUT%>
+
+<%RETURN: {
+		title		: "TinyMCE modal",
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %>

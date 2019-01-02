@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Site: Section</title>
+	<folder>true</folder>
+	<state>publish</state>
+	<statelist>
+		<state>publish</state>
+		<state>ready</state>
+	</statelist>
+	<extends>$Content</extends>
+
+	<children>
+		<type>Section</type>
+		<type>Image</type>
+	</children>
+
+	<modify>
+		<form>
+			<title>Свойства раздела</title>
+			<fields class="fieldset">
+				<field
+					class="string" 
+					id="text" 
+					type="text"
+					variant="html" 
+					title="Текст" 
+					max="655366"/>
+				<field
+					class="binary"
+					type="binary"
+				 	id="image" 
+					title="Image" max="30m"/>
+			</fields>
+		</form>
+	</modify>
+
+	<respond>
+		<behaviour>
+			<handle>any</handle>
+		</behaviour>
+		<filter class="script" type="ACM.TPL"><![CDATA[<%
+			%><%IF: Object.isMap( content ) %><%
+				%><%EXEC: content = Create.map( content ) %><%
+				%><%EXEC: content.childrenMenu = this.getFoldersListable() %><%
+				%><%EXEC: content = this.fillSelection( content ) %><%
+				%><%IF: this.image %><%
+					%><%EXEC: content.iconParent = this.getLocation() + "image.jpeg" %><%
+					%><%EXEC: content.iconParentAlt = this.getTitle() %><%
+				%><%/IF%><%
+			%><%/IF%><%
+			%><%RETURN: content %><%
+		%>]]></filter>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%EXEC: target = Request.getResourceIdentifier() %><%
+			%><%IF: target.startsWith( "image.jpeg" ) && this.image %><%
+				%><%RETURN: this.image %><%
+			%><%/IF%><%
+
+			%><%EXEC: content = {} %><%
+			%><%EXEC: content.guid = this.getGuid() %><%
+			%><%EXEC: content.title = afterPoint( this.getTitle() ) %><%
+			%><%EXEC: content.bodyTitle = content.title %><%
+			%><%EXEC: content.body = this.text %><%
+			%><%IF: this.image %><%
+				%><%EXEC: content.bodyImageSrc = this.getLocation() + "image.jpeg" %><%
+				%><%EXEC: content.bodyImageAlt = content.title %><%
+			%><%/IF%><%
+			%><%EXEC: content.list = this.getFilesListable(0, "alphabet") %><%
+			%><%EXEC: content.children = this.getFoldersListable() %><%
+			%><%EXEC: content.childrenMenu = content.children ? content.children : null %><%
+			%><%RETURN: this.fillSelection( content ) %><%
+		%>]]></script>
+	</respond>
+
+	<render>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%CHOOSE: mode %><%
+			%><%MATCH: "matrix-image" %><%
+			%><%MATCH%><%
+				%><%= sentenceLeft( clearHtmlFormatting( this.text ) , 300, 400, '...' ) %><%
+			%><%/CHOOSE%><%
+		%>]]></script>
+	</render>
+</type>

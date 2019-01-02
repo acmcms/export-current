@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><%EXEC:mode = 'link'%><%
+
+
+	%><LINK HREF="frames.css" REL=stylesheet><%
+	%><LINK HREF="forms.css" REL=stylesheet><%
+
+%><script>
+<%INCLUDE: 'WindowsMethods.js' %>
+<%INCLUDE: 'Containers.js' %>
+<%INCLUDE: 'EventsMethods.js' %>
+<%INCLUDE: 'Cookies.js' %>
+<%INCLUDE: 'SystemWindows.js' %>
+<%INCLUDE: 'Form.js' %>
+</script>
+
+
+<script>
+	mForm.type = 'Navigation';
+	mForm.path = "<%=Request.path%>";
+</script>
+
+</head>
+
+<BODY BGCOLOR="buttonface" scroll="no" style="cursor:default; margin:0" class="FrameBorder">
+
+<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+<TR>
+	<TD width="100%">
+		<%INCLUDE: 'ObjectChildrenView.inc' %>
+	</TD>
+</TR>
+</TABLE>
+
+</BODY>

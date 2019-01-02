@@ -1,0 +1,55 @@
+<div cm=DECMD_UNDO		cName=undo><img width=21 height=20></div>
+<div cm=DECMD_REDO		cName=redo><img width=21 height=20></div>
+
+<div cm=DECMD_CUT		cName=cut><img width=21 height=20></div>
+<div cm=DECMD_COPY		cName=copy><img width=21 height=20></div>
+<div cm=DECMD_PASTE		cName=paste><img width=21 height=20></div>
+
+<div cm=CM_PASTETEXT		cName=pastetext		cType=TBCMD_CUSTOM	onEdit="CheckDecCommand"	cmEdit=DECMD_PASTE><img width=21 height=20></div>	
+<div cm=CM_PASTEWORD		cName=pasteword		cType=TBCMD_CUSTOM	onEdit="CheckDecCommand"	cmEdit=DECMD_PASTE><img width=21 height=20></div>
+
+<div cm=DECMD_BOLD		cName=bold><img width=21 height=20></div>
+<div cm=DECMD_ITALIC		cName=italic><img width=21 height=20></div>
+<div cm=DECMD_UNDERLINE		cName=underline><img width=21 height=20></div>
+<div cm="StrikeThrough"		cName=strikethrough	cType=TBCMD_DOC><img width=21 height=20></div>
+
+<div cm="Subscript"		cName=subscript		cType=TBCMD_DOC><img width=21 height=20></div>
+<div cm="Superscript"		cName=superscript	cType=TBCMD_DOC><img width=21 height=20></div>
+
+<!--
+<div cm="DoStyle"		cName=styles		cType=TBCMD_SELECT	cValue=GetClassNames>
+	<select style="margin:0; width:110px"></select>
+</div>
+-->
+
+<div cm=DECMD_JUSTIFYLEFT	cName=justifyleft><img width=21 height=20></div>
+<div cm=DECMD_JUSTIFYCENTER	cName=justifycenter><img width=21 height=20></div>
+<div cm=DECMD_JUSTIFYRIGHT	cName=justifyright><img width=21 height=20></div>
+<div cm="JustifyFull"		cName=justifyfull	cType=TBCMD_DOC><img width=21 height=20></div>
+
+<div cm=DECMD_ORDERLIST		cName=insertorderedlist><img width=21 height=20></div>
+<div cm=DECMD_UNORDERLIST	cName=insertunorderedlist><img width=21 height=20></div>	
+
+<div cm=DECMD_OUTDENT		cName=outdent><img width=21 height=20></div>
+<div cm=DECMD_INDENT		cName=indent><img width=21 height=20></div>
+
+<div cm=CM_LINK			cName=link		cType=TBCMD_CUSTOM	onEdit="CheckDecCommand"	cmEdit=DECMD_HYPERLINK><img width=21 height=20></div>
+<div cm=DECMD_UNLINK		cName=unlink><img width=21 height=20></div>
+
+<div cm="InsertHorizontalRule"	cName=rule		cType=TBCMD_DOC><img width=21 height=20></div>
+<div cm=CM_IMAGE		cName=image		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=CM_TABLE		cName=table		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+
+<div cm=DECMD_INSERTROW		cName=insertrow><img width=21 height=20></div>
+<div cm=DECMD_INSERTCOL		cName=insertcol><img width=21 height=20></div>
+<div cm=DECMD_INSERTCELL	cName=insertcell><img width=21 height=20></div>
+
+<div cm=DECMD_DELETEROWS	cName=deleterows><img width=21 height=20></div>
+<div cm=DECMD_DELETECOLS	cName=deletecols><img width=21 height=20></div>
+<div cm=DECMD_DELETECELLS	cName=deletecells><img width=21 height=20></div>
+
+<div cm=DECMD_MERGECELLS	cName=mergecellsright><img width=21 height=20></div>
+<div cm=DECMD_SPLITCELL		cName=splitcellvertical><img width=21 height=20></div>
+
+<div cm=CM_SHOWTABLEBORDER	cName=showtableborders	cType=TBCMD_CUSTOM	onEdit="CheckTableBorders"><img width=21 height=20></div>
+<div cm=CM_SHOWDETAILS		cName=showdetails	cType=TBCMD_CUSTOM	onEdit="CheckShowDetails"><img width=21 height=20></div>

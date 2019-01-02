@@ -1,0 +1,46 @@
+mkdir -p /test
+
+
+
+mkdir -p /test/ramfs
+vfs mount /test/ramfs ramfs tst-ramfs
+
+
+mkdir -p /test/hostfs
+vfs mount /test/hostfs hostfs /
+
+
+mkdir -p /test/tst-db4o
+vfs mount /test/tst-db4o s4fs tst db4o
+
+
+mkdir -p /test/tst-h2db
+vfs mount /test/tst-h2db s4fs tst h2db
+
+
+mkdir -p /test/tst-hsql
+vfs mount /test/tst-hsql s4fs tst hsql
+
+
+mkdir -p /test/tst-drby
+vfs mount /test/tst-drby s4fs tst drby
+
+time cp -r /storage/stats /test/tst-db4o/stats
+time cp -r /storage/stats /test/tst-h2db/stats
+time cp -r /storage/stats /test/tst-hsql/stats
+
+mkstring -f aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa /test/tst-db4o/a
+mkstring -f aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa /test/tst-db4o/b
+mkstring -f aaaa /test/tst-db4o/a
+
+mkstring -f aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa /test/tst-h2db/a
+mkstring -f aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa /test/tst-h2db/b
+mkstring -f aaaa /test/tst-h2db/a
+
+mkstring -f aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa /test/tst-hsql/a
+mkstring -f aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa /test/tst-hsql/b
+mkstring -f aaaa /test/tst-hsql/a
+
+
+mkdir -p /test/tst-psgr
+vfs mount /test/tst-psgr s4fs tst psgr "host=localhost&port=5432&database=ae3-test&user=test&password=test"

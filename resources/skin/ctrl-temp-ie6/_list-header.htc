@@ -1,0 +1,94 @@
+<%FINAL: 'text/x-component' %>
+<PUBLIC:ATTACH EVENT="onclick"  ONEVENT="Click()" />
+
+<SCRIPT LANGUAGE="JScript">
+
+function Click(){
+	if(!this.editor || !this.parent) return;
+
+	try{
+		clearTimeout(this.parent.timer);
+	}catch(Error){}
+	this.parent.timer = null;	
+	
+	var obj = event.srcElement;
+
+	if(obj.id != 'sort'){
+		if(!this.Edit) this.Edit = switchEditMode;
+		this.Edit();
+	}else{
+		if(this.parent.currentInput &&  this.parent.currentInput.fieldID != this.fieldID) this.parent.clearForm();
+		if(!this.Switch) this.Switch = switchSortMode;
+		this.Switch(obj);
+	}
+	window.event.cancelBubble = true;
+}
+
+
+function switchSortMode(obj){
+	if(!this.prevContent) this.prevContent = this.innerHTML;
+
+	if(!this.sortValue) this.sortValue = 0;
+	if(!this.sort) this.sort = Number(this.sortValue);
+	this.sort++;
+	if (this.sort > 2) this.sort = 0;
+
+	var txt;
+	switch(this.sort){
+		case 0: txt = 'c'; break;
+		case 1: txt = '5'; break;
+		case 2: txt = '6'; break;
+	}
+	obj.innerHTML = txt;
+
+	if(this.sort != this.sortValue){
+		this.parent.timer = setTimeout("sortTimerSubmit('"+this.fieldID+"','"+this.sort+"')",1500);
+	}
+	this.parent.currentInput = this;
+}
+
+function switchEditMode(){
+	if(this.status == 'edit') return;
+	this.status = 'edit';
+	window.document.forms[0].filterfield.value=this.fieldID;
+	this.parent.clearForm();
+	if(!this.prevContent) this.prevContent = this.innerHTML;
+	this.innerHTML = '';
+	switch(this.editor){
+		case 'string':
+			var oObj = window.document.createElement("INPUT");
+			oObj.name = 'filtervalue';
+			oObj.type = 'text';
+			oObj.className = 'filter';
+			if(this.getAttribute('filterValue')) oObj.value = this.getAttribute('filterValue');
+			this.insertAdjacentElement("afterBegin",oObj);
+			oObj.focus();
+			break;
+		case 'select':
+			this.className = 'listTDheaderWOborder';
+			var oObj = window.document.createElement("SELECT");
+			oObj.name = 'filtervalue';
+			oObj.className = 'filter';
+			this.insertAdjacentElement("afterBegin",oObj);
+			var arr = this.editorValue.split(';');
+			for(var i = 0; i<arr.length; ++i){
+				var oOption = window.document.createElement("OPTION");
+				var cArr = arr[i].split(':');
+				oOption.text = cArr[1];
+				oOption.value = cArr[0];
+				oObj.add(oOption);
+			}
+			if(this.getAttribute('filterValue')) oObj.value = this.getAttribute('filterValue');
+			oObj.onclick = function(){window.event.cancelBubble = true;}
+			oObj.onchange = function(){window.document.forms['filter'].submit();}
+			oObj.focus();
+			break;
+		case 'date':
+			var w = window.showModalDialog('formDialog.datePeriod', null, "dialogWidth:200px; dialogHeight:300px; scroll:no; status:no; resizable:no; help:no");
+			break;
+	}
+	this.parent.currentInput = this;
+}
+
+</SCRIPT>
+<%/FINAL%>

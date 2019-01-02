@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+
+	<!--
+
+
+		Do NOT update this file directly!
+		It is updated automatically - you changes will be overwritten! 
+
+
+	-->
+
+	<title>Object: Проверщик POP3</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>ready</state>
+	<statelist>
+		<state>ready</state>
+		<state>draft</state>
+	</statelist>
+	<folder>false</folder>
+
+	<modify>
+		<form> 
+			<title>Свойства</title>
+			<fields class="fieldset">
+				<field	class="string"
+					id="robot"
+					min="5"
+					max="128"
+					default="robot@domain.com"
+					/>
+				<field	class="string"
+					id="forward"
+					min="5"
+					max="128"
+					default="forward@domain.com"
+					/>
+				<field	class="string"
+					id="popHost"
+					min="3"
+					max="128"
+					default="popserver.domain.com"
+					/>
+				<field	class="integer"
+					id="popPort"
+					min="1"
+					max="65536"
+					default="110"
+					/>
+				<field	class="string"
+					id="popPassword"
+					variant="password"
+					min="0"
+					max="16"
+					default="12345678"
+					/>
+			</fields>
+		</form>
+		<trigger class="script" type="ACM.TPL"><![CDATA[<%
+		%>]]></trigger>
+	</modify>
+
+	<respond>
+		<behaviour>
+			<handle>any</handle>
+			<public>true</public>
+			<ttl>24h</ttl>
+			<cache>24h</cache>
+		</behaviour>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return {
+				title : this.getTitle(),
+				body : null
+			};
+		]]></script>
+	</respond>
+
+	<command>
+		<type>hidden</type>
+		<key>checkEverything</key>
+		<static>true</static>
+		<execute>auto</execute>
+		<delay>5m</delay>
+		<period>30m</period>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			/**
+			 * 100 of the oldest entries. When we have more than that amount, the 
+			 * rotation is due to the fact that processed entry's $modified is
+			 * updated.
+			 */
+			var list = Storage.getRoot().search(100, true, 20000L, "$modified+", -1L, -1L, "'$type=PopMailChecker'");
+			for each( var Current in list ){
+				var robot = Current.robot;
+				var forward = Current.forward;
+				var popHost = Current.popHost;
+				var popPort = Current.popPort;
+				var popPassword = Current.popPassword;
+				var signaturePrefix = "MSG[";
+				var statusSignature = "MSG[STATUS]-"+Current.getKey();
+
+				var session = null;
+				if( Date.now() - Current.getModified() > 1000L * 60L * 5L ){
+					try{
+						session = Mail.createPopSession(popHost, popPort, robot, popPassword);
+						sessionList = session.list();
+					}catch(exception){
+						Runtime.SendMail(
+							From = robot,
+							To = forward,
+							Subject = "MSG[ERROR]: while checking: "+robot,
+							Plain = true,
+							Format = "plain",
+							Body = Format.throwableAsPlainText( Exception ),
+							Encoding = "utf-8"
+							);
+					}
+				}
+				
+				if( session ){
+					if( Array.isArray( sessionList ) && sessionList.length ){
+						var statusMap = {};
+						var statusNew = {};
+						statusMap.handled = [];
+						statusNew.handled = [];
+						var messagesMap = {};
+						for( var i = sessionList.length - 1; i >= 0; --i ){
+							var messageMark = sessionList[ i ];
+							var message = messageMark.get();
+							var subject = message.getSubject();
+							var from = message.getOriginator().getAddress();
+							if( from == forward ){
+								if( subject == statusSignature ){
+									statusMap = xmlToMap( message.getMessageText() );
+									if( !statusMap.handled ){
+										statusMap.handled = [];
+									}else{
+										statusMap.handled = Array( statusMap.handled );
+									}
+									messageMark.delete();
+								}
+							}else{
+								key = String( messageMark.getMessageSize() );
+								if( !subject.startsWith( signaturePrefix ) ){
+									if( !statusMap.handled.contains( key ) ){
+										messagesMap[ key ] = message;
+									}
+								}
+								statusNew.handled.add( key );
+							}
+						}
+						messagesMap.keySet().removeAll( statusMap.handled );
+						for( var Current in messagesMap.entrySet() ){
+							var from = Current.value.getOriginator().getAddress();
+							var subject = Current.value.getSubject();
+							var text = Current.value.getMessageText();
+							var body = "";
+							var attachments = Current.value.getAttachments();
+							if( Object.isFilled( attachments ) ){
+								body += "attachments: \n";
+								for( Current in attachments.entrySet() ){
+									body += "   " + Current.key + " [" + formatByteSize( binarySize( Current.value ) ) + "]\n";
+								}
+								body += "\n\n";
+							}
+							body += text;
+							Runtime.SendMail(
+								From = robot,
+								To = forward,
+								Subject = "MSG["+from+"]: "+subject,
+								Plain = true,
+								Format = "plain",
+								Body = body,
+								Encoding = "utf-8"
+								);
+						}
+						session.quit();
+						Runtime.SendMail(
+							From = forward,
+							To = robot,
+							Subject = statusSignature,
+							Plain = true,
+							Format = "plain",
+							Body = mapToXml( statusNew ),
+							Encoding = "utf-8"
+							);
+					}else{
+						session.quit();
+					}
+					Current.createChange().commit();
+				}
+			}
+		]]></script>
+	</command>
+</type>

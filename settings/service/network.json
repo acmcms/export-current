@@ -1,0 +1,5 @@
+{
+	type : "ae3.Service",
+	name : 'network',
+	reference : "ru.myx.ae3.internal/network/NetworkService"
+}

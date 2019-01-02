@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<script type="text/javascript">
+			// standard routine v2.0
+			function parseUrlEncoded( url ){
+				var result = {};
+				var array = url.split('&');
+				for( var i in array ){
+					var current = array[i];
+					var index = current.indexOf('=');
+					if( index > 0 ){
+						var key = current.substring(0, index);
+						var value = decodeURIComponent(current.substring(index+1));
+						var ready = result[ key ];
+						if( ready == undefined ){
+							result[ key ] = value;
+						}else{
+							if( isArray( ready ) ){
+								ready.push( value );
+							}else{
+								result[ key ] = [ ready, value ];
+							}
+						}
+					}
+				}
+				return result;
+			}
+			var map = parseUrlEncoded(window.location.href);
+		</script>
+	</head>
+<body>
+	<%
+
+	%><%EXEC: cNode = Runtime.getLinkageRootNode() %><%
+	%><%EXEC: path = '/' %><%
+	%><%IF: Request.cNode %><%
+		%><%ITERATE: key : split(Request.cNode,'/') %><%
+			%><%IF: key %><%
+				%><%EXEC: cNode = cNode.getChildByName(key) %><%
+				%><%EXEC: path = path + cNode.getKey() + '/' %><%
+			%><%/IF%><%
+		%><%/ITERATE%><%
+	%><%/IF%><%
+
+	%><%IF: cNode %><%
+		%><%ITERATE: item : cNode.getChildren() %><% 
+			%><p><%
+				%><%EXEC: url = Request.modifyQueryStringParameter('?' + Request.getParameterString(), 'cNode', Format.xmlAttributeFragment(path + item.getKey())) %><%
+				%><a href="<%= url %>"><%
+					%><%= item.getTitle() %><%
+				%></a><%
+
+				%><%EXEC: url = Runtime.getLinkagePublicUrl( item.getLocationControl() ) %><%
+				%> <a href="#" onclick="window.opener.CKEDITOR.tools.callFunction( map.CKEditorFuncNum, '<%= Format.jsStringFragment(url) %>' );window.close();return false;">select</a><%
+			%></p><%
+		%><%/ITERATE%><%
+	%><%/IF%><% 
+	%>
+</body>
+</html>

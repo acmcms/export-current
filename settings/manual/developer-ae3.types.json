@@ -1,0 +1,7 @@
+{
+	type : "ae3.Manual",
+	title : "Core AE3 Types (Classes)",
+	name : "developer-ae3.types",
+	group : "developer",
+	vfs : "/resources/lib/ru.myx.ae3.manual/docs/reference-core-ae3-types.xml"
+}

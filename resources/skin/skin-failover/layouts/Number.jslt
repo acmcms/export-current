@@ -1,0 +1,9 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+// Simple one - returns string representation of numeric value stored in 'value' field.
+//
+
+return String( Number( layout.value ) );

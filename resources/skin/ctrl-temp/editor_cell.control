@@ -1,0 +1,144 @@
+
+<HTML>
+<HEAD>
+<TITLE>Table</TITLE>
+
+<style>
+<%INCLUDE: 'editor_style.css' %>
+<%INCLUDE: 'editor_popup-style.css' %>
+</style>
+
+<SCRIPT>
+var params = window.dialogArguments;
+var cell = params.object;
+
+function SetDefaults(){
+	if(cell){
+		Colspan.value		= cell.colSpan;
+		Rowspan.value		= cell.rowSpan;
+		Width.value			= cell.width;
+		Height.value		= cell.height;
+		Wrap.value			= cell.noWrap ;
+		Align.value			= cell.align ;
+		Valign.value		= cell.vAlign ;
+		Background.value	= cell.bgColor ; 
+		Border.value		= cell.borderColor ;
+		Classname.value		= cell.className ;
+	}
+}
+
+function Return(){
+	var result = [];
+	result.colSpan		= Colspan.value;
+	result.rowSpan		= Rowspan.value;
+	result.width		= Width.value;
+	result.height		= Height.value;
+	result.wrap			= Wrap.value;
+	result.align		= Align.value;
+	result.vAlign		= Valign.value;
+	result.background	= Background.value; 
+	result.border		= Border.value;
+	result.className	= Classname.value;
+
+	window.returnValue = result;
+	window.close();
+}
+
+function IsDigit(){
+  return (event.keyCode >= 48) && (event.keyCode <= 57);
+}
+</SCRIPT>
+
+<SCRIPT FOR=window EVENT=onload>
+	SetDefaults();
+</SCRIPT>
+
+<SCRIPT FOR=Ok EVENT=onclick>
+	Return();
+</SCRIPT>
+
+</HEAD>
+
+<body>
+<table border=0 cellpadding=0 cellspacing=0 width=100%>
+<tr>
+	<td width=120 valign=top style="height:100%">
+		<fieldset style="padding:10px 3px 10px 3px; margin-right:1px; height:100%">
+			<table border=0 cellpadding=0 cellspacing=1 width=100%>
+			<tr>
+				<td class=th>Colspan</td>
+				<td width=100%><INPUT TYPE=TEXT NAME=Colspan ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%" value=1></td>
+			</tr>
+			<tr>
+				<td class=th>Rowsspan</td>
+				<td><INPUT TYPE=TEXT NAME=Rowspan ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%" value=1></td>
+			</tr>
+			<tr>
+				<td class=th>Width</td>
+				<td><INPUT TYPE=TEXT NAME=Width style="width:100%"></td>
+			</tr>
+			<tr>
+				<td class=th>Height</td>
+				<td><INPUT TYPE=TEXT NAME=Height style="width:100%"></td>
+			</tr>
+			<tr>
+				<td class=th>Wrap</td>
+				<td>
+					<SELECT Name=Wrap style="width:100%">
+						<option>
+						<option value=true>On
+						<option value=false>Off
+					</SELECT>
+				</td>
+			</tr>
+			</table>
+		</fieldset>
+	</td>
+	<td valign=top style="height:100%">
+		<fieldset style="padding:10px 3px 10px 3px; height:100%">
+			<table border=0 cellpadding=0 cellspacing=1 width=100%>
+			<tr>
+				<td class=th>Align</td>
+				<td>
+					<SELECT Name=Align style="width:100%">
+						<option>
+						<option value=left>left
+						<option value=right>right
+						<option value=center>center
+					</SELECT>
+				</td>
+			</tr>
+			<tr>
+				<td class=th nowrap>Vertical align</td>
+				<td>
+					<SELECT Name=Valign style="width:100%">
+						<option>
+						<option value=middle>middle
+						<option value=baseline>baseline
+						<option value=bottom>bottom
+						<option value=top>top
+					</SELECT>
+				</td>
+			</tr>
+			<tr>
+				<td class=th nowrap>Border color</td>
+				<td width=100%><INPUT TYPE=TEXT NAME=Border style="width:100%"></td>
+			</tr>
+			<tr>
+				<td class=th nowrap>Background color</td>
+				<td><INPUT TYPE=TEXT NAME=Background style="width:100%"></td>
+			</tr>
+			<tr>
+				<td class=th>ClassName</td>
+				<td><INPUT TYPE=TEXT NAME=Classname style="width:100%"></td>
+			</tr>
+			</table>
+		</fieldset>
+	</td>
+</tr>
+</table>
+
+<div align=right style="margin-top:5px"><BUTTON ID=Ok TYPE=SUBMIT>&nbsp;<B>OK</B>&nbsp;</BUTTON><BUTTON ONCLICK="window.close();">&nbsp;Cancel&nbsp;</BUTTON></div>
+
+</body>
+</HTML>

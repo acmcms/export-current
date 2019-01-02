@@ -1,0 +1,130 @@
+<html><!-- <%FORMAT:'html'%><%
+	%><%IGNORE%> --><head><script type="text/javascript" src="../../js/require.js"></script></head><body><!-- <%/IGNORE%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+	<script> 
+		// <%FORMAT:'js'%>
+		require("lib/standard");
+		require("Utils.Event");
+		require("Utils.Coordinates");
+		require("Features.MouseCapture");
+
+		var targets = [];
+		var incells = [];
+		var selects = [];
+		var colors = ['red', 'green', 'blue', 'magenta', 'cyan'], colorIndex = 0;
+		
+		var prepare = function(){
+			// targets
+			['td','div'].forEach(function(elementName){
+				var list = document.getElementsByTagName(elementName);
+				for( var i = 0; i < list.length; ++i ) {
+					list[i].getAttribute("skip") || targets.push( list[i] );
+				}
+			});
+			// indicator
+			var table = document.createElement("table");
+			table.setAttribute("align", "center");
+			table.setAttribute("border", "1");
+			table.border = 1;
+			table.style.width = "75%";
+			var tbrow = table.insertRow(-1);
+			for(var i = -4; i <= 4; ++i){
+				var cell = tbrow.insertCell(-1);
+				cell.style.width = "10%";
+				cell.style.height = "20px";
+				cell.innerHTML = "&nbsp;";
+				cell.inindex = i;
+				incells.push(cell);
+			}
+			document.getElementById("indicator").appendChild(table);
+		};
+		var indicate = function(dir){
+			var color = colors[Math.abs(colorIndex ++) % colors.length];
+			incells.forEach(function(cell){
+				var i = cell.inindex;
+				cell.style.backgroundColor = dir < 0 && i >= dir && i < 0 || dir > 0 && i <= dir && i > 0
+					? color
+					: "white";
+			});
+		};
+		var clean = function(){
+			targets.forEach(function(target){
+				target.innerHTML = "";
+			});
+			selects = [];
+		};
+		var makeTargets = function(){
+			selects.length && clean();
+			for( var i = 0; i < targets.length; ++i ) {
+				targets[i].innerHTML = "AAA<h1>a<br>a</h1><h2>b<br>b</h2><h3>c<br>c</h3>ZZZ";
+				var capture = new Features.MouseCapture(targets[i]);
+				capture.onDrag = function(dir){
+					indicate(dir);
+				};
+				capture.onDragRelease = function(){
+					indicate(0);
+				};
+				selects.push(capture);
+			}
+		};
+		
+		function dummy(e){
+			e || (e = window.event);
+			e.cancelBubble = true; /* Microsoft */
+			e.stopPropagation && e.stopPropagation(); /* W3C */
+			return false;
+		}
+		
+		// <%/FORMAT%>
+	</script>
+	<table width="100%" style="border:3px solid cyan;overflow:scroll">
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<h3>Indicator:</h3>
+	<p id="indicator" style="width:80%"></p>
+	<table width="33%" style="width:33%;height:40px;border:3px solid blue;overflow:scroll">
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<div style="width:120px;height:120px;border:3px solid red;overflow:scroll">
+	</div>
+	<div style="position:fixed;top:50px;right:10px;width:120px;height:120px;border:3px solid black;overflow:scroll">
+	</div>
+	<div style="position:absolute;top:50px;right:150px;width:120px;height:120px;border:3px solid black;overflow:scroll">
+	</div>
+	<div 
+		skip="true" 
+		style="position:fixed;top:50px;right:300px;width:120px;height:120px;border: 3px solid green; background-color: pink; z-index: 1000; color: black" 
+		onmouseover="return dummy()" 
+		onmouseout="return dummy()" 
+		onmousemove="return dummy()" 
+		onmouseup="return dummy()" 
+		onmousedown="return dummy()"
+		>
+		Black hole.
+	</div>
+	<script>
+		// <%FORMAT:'js'%>
+		prepare();
+		makeTargets();
+		// <%/FORMAT%>
+	</script>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Abstract: Features.MouseCapture',
+		template	: "html-document",
+		useRequire	: true,
+		useDebug	: true,
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

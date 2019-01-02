@@ -1,0 +1,62 @@
+<%
+
+%><%CODE: 'ACM.ECMA' %>
+	editor = new VlapanRichedit( editorName = "yui" );
+	editorName = "editor";
+	requireCss = Create.set();
+
+	requireJs = [];
+//	requireJs.add("");
+<%/CODE%><%
+
+%><%OUTPUT: head %><%
+	%><!-- YUI CSS Reset --><%
+	%><link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssreset/reset-min.css"><%
+	%><%= editor.init() %><%
+%><%/OUTPUT%><%
+
+%><%IF: Request.modal %><%
+	%><%OUTPUT: body %><%
+		%><body class="yui-skin-sam"><%
+			%><script type="text/javascript"><%
+				%>function getData(){<%
+					%>try{<%
+						%>return yuiEditor.getEditorHTML();<%
+					%>}catch(err){<%
+						%>return null;<%
+					%>}<%
+				%>}<%
+			%></script><%
+			%><%= VlapanRichedit.getModalForm( editorName ) %><%
+			%><%= editor.replace( id = editorName ) %><%
+		%></body><%
+	%><%/OUTPUT%><%
+%><%ELSE%><%
+	%><%OUTPUT: body %><%
+		%><body class="yui-skin-sam"><%
+			%><form method="post"><%
+				%><p><%
+					%><textarea name="<%= editorName %>" id="<%= editorName %>" cols="50" rows="10" style="width:100%;height:100%;"><% 
+						%><strong>Your</strong> HTML <em>code</em> goes here.<br><%
+						%>This text will be pre-loaded in the editor when it is rendered.<% 
+					%></textarea><%
+					%><%= editor.replace( id = editorName ) %><%
+				%></p><%
+				%><p><%
+					%><input type="submit"/><%
+				%></p><%
+			%></form><%
+		%></body><%
+	%><%/OUTPUT%><%
+%><%/ELSE%><%
+%><%/IF%><%
+
+%><%RETURN: {
+		title		: "YUIEditor",
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

@@ -1,0 +1,52 @@
+	<command>
+		<key>getDownloadsMap</key>
+		<type>hidden</type>
+		<execute>cache</execute>
+		<expire>30m</expire>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var found = Download.searchByFollowLink( this.follow ),
+				groups = {};
+			found && found.forEach(function(Current){
+				var group = groups[ Current.getLevel2Name() ];
+				if( !group ){
+					group = {
+						counter : 0,
+						items : [],
+						types : {}
+					};
+					groups[ Current.getLevel2Name() ] = group;
+				}
+				group.types[ Current.getType() ] = true;
+				group.items.push( Current );
+				++ group.counter;
+			});
+			return groups;
+		]]></script>
+	</command>
+
+	
+	<command>
+		<key>getDownloadsMap</key>
+		<type>hidden</type>
+		<execute>cache</execute>
+		<expire>30m</expire>
+		<script class="script" type="ACM.TPL"><![CDATA[<%FORMAT: 'xml' %><%
+			%><%EXEC: found = Download.searchByFollowLink( this.follow ) %><%
+			%><%EXEC: groups = {} %><%
+			%><%CALL: ForArray( found ) %><%
+				%><%EXEC: group = groups[ Current.getLevel2Name() ] %><%
+				%><%IF: !group %><%
+					%><%EXEC: group = {} %><%
+					%><%EXEC: group.counter = 0 %><%
+					%><%EXEC: group.items = [] %><%
+					%><%EXEC: group.types = {} %><%
+					%><%EXEC: groups[ Current.getLevel2Name() ] = group %><%
+				%><%/IF%><%
+				%><%EXEC: group.types[ Current.getType() ] = true %><%
+				%><%EXEC: group.items.add( Current ) %><%
+				%><%EXEC: group.counter = group.counter + 1 %><%
+			%><%/CALL%><%
+			%><%RETURN: groups %><%
+		%><%/FORMAT%>]]></script>
+	</command>
+	

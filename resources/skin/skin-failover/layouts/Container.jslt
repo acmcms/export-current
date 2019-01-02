@@ -1,0 +1,9 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+// Simple one - returns content of container layout.
+//
+
+return layout.content;

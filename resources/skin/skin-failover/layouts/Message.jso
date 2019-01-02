@@ -1,0 +1,5 @@
+{
+	onLayoutExecute : function(context, layout) {
+		return '[' +  (layout.title || 'Message') + ': ' + Format.jsDescribe(layout) + ']';
+	}
+}

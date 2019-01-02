@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>vlapan TreeData JSON</title>
+	<visibility>hidden</visibility>
+
+	<command>
+		<key>get</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="example" class="boolean" default="false"/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%EXEC: maxLevel = Integer(Request.maxlevel,1) %><%
+			
+			%><%EXEC: cNode = ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+			%><%EXEC: cPath = '' %><%
+			%><%IF: Request.cNode %><%
+				%><%EXEC: cNode = ControlAPI.childForPath(cNode, Request.cNode) %><%
+				%><%EXEC: cPath = cPath + Request.cNode %><%
+			%><%/IF%><%
+
+			%><%IF: Request.path %><%
+				%><%EXEC: path = cNode.getKey() + '/' + Request.path %><%
+				%><%EXEC: path = replace(path,'//','/') %><%
+				%><%EXEC: pathNodes = split(path,'/') %><%
+				%><%EXEC: rPath = substr(Request.path,1) %><%
+				%><%EXEC: EndsWith(rPath,'/') || (rPath += '/') %><%
+			%><%/IF%><%
+			
+			%><%EXEC: pathsLength = ArrayLength(pathNodes) %><%
+	
+			%><%RECURSION: node = cNode, path = cPath, children = '', level = 0, type = 'root', first = true %><%
+				%><%IF: node && ControlAPI.isAccessible(path, node) %><%
+					%><%EXEC: searchFlag = level < pathsLength - 1 && pathNodes[level] == node.getKey() %><%
+					%><%EXEC: isTarget = rPath == path %><%
+			
+					%><%EXEC: hasChildren = ArrayFilled( node.getChildren && node.getChildren() ) %><%
+					%><%= first ? "{" : ",{" %><%
+					%>path:"<%= path %>",<%
+					%>children:<%= hasChildren %>,<%
+					%>icon:"<%= ControlAPI.getIcon(node) %>",<%
+					%>level:<%= level %>,<%
+					%>type:"<%= type %>",<%
+					%>name:"<%= StringToUrlHard(node.getKey()) %>",<%
+					%>title:<%= Format.jsString(node.getTitle()) %><%
+					%><%IF: isTarget %><%
+						%>,selected:true<%
+					%><%/IF%><%
+					%><%IF: level < maxLevel || searchFlag %><%
+						%><%EXEC: foundFlag = false %><%
+						%><%IF: hasChildren %><%
+							%>,items:[<%
+							%><%ITERATE: child : ControlAPI.filterAccessible(path, node.getChildren()) %><%
+								%><%= first ? "" : "," %><%
+								%><%DEEPER: node = child, path = path + child.getKey() + '/', children = '', level = level + 1, type = 'child', first = true %><%
+								%><%EXEC: searchFlag && (foundFlag || (foundFlag = (child.getKey() == pathNodes[level]))) %><%
+								%><%EXEC: first = false %><%
+							%><%/ITERATE%><%
+							%>]<%
+						%><%/IF%><%
+						%><%IF: searchFlag && !foundFlag %><%
+							%>,items:[<%
+								%><%EXEC: cNode = node.getChildByName(pathNodes[level+1]) %><%
+								%><%IF: cNode %><%
+									%><%DEEPER: node = cNode, path = path + cNode.getKey() + '/', children = '', level = level + 1, type = 'child', first = true %><%
+								%><%/IF%><%
+							%>]<%
+						%><%/IF%><%
+					%><%/IF%><%
+					%>}<%
+				%><%ELSE%><%
+					%><%IF: example %><%
+						%>{path:"pics/",children:true,icon:"container-home",level:0,type:"root",name:"root",title:"PicDB",items:[{path:"pics/nature",children:true,icon:"container-information",level:1,type:"child",name:"nature",title:"Nature"},{path:"pics/geo",children:true,icon:"container",level:1,type:"child",name:"geo",title:"Geography"},{path:"pics/person/",children:true,icon:"container-personal",level:1,type:"child",name:"person",title:"Person"},{path:"pics/logotype.png",children:false,icon:"container-personal",level:1,type:"child",name:"logotype",title:"Logotype"}]}<%
+					%><%ELSE%><%
+						%>{error:1,title:"error: node is not accessible"}<%
+					%><%/ELSE%><%
+					%><%/IF%><%
+				%><%/ELSE%><%
+				%><%/IF%><%
+			%><%/RECURSION%><%	
+		%>]]></script>
+	</command>
+</type>

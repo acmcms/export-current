@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>markItUp!</title>
+	<visibility>hidden</visibility>
+	<command>
+		<key>VlapanRicheditMarkItUp</key>
+		<arguments class="fieldset">
+			<field id="finder" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			this.finder = finder;
+			return this;
+		]]></script>
+	</command>
+	<command>
+		<key>init</key>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%>
+			<script type="text/javascript" src="/!/skin/vlapan-default/$files/jquery-1.6.3.min.js"></script>
+			<link rel="stylesheet" type="text/css" href="/!/skin/vlapan-richedit/$files/markitup/1.1.12/skins/markitup/style.css" />
+			<link rel="stylesheet" type="text/css" href="/!/skin/vlapan-richedit/$files/markitup/1.1.12/sets/textile/style.css" />
+			<script type="text/javascript" src="/!/skin/vlapan-richedit/$files/markitup/1.1.12/jquery.markitup.js"></script>
+			<script type="text/javascript" src="/!/skin/vlapan-richedit/$files/markitup/1.1.12/sets/textile/set.js"></script>
+			<%
+		%>]]></script>
+	</command>
+	<command>
+		<key>getJs</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return [
+				"/!/skin/vlapan-default/$files/jquery-1.6.3.min",
+				"http://markitup.jaysalvat.com/examples/markitup/jquery.markitup.js",
+				"http://markitup.jaysalvat.com/examples/markitup/sets/textile/set.js"
+			];
+		]]></script>
+	</command>
+	<command>
+		<key>getCss</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return [
+				"http://markitup.jaysalvat.com/examples/markitup/skins/markitup/style.css",
+				"http://markitup.jaysalvat.com/examples/markitup/sets/textile/style.css"
+			];
+		]]></script>
+	</command>
+	<command>
+		<key>replace</key>
+		<arguments class="fieldset">
+			<field id="id" class="string"/>
+			<field id="fullscreen" class="boolean"/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%>
+			<script language="javascript">
+			$(document).ready(function(){
+				// Useful to prevent multi-instances CSS conflict
+				var mySettings = {};
+				mySettings.nameSpace="textile";
+				$('#<%= id %>').markItUp(mySettings);
+			});
+			</script>
+			<%
+		%>]]></script>
+	</command>
+</type>

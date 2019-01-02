@@ -1,0 +1,284 @@
+<%
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add('shared-editor_style') %><%
+%><%EXEC: requireCss.add('wysiwyg') %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add("require") %><%
+%><%EXEC: requireJs.add("Utils/Cookies") %><%
+%><%EXEC: requireJs.add("Utils/Event") %><%
+%><%EXEC: requireJs.add("app/Router") %><%
+
+%><%EXEC: requireJs.add("Tabble") %><%
+%><%EXEC: requireJs.add("Toolbar") %><%
+
+%><%EXEC: requireJs.add("/!/skin/ctrl-ie6-richedit-modal/client/js/DHTMLEd") %><%
+
+%><%EXEC: requireJs.add("/!/skin/ctrl-ie6-richedit-modal/client/js/EditorActiveX") %><%
+%><%EXEC: requireJs.add("/!/skin/ctrl-ie6-richedit-modal/client/js/EditorIFrame") %><%
+%><%EXEC: requireJs.add("/!/skin/ctrl-ie6-richedit-modal/client/js/EditorDiv") %><%
+%><%EXEC: requireJs.add("/!/skin/ctrl-ie6-richedit-modal/client/js/EditorSource") %><%
+%><%EXEC: requireJs.add("/!/skin/ctrl-ie6-richedit-modal/client/js/EditorPreview") %><%
+
+%><%EXEC: requireJs.add("/!/skin/ctrl-ie6-richedit-modal/client/js/editor_toolbar") %><%
+%><%EXEC: requireJs.add("/!/skin/ctrl-ie6-richedit-modal/client/js/shared-editor_toolbar-html") %><%
+%><%EXEC: requireJs.add("/!/skin/ctrl-ie6-richedit-modal/client/js/editor_actions") %><%
+
+// attributes are not working here - they are accessible only for layouts!
+%><%EXEC: testing = attributes && attributes.testing || Request.target.indexOf('.test.') != -1 %><%
+
+// to select first tab
+%><%EXEC: firstTab = true %><%
+
+%><%OUTPUT: head %><%
+	%><script><%
+		%><%FORMAT: 'js' %>
+			window.resizeTimer = false;
+	
+			function keepEditorSize(){
+				clearTimeout(window.resizeTimer);
+				window.resizeTimer = setTimeout("putEditorSizeInCookies()",1000);
+			}
+			
+			function putEditorSizeInCookies(){
+				Utils.Cookies.create("editorSize", document.body.offsetWidth+","+document.body.offsetHeight, 3650);
+			}
+	
+			window.returnValue = undefined;
+			
+			function TabHolderOff(obj){
+				var oTable = obj.offsetParent;
+				obj.className = 'TabOff';
+				oTable.rows[1].cells[obj.tabNum * 2].innerHTML = (obj.tabNum > 0) ? TabbleSplitters.tabSplitter1 : TabbleSplitters.tabSplitter2;
+				oTable.rows[1].cells[obj.tabNum * 2 + 2].innerHTML = (obj.tabNum < obj.parent.holders.length - 1) ? TabbleSplitters.tabSplitter1 : TabbleSplitters.tabSplitter5;
+				oTable.rows[0].cells[obj.tabNum * 2].className = 'TabOn';
+				oTable.rows[0].cells[obj.tabNum * 2 + 1].className = 'TabOn';
+				oTable.rows[0].cells[obj.tabNum * 2 + 2].className = 'TabOn';
+			}
+			
+			function TabHolderOn(obj){
+				var oTable = obj.offsetParent;
+				obj.className = 'TabOn';
+				oTable.rows[1].cells[obj.tabNum * 2].innerHTML = TabbleSplitters.tabSplitter3;
+				oTable.rows[1].cells[obj.tabNum * 2 + 2].innerHTML = TabbleSplitters.tabSplitter4;
+				oTable.rows[0].cells[obj.tabNum * 2].className = 'TabOffl';
+				oTable.rows[0].cells[obj.tabNum * 2 + 1].className = '';
+				oTable.rows[0].cells[obj.tabNum * 2 + 2].className = 'TabOffr';
+			}
+			
+	
+			function TabIni(obj){
+				obj.switchTab = SwitchTab;
+				obj.getValue = GetValue;
+				obj.holders = [];
+				obj.frames = obj.rows[0].cells[0].firstChild.rows;
+				var cells = obj.rows[1].cells[0].firstChild.rows[1].cells;
+				for (var i = 0; i < cells.length; ++i){
+					if (cells[i].getAttribute('holder')){
+						cells[i].parent = obj;
+						cells[i].tabNum = obj.holders.length;
+						cells[i].frame = obj.frames[cells[i].tabNum];
+						cells[i].frame.holder = cells[i];
+						cells[i].onclick = function(){
+							this.parent.switchTab(this.tabNum);
+						};
+						obj.holders[obj.holders.length] = cells[i];
+						if (cells[i].className == 'TabOn'){
+							obj.select = cells[i];
+						}
+					}
+				}
+			}
+			
+			function Return(){
+				tabble.onBlur();
+				window.returnValue = tabble.value;
+				window.close();
+			}
+	
+			var ContextMenu = [];
+		
+			var GeneralContextMenu	= [];
+			var TableContextMenu	= [];
+			var LinkContextMenu		= [];
+			var AbsPosContextMenu	= [];
+		
+		
+			function ContextMenuItem(text, command, commandType){
+				this.Text			= text ;
+				this.cType			= commandType || TBCMD_DEC;
+				
+				switch (this.cType){
+					case TBCMD_DEC :
+						this.cm = command;
+						this.action = DHTMLEd.decCommand;
+						break ;
+					case TBCMD_DOC :
+						this.cm = command;
+						this.action = DHTMLEd.docCommand;
+						break ;
+					default :
+						this.action = eval(command);
+						break ;
+				}
+			}
+		
+			var MENU_SEPARATOR = "";
+			GeneralContextMenu[0] = new ContextMenuItem("Cut", DECMD_CUT);
+			GeneralContextMenu[1] = new ContextMenuItem("Copy", DECMD_COPY);
+			GeneralContextMenu[2] = new ContextMenuItem("Paste", DECMD_PASTE);
+			GeneralContextMenu[3] = new ContextMenuItem("Paste text only", CM_PASTETEXT, TBCMD_CUSTOM);
+			GeneralContextMenu[4] = new ContextMenuItem("Paste from Word", CM_PASTEWORD, TBCMD_CUSTOM);
+		
+			LinkContextMenu[0] = new ContextMenuItem(MENU_SEPARATOR, 0);
+			LinkContextMenu[1] = new ContextMenuItem("EditLink", CM_LINK, TBCMD_CUSTOM);
+			LinkContextMenu[2] = new ContextMenuItem("RemoveLink", DECMD_UNLINK);
+		
+			TableContextMenu[0] = new ContextMenuItem(MENU_SEPARATOR, 0);
+			TableContextMenu[1] = new ContextMenuItem("Insert Row", DECMD_INSERTROW);
+			TableContextMenu[2] = new ContextMenuItem("Delete Rows", DECMD_DELETEROWS);
+			TableContextMenu[3] = new ContextMenuItem(MENU_SEPARATOR, 0);
+			TableContextMenu[4] = new ContextMenuItem("Insert Column", DECMD_INSERTCOL);
+			TableContextMenu[5] = new ContextMenuItem("Delete Columns", DECMD_DELETECOLS);
+			TableContextMenu[6] = new ContextMenuItem(MENU_SEPARATOR, 0);
+			TableContextMenu[7] = new ContextMenuItem("Insert Cell", DECMD_INSERTCELL);
+			TableContextMenu[8] = new ContextMenuItem("Delete Cells", DECMD_DELETECELLS);
+			TableContextMenu[9] = new ContextMenuItem("Merge Cells", DECMD_MERGECELLS);
+			TableContextMenu[10] = new ContextMenuItem("Split Cell", DECMD_SPLITCELL);
+			TableContextMenu[11] = new ContextMenuItem(MENU_SEPARATOR, 0);
+			TableContextMenu[12] = new ContextMenuItem("CellProperties", CM_CELLPROPERTIES, TBCMD_CUSTOM) ;
+			TableContextMenu[13] = new ContextMenuItem("TableProperties", CM_TABLEPROPERTIES, TBCMD_CUSTOM) ;
+		
+			AbsPosContextMenu[0] = new ContextMenuItem(MENU_SEPARATOR, 0);
+			AbsPosContextMenu[1] = new ContextMenuItem("Send To Back", DECMD_SEND_TO_BACK);
+			AbsPosContextMenu[2] = new ContextMenuItem("Bring To Front", DECMD_BRING_TO_FRONT);
+			AbsPosContextMenu[3] = new ContextMenuItem(MENU_SEPARATOR, 0);
+			AbsPosContextMenu[4] = new ContextMenuItem("Send Backward", DECMD_SEND_BACKWARD);
+			AbsPosContextMenu[5] = new ContextMenuItem("Bring Forward", DECMD_BRING_FORWARD);
+			AbsPosContextMenu[6] = new ContextMenuItem(MENU_SEPARATOR, 0);
+			AbsPosContextMenu[7] = new ContextMenuItem("Send Below Text", DECMD_SEND_BELOW_TEXT);
+			AbsPosContextMenu[8] = new ContextMenuItem("Bring Above Text", DECMD_BRING_ABOVE_TEXT);
+		<%/FORMAT%><%
+	%></script><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+%><body BGCOLOR=buttonface scroll="no" class="BorderBox" style="cursor:default; margin:2px; border:0" onresize="keepEditorSize()"><%
+	%><div id="divTemp" style="VISIBILITY: hidden; OVERFLOW: hidden; POSITION: absolute; WIDTH: 1px; HEIGHT: 1px"></div><%
+	%><table border=0 cellpadding=0 cellspacing=0 width=100% height=100%><%
+		%><tr><%
+			%><td><%
+			%></td><%
+		%></tr><%
+		%><tr><%
+			%><td height=100% id="tabble-target"><%
+			%></td><%
+		%></tr><%
+		%><tr><%
+			%><td align=right style="padding:10px 0 4px 0"><%
+				%><button onclick="Return()"><%
+					%><%= intl( en = "Save", ru = "Сохранить" ) %><%
+				%></button><%
+				%>&nbsp;<%
+				%><button onclick='window.close()'><%
+					%><%= intl( en = "Close", ru = "Закрыть" ) %><%
+				%></button><%
+			%></td><%
+		%></tr><%
+	%></table><%
+	%><script><%
+		%><%FORMAT: 'js' %>
+			tabble = new Tabble(document.getElementById("tabble-target"));
+			tabble.value = window.dialogArguments || 
+				<%= Format.jsString( Request.parameterString 
+						? ''
+						: "Te<b>st ed</b>it<i>or valu</i>e!") %>;
+
+			function setupEditor(editor){
+				editor.onBlur = function(){
+					this.editor.getHtml && (tabble.value = this.editor.getHtml());
+				};
+				editor.onFocus = function(){
+					this.editor.setHtml(tabble.value);
+					this.editor.setFocus && this.editor.setFocus();
+				};
+			}
+						
+			var editorActiveX = document.createElement("div");
+			editorActiveX.editor = new EditorActiveX(editorActiveX, tabble);
+			setupEditor(editorActiveX);
+			tabble.addPane("ActiveX", editorActiveX);
+
+			var editorIFrame = document.createElement("div");
+			editorIFrame.editor = new EditorIFrame(editorIFrame, tabble);
+			setupEditor(editorIFrame);
+			tabble.addPane("IFrame", editorIFrame);
+			
+			var editorDiv = document.createElement("div");
+			editorDiv.editor = new EditorDiv(editorDiv, tabble);
+			setupEditor(editorDiv);
+			tabble.addPane("Div", editorDiv);
+			
+			var editorSource = document.createElement("div");
+			editorSource.editor = new EditorSource(editorSource, tabble);
+			setupEditor(editorSource);
+			tabble.addPane("Source", editorSource);
+			
+			var editorPreview = document.createElement("div");
+			editorPreview.editor = new EditorPreview(editorPreview, tabble);
+			setupEditor(editorPreview);
+			tabble.addPane("Preview", editorPreview);
+	
+			tabble.finish();
+		<%/FORMAT%><%
+	%></script><%
+
+
+	%><div style="display:none"><%
+				%><table border=0 cellpadding=0 cellspacing=0 width=100% height=100% id=TabsFormTable><%
+					%><tr><%
+						%><td><%
+							%><table border=0 cellpadding=0 cellspacing=0 class=zakladka width=100%><%
+								%><tr class=border><%
+									%><td class=TabOffl><img width=0 height=0></td><%
+									%><td><img width=0 height=0></td><%
+									%><td class=TabOffr><img width=0 height=0></td><%
+									%><td class=TabOn><img width=0 height=0></td><%
+									%><td class=TabOn><img width=0 height=0></td><%
+									%><td class=TabOn><img width=0 height=0></td><%
+									%><td class=TabOn><img width=0 height=0></td><%
+									%><td class=TabOn><img width=0 height=0></td><%
+									%><td class=TabOn><img width=0 height=0></td><%
+									%><td class=TabOn><img width=0 height=0></td><%
+								%></tr><%
+								%><tr><%
+									%><td><script>document.write(TabbleSplitters.tabSplitter3)</script></td><%
+									%><td class=TabOn holder=1 hName=WYSIWYG nowrap><div>ActiveX</div></td><%
+									%><td><script>document.write(TabbleSplitters.tabSplitter4)</script></td><%
+									%><td class=TabOff holder=1 hName=WISIWIG nowrap><div>WYSIWYG</div></td><%
+									%><td><script>document.write(TabbleSplitters.tabSplitter1)</script></td><%
+									%><td class=TabOff holder=1 hName=HTML nowrap><div>HTML</div></td><%
+									%><td><script>document.write(TabbleSplitters.tabSplitter1)</script></td><%
+									%><td class=TabOff holder=1 hName=Browse nowrap><div>Browse</div></td><%
+									%><td><script>document.write(TabbleSplitters.tabSplitter5)</script></td><%
+									%><td style="width:100%"></td><%
+								%></tr><%
+							%></table><%
+						%></td><%
+					%></tr><%
+				%></table><%
+	%></div><%
+
+
+
+%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: intl( en = "Rich Editor", ru = "Редактор" ),
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

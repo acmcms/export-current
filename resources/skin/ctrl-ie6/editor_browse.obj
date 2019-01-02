@@ -1,0 +1,21 @@
+<div style="width:100%; height:100%; overflow:auto;" id=BrowseEditorElement></div>
+
+<script>
+	eventMethods.register(BrowseEditorElement, 'TabsForm');
+
+	BrowseEditorElement.onFire = function(eType,eValue,eObj){
+		switch (eType){
+			case 'SwitchTab':
+				if(eValue == 'Browse') this.setHtml( String(eObj.value) );
+				break;
+		}
+	}
+
+	BrowseEditorElement.setHtml = function(html){
+		this.value = html;
+		this.innerHTML = "";
+		var oIframe = document.createElement("<IFRAME SRC='__blank' name='BrowseEditorElementpreview' style='width:100%; height:100%;' marginWidth=2 marginHeight=2>");
+		this.insertAdjacentElement('beforeEnd', oIframe)
+//		this.innerHTML = html;
+	}
+</script>

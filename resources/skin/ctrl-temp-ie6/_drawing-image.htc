@@ -1,0 +1,19 @@
+<%FINAL: 'text/x-component' %>
+<PUBLIC:ATTACH EVENT="onload" ONEVENT="setSize()" FOR="window"/>
+<PUBLIC:ATTACH EVENT="onresize" ONEVENT="setTimer()"/>
+<SCRIPT LANGUAGE="JScript">
+
+function setSize(){
+	if(this.timer) clearTimeout(this.timer);
+	this.src = this.source + '&gwidth='+this.offsetWidth+'&gheight='+this.offsetHeight;
+}
+
+function setTimer(){
+	if(this.timer) clearTimeout(this.timer);
+	var src = this.source + '&gwidth='+this.offsetWidth+'&gheight='+this.offsetHeight
+	if(this.src.indexOf(src) != -1) return;
+	var str = 'var obj = document.getElementById("'+this.id+'"); obj.src = "' + src + '";';
+	this.timer = setTimeout(str,1500);
+}
+</SCRIPT>
+<%/FINAL%>

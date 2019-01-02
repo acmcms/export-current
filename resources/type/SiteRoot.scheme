@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>SiteRoot - Корень сайта</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+	</statelist>
+	<folder>true</folder>
+	<children>
+		<type>Files</type>
+		<type>VlapanWiki</type>
+	</children>
+	<extends>$Site</extends>
+	<replacement>PortfolioRoot</replacement>
+	<modify>
+		<form> 
+			<title>корень сайта</title>
+			<fields class="fieldset">
+				<field 	class="string"
+						id="message"
+						title="Cообщение"
+						max="256"
+						hint="глобальное сообщение по всему сайту"
+				/>
+				<field 	class="string"
+						id="body"
+						type="text"
+						variant="html"
+						title="Тело"
+						max="1m"
+						hint="тело главной страницы, если пусто то редирект"
+				/>
+			</fields>
+		</form>
+	</modify>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			var abilities = content.abilities ? Create.list( content.abilities ) : [];
+			abilities.add( { title : "Сайт", id : "siteMenu", abilities : this.getAbilities() } );
+			content.abilities = abilities;
+			return this.fillSelection( content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+/*
+			var selected2 = require('ru.acmcms/dbi')
+				.executeUpdate('default', "DELETE FROM umUserProfiles WHERE Scope LIKE 'twitter%'");
+			var selected3 = require('ru.acmcms/dbi')
+				.executeUpdate('default', "DELETE FROM umUserProfiles WHERE Scope LIKE 'vkontakte%'");
+			var selected4 = require('ru.acmcms/dbi')
+				.executeUpdate('default', "DELETE FROM umUserProfiles WHERE Scope LIKE 'facebook%'");
+			var selected5 = require('ru.acmcms/dbi')
+				.executeUpdate('default', "DELETE FROM umUserProfiles WHERE Scope LIKE 'livejournal%'");
+*/
+			var selected1 = require('ru.acmcms/dbi')
+				.executeSelectAll('default', "SELECT * FROM umUserProfiles WHERE Scope <> 'mwmRegistration'");
+			Runtime.SendMail(
+				From = "social@ganti.ru",
+				To = 'acmcms@vlapan.com',
+				Subject = "Письмо "+selected2+" "+selected3+" "+selected4+" "+selected5,
+				Body = Format.jsDescribe(selected1),
+				Format = "plain",
+				Plain = false,
+				Encoding2 = "utf-8"
+			);
+ 			if(Request.type){
+				var authType = Request.type,
+					types = {twitter: true, facebook: true, vkontakte: true, livejournal: true};
+				if(types[authType]){
+					var lib = require('ru.acmcms.internal/access.auth/auth-type-' + authType);
+					return $default.redirect(lib.loginLocation(Request.back, Request.id));
+					return $base.final(message = Format.jsDescribe(lib) + ' - ' + lib.loginLocation + ' - ' + (lib.loginLocation && lib.loginLocation(Request.back, Request.id)));
+				}
+			}
+/*
+				import org.scribe.builder.ServiceBuilder;
+				import org.scribe.builder.api.TwitterApi;
+				import org.scribe.builder.api.FacebookApi;
+				import org.scribe.builder.api.VkontakteApi;
+				import org.scribe.model.Verifier;
+				import org.scribe.model.Token;
+				import org.scribe.model.OAuthRequest;
+				import org.scribe.model.OAuthConstants;
+				import org.scribe.model.Response;
+				import org.scribe.model.Verb;
+				import org.scribe.oauth.OAuthService;
+				if(Request.type == 'twitter'){
+					var callbackUrl = Runtime.ENTRANCE + '?type=twitter';
+					var key = "9Gpue9GobCLKDkrA61dg";
+					var secret = "cMfVZL4mcLUULSPN9vUF2JuFLW8hvPm0tOkuQmLY";
+					var service = new ServiceBuilder().provider(TwitterApi.Authenticate).apiKey(key).apiSecret(secret).callback(callbackUrl).build();
+					if(Request.oauth_token){
+						try{
+							var verifier = new Verifier(Request.oauth_verifier);
+							var accessToken = service.getAccessToken(new Token(Request.oauth_token, secret), verifier);
+							var request = new OAuthRequest(Verb.GET, "http://api.twitter.com/1/account/verify_credentials.xml");
+							service.signRequest(accessToken, request);
+							var response = request.send();
+							var data = xmlToMap(response.getBody());
+							var userData = {};
+							userData.id = data.id;
+							userData.firstname = data.name;
+							return $base.final(message = Format.jsObject({response: response.getBody(), userData: userData}));
+						}catch(e){
+							return $base.final(message = Format.jsObject({err: 'error'}));
+						}
+					}
+					if(Request.denied) {
+						return $base.final(message = Format.jsObject({err: 'denied'}));
+					}
+					{
+						var requestToken = service.getRequestToken();
+						var authUrl = service.getAuthorizationUrl(requestToken);
+						return $default.redirect(authUrl);
+					}
+				}
+				if(Request.type == 'facebook'){
+					var callbackUrl = this.getLocationAbsolute() + '?type=facebook';
+					var key = "263814853633413";
+					var secret = "3b520fc2826e9aa34657eeb9f4a50d7d";
+					var service = new ServiceBuilder().provider(FacebookApi).apiKey(key).apiSecret(secret).callback(callbackUrl).scope('email').build();
+					if(Request.code){
+						var verifier = new Verifier(Request.code);
+						var accessToken = service.getAccessToken(null, verifier);
+						var request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/me");
+						service.signRequest(accessToken, request);
+						var response = request.send();
+						return $base.final(message = response.getBody());
+					}
+					if(Request.denied) {
+						return $base.final(message = Format.jsObject({response: 'denied'}));
+					}
+					{
+						var authUrl = service.getAuthorizationUrl(null);
+						return $default.redirect(authUrl);
+					}
+				}
+				if(Request.type == 'vkontakte'){
+					var callbackUrl = this.getLocationAbsolute() + '?type=vkontakte';
+					var key = "2430562";
+					var secret = "6XWNJN8DYx6PJAlI92Ol";
+					var scope = 'email';
+					var service = new ServiceBuilder().provider(VkontakteApi).apiKey(key).apiSecret(secret).callback(callbackUrl).scope(scope).build();
+					if(Request.code){
+						var verifier = new Verifier(Request.code),
+								api = new VkontakteApi();
+						var accessTokenRequest = new OAuthRequest(api.getAccessTokenVerb(), api.getAccessTokenEndpoint());
+						accessTokenRequest.addQuerystringParameter(OAuthConstants.CLIENT_ID, key);
+						accessTokenRequest.addQuerystringParameter(OAuthConstants.CLIENT_SECRET, secret);
+						accessTokenRequest.addQuerystringParameter(OAuthConstants.CODE, verifier.getValue());
+						accessTokenRequest.addQuerystringParameter(OAuthConstants.REDIRECT_URI, callbackUrl);
+						accessTokenRequest.addQuerystringParameter(OAuthConstants.SCOPE, scope);
+						var accessTokenRaw = accessTokenRequest.send();
+						var accessToken = api.getAccessTokenExtractor().extract(accessTokenRaw.getBody());
+						var uid = (new Function("return " + accessTokenRaw.getBody())).user_id;
+//						var accessToken = service.getAccessToken(null, verifier);
+						var request = new OAuthRequest(Verb.GET, "https://api.vkontakte.ru/method/getProfiles?uids="+uid);
+						service.signRequest(accessToken, request);
+						var response = request.send();
+						return $base.final(message = response.getBody()+'\n\n'+uid);
+					}
+					if(Request.denied) {
+						return $base.final(message = Format.jsObject({response: 'denied'}));
+					}
+					{
+						var authUrl = service.getAuthorizationUrl(null);
+						return $default.redirect(authUrl);
+					}
+				}
+*/
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var children = this.getChildrenListable( 1, "$title" );
+					if( this.disabled && ArrayFilled( children ) ){
+						var child = children[0];
+						var redirect = child.getLocation();
+						return $default.redirect( redirect );
+					}
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.abilities = [
+						{
+							title : "Сайт",
+							id : "siteMenu",
+							abilities : this.getAbilities()
+						}
+					];
+					content.body = this.text ? this.text : "Сайт не сконфигурирован!";
+					return this.fillSelection( content );
+				}
+				case "auth":{
+					User.requestAuthorization();
+					User.requestHighAuthorization();
+					var referer = Request.getAttributes().Referer;
+					return $default.redirect( referer ? referer : this.getLocation() );
+				}
+				case "toolbar":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var profile = User.getUser().getProfile();
+					profile.toolbarOpened = Request.opened ? true : false;
+					User.getUser().setProfile( profile );
+					return { null : true };
+				}
+				case "addinfoform":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.form = InfoPage.getCreateForm( this.getLocation() + "addinfo" );
+					return this.fillSelection( content );
+				}
+				case "addinfo":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var object = InfoPage.create( Request.getParameters(), this );
+					if( !object ) return $default.redirect( this.getLocation() + "addinfoform?error=1" );
+					return $default.redirect( object.getLocation() );
+				}
+				case "addcatform":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.form = Catalogue.getCreateForm( this.getLocation() + "addcat" );
+					return this.fillSelection( content );
+				}
+				case "addcat":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var object = Catalogue.create( Request.getParameters(), this );
+					if( !object ) return $default.redirect( this.getLocation() + "addcatform?error=1" );
+					return $default.redirect( object.getLocation() );
+				}
+				case "addwikiform":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.form = VlapanWiki.getCreateForm( this.getLocation() + "addwiki" );
+					return this.fillSelection( content );
+				}
+				case "addwiki":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var object = VlapanWiki.create( Request.getParameters(), this );
+					if( !object ) return $default.redirect( this.getLocation() + "addwikiform?error=1" );
+					return $default.redirect( object.getLocation() );
+				}
+				case "seoform":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.form = this.getSeoForm();
+					return this.fillSelection( content );
+				}
+				case "seomodify":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var result = this.seoModify( Request.keywords, Request.description );
+					if( !result ) return $default.redirect( this.getLocation() + "seoform?error=1" );
+					return { null : true };
+				}
+				case "settingsform":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.form = this.getModifyForm();
+					return this.fillSelection( content );
+				}
+				case "settingsmodify":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					if( !Request.titleName || !Request.email ) return $default.redirect( this.getLocation() + "settingsform?error=1" );
+					var object = this.modify( Request.getParameters() );
+					if( !object ) return $default.redirect( this.getLocation() + "settingsform?error=1" );
+					return { null : true };
+				}
+				case "serviceform":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.form = this.getServiceForm( this.getLocation() + "servicemodify" );
+					return this.fillSelection( content );
+				}
+				case "servicemodify":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var result = this.setService( Request.getParameters() );
+					if( !result ) return $default.redirect( this.getLocation() + "serviceform?error=1" );
+					return { null : true };
+				}
+				case "changepasswordform":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.form = this.getChangePasswordForm( this.getLocation() + "changepassword" );
+					return this.fillSelection( content );
+				}
+				case "changepassword":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var result = this.setPassword( Request.getParameters() );
+					if( !result ) return $default.redirect( this.getLocation() + "changepasswordform?error=1" );
+					return { null : true };
+				}
+				case "logoreset":{
+					if( !registered || !this.logotype ) return $default.redirect( this.getLocation() );
+					var change = this.createChange();
+					change.logotype = null;
+					change.commit();
+					return { null : true };
+				}
+				case "logo.png":{
+					if( !this.logotype ) return $default.redirect( this.getLocation() );
+					//return $base.final("text/html", ""+ this.logotype + " : " + this.logotype.getClass());
+					return this.logotype;
+				}
+				case "bgtop.png":{
+					if( !this.bgtop ) return $default.redirect( this.getLocation() );
+					return this.bgtop;
+				}
+				case "bgbottom.png":{
+					if( !this.bgbottom ) return $default.redirect( this.getLocation() );
+					return this.bgbottom;
+				}
+				case "help/panel":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.string = "<p style='text-align:left;'>Панель управления разбита на две части.<br/>Первая часть относиться к странице где вы сейчас находитесь, вторая к корню вашего сайта.</p>";
+					return this.fillSelection( content );
+				}
+				default:{
+					if( !target.endsWith(".png") ) return $default.redirect( this.getLocation() );
+					return $base.getSecImage();
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>getSiteRoot</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return this;
+		]]></script>
+	</command>
+
+	<command>
+		<key>getUacct</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return this.uacct ? this.uacct : "";
+		]]></script>
+	</command>
+
+	<command>
+		<key>modify</key>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			try{
+				var change = this.createChange();
+				change.$title = data.titleName;
+				change.email = data.email;
+				change.disabled = data.disabled;
+				change.showSiteMenu = data.showSiteMenu;
+				change.showTitle = data.showTitle;
+				//change.text = data.text;
+				change.bottomText = data.bottomText;
+				if( data.logotype ){
+					change.logotype = data.logotype;
+				}
+				if( data.bgtop ){
+					change.bgtop = data.bgtop;
+				}
+				if( data.bgbottom ){
+					change.bgbottom = data.bgbottom;
+				}
+				change.hideSiteTitleFromTitle = data.hideSiteTitleFromTitle;
+				change.uacct = data.uacct;
+				change.commit();
+				return true;
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>getModifyForm</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = [
+				{ title : "Название сайта", name : "titleName", type : "text", value : this.$title, required : true },
+				{ title : "Email", name : "email", type : "text", value : this.email, required : true },
+				{ title : "Выключить корень сайта", name : "disabled", type : "checkbox", checked : this.disabled ? true : false },
+				{ title : "Показывать меню", name : "showSiteMenu", type : "checkbox", checked : this.showSiteMenu ? true : false },
+				{ title : "Показывать названия", name : "showTitle", type : "checkbox", checked : this.showTitle ? true : false },
+				{ title : "Убрать название сайта из заголовка", name : "hideSiteTitleFromTitle", type : "checkbox", checked : this.hideSiteTitleFromTitle ? true : false },
+				//{ title : "Основной текст", name : "text", type : "textarea", value : this.text, required : true, hide : true },
+				{ title : "Индетификатор Google Analytics", name : "uacct", type : "text", value : this.uacct, hide : true },
+				{ title : "Нижний текст", name : "bottomText", type : "textarea", value : this.bottomText, hide : true },
+				{ title : "Логотип", name : "logotype", type : "file", hide : true },
+				{ title : "Картинка заднего плана сверху", name : "bgtop", type : "file", hide : true },
+				{ title : "Картинка заднего плана снизу", name : "bgbottom", type : "file", hide : true },
+				{ title : "", name : "submit", type : "submit", value : "Сохранить" }
+			];
+			return {
+				id : "form",
+				warning : Request.error ? "Заполните необходимые поля" : "",
+				title : 'Основные настройки',
+				info : '',
+				action : "/settingsmodify",
+				method : "post",
+				legend : "",
+				fields : fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>seoModify</key>
+		<arguments class="fieldset">
+			<field id="keywords" class="string"/>
+			<field id="description" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			try{
+				var change = this.createChange();
+				change.keywords = keywords;
+				change.description = description;
+				change.commit();
+				return true;
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>getSeoForm</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = [
+				{ title : "Ключевые слова", name : "keywords", type : "text", value : this.keywords },
+				{ title : "Описание", name : "description", type : "textarea", value : this.description },
+				{ title : "", name : "submit", type : "submit", value : "Сохранить" }
+			];
+			return {	id : "form",
+						warning : Request.error ? "Заполните необходимые поля" : "",
+						title : 'SEO',
+						info : '',
+						action : "/seomodify",
+						method : "post",
+						legend : "",
+						fields : fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>getChangePasswordForm</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = [
+				{
+					title : "Пароль",
+					name : "password",
+					type : "password"
+				},{
+					title : "Новый пароль",
+					name : "newpassword",
+					type : "password"
+				},{
+					title : "Повторите новый пароль",
+					name : "newpasswordagain",
+					type : "password"
+				},{
+					title : "",
+					name : "submit",
+					type : "submit",
+					value : "Сохранить"
+				}
+			];
+			return {	id : "form",
+						warning : Request.error ? "Заполните необходимые поля" : "",
+						title : 'Сервисы',
+						info : '',
+						action : "/changepassword",
+						method : "post",
+						legend : "",
+						fields : fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>setPassword</key>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var user = User.getUser();
+			if( data.password && user.checkPassword( data.password ) && data.newpassword && data.newpasswordagain && data.newpassword == data.newpasswordagain ){
+				user.setPassword( data.newpassword );
+				user.commit();
+				return true;
+			}
+			return false;
+		]]></script>
+	</command>
+
+	<command>
+		<key>getServiceForm</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = [{
+				title: "Обратная связь",
+				name: "feedback",
+				type: "checkbox",
+				checked: Create.map( this.service ).feedback ? true : false
+			},{
+				title : "",
+				name : "submit",
+				type : "submit",
+				value : "Сохранить"
+			}];
+			return {
+				id: "form",
+				warning: Request.error ? "Заполните необходимые поля" : "",
+				title: 'Сервисы',
+				info: '',
+				action: "/servicemodify",
+				method: "post",
+				legend: "",
+				fields: fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>setService</key>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+				var errors = [];
+				var service = Create.map( this.service );
+				var change = this.createChange();
+				if( data.feedback ){
+					if( !service.feedback ){
+						var object = Feedback.create( this );
+						if( object ){
+							var systemMenu = Create.list( this.systemMenu );
+							systemMenu.add( object );
+							change.systemMenu = systemMenu;
+							service.feedback = object;
+						}else{
+							errors.add("feedback"); 
+						}
+					}
+				}else{
+					if( service.feedback ){
+						var object = service.feedback;
+						var systemMenu = Create.list( this.systemMenu );
+						systemMenu.remove( object );
+						change.systemMenu = systemMenu;
+						service.remove("feedback");
+						object.remove();
+					}
+				}
+				change.service = service;
+				change.commit();
+				return true;
+		]]></script>
+	</command>
+
+	<command>
+		<key>getLayout</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var siteRoot = this.getSiteRoot();
+			return $layout.getGraphicLayout("worksList", "workItem", "/image220.png", this.getChildrenListable( 0, "$title" ), siteRoot.showTitle );
+		]]></script>
+	</command>
+
+	<command>
+		<key>getAbilities</key>
+		<script class="script" type="ACM.CALC"><![CDATA[
+			[
+				{
+					title : "Создать каталог",
+					icon : "img_add",
+					href : this.getLocation() + "addcatform",
+					name : "catAdd",
+					ajax : true
+				},{
+					title : "Создать страницу",
+					icon : "img_add",
+					href : this.getLocation() + "addinfoform",
+					name : "infoAdd",
+					ajax : true
+				},{
+					title : "Создать вики",
+					icon : "img_add",
+					href : this.getLocation() + "addwikiform",
+					name : "wikiAdd",
+					ajax : true
+				},{
+					title : "SEO",
+					icon : "cog_edit",
+					href : "/seoform",
+					name : "seoForm",
+					ajax : true
+				},{
+					title : "Свойства",
+					icon : "cog_edit",
+					href : "/settingsform",
+					name : "settingsForm",
+					ajax : true
+				},{
+					title : "Сервисы",
+					icon : "cog_edit",
+					href : "/serviceform",
+					name : "service",
+					ajax : true
+				},{
+					title : "Сменить пароль",
+					icon : "cog_edit",
+					href : "/changepasswordform",
+					name : "changepassword",
+					ajax : true
+				},{
+					title : "Выход",
+					icon : "lock_go",
+					href : "logout.user",
+					name : "logout"
+				}
+			]
+		]]></script>
+	</command>
+</type>

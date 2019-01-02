@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Abstract: Default object</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<replacement>*</replacement>
+	<replacement>*Disabled</replacement>
+
+	<load class="fieldset">
+		<field id="image" respond="true" load="false"/>
+		<field id="image2" respond="true" load="false"/>
+		<field id="images" load="false" indexing="false"/>
+		<field id="icon" respond="true" load="false"/>
+	</load>
+
+	<respond>
+		<behaviour>
+			<handle>this</handle>
+			<public>true</public>
+			<ttl>0</ttl>
+			<cache>2h</cache>
+		</behaviour>
+
+		<script class="script" type="ACM.TEXT"><![CDATA[
+			No response here.
+		]]></script>
+		
+	</respond>
+
+	<render>
+		<script class="script" type="ACM.TEXT"><![CDATA[
+			Default
+		]]></script>
+	</render>
+
+	<command>
+		<type>hidden</type>
+		<key>synchronizeWith</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			for(var Current in this.getChildren(0,null)){
+				var newLink = data.target.createChild();
+				newLink.setKey(Current.getKey());
+				newLink.setState(Current.getState());
+				newLink.setFolder(Current.isFolder());
+				newLink.setCreateLinkedWith(Current);
+				var newSync = newLink.getSynchronization();	
+				newSync.synchronizeExport( Current.getGuid() );
+				newSync.synchronizeImport( Current.getGuid() );
+				newSync.commit();
+				newLink.setCreateLocal(false);
+				var name = Current.getKey();
+				Current.synchronizeWith(target = newLink);
+				newLink.commit();
+			}
+		]]></script>
+	</command>
+
+
+	<command>
+		<key>ARRAY_MONTH3</key>
+		<static>true</static>
+		<execute>once</execute>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return [
+				intl(en = "jan", ru = "янв"),
+				intl(en = "feb", ru = "фев"),
+				intl(en = "mar", ru = "мар"),
+				intl(en = "apr", ru = "апр"),
+				intl(en = "may", ru = "май"),
+				intl(en = "jun", ru = "июн"),
+				intl(en = "jul", ru = "июл"),
+				intl(en = "aug", ru = "авг"),
+				intl(en = "sep", ru = "сен"),
+				intl(en = "oct", ru = "окт"),
+				intl(en = "nov", ru = "ноя"),
+				intl(en = "dec", ru = "дек")
+			];
+		]]></script>
+	</command>
+	
+	<command>
+		<key>ARRAY_WEEKDAYS2</key>
+		<static>true</static>
+		<execute>once</execute>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return [
+				intl(en = "mo", ru = "пн"),
+				intl(en = "tu", ru = "вт"),
+				intl(en = "we", ru = "ср"),
+				intl(en = "th", ru = "чт"),
+				intl(en = "fr", ru = "пт"),
+				intl(en = "sa", ru = "сб"),
+				intl(en = "su", ru = "вс")
+			];
+		]]></script>
+	</command>
+
+	<command>
+		<key>ARRAY_MONTH_FULL</key>
+		<static>true</static>
+		<execute>once</execute>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return [
+				intl(en = "january", ru = "января"),
+				intl(en = "february", ru = "февраля"),
+				intl(en = "march", ru = "марта"),
+				intl(en = "april", ru = "апреля"),
+				intl(en = "may", ru = "мая"),
+				intl(en = "jun", ru = "июня"),
+				intl(en = "jul", ru = "июля"),
+				intl(en = "august", ru = "августа"),
+				intl(en = "september", ru = "сентября"),
+				intl(en = "october", ru = "октября"),
+				intl(en = "november", ru = "ноября"),
+				intl(en = "december", ru = "декабря") 
+			];
+		]]></script>
+	</command>
+	
+	<command>
+		<key>ARRAY_ALPHABET</key>
+		<static>true</static>
+		<execute>once</execute>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return [
+				['#','A','B','C','D','E','F','G','H'],
+				['I','J','K','L','M','N','O','P','Q'],
+				['R','S','T','U','V','W','X','Y','Z'],
+				[],
+				['А','Б','В','Г','Д','Е','Ж','З','И'],
+				['К','Л','М','Н','О','П','Р','С','Т'],
+				['У','Ф','Х','Ц','Ч','Ш','Э','Ю','Я']
+			];
+		]]></script>
+	</command>
+	
+	<command>
+		<key>MAP_ALPHABET_CONVERSION</key>
+		<static>true</static>
+		<execute>once</execute>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var result = {};
+			for( var list in $default.ARRAY_ALPHABET() ){
+				for( var letter in list ){
+					result[ letter.toUpperCase() ] = letter;
+					result[ letter.toLowerCase() ] = letter;
+				}
+			}
+			result[ 'Ё' ] = 'Е';
+			result[ 'ё' ] = 'Е';
+			result[ 'Й' ] = 'И';
+			result[ 'й' ] = 'И';
+			return result;
+		]]></script>
+	</command>
+
+	<command>
+		<type>hidden</type>
+		<key>getMenuItems</key>
+		<execute>always</execute>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return this.getFoldersListable();
+		]]></script>
+	</command>
+
+	<command>
+		<type>hidden</type>
+		<key>fillSelection</key>
+		<execute>always</execute>
+		<arguments class="fieldset">
+			<field id="content" class="object"/>
+			<field id="calendar" class="boolean" default="false"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			content.selected || (content.selected = []);
+			content.selected.contains( this.getGuid() ) || content.selected.add( this.getGuid() );
+
+			var list = this.getMenuItems();
+
+			var selection = ArrayFilled( list )
+				? HashFilled( content.selection )
+					? { calendar : calendar, list : list, deeper : content.selection }
+					: { calendar : calendar, list : list }
+				: HashFilled( content.selection )
+					? { calendar : calendar, deeper : content.selection }
+					: { calendar : calendar };
+
+			content.selection = selection;
+			return content;
+		]]></script>
+	</command>
+
+	<command>
+		<type>hidden</type>
+		<key>getBanner</key>
+		<execute>always</execute>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if(data.section){
+				docs = data.section.searchLocal(10,true,null,-1,-1,'"$state=4 $type='+data.type+'"');
+				banners = Random.subList(docs,1);
+				if(ArrayFilled(banners)){
+					= banners[0].render('default');
+				}
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>redirect</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field class="string" id="location"/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%REDIRECT: location %><%
+		%>]]></script>
+	</command>
+
+	<command>
+		<key>getCatalogueRoot</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			parent = this.getParent();
+			if(parent){
+				return parent.getCatalogueRoot();
+			}
+			return null;
+		]]></script>
+	</command>
+
+	<command>
+		<key>getSiteRoot</key>
+		<export>true</export>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var parent = this.getParent();
+			if( parent ){
+				return parent.getSiteRoot();
+			}
+			return null;
+		]]></script>
+	</command>
+
+ 	<command>
+		<key>renderItem</key>
+		<execute>cache</execute>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%EXEC:item = data.item%><%
+			%><h3><%= afterPoint( item.getTitle() ) %></h3><%
+			%><%IF:item.spot%><%
+				%><%=item.spot%><%
+			%><%ELSE%><%
+				%><%IF: item.text %><%
+					%><%= sentenceLeft( clearHtmlFormatting( item.text ), 400, 500 ) %><%
+				%><%/IF%><%
+			%><%/ELSE%><%
+			%><%/IF%><%
+			%><div><%
+				%><img src=/__i/1.gif width=1 height=5><%
+				%><a href=#><%
+				%><img src=/$files/arrow-right.gif width=12 height=9 border=0><%
+				%>подробнее<%
+				%></a><%
+				%><br>&nbsp;<br><%
+			%></div><%
+			%><div class=idiv><%
+				%><img src=/__i/1.gif width=1 height=1><%
+			%></div><%
+		%>]]></script>
+	</command>
+</type>

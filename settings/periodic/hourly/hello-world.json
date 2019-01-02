@@ -1,0 +1,6 @@
+{
+	type : "ae3/Executable",
+	name : "hello-world",
+	reference : "ru.myx.ae3.example/HelloWorldPeriodicTask",
+	requires : null
+}

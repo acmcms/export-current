@@ -1,0 +1,18 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+// Returns formatted code.
+//
+
+var lines = layout.elements || (typeof layout.content == "object"
+				? Layouts.formatObject( layout.content )
+				: layout.content.toString()).split('\n');
+
+return {
+	layout	: "numbered",
+	cssClass: "code",
+	sequence: "restart",
+	elements: lines 
+};

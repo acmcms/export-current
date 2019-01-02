@@ -1,0 +1,116 @@
+<%FINAL: 'text/x-component' %>
+
+<PUBLIC:ATTACH EVENT="onload"  ONEVENT="formSetMultipleIni()" FOR="window"/>
+
+<SCRIPT LANGUAGE="JScript">
+function formSetMultipleIni(){
+	this.parent = window.document.getElementById('fld' + this.getAttribute('fieldName') + '_obj');
+	this.parent.set = this;
+	this.style.display = '';
+
+	function rowCheck(){
+		if(this.checked) {
+			return;
+		}
+		if(this.parent.nextSibling){
+			this.parent.nextSibling.removeNode(true);
+		}
+		this.style.display = '';
+		this.cells[0].firstChild.innerHTML = 'a';
+		this.cells[1].style.fontWeight = 'bold';
+		this.checked = true;
+
+		var html = document.createElement("div");
+		html.innerHTML = '<input type=hidden name="'+this.parent.getAttribute('fieldName')+'" value="'+this.key+'">';
+		this.cells[1].appendChild(html.firstChild);
+	}
+
+	function rowUncheck(){
+		if(!this.checked) {
+			return;
+		}
+		this.cells[0].firstChild.innerHTML = '';
+		this.cells[1].style.fontWeight = 'normal';
+		this.checked = false;
+		var inputs = this.getElementsByTagName('INPUT');
+		try{
+			inputs[0].removeNode(true);
+		}catch(Error){
+			//
+		}
+		var allinputs = this.parent.getElementsByTagName('INPUT');
+		if(allinputs.length < 1){
+			this.parent.setClear();
+		}
+	}
+
+	for(var i = 0; i < this.rows.length; ++i){
+		var cRow = this.rows[i];
+		cRow.parent = this;
+		cRow.onclick = rowOnClick;
+		cRow.check = rowCheck;
+		cRow.uncheck = rowUncheck;
+	}
+
+	this.buttons = Dom.getElementsByAttributeName(window.document.getElementById(this.parent.id), 'info');
+
+	this.clear = function(){
+		for(var i = 0; i < this.rows.length; ++i){
+			this.rows[i].uncheck();
+			this.rows[i].style.display = '';
+		}
+	}
+
+	this.setClear = function(){
+		var html = document.createElement("div");
+		html.innerHTML = '<input type=hidden name="fieldcmd_fieldRemove_'+this.getAttribute('mapPath')+'" value="1">';
+		this.parentNode.appendChild(html.firstChild);
+
+		this.buttons.clearall.disabled = true;
+		this.buttons.selectall.disabled = false;
+		this.buttons.filter.disabled = true;
+
+		this.buttons.filter.state = 'all';
+		this.buttons.filter.innerHTML = '<%= intl( en = "Selected", ru = "Выбранные" ) %>';
+	}
+
+	this.setAll = function(){
+		for(var i = 0; i < this.rows.length; ++i){
+			this.rows[i].check();
+		}
+		this.buttons.clearall.disabled = false;
+		this.buttons.selectall.disabled = true;
+		this.buttons.filter.disabled = true;
+
+		this.buttons.filter.state = 'all';
+		this.buttons.filter.innerHTML = '<%= intl( en = "Selected", ru = "Выбранные" ) %>';
+	}
+
+	this.setFilter = function(){
+		var status = this.buttons.filter.state;
+		if(status == 'all'){
+			for(var i = 0; i < this.rows.length; ++i){
+				this.rows[i].checked || (this.rows[i].style.display = 'none');
+			}
+			this.buttons.filter.state = 'selected';
+			this.buttons.filter.innerHTML = '<%=intl(en="Show all", ru="Все") %>';
+		}else{
+			for(var i = 0; i < this.rows.length; ++i){
+				this.rows[i].style.display = '';
+			}
+			this.buttons.filter.state = 'all';
+			this.buttons.filter.innerHTML = '<%= intl( en = "Selected", ru = "Выбранные" ) %>';
+		}
+	}
+
+	function rowOnClick(){
+		this.parent.buttons.filter.disabled = false;
+		this.parent.buttons.clearall.disabled = false;
+		this.parent.buttons.selectall.disabled = false;
+		this.checked ? this.uncheck() : this.check();
+	}
+
+}
+
+</SCRIPT>
+<%/FINAL%>

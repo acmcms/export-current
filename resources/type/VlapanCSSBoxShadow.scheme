@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>VlapanCSSBoxShadow</title>
+	<visibility>hidden</visibility>
+
+	<command>
+		<key>insert</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="value" class="string" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%>box-shadow:<%= value %>;<%
+			%>-moz-box-shadow:<%= value %>;<%
+			%>-webkit-box-shadow:<%= value %>;<%
+		]]></script>
+	</command>
+</type>

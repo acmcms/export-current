@@ -1,0 +1,123 @@
+$output( body ){
+	%>var leftarrow=$("<span>&#8592;</span>");<%
+	%>var rightarrow=$("<span>&#8594;</span>");<%
+	%>var plus=$("<span>+</span>");<%
+	%>var minus=$("<span>-</span>");<%
+	%>$().ready(function(){<%
+		%>$(".toolbar").draggable({<%
+			%>snap:true,<%
+			%>snapMode:'inner',<%
+			%>delay:0,<%
+			%>distance:5,<%
+//			%>cursor:'move',<%
+//			%>cursorAt:{top:1},<%
+			%>containment:'parent',<%
+//			%>opacity:.5,<%
+			%>handle:$('.toolbar'),<%
+			%>start:function(event, ui){<%
+				%>$(".toolbar").css({right:null,cursor:'move'});<%
+			%>},<%
+			%>stop:function(event, ui){<%
+				%>if(ui.position.left < 30){<%
+					%>$(".toolbar").css({right:null,left:0,cursor:null});<%
+				%>}else if(ui.position.left + $(".toolbar").width() > $(document).width() - 45 ){<%
+					%>$(".toolbar").css({right:0,left:null});<%
+				%>}<%
+			%>},<%
+			%>drag:function(event, ui){<%
+//				%>var str = ":window.width:"+$(window).width()+":document.width:"+$(document).width();<%
+//				%>str += ":position:" + ui.position.top + ":" + ui.position.left;<%
+//				%>str += ":originalPosition:" + ui.originalPosition.top + ":" + ui.originalPosition.left;<%
+//				%>str += ":offset:" + ui.offset.top + ":" + ui.offset.left;<%
+//				%>for(var k in ui.helper){<%
+//					%>str = str + ":" + k;<%
+//				%>}<%
+//				%>$("#debug").html(str);<%
+				%>if(ui.position.left < 30){<%
+//					%>$("#debug").html("left:"+str);<%
+					%>$(".toolbar").removeClass("toolbarRight toolbarCenter");<%
+					%>toolbarControl();<%
+				%>}else if(ui.position.left + $(".toolbar").width() > $(document).width() - 45 ){<%
+//					%>$("#debug").html("right:"+str);<%
+//					%>$(".toolbar").css({right:0,left:null});<%
+					%>$(".toolbar").removeClass("toolbarCenter").addClass("toolbarRight");<%
+					%>toolbarControl();<%
+				%>}else{<%
+//					%>$("#debug").html("center:"+str);<%
+					%>$(".toolbar").removeClass("toolbarRight").addClass("toolbarCenter");<%
+					%>toolbarControl();<%
+				%>}<%
+			%>}<%
+		%>});<%
+		%>$(".toolbar .control").click(<%
+			%>function(){<%
+				%>var text=$(this).text();<%
+				%>if(toolbarOpened){<%
+					%>toolbarOpened=false;<%
+					%>$(".toolbar .menu").hide();<%
+					%>$.get("/toolbar");<%
+				%>}else{<%
+					%>toolbarOpened=true;<%
+					%>$(".toolbar .menu").show();<%
+					%>$.get("/toolbar",{opened:1});<%
+				%>}<%
+				%>toolbarControl();<%
+			%>}<%
+		%>);<%
+		%>$(".toolbar .menuItem").hover(<%
+			%>function(){<%
+				%>$(this).find("a").css("color","#000");<%
+				%>$(this).css("background","#fff");<%
+			%>},<%
+			%>function(){<%
+				%>$(this).find("a").css("color","#ccc");<%
+				%>$(this).css("background","#000");<%
+			%>}<%
+		%>);<%
+		%>$("a.panelhelp").cluetip({<%
+			%>cluetipClass:'jtip',<%
+			%>arrows:true,<%
+			%>showTitle:false,<%
+			%>dropShadow:true,<%
+			%>hoverIntent:true,<%
+			%>mouseOutClose:true<%
+		%>});<%
+	%>});<%
+	%>function toolbarControl(){<%
+		%>$(".toolbar .control").find("span:last").remove();<%
+		%>if(toolbarOpened){<%
+			%>if($(".toolbar").hasClass("toolbarCenter")){<%
+				%>$(".toolbar .control").append(minus);<%
+			%>}else if($(".toolbar").hasClass("toolbarRight")){<%
+				%>$(".toolbar .control").append(rightarrow);<%
+			%>}else{<%
+				%>$(".toolbar .control").append(leftarrow);<%
+			%>}<%
+		%>}else{<%
+			%>if($(".toolbar").hasClass("toolbarCenter")){<%
+				%>$(".toolbar .control").append(plus);<%
+			%>}else if($(".toolbar").hasClass("toolbarRight")){<%
+				%>$(".toolbar .control").append(leftarrow);<%
+			%>}else{<%
+				%>$(".toolbar .control").append(rightarrow);<%
+			%>}<%
+		%>};<%
+	%>}<%
+	%>function userCommit(evt){<%
+		%>evt.cancelBubble = true;<%
+		%>if(evt.stopPropagation) evt.stopPropagation();<%
+		%>return confirm('<%= intl( en = "Are you sure?", ru = "Вы уверенны?" ) %>');<%
+	%>}<%
+	%>function elementClick(obj,evt){<%
+		%>if(!obj.firstChild.getAttribute('href')) return false;<%
+		%>if(obj.firstChild.onclick({})){<%
+			%>document.location = obj.firstChild.getAttribute('href');<%
+		%>}<%
+		%>return false;<%
+	%>}<%
+	%>function showField(id){<%
+		%>$(".inputhide").hide("slow");<%
+		%>$("#div"+id).show("slow");<%
+	%>}<%
+}
+return $base.final( "text/javascript", body );

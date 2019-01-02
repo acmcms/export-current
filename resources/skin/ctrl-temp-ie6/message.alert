@@ -1,0 +1,34 @@
+<HTML>
+<HEAD>
+<TITLE>=)</TITLE>
+</HEAD>
+
+<style>
+BODY, TD, DIV, BUTTON {
+	font-family : Tahoma, Arial ;
+	font-size: 8pt;
+	color: buttontext;
+}
+
+</style>
+
+<script>
+	window.returnValue = true;
+</script>
+
+<body style="margin:5px 10px 0 10px; background-color:buttonface;">
+
+<table border=0 cellpadding=0 cellspacing=10 width=100% height=100%>
+<tr>
+	<td valign=top><script>document.write("<img src='icons/status-"+dialogArguments['type']+".32.gif' width=32 height=32 border=0>")</script></td>
+	<td width=100% al2ign=center><script>document.write(dialogArguments['txt'])</script></td>
+</tr>
+
+<tr>
+	<td colspan=2 align=center valign=bottom height=100%><button onclick="window.close()" style="padding-left:10px; padding-right:10px"><script>document.write(dialogArguments['ok'])</script></button></td>
+</tr>
+</table>
+
+
+</body>
+</HTML>

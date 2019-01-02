@@ -1,0 +1,7 @@
+<%
+
+%><%FINAL: 'application/json' %><%
+	%><%= VlapanTreeData.get() %><%
+%><%/FINAL%><%
+
+%>

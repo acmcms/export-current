@@ -1,0 +1,35 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+
+
+const content = layout.content;
+const prefix = !content.startsWith('<?xml ');
+const xsl = layout.xsl;
+
+var xml;
+if(prefix || xsl){
+	$output(xml){
+		if(prefix){
+			%><?xml version="1.0" encoding="UTF-8"?><%
+		}
+		if(xsl){
+			%><?xml-stylesheet type="text/xsl" href="<%= Format.xmlAttributeFragment(xsl) %>"?><%
+		}
+		= layout.content;
+	}
+}else{
+	xml = layout.content;
+}
+
+return {
+	layout	:	"final",
+	// optional
+	code	:	layout.code,
+	type	:	"text/xml",
+	content	:	xml,
+	cache	:	layout.cache,
+	delay	:	layout.delay,
+};

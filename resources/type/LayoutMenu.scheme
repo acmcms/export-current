@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Layout: Menu</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawLayout</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="menu" class="list" />
+			<field id="menus" class="list" />
+			<field id="selected" class="list" />
+			<field id="siteMenuIcons" class="boolean" default="false" />
+			<field id="control" class="boolean" default="true" />
+			<field id="cssClass" class="string" default="siteMenu" />
+			<field id="opened" class="boolean" default="true" />
+			<field id="title" class="string" />
+			<field id="handle" class="boolean" default="false" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><div class="<%= cssClass %>"><%
+				if( handle ){
+					%><div class="handle"></div><%
+				}
+				if( control ){
+					%><div class="control"><span><%= opened ? "&#8592;" : "&#8594;" %></span></div><%
+				}
+				%><div class="menu"><%
+					if( title ){
+						%><div class="title"><%
+							%><%= title %><%
+						%></div><%
+					}
+					if( !ArrayFilled( menus ) && ArrayFilled( menu ) ){
+						menus = [ menu ];
+					}
+					for( var submenu in menus ){
+						if( submenu.title ){
+							%><fieldset class="menuCategory"><%
+								%><legend class="text"><%
+									%><%= submenu.title %><%
+									%><%= submenu.type ? ' (<span id="panelhelp">' + submenu.type + "</span>)" : "" %><%
+								%></legend><%
+						}
+						submenuList = submenu.abilities || submenu;
+						%><ul><%
+							for( var item in submenuList ){
+								= LayoutMenu.drawItem( item, item.getGuid && selected.contains( item.getGuid() ), siteMenuIcons );
+							}
+						%></ul><%
+						if( submenu.title ){
+							%></fieldset><%
+						}
+					}
+				%></div><%
+			%></div><%
+		]]></script>
+	</command>
+
+	<command>
+		<key>drawItem</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="item" class="object" />
+			<field id="selected" class="boolean" default="false" />
+			<field id="siteMenuIcons" class="boolean" default="false" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var href = ( item.href || item.getLocation() ) + ( item.ajax ? '?ajax=true' : '');
+			%><li<%= selected ? ' id="selected"' : "" %><%
+				%> class="menuItem<%= item.ajax ? ' jqm" href="' + href + '"' : '" onclick="elementClick(this,event)"' %>><%
+				%><a href="<%= href %>"<%= item.ajax ? ' class="jqm"' : '' %><%= item.confirm ? ' onclick="return userCommit(event)"' : "" %>><%
+					if( siteMenuIcons ){
+						%><div class="icon icon_<%= item.icon || item.getKey() %>"></div><%
+					}
+					= afterPoint( item.title || item.getTitle() );
+				%></a><%
+			%></li><%
+		]]></script>
+	</command>
+</type>

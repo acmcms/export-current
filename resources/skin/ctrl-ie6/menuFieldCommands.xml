@@ -1,0 +1,93 @@
+<%FINAL: 'text/xml' %><%
+%><body><%
+%><XML ID="oMetaData" base="" entryname="entry" type="menu"><%
+
+%><%EXEC: form = Session[Request.key].data %><%
+
+%><%IF: Request.fieldName.startsWith("tomap_") %><%
+	%><%EXEC: mapName = Request.fieldName.substring(6, Request.fieldName.indexOf('___')) %><%
+	%><%EXEC: mapField = form.getFieldset().getField(mapName) %><%
+	%><%EXEC: fieldset = mapField.getAttributes().fieldset %><%
+	%><%EXEC: fieldName = Request.fieldName.substring( Request.fieldName.indexOf('___') + 3 ) %><%
+	%><%EXEC: field = fieldset.getField(fieldName) %><%
+	%><%EXEC: value = form[mapName][fieldName] %><%
+%><%ELSE%><%
+
+	%><%EXEC:mapPaths = split(Request.fieldName,'/')%><%
+	%><%EXEC:fieldset = form.getFieldset() %><%
+	%><%EXEC:value = form.getData()%><%
+
+	%><%ITERATE: path : mapPaths %><%
+		%><%EXEC: field = fieldset.getField(path) %><%
+		%><%EXEC: fieldset = field.getAttributes().fieldset %><%
+		%><%EXEC: value = value[path] %><%
+	%><%/ITERATE%><%
+
+%><%/ELSE%><%
+%><%/IF%><%
+
+%><%EXEC: attributes = field.getAttributes() %><%
+
+
+
+%><%IF:!attributes.constant%><%
+	%><%CHOOSE: attributes.type %><%
+	%><%MATCH:'list'%><%
+		%><%EXEC: container = (attributes.content_handler && attributes.content_handler( value )) %><%
+		%><%IF: container %><%
+			%><%OUTPUT:menu%><%
+				%><%ITERATE: command : container.getCommands() %><%
+					%><%IF: command.getKey() %><%
+						= Format.xmlElement('entry', {
+							cmd : "formcmd_containercmd_" + Request.fieldName + "___" + command.getKey(),
+							key : StringToUrlHard(Request.key),
+							icon : ControlAPI.getIcon(command),
+							title : command.getTitle()
+						});
+					%><%/IF%><%
+				%><%/ITERATE%><%
+			%><%/OUTPUT%><%
+		%><%ELSE%><%
+			%><%OUTPUT:menu%><%
+				= Format.xmlElement('entry', {
+					myCmd : "dialog",
+					path : "formDialog.listadd?id="+Request.key+"&data="+Request.fieldName,
+					icon : "command-add",
+					title : intl(en = "Add", ru = "Добавить")
+				});
+			%><%/OUTPUT%><%
+		%><%/ELSE%><%
+		%><%/IF%><%
+
+	%><%MATCH:'map'%><%
+		%><%EXEC: container = (attributes.content_handler && attributes.content_handler( value )) %><%
+		%><%OUTPUT:menu%><%
+			%><%IF: container%><%
+				%><%ITERATE: command : container.getCommands() %><%
+					%><%IF: command.getKey() %><%
+						= Format.xmlElement('entry', {
+							cmd : "formcmd_containercmd_" + Request.fieldName + "___" + command.getKey(),
+							key : StringToUrlHard(Request.key),
+							icon : ControlAPI.getIcon(command),
+							title : command.getTitle()
+						});
+					%><%/IF%><%
+				%><%/ITERATE%><%
+			%><%ELSE%><%
+				= Format.xmlElement('entry', {
+					myCmd : "dialog",
+					path : "formDialog.mapadd?id="+Request.key+"&data="+Request.fieldName,
+					icon : "command-add",
+					title : intl(en = "Add", ru = "Добавить")
+				});
+			%><%/ELSE%><%
+			%><%/IF%><%
+		%><%/OUTPUT%><%
+
+	%><%/CHOOSE%><%
+
+	%><entry id="FieldCommands" title="<%=Format.xmlAttributeFragment(field.getTitle())%>" status="true" group="FieldCommands" CommandType="form_field"><%= menu || ''%></entry><%
+%><%/IF%><%
+%></XML><%
+%></body><%
+%><%/FINAL%>

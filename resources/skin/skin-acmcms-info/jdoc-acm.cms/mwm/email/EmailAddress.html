@@ -1,0 +1,455 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+<title>EmailAddress (AE3 ACM SAPI)</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="EmailAddress (AE3 ACM SAPI)";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar_top">
+<!--   -->
+</a><a href="#skip-navbar_top" title="Skip navigation links"></a><a name="navbar_top_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../mwm/email/DigestBody.html" title="class in mwm.email"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../mwm/email/EmailException.html" title="class in mwm.email"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../index.html?mwm/email/EmailAddress.html" target="_top">Frames</a></li>
+<li><a href="EmailAddress.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">mwm.email</div>
+<h2 title="Class EmailAddress" class="title">Class EmailAddress</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li>mwm.email.EmailAddress</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd>java.io.Serializable</dd>
+</dl>
+<hr>
+<br>
+<pre>public final class <span class="strong">EmailAddress</span>
+extends java.lang.Object
+implements java.io.Serializable</pre>
+<div class="block">This class models an immutable email address object. The immutablility makes
+ sure that once created, the address object cannot change. The modifiers in
+ this class works as the modifiers in the String class - they all return new
+ objects that reflects the change - the original object is unchanged. This
+ class also provides a static method for email address verification and one
+ for parsing an address from a string.
+ <p>
+ 
+ A valid name object according to the RFC 822 is a String that does not
+ contain the characters 0 - 31, 34 or 127 which is control characters, delete
+ and qoute. This class will ruthlessly accept ANY strings as valid names and
+ it is up to the implementors and users of this class to make sure that the
+ name string get encoded or left out before attempting to use it in a protocol
+ specific manner.
+ <p>
+ 
+ A valid address string cannot - like the name string - contain the characters
+ 0 - 31, 34 or 127. It also cannot contain spaces. An address must also
+ contain a "@" character which cannot start or end the address string.
+ <p>
+ 
+ Upon creation of the address object an InvalidFormatException will be thrown
+ if the address does not conform to the above rules.</div>
+<dl><dt><span class="strong">Author:</span></dt>
+  <dd>Lars J. Nilsson</dd>
+<dt><span class="strong">See Also:</span></dt><dd><a href="../../serialized-form.html#mwm.email.EmailAddress">Serialized Form</a></dd></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../mwm/email/EmailAddress.html#EmailAddress(java.lang.String, java.lang.String)">EmailAddress</a></strong>(java.lang.String&nbsp;name,
+            java.lang.String&nbsp;address)</code>
+<div class="block">Construct a new email address object.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.Object</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/EmailAddress.html#clone()">clone</a></strong>()</code>
+<div class="block">Clone this address.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/EmailAddress.html#equals(mwm.email.EmailAddress)">equals</a></strong>(<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;address)</code>
+<div class="block">Check the equality of the provided email address.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/EmailAddress.html#getAddress()">getAddress</a></strong>()</code>
+<div class="block">Get the email address.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/EmailAddress.html#getName()">getName</a></strong>()</code>
+<div class="block">Get the address name.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/EmailAddress.html#isValid(java.lang.String)">isValid</a></strong>(java.lang.String&nbsp;address)</code>
+<div class="block">Check for email address validity.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a></code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/EmailAddress.html#parseAddress(java.lang.String)">parseAddress</a></strong>(java.lang.String&nbsp;input)</code>
+<div class="block">This method tries to parse a string into an email address object,
+ according to the RFC 822 address rules.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/EmailAddress.html#toString()">toString</a></strong>()</code>&nbsp;</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>equals, getClass, hashCode, notify, notifyAll, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="EmailAddress(java.lang.String, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>EmailAddress</h4>
+<pre>public&nbsp;EmailAddress(java.lang.String&nbsp;name,
+            java.lang.String&nbsp;address)
+             throws <a href="../../mwm/email/InvalidFormatException.html" title="class in mwm.email">InvalidFormatException</a></pre>
+<div class="block">Construct a new email address object. An email address cannot contain the
+ characters 0 - 31, 34, 127 or spaces and must contain a "@" character, an
+ InvalidFormatException will be throw if the address provided to this
+ constructor does not abide to those rules.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - </dd><dd><code>address</code> - </dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code><a href="../../mwm/email/InvalidFormatException.html" title="class in mwm.email">InvalidFormatException</a></code></dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="clone()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clone</h4>
+<pre>public&nbsp;java.lang.Object&nbsp;clone()</pre>
+<div class="block">Clone this address. Since the address cannot be created without a
+ validity check we can suppress the InvalidFormatException in this
+ operation and return a new object direct.</div>
+<dl>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>clone</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+</dl>
+</li>
+</ul>
+<a name="equals(mwm.email.EmailAddress)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>equals</h4>
+<pre>public&nbsp;boolean&nbsp;equals(<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;address)</pre>
+<div class="block">Check the equality of the provided email address. This method will check
+ the address part of an email address only and is not case sensitive. Thus
+ "Kim &lt;kim@kim.com&gt;" is equal to "Kimmy &lt;Kim@Kнm.com&gt;" but not
+ to "Kimmmy &lt;kimmy@kim.com&gt;".</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>address</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="getAddress()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAddress</h4>
+<pre>public&nbsp;java.lang.String&nbsp;getAddress()</pre>
+<div class="block">Get the email address. This address is validated and ready.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>string</dd></dl>
+</li>
+</ul>
+<a name="getName()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getName</h4>
+<pre>public&nbsp;java.lang.String&nbsp;getName()</pre>
+<div class="block">Get the address name. This method will return an empty String if there is
+ no name provided.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>string</dd></dl>
+</li>
+</ul>
+<a name="isValid(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isValid</h4>
+<pre>public static&nbsp;boolean&nbsp;isValid(java.lang.String&nbsp;address)</pre>
+<div class="block">Check for email address validity. An email address must not contain the
+ characters 0 - 31, 34, 127 or spaces. It must however contain a "@"
+ character which cannot be located at the start or the end of the address.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>address</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="parseAddress(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>parseAddress</h4>
+<pre>public static&nbsp;<a href="../../mwm/email/EmailAddress.html" title="class in mwm.email">EmailAddress</a>&nbsp;parseAddress(java.lang.String&nbsp;input)
+                                 throws <a href="../../mwm/email/InvalidFormatException.html" title="class in mwm.email">InvalidFormatException</a></pre>
+<div class="block">This method tries to parse a string into an email address object,
+ according to the RFC 822 address rules. If the parsing fails the method
+ will throw an invalid format exception.
+ <p>
+ 
+ The parser will attempt to read a single address line wich may contain
+ escape characters and foldings but not encodings. Thus the following
+ lines will all be valid addresses:<br>
+ <br>
+ - "Lars J. Nilsson" &lt;myaddress@address.com&gt;<br>
+ - Lars \"J.\" Nilsson myaddress@address.com<br>
+ - "Lars \"J.\" Nilsson" &lt;myaddress@address.com&gt;
+ <p>
+ 
+ The parsing mechanism attempts to unfold the given value if it contains
+ line breaks. However, this class is considered be within a mail protocoll
+ context (protocoll server space), meaning that it does not support linear
+ white space within address domain tokens. That limitation also rules out
+ folding within tokens. Thus the following string is regarded as valid...<br>
+ <br>
+ - "Lars J. Nilsson" <br>
+ &nbsp;&nbsp;myaddress@address.com<br>
+ <br>
+ 
+ ... while the following two examples will fail to parse correctly due to
+ the linear white space. They are considered invalid:<br>
+ <br>
+ - "Lars J. Nilsson" myaddress @ address.com<br>
+ <br>
+ - "Lars J. Nilsson" myaddress@<br>
+ &nbsp;&nbsp;address.com<br>
+ <br>
+ 
+ Most email constructors will honor the recomendation from RFC 822 that
+ folding is limited to "higher-level syntactic breaks" and that no linear
+ white space shall occur between word tokens and their dots or "at"-signs
+ when dealing with a protocoll server. For addresses this means that they
+ will very seldon be folded other than between addresses in a comma
+ separated list. Still it is recomended that the unfolding of addresses is
+ done by the mail reading mechanism during in or output, and that the same
+ mechanism also checks for linear white space.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>input</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>address</dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code><a href="../../mwm/email/InvalidFormatException.html" title="class in mwm.email">InvalidFormatException</a></code></dd></dl>
+</li>
+</ul>
+<a name="toString()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>toString</h4>
+<pre>public&nbsp;java.lang.String&nbsp;toString()</pre>
+<dl>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>toString</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar_bottom">
+<!--   -->
+</a><a href="#skip-navbar_bottom" title="Skip navigation links"></a><a name="navbar_bottom_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../mwm/email/DigestBody.html" title="class in mwm.email"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../mwm/email/EmailException.html" title="class in mwm.email"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../index.html?mwm/email/EmailAddress.html" target="_top">Frames</a></li>
+<li><a href="EmailAddress.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+<p class="legalCopy"><small><i>Copyright &#169; 2000-2011 -= MyX =- (http://myx.ru). All Rights Reserved.</i></small></p>
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+	type : "ae3/Executable",
+	reference : "ru.myx.ae3.internal/stats/StatsCommand",
+	requires : ['stats']
+}

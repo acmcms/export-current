@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>System: Members</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+	</statelist>
+	<folder>true</folder>
+	<children>
+		<type>Member</type>
+	</children>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":
+				case "/":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.this = this;
+					var supervisor = User.getUser().isInGroup( "def.supervisor" );
+					var authorized = User.getState() == User.US_AUTHORIZED;
+					if( supervisor && authorized ){
+						$output( menu ){
+							%><a href="/registration">Заполнить анкету</a><%
+						}
+						content.supervisor = [];
+						content.supervisor.add( menu );
+					}
+					return this.fillSelection( content = content );
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+	<command>
+		<key>displayBlock</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var supervisor = User.getUser().isInGroup( "def.supervisor" );
+			var authorized = User.getState() == User.US_AUTHORIZED;
+			var members = this.getChildrenListable(0, "$title");
+			if( members ){
+				$output( render ){
+					%><table cellpadding="5" cellspacing="2" border="0"><%
+						%><tr style="font-weight:bold"><td></td><td>Ф.И.О.</td><td>Город</td><%
+						if( supervisor && authorized ){
+							%><td>-</td><%
+						}
+						%></tr><%
+						for( member in members ){
+							%><tr><td>&#8594;</td><td><a href="<%= member.getLocation() %>"><%= member.getTitle() %></a></td><td><%= member.city %></td><%
+							if( supervisor && authorized ){
+								%><td><a href="<%= member.getLocation() %>delete" onclick="if(confirm('Вы подтверждаете действие?')==false){return false;}">удалить</a></td><%
+							}
+							%></tr><%
+						}
+					%></table><%
+				}
+			}
+			return render;
+		]]></script>
+	</command>
+</type>

@@ -1,0 +1,7 @@
+{
+	"type" : "ae3.Manual",
+	"title" : "ae3.pdf Package Reference",
+	"name" : "doc-pkg.ae3.pdf",
+	"group" : "developer-pkg.ae3",
+	"vfs" : "/resources/lib/ae3/reference-pkg.ae3.pdf.xml"
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>Internet Explorer 6 Layouts (alpha - temporary version)</title>
+	<charset>UTF-8</charset>
+	<prototype>ctrl-ie6-abstract</prototype>
+	<import package="skin-jsclient" namespace="client"/>
+	
+	<renderer>ACM.TPL</renderer>
+	<secure>true</secure>
+	<auth>true</auth>
+</settings>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<type>
+	<title>Static: Image Fitter and Copyright Marker module</title>
+	<visibility>hidden</visibility>
+	<icon>types</icon>
+
+	<command>
+		<key>getFittedImage</key>
+		<type>hidden</type>
+		<export>true</export>
+		<arguments class="fieldset">
+			<field id="key" class="string"/>
+			<field id="width" class="integer"/>
+			<field id="height" class="integer"/>
+			<field id="background" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return ImageFormatterAndMarker.getFittedAndMarkedImage(key,width,height,background,null);
+		]]></script>
+	</command>
+	
+	<command>
+		<key>getFittedAndMarkedImage</key>
+		<type>hidden</type>
+		<export>true</export>
+		<arguments class="fieldset">
+			<field id="key" class="string"/>
+			<field id="width" class="integer"/>
+			<field id="height" class="integer"/>
+			<field id="background" class="string"/>
+			<field id="mark" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change;
+			var images;
+
+			if( this.imagesVersion < 7 ) {
+				change = this.createChange();
+				change.images = null;
+				change.imagesVersion = 7;
+				images = {};
+			}else{
+				images = this.images || {};
+			}
+
+			mark && mark.indexOf('://') !== -1 && (mark = mark.substring(mark.indexOf('://') + 3));
+
+			var identity = (key 
+							? key + '-' 
+							: '') + 
+						width + '-' + 
+						height + '-' + 
+						background + (mark && width > 260 
+										? '-' + mark 
+										: "");
+										
+			var image = images[ identity ];
+			if( !image ){
+				image = Imaging.imageForBinary( this[key || 'image'] );
+				if( !image ){
+					return null;
+				}
+				image = width < 200
+							? Imaging.bitmapResizeCanvas( image, background, width, height )
+							: Imaging.bitmapResizeFit( image, width, height );
+				if( mark && width > 260 ){
+					image = Imaging.makeWatermarks( image, mark );
+				}
+				image = Imaging.encodePng( image );
+				images = Create.map( images );
+				images[ identity ] = image;
+				change || (change = this.createChange());
+				change.images = images;
+				change.commit();
+			}
+			return image;
+		]]></script>
+	</command>
+</type>

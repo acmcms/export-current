@@ -1,0 +1,14 @@
+<% // 	
+		Шаблон 500 для XML данных.
+
+
+%><%FINAL: 'text/xml' %><%
+%><%LOG: 'CTRL-IE6-500-XML', content.body %><%
+%><body><%
+	%><XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML"><%
+		%><entry type="error"><%
+			%><%= Format.xmlNodeValue(content.body) %><%
+		%></entry><%
+	%></XML><%
+%></body><%
+%><%/FINAL%>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>Abstract HTML skin</title>
+	<abstract>true</abstract>
+	<charset>UTF-8</charset>
+	
+	<default>skin-standard-html.html</default>
+	
+	<prototype>skin-standard</prototype>
+	
+	<!-- for: client/js/require.js -->
+	<import package="skin-jsclient" namespace="client"/>
+	
+	<renderer>
+		<type>ACM.TPL</type>
+		<suffix>.tpl</suffix>
+	</renderer>
+</settings>

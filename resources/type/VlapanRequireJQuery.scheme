@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>jQuery</title>
+	<visibility>hidden</visibility>
+	<command>
+		<key>get</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="prefix" class="string" default="jquery" />
+			<field id="version" class="string" default="1.6.4" />
+			<field id="local" class="boolean" default="false" />
+			<field id="cdn" class="string" default="google" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var package = {js:[], css:[], head:[]};
+			if(local){
+				package.js.push(prefix + '/$files/jquery-' + version + '.min');
+			}else{
+				switch(cdn){
+					case 'google':{
+						package.js.push('http://ajax.googleapis.com/ajax/libs/jquery/' + version + '/jquery.min.js');
+						break;
+					}
+					case 'microsoft':{
+						package.js.push('http://ajax.microsoft.com/ajax/jquery/jquery-' + version + '.min.js');
+						break;
+					}
+					default:{
+						package.js.push('http://code.jquery.com/jquery-' + version + '.min.js');
+					}
+				}
+			}
+			return package;
+		]]></script>
+	</command>
+</type>

@@ -1,0 +1,80 @@
+.input-string-window{
+	border: solid 1px #AAAAAA;
+}
+.input-string-container{
+	cursor: default;
+	font-family: Arial, Tahoma, Verdana, Sans-serif, sans;
+	font-size: 12px;
+	min-height: 18px;
+	height: 18px;
+	min-width: 50px;
+	max-width: 100%;
+	color: black;
+	background-color: #fafafa;
+	vertical-align: middle;
+	-moz-user-select: none;
+	white-space: nowrap;
+	text-align: left;
+}
+.input-string-item, .input-string-item-active{
+	font-size: 12px;
+	line-height: 18px;
+	height: 18px;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	outline: 0;
+	vertical-align: middle;
+}
+.input-string-item{
+	background-color: #f5f5f5;
+	color: black;
+}
+.input-string-item-active{
+	background-color: #3875D7;
+	color: white;
+}
+.input-string-icon{
+	margin: -1px 0 -1px 0;
+	border: none;
+	width: 16px;
+	height: 16px;
+	--background-color: #f5f5f5;
+}
+.input-string-nocross{
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+.input-string-cross{
+	position: relative;
+	cursor: default;
+	font-size: 15px;
+	line-height: 15px;
+	height: 16px;
+	font-family: Arial, Tahoma, Verdana, Sans-serif, sans;
+	background-color: #fafafa;
+	color: black;
+	vertical-align: baseline;
+	text-align: center;
+	border-left: 1px solid #AAAAAA;
+	padding: 2px 3px 0 3px;
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+}
+.bold{
+	font-weight: bold;
+}
+.underline{
+	text-decoration: underline;
+}
+.italic{
+	font-style: italic;
+}
+.input-string-item-active .red{
+	color: #FFAA99;
+}
+.input-string-item .red{
+	color: #771111;
+}

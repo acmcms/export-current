@@ -1,0 +1,38 @@
+BODY {
+	margin: 4;
+	background: buttonface;
+}
+
+LEGEND,TD,DIV {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	color: buttontext;
+}
+
+BUTTON {
+	background-color: buttonface;
+	border-color: buttonhighlight;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding: 0;
+	border-width: 1px;
+	color: buttontext;
+}
+
+.th,TH {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	text-align: right;
+}
+
+INPUT,SELECT {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding: 1px;
+	margin: 0;
+	border-width: 1px;
+	border-left-color: buttonshadow;
+	border-top-color: buttonshadow;
+	border-right-color: buttonhighlight;
+	border-bottom-color: buttonhighlight;
+}

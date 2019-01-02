@@ -1,0 +1,41 @@
+<%
+
+%><%CODE: 'ACM.ECMA' %>
+	editor = new VlapanRichedit( editor = "tinymce" );
+	editorName = "editor";
+	requireCss = Create.set();
+
+	requireJs = [];
+//	requireJs.add("");
+
+<%/CODE%><%
+
+%><%OUTPUT: head %><%
+	%><!-- YUI CSS Reset --><% 
+	%><link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssreset/reset-min.css"><%
+	%><%= editor.init() %><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body><%
+		%><form method="post"><%
+			%><p><%
+				%><textarea id="<%= editorName %>" name="<%= editorName %>"></textarea><%
+				%><%= editor.replace( id = editorName ) %><%
+			%></p><%
+			%><p><%
+				%><input type="submit" value="Send"/><%
+			%></p><%
+		%></form><%
+	%></body><%
+%><%/OUTPUT%><%
+
+%><%RETURN: {
+		title		: "TinyMCE",
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

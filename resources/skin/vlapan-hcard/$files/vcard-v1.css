@@ -1,0 +1,101 @@
+html,body {
+	font-family: 'Helvetica Neue', 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
+	font-size: 17px;
+	-webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+	-moz-text-stroke: 1px rgba(255, 255, 255, 0.1);
+	text-align: center;
+	color: #555;
+}
+
+h1,h2 {
+	text-shadow: 1px 2px 2px #ddd;
+	color: #343434;
+}
+
+h1 {
+	font-size: 60px;
+}
+
+h2 {
+	font-size: 20px;
+}
+
+.watermark {
+	display: block !important;
+	-webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
+	-moz-text-stroke: 1px rgba(0, 0, 0, 0.1);
+	position: fixed;
+	overflow: hidden;
+	bottom: 0;
+	right: 5px;
+	font-size: 60px;
+	color: #eee;
+}
+
+#wrapper {
+	z-index: 1;
+	position: relative;
+	margin-top: 16%;
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+	width: 300px;
+}
+
+.vcard .text {
+	float: right;
+	width: 228px;
+}
+
+.vcard .text div {
+	margin-bottom: 5px;
+}
+
+.vcard .text a {
+	color: #555;
+}
+
+.avatarplace {
+	text-align: center;
+	width: 62px;
+	float: left;
+	overflow: hidden;
+}
+
+.avatarplace .nickname {
+	font-size: 16px;
+	line-height: 20px;
+	font-weight: bold;
+}
+
+.avatarplace img {
+	border: 1px solid #aaa;
+}
+
+.clear {
+	clear: both;
+}
+
+.styles {
+	bottom: 0;
+	left: 10px;
+}
+
+.langs {
+	bottom: 0;
+	left: 50px;
+}
+
+.buttons {
+	position: fixed;
+	font-size: 12px;
+}
+
+.buttons .item {
+	background-color: #eee;
+}
+
+.buttons .item a {
+	text-decoration: none;
+	color: #555;
+}

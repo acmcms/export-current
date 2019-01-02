@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Test</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>publish</state>
+	<statelist>
+		<state>publish</state>
+		<state>draft</state>
+	</statelist>
+	<folder>false</folder>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					return { message : "no response" };
+				}
+				case "remove":{
+					var redirect = this.getParent().getLocation();
+					this.remove();
+					return $default.redirect( redirect + "html" + (Request.args ? "?" + Request.args : "") );
+				}
+				default:{
+					return $default.redirect( this.getParent().getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>remove</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.delete();
+		]]></script>
+	</command>
+
+	<command>
+		<key>create</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+			<field id="parent" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.key ) return false;
+			try{
+				var change = parent.createChild();
+				change.$title = data.key;
+				change.$key = data.key;
+				change.$type = "Test";
+				change.$state = Storage.STATE_PUBLISH;
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+</type>

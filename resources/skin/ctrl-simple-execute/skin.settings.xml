@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>Simple: abstract actor (Plain HTML / Any browser)</title>
+	<abstract>true</abstract>
+
+	<prototype>ctrl-simple-abstract</prototype>
+	
+	<default>execute.htm</default>
+	<charset>UTF-8</charset>
+	
+	<renderer>
+		<type>ACM.TPL</type>
+		<suffix>.tpl</suffix>
+	</renderer>
+	
+	<secure>true</secure>
+	<auth>true</auth>
+</settings>

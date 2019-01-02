@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Layout: Path</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawLayout</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="list"/>
+			<field id="color" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if ( !data ) return;
+			%><div class="gradusnik"><%
+				for( CurrentIndex = data.size() - 1; CurrentIndex >= 0; CurrentIndex-- ){
+					var current = Storage.getByGuid( data[ CurrentIndex ] );
+					if( current ){
+						%><span class="item"><%
+							%><span<%= color ? ' style="color:#' + color + ';"' : '' %>>&#8594;</span> <%
+							%><a href="<%= current.getLocation() %>"><%
+								%><%= afterPoint( current.getTitle() ) %><%
+							%></a><%
+						%></span> <%
+					}
+				}
+			%></div><%
+		]]></script>
+	</command>
+</type>

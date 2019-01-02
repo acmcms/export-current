@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Layout: Form</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawLayout</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><div class="form"><%
+				if( data.title ){
+					%><fieldset><%
+						%><legend><%= data.title %></legend><%
+				}
+				if( data.info ){
+					%><div class="info siteMessage"><%= data.info %></div><%
+				}
+				if( data.warning ){
+					%><div class="warning warningMessage"><%= data.warning %></div><%
+				}
+				%><form id="<%= data.id %>" action="<%= data.action %>" method="<%= data.method %>" enctype="multipart/form-data"><%
+					= LayoutForm.drawFields( data.fields );
+				%></form><%
+				if( data.title ){
+					%></fieldset><%
+				}
+				if( data.focus ) {
+					%><script type="text/javascript"><%
+						%>$().ready(function(){<%
+							%>$('<%= data.focus %>').focus();<%
+						%>});<%
+					%></script><%
+				}
+			%></div><%
+			%><div class="clear"></div><%
+		]]></script>
+	</command>
+
+	<command>
+		<key>drawFields</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="fields" class="list"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><ul><%
+				for( var item in fields ){
+					%><li><%
+						%><label for="<%= item.name ? item.name : "secNumber" %>"><%
+							= item.title ? item.title : '';
+							= item.required ? '<span class="required">*</span>' : '';
+							if( item.type == "secNumber" ){
+								%><img src="/secPic.png?key=<%= Random.integer( 899999 ) + 100000 %>" width="70" height="50"/><%
+							}
+						%></label><%
+
+						= LayoutForm.drawField( item );
+
+						%><%= item.command ? item.command : '' %><%
+						if( item.hint ){
+							%><div class="hint"><%= item.hint %></div><%
+						}
+					%></li><%
+				}
+			%></ul><%
+		]]></script>
+	</command>
+	
+	<command>
+		<key>drawField</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="item" class="map"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			switch( item.type ){
+				case "textarea":{
+					%><textarea name="<%= item.name %>" id="<%= item.name %>"><%
+						= Format.xmlNodeValue( item.value );
+					%></textarea><%
+					break;
+				}
+				case "ckeditor":{
+					%><textarea name="<%= item.name %>" id="<%= item.name %>"><%
+						= Format.xmlNodeValue( item.value );
+					%></textarea><%
+					var editor = new VlapanRichedit( editorName = "<%= item.name %>", finder = "gwt-finder" );
+					= editor.replace( id = editorId );
+					break;
+				}
+				case "image":{
+					%><div class="clear"></div><%
+					%><div class="image"><%
+						%><a target="_new" href="<%= item.src ? item.src : "/$files/noimg.png" %>"><%
+							%><img src="<%= item.src ? item.src : "/$files/noimg.png" %>" width="120" height="80"/><%
+						%></a><%
+					%></div><%
+					%><input<%
+						%> class="image"<%
+						%> name="<%= item.name %>"<%
+						%> id="<%= item.name %>"<%
+						%> type="file"<%
+					%>/><br/><br/><%
+					break;
+				}
+				case "file":{
+					if( item.imgSrc ){
+						%><img src="<%= item.imgSrc %>" align="left"/><%
+					}
+					%><input<%
+						%> class="file"<%
+						%> name="<%= item.name %>"<%
+						%> id="<%= item.name %>"<%
+						%> type="file"<%
+					%>/><%
+					break;
+				}
+				case "select":{
+					= {
+						$layout 	: "layout-form-select",
+						options 	: item.options,
+						name 		: item.name,
+						selected 	: item.selected
+					};
+					break;
+				}
+				case "radio":{
+					= {
+						$layout 	: "layout-form-radio",
+						options 	: item.options,
+						name 		: item.name,
+						selected 	: item.selected
+					};
+					break;
+				}
+				case "date":{
+					= {
+						$layout 	: "layout-form-date",
+						day			: Int( item.value[0], 0 ),
+						month		: Int( item.value[1], 0 ),
+						year		: Int( item.value[2], 0 )
+					};
+					break;
+				}
+				case "submit":{
+					%><input<%
+						%> class="submit"<%
+						%> type="<%= item.type %>"<%
+						%> name="<%= item.name %>"<%
+						%> id="<%= item.name %>"<%
+						= item.onkeydown ? ' onkeydown="' + item.onkeydown + '"' : '';
+						= item.value ? ' value="' + Format.xmlAttributeFragment( item.value ) + '"' : '';
+					%>/><%
+					break;
+				}
+				case "secNumber":{
+					var name = item.name ? item.name : 'secNumber';
+					%><input type="text" name="<%= name %>" id="<%= name %>" /><%
+					break;
+				}
+				default:{
+					%><input<%
+						%> class="input input_<%= item.type %>"<%
+						%> type="<%= item.type %>"<%
+						%> name="<%= item.name %>"<%
+						%> id="<%= item.name %>"<%
+						= item.onkeydown ? ' onkeydown="' + item.onkeydown + '"' : '';
+						= item.value ? ' value="' + Format.xmlAttributeFragment( item.value ) + '"' : '';
+						= item.checked ? ' checked="checked"' : '';
+					%>/><%
+				}
+			}
+		]]></script>
+	</command>
+</type>

@@ -1,0 +1,36 @@
+<%IF: !Request.path %>
+	<%REDIRECT:'xxx'%>
+<%/IF%>
+
+<%EXEC: path = Request.path %>
+<%EXEC: node = ControlAPI.childForPath(ControlAPI.nodeForObject(Request.getSharedObject()), path) %>
+
+<%IF: Request.mode == 'link' %>
+	<%EXEC: Session.getParameters().pathLink = path %>
+	<%REDIRECT: 'showObjectChildrenLink?path='+path %>
+<%ELSE%>
+	<%WHILE: !node %>
+		<%EXEC: path = path.substring(0,path.lastIndexOf('/')) %>
+		<%EXEC: node = ControlAPI.childForPath(ControlAPI.nodeForObject(Request.getSharedObject()), path) %>
+	<%/WHILE%>
+
+	<%EXEC: forms = node.getForms() %>
+	<%EXEC: Session.getParameters().path = path %>
+	<%REDIRECT: 'showObjectChildren?path='+path %>
+<%/ELSE%>
+<%/IF%>
+
+
+<%IGNORE%>
+	<%IF: Array.isFilled(forms) %>
+		<%REDIRECT: 'showForm?path=' + Request.path +'&form='+forms[0] %>
+	<%ELSE%>
+		<%IF: Request.mode == 'link' %>
+			<%REDIRECT: 'showObjectChildrenLink?path='+Request.path %>
+		<%ELSE%>
+			<%REDIRECT: 'showObjectChildren?path='+Request.path %>
+		<%/ELSE%>
+		<%/IF%>
+	<%/ELSE%>
+	<%/IF%>
+<%/IGNORE%>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>Web: 'public' skin</title>
+	<abstract>true</abstract>
+	
+	<default>public.html</default>
+	
+	<prototype>skin-web-abstract</prototype>
+	
+	<!-- for: client/js/require.js -->
+	<import package="skin-jsclient" namespace="client"/>
+	
+	<charset>UTF-8</charset>
+	
+	<generate>build</generate>
+	<renderer>
+		<type>ACM.TPL</type>
+		<!-- <suffix>.tpl</suffix> -->
+	</renderer>
+</settings>

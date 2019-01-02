@@ -1,0 +1,82 @@
+<%
+%><%FINAL: 'text/xml' %><%
+%><body><%
+	%><XML ID="oMetaData" base="" entryname="entry" type="tree"><%
+		
+		%><%EXEC: maxLevel = Integer(Request.maxlevel,1) %><%
+		
+		%><%EXEC: cNode = Runtime.getLinkageRootNode() %><%
+		%><%EXEC: cPath = '' %><%
+		%><%EXEC: check = '' %><%
+		%><%IF: Request.cNode %><%
+			%><%EXEC: cPath = cPath + Request.cNode %><%
+			%><%ITERATE: key : split(Request.cNode,'/') %><%
+				%><%IF: key %><%
+					%><%EXEC: cNode = cNode.getChildByName(key) %><%
+					%><%EXEC: check = (cNode.getLocationControl() || (check + cNode.getKey())) + '/' %><%
+				%><%/IF%><%
+			%><%/ITERATE%><%
+		%><%/IF%><%
+		
+		%><%IF: Request.path %><%
+			%><%EXEC: path = cNode.getKey() + '/' + Request.path %><%
+			%><%EXEC: path = replace(path,'//','/') %><%
+			%><%EXEC: pathNodes = split(path,'/') %><%
+			%><%EXEC: rPath = substr(Request.path,1) %><%
+			%><%EXEC: EndsWith(rPath,'/') || (rPath += '/') %><%
+		%><%/IF%><%
+		
+		%><%EXEC: pathsLength = ArrayLength(pathNodes) %><%
+		
+		%><%RECURSION: node = cNode, path = cPath, check = check, children = '', level = 0, type = 'root' %><%
+			%><%IF: node && ControlAPI.isAccessible(check, node) %><%
+				%><%EXEC: searchFlag = level < pathsLength - 1 && pathNodes[level] == node.getKey() %><%
+				%><%EXEC: isTarget = rPath == path %><%
+		
+				%><%IF: level < maxLevel || searchFlag %><%
+					%><%EXEC: hasChildren = node.hasChildren() %><%
+					%><entry<%
+						%> cpath="<%= path %>"<%
+						%> check="<%= check %>"<%
+						%> children="<%= hasChildren %>"<%
+						%> icon="<%= ControlAPI.getIcon(node) %>"<%
+						%> level="<%= level %>"<%
+						%> type="<%= type %>"<%
+						%> name="<%= StringToUrlHard(node.getKey()) %>"<%
+						%> title="<%= Format.xmlAttributeFragment( node.getTitle() ) %>"<%
+						%><%IF: isTarget %><%
+							%> selected="true"<%
+						%><%/IF%>><%
+					%><%EXEC: foundFlag = false %><%
+					%><%IF: hasChildren %><%
+						%><%EXEC: children = ControlAPI.filterAccessibleHierarchy(check, node.getChildren()) %><%
+						%><%EXEC: children = node.getChildren() %><%
+						%><%EXEC: newlevel = level + 1 %><%
+						%><%ITERATE: child : children %><%
+							%><%DEEPER: node = child, path = path + child.getKey() + '/', check = (child.getLocationControl() || (check + child.getKey())) + '/', children = '', level = level + 1, type = 'child' %><%
+							%><%EXEC: searchFlag && (foundFlag || (foundFlag = (child.getKey() == pathNodes[newLevel]))) %><%
+						%><%/ITERATE%><%
+					%><%/IF%><%
+		
+					%><%IF: searchFlag && !foundFlag %><%
+						%><%EXEC: cNode = node.getChildByName(pathNodes[level+1]) %><%
+						%><%IF: cNode %><%
+							%><%EXEC: newlevel = level + 1 %><%
+							%><%DEEPER: node = cNode, path = path + cNode.getKey() + '/', check = (Current.getLocationControl() || (check + Current.getKey())) + '/', children = '', level = level + 1, type = 'child' %><%
+						%><%/IF%><%
+					%><%/IF%><%
+					%></entry><%
+				%><%ELSE%><%
+					%><entry cpath="<%=path%>" check="<%=check %>" children="<%= node.hasChildren() %>" icon="<%=ControlAPI.getIcon(node) %>" level="<%=level%>" type="<%=type%>" name="<%=StringToUrlHard(node.getKey()) %>" title="<%= Format.xmlAttributeFragment( node.getTitle() ) %>"<%IF: isTarget%> selected="true"<%/IF%>/><%
+				%><%/ELSE%><%
+				%><%/IF%><%
+		
+		
+			%><%/IF%><%
+		%><%/RECURSION%><%	
+	
+	%></XML><%
+%></body><%
+
+%><%/FINAL%><%
+%>

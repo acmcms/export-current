@@ -1,0 +1,24 @@
+<%FINAL: "text/xml" %><%
+	%><body><%
+		%><XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML"><%
+			%><%EXEC: form = Session[Request.id].data %><%
+			%><%EXEC: mainFieldset = form.fieldset %><%
+			%><%EXEC: field = mainFieldset.getField(Request.mapName) %><%
+			%><%EXEC: (value = form[Request.mapName]) || (form[Request.mapName] = value = {}) %><%
+			%><%EXEC: fieldset = field.attributes.fieldset %><%
+			
+			%><%EXEC: source = value[Request.mapKey] %><%
+			%><%EXEC: target = {} %><%
+			%><%EXEC: fieldset.dataRetrieve(source, target) %><%
+			
+			%><%EXEC: errors || (errors = {}) %><%
+			%><%EXEC: prefix = "tomap_"+Request.mapName+"___"+Request.mapName+"___" %><%
+			
+			%><%IF: fieldset%><%
+				%><table border=0 cellpadding=0 cellspacing=1 width=100% object=formTable><%
+					%><%INCLUDE: 'formFields.inc' %><%
+				%></table><%
+			%><%/IF%><%
+		%></XML><%
+	%></body><%
+%><%/FINAL%>

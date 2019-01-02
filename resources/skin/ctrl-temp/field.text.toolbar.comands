@@ -1,0 +1,38 @@
+// Command Type Enum
+TBCMD_DEC		= 0 ;
+TBCMD_DOC		= 1 ;
+TBCMD_CUSTOM	= 2 ;
+TBCMD_SELECT	= 3 ;
+
+
+// Custom Commands
+CM_IMAGE		= "EditImage";
+CM_TABLE		= "EditTable";
+CM_TABLEPROPERTIES		= "TableProperties";
+CM_CELLPROPERTIES		= "CellProperties";
+CM_SHOWDETAILS	= "ShowDetails";
+CM_SHOWTABLEBORDER	= "ShowTableBorders";
+CM_LINK			= "EditLink";
+CM_PASTEWORD	= "PasteWord";
+CM_PASTETEXT	= "PasteText";
+
+
+//HTML_CUT		= "htmlCut";
+//HTML_COPY		= "htmlCopy";
+//HTML_PASTE		= "htmlPaste";
+HTML_BOLD		= "htmlBold";
+HTML_ITALIC		= "htmlItalic";
+HTML_UNDERLINE	= "htmlUnderline";
+HTML_STRIKETHROUGH	= "htmlStrikethrough";
+HTML_SUBSCRIPT	= "htmlSubscript";
+HTML_SUPERSCRIPT= "htmlSuperscript";
+HTML_FONT		= "htmlFont";
+HTML_COMMENT	= "htmlComment";
+HTML_NBSP		= "htmlNBSP";
+HTML_BREAK		= "htmlBreak";
+HTML_PARAGRAPH	= "htmlParagraph";
+HTML_RULE		= "htmlRule";
+HTML_CENTER		= "htmlCenter";
+HTML_LINK		= "htmlLink";
+HTML_IMAGE		= "htmlImage";
+HTML_SCRIPT		= "htmlScript";

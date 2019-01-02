@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Layout: Tags</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawLayout</key>
+		<static>true</static>
+		<!-- execute>cache</execute>
+		<expire>5m</expire -->
+		<arguments class="fieldset">
+			<field id="title" class="string"/>
+			<field id="tagsMap" class="map"/>
+			<field id="max" class="integer" default="10"/>
+			<field id="type" class="string"/>
+			<field id="userKey" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var supervisor = User.getUser().isInGroup( "def.supervisor" );
+			if( title ){
+				%><div class="title"><%= title %></div><%
+			}
+			%><div class="tags"><%
+			if( HashFilled( tagsMap ) && max ){
+				var cat7 = max * 0.11;
+				var cat6 = max * 0.15;
+				var cat5 = max * 0.20;
+				var cat4 = max * 0.25;
+				var cat3 = max * 0.30;
+				var cat2 = max * 0.4;
+				for( var item in tagsMap.values() ){
+					var styletype = ( item.weight < cat7 ? "c7" : ( item.weight < cat6 ? "c6" : ( item.weight < cat5 ? "c5" : ( item.weight < cat4 ? "c4" : ( item.weight < cat3 ? "c3" : ( item.weight < cat2 ? "c2" : "c1" ) ) ) ) ) );
+					%><span class="<%= styletype %>"><%
+						= '<a href="' + ( !type ? item.href : item.href + '?type=' + type + '&amp;sort=users' + ( userKey ? '&amp;user=' + userKey : '' ) ) + '">';
+							%><%= item.title %><%
+						%></a><%
+						if( supervisor ){
+							%>(<%= item.weight %>)<%
+						}
+					%></span> <%
+				}
+			}
+			%></div><%
+		]]></script>
+	</command>
+</type>

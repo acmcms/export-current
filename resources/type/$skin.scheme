@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Abstract: Skin</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>getSeoHeaders</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="keywords" class="string"/>
+			<field id="description" class="string"/>
+			<field id="robots" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><meta name="keywords" content="<%= keywords %>"/><%
+			if( description ){
+				%><meta name="description" content="<%= description %>"/><%
+			}
+			if( robots ){
+				%><meta name="robots" content="<%= robots %>"/><%
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>splitMatrix</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="matrix" class="list"/>
+			<field id="pageSize" class="integer" default="10"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var output = {};
+			var listingPages;
+			var append;
+			var count = matrix.size();
+			var pages = ArraySplit( matrix, pageSize );
+			var pageCount = ArrayLength(pages);
+			var page = Int(Request.pmatrix, 0);
+			if( page < 0 ){
+				var listingUrl = Request.getUrl();
+				var url = listingUrl;
+				return $default.redirect( Request.modifyQueryStringParameter( url, 'pmatrix' ) );
+			}
+			if( page >= pageCount ){
+				var listingUrl = Request.getUrl();
+				var url = listingUrl;
+				return $default.redirect( Request.modifyQueryStringParameter( url, 'pmatrix', String(pageCount - 1) ) );
+			}
+		
+			var listingUrl = Request.getUrl();
+			if( pageCount > 1 ){
+				var url = listingUrl;
+				$output( listingPages ){
+					%><div class="matrixPages"><%
+					%><div><%
+						= intl(en = "Shown: ", ru = "Показано: ");
+						= pageSize *  page + 1;
+						%> .. <%
+						= Math.min(pageSize *  (page + 1), count);
+						%>(<%= count %>)<%
+					%></div><%
+					= intl(en = "Pages: ", ru = "Страницы: ");
+					since = 0;
+					if( page > 4 ){
+						since = page - 5;
+						if( since ){
+							%><a href="<%
+							CurrentIndex = page - 10;
+							if( CurrentIndex <= 0 ){
+								= Request.modifyQueryStringParameter(url, 'pmatrix');
+							}else{
+								= Request.modifyQueryStringParameter(url, 'pmatrix', String(CurrentIndex) );
+							}
+							%>">&laquo;&laquo;&laquo;</a>&nbsp;<%
+						}
+					}
+					till = pageCount;
+					if( till-since > 11 ){
+						till = since + 11;
+						$output( append ){
+							%><a href="<%
+							CurrentIndex = page + 10;
+							if( CurrentIndex >= pageCount ){
+								= Request.modifyQueryStringParameter(url, 'pmatrix', String(pageCount-1) );
+							}else{
+								= Request.modifyQueryStringParameter(url, 'pmatrix', String(CurrentIndex) );
+							}
+							%>">&raquo;&raquo;&raquo;</a><%
+						}
+					}
+					for( CurrentIndex = since; CurrentIndex < till; CurrentIndex++ ){
+						%><a <%
+						if( CurrentIndex != page ){
+							%>href="<%
+							if( CurrentIndex == 0 ){
+								= Request.modifyQueryStringParameter(url, 'pmatrix');
+							}else{
+								= Request.modifyQueryStringParameter(url, 'pmatrix', String(CurrentIndex) );
+							}
+							%>"<%
+						}
+						%>>&nbsp;<%= CurrentIndex+1 %>&nbsp;</a> <%
+					}
+					if( append ){
+						%>&nbsp;<%= append %><%
+					}
+					%></div><%
+				}
+			}
+			return {
+				listingPages: listingPages,
+				page: pages[ page ]
+			};
+		]]></script>
+	</command>
+</type>

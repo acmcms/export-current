@@ -1,0 +1,18 @@
+<div cm=HTML_BOLD		cName=bold		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_ITALIC		cName=italic		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_UNDERLINE		cName=underline		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_STRIKETHROUGH	cName=strikethrough	cType=TBCMD_CUSTOM><img width=21 height=20></div>
+
+<div cm=HTML_SUBSCRIPT		cName=subscript		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_SUPERSCRIPT	cName=superscript	cType=TBCMD_CUSTOM><img width=21 height=20></div>
+
+<div cm=HTML_FONT		cName=font		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_NBSP		cName=nbsp		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_BREAK		cName=break		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_PARAGRAPH		cName=paragraph		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_RULE		cName=rule		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_COMMENT		cName=comment		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_CENTER		cName=center		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_IMAGE		cName=image		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_LINK		cName=link		cType=TBCMD_CUSTOM><img width=21 height=20></div>
+<div cm=HTML_SCRIPT		cName=script		cType=TBCMD_CUSTOM><img width=21 height=20></div>

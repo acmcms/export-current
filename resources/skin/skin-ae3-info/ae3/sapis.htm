@@ -1,0 +1,46 @@
+<html><body><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<p>
+			static APIs - objects accessible through thread's global 
+			context provided by system as an execution environment 
+			helpers, factories and API's.
+		</p>
+		<ul>
+			<li>
+				<h3>List of JS SAPIs</h3>
+				<p>Some objects are available just because they are part of 
+				<a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm">ecma-262</a>
+				(<a href="http://en.wikipedia.org/wiki/JavaScript">JavaScript</a>) specification.</p>
+				<ul>
+					<li><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects">MDC - Global Objects</a> 
+					Good and open documentation covering JavaScript's global object.</li>
+				</ul>
+			</li>
+			<li>
+				<h3>List of AE3 SAPIs</h3>
+				<ul>
+					<li><a href="../jdoc-ae3.sdk/ru/myx/sapi/FileSAPI.html">File / FileAPI</a></li>
+					<li><a href="../jdoc-ae3.sdk/ru/myx/sapi/FormatSAPI.html">Format / FormatAPI</a></li>
+					<li><a href="../jdoc-ae3.sdk/ru/myx/sapi/ImagingSAPI.html">Imaging / ImagingAPI</a></li>
+					<li><a href="../jdoc-ae3.sdk/ru/myx/sapi/RandomSAPI.html">Random / RandomAPI</a></li>
+					<li><a href="../jdoc-ae3.sdk/ru/myx/sapi/ReflectionSAPI.html">Reflection / ReflectionAPI</a></li>
+				</ul>
+			</li>
+			<li>
+				<h3>Other</h3>
+				<ul>
+					<li><a href="/!/skin/skin-ae3-info/">AE3 Information Center</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'AE3 Developer: Static APIs',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

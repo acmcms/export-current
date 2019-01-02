@@ -1,0 +1,4 @@
+{
+	type : "ae3/Executable",
+	reference : "ae3/internal/test/CommandTest"
+}

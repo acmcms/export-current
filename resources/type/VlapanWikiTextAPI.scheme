@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Static: WikiAPI</title>
+	<visibility>hidden</visibility>
+	<command>
+		<key>parse</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="markupString" class="string"/>
+			<field id="markupLanguageString" class="string" default="textile"/>
+			<field id="builderString" class="string" default="html"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			import java.io.StringWriter;
+			var parsedValue = new StringWriter();
+			var markupLanguage, builder
+			if(builderString == "html"){
+				import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+				builder = new HtmlDocumentBuilder(parsedValue);
+				builder.setEmitAsDocument(false);
+			}else if(builderString == "docbook"){
+				import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
+				builder = new DocBookDocumentBuilder(parsedValue);
+			}
+			if(markupLanguageString == "mediawiki"){
+				import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
+				markupLanguage = new MediaWikiLanguage();
+			}else if(markupLanguageString == "tracwiki"){
+				import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
+				markupLanguage = new TracWikiLanguage();
+			}else if(markupLanguageString == "confluence"){
+				import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
+				markupLanguage = new ConfluenceLanguage();
+			}else if(markupLanguageString == "textile"){
+				import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+				markupLanguage = new TextileLanguage();
+			}else if(markupLanguageString == "twiki"){
+				import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
+				markupLanguage = new TWikiLanguage();
+			}
+			import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+			var wikiparser = new MarkupParser(markupLanguage, builder);
+			wikiparser.parse(markupString);
+			return parsedValue;
+		]]></script>
+	</command>
+</type>

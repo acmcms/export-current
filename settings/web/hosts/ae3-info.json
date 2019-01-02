@@ -1,0 +1,9 @@
+{
+	type		: "ae3.web/Share",
+	name		: "ae3-info",
+	aliases		: "ae3-info.*",
+	reference	: {
+		type : "skin",
+		skin : "skin-ae3-info"
+	}
+}

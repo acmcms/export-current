@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE> <%=Runtime.getSystemName() %> </TITLE><%
+	
+	%><LINK HREF="frames.css" REL=stylesheet><%
+	%><LINK HREF="forms.css" REL=stylesheet><%
+
+	%><style>
+A:link, A:hover, A:active, A:visited {
+	color:buttontext;
+	text-decoration:underline;
+}
+
+.blockParent A:link, .blockParent A:visited, .blockParent A:active{
+	color:buttontext;
+	text-decoration:none;
+}
+
+.blockParent A:hover{
+	color:buttontext;
+	text-decoration:underline;
+}
+
+.blockParent TD{
+	height:17px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding:0 15px 0 4px;
+	border-style:solid;
+	border-width:1px;
+	border-color:buttonface;
+}
+
+.blockParent TD.listTDheader{
+	border-bottom:solid 1px buttonshadow;
+	border-right:solid 1px buttonshadow;
+	border-top:solid 1px buttonhighlight;
+	border-left:solid 1px buttonhighlight;
+	background-color:buttonface;
+	color:buttontext;
+	height:16px;
+	padding-left:3px;
+	padding-right:1px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	behavior: url(_list-header.htc);
+}
+
+.blockParent .TDicon{
+	padding:0;
+	border:0;
+}
+
+.blockParent .TDtitle{
+	padding:0 0 0 4px;
+	border:0px;
+}
+
+</style>
+
+<BODY BGCOLOR="buttonface" scroll="auto" style="cursor:default; margin:10px;">
+
+<TABLE border=0 cellpadding=0 cellspacing=0 width=100%>
+<TR>
+	<TD valign=top width=50%>
+
+		<TABLE border=0 cellpadding=0 cellspacing=0>
+		<TR>
+			<TD style="padding:0 4px 0 0"><img src="icons/object-system.32.gif"></TD>
+			<TD valign=bottom style="padding:0 0 2px 0"><h1><%=intl(en = 'System info', ru = 'Системная информация')%></h1></TD>
+		</TR>
+		<TR>
+			<TD></TD>
+			<TD>
+				<TABLE border=0 cellpadding=0 cellspacing=0>
+				<TR>
+					<TD align=right class=fieldhead nowrap><%=intl(en = 'System build', ru = 'Версия системы')%>:&nbsp;</TD>
+					<TD nowrap><%=Runtime.getRuntimeVersion() + '/' + Runtime.getRuntimeBuild()%></TD>
+				</TR>
+				<TR>
+					<TD align=right class=fieldhead nowrap><%=intl(en = 'Tlib build', ru = 'Версия интерфейса')%>:&nbsp;</TD>
+					<TD nowrap><%INCLUDE: 'Version.info' %></TD>
+				</TR>
+				<TR>
+					<TD align=right class=fieldhead nowrap><%=intl(en = 'User guide', ru = 'Руководство пользователя')%>:&nbsp;</TD>
+					<TD nowrap style="padding-top:3px">
+						<a href="$files/userguide643.pdf" target=_blank><b>User guide</b></a> Adobe PDF (1.4 Mb)<br>
+					</TD>
+				</TR>
+				</TABLE>
+			</TD>
+		</TR>
+		</TABLE>
+
+
+		<hr style="text-align:left; margin:20px 0 20px 0">
+
+		<TABLE border=0 cellpadding=0 cellspacing=0>
+		<TR>
+			<TD style="padding:0 4px 0 0"><img src="icons/object-share.32.gif"></TD>
+			<TD valign=bottom style="padding:0 0 2px 0"><h1><%=intl(en = 'Root points', ru = 'Точки доступа')%></h1></TD>
+		</TR>
+		</TABLE>
+
+		<div style="background-color:window; margin:4px 0 0 0" class=FrameBorder>
+		<TABLE id=blockParent class=blockParent style="BORDER-COLLAPSE: collapse; margin-top:3px" width=100%>
+		<TR>
+			<TD nowrap class=listTDheader><%=intl(en = 'domain', ru = 'домен')%></TD>
+			<TD nowrap class=listTDheader width=100%><%=intl(en = 'path', ru = 'путь')%></TD>
+		</TR>
+		<%ITERATE: share : Application.getDomainSharePoints() %>
+			<TR>
+				<TD nowrap>
+					<%CHOOSE:share.getAuthType()%>
+						<%MATCH:0, 1%>
+							<%EXEC:icon='share-public'%>
+						<%MATCH:2, 3%>
+							<%EXEC:icon='share-test'%>
+						<%MATCH:4%>
+							<%EXEC:icon='share-close'%>
+					<%/CHOOSE%>
+					<TABLE border=0 cellpadding=0 cellspacing=0>
+					<TR>
+						<TD class=TDicon><img src="icons/<%=icon%>.16.gif" width=16 height=16></TD>
+						<TD class=TDtitle><a href="http://<%=share.getAlias()%>" target=_blank><%=share.getAlias()%></a></TD>
+					</TR>
+					</TABLE>
+				</TD>
+				<TD nowrap><a href="#" onclick="goToPath('<%=share.getPath()%>'); return false"><%=share.getPath()%></a></TD>
+			</TR>
+		<%/ITERATE%>
+		</TABLE>
+		</div>
+	</TD>
+	<TD>&nbsp;</TD>
+</TR>
+</TABLE>
+
+
+<script>
+eventMethods = parent.eventMethods;
+
+function goToPath(path){
+	eventMethods.fire('SetListActive','form',{'path':path});
+	eventMethods.fire('treeChange','tree',{'path':path});
+}
+</script>
+
+</BODY>
+
+</HTML>

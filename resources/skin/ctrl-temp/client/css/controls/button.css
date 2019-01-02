@@ -1,0 +1,44 @@
+.button-self{
+	border:solid 1px ButtonFace;
+	background-color:ButtonFace;
+	color:ButtonText;
+	font-size:14px;
+	line-height:14px;
+	min-height:18px;
+	min-width:4px;
+	padding:0;
+	text-decoration:none;
+	vertical-align:middle;
+	white-space:nowrap;
+	cursor:hand;
+}
+.button-self:HOVER{
+	border:solid 1px ButtonShadow;
+	border-top-color:ButtonHighlight;
+	border-left-color:ButtonHighlight;
+}
+.button-self-active{
+	border:solid 1px Highlight;
+	background-color:Highlight;
+	color: HighlightText;
+	font-size:14px;
+	line-height:14px;
+	min-height:18px;
+	min-width:4px;
+	padding:0;
+	margin:0;
+	text-decoration:none;
+	vertical-align:middle;
+	white-space:nowrap;
+	cursor:hand;
+}
+.button-self IMG, .button-self-active IMG{
+	padding:1px;
+	width:16px;
+	height:16px;
+	border:none;
+}
+.button-self SPAN, .button-self-active SPAN{
+	font-size:12px;
+	line-height:18px;
+}

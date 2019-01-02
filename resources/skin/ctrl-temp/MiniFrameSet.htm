@@ -1,0 +1,37 @@
+%><script><%
+%>var router = parent.router;<%
+
+%><%EXEC: (Request.path && ControlAPI.childForPath(ControlAPI.nodeForObject(Request.getSharedObject()), Request.path)) 
+																				&& (lastPath = Request.path) %><%
+%><%EXEC: lastPath = (lastPath || Session.getParameters().pathLink) %>
+
+function Start(){
+	var obj = document.getElementById('list');
+	obj.entryType = 'form';
+	obj.router = router;
+	obj.router.register(obj, 'tree');
+	obj.onFire = function(type, value){
+		switch(type){
+			case "treeChange":
+				this.src = "defaultAction?path=" + value.path + '&mode=link';
+				break;
+		}
+	};
+	obj.onFire("treeChange",{path : '<%= lastPath || '' %>'});
+}
+</script><%
+
+%><FRAMESET<%
+	%> COLS="250,*"<%
+	%> border="1"<%
+	%> frameborder="1"<%
+	%> FRAMESPACING="5"<%
+	%> TOPMARGIN="0"<%
+	%> LEFTMARGIN="0"<%
+	%> MARGINHEIGHT="0"<%
+	%> MARGINWIDTH="0"<%
+	%> onload="Start()"><%
+	
+	%><FRAME SRC="treeLink.htm<%=lastPath ? '?path=' + lastPath : '' %>" id=tree NAME="tree" TOPMARGIN="0" LEFTMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" FRAMEBORDER="no" BORDER="1"><%
+	%><FRAME SRC="javascript:'';" id=list NAME="list" FRAMEBORDER="no" BORDER="0" BORDERCOLOR="buttonface"><%
+%></FRAMESET>

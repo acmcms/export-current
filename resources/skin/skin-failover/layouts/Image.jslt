@@ -1,0 +1,28 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+// If an image have 'resolve' property and no 'binary' nor 'href' - try to resolve them.
+//
+
+var resolve = layout.resolve;
+var binary = layout.binary;
+var href = layout.href;
+
+if( !resolve || binary !== undefined || href !== undefined ){
+	return layout;
+}
+
+binary || (binary = context.resolveToBinary( resolve ));
+href || (href = context.resolveToHref( resolve ));
+
+
+console.log('>>>>>>> resolve=' + resolve + ', binary=' + binary + ', href=' + href);
+
+return binary 
+	? Layouts.extend( layout, {
+		binary	: binary,
+		href	: href
+	} )
+	: "image not found: " + resolve;

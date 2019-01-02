@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<type>
+
+	<title>Object: Рассылки</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>ready</state>
+		<state>system</state>
+		<state>draft</state>
+	</statelist>
+	<folder>true</folder>
+
+	<children>
+		<type>SendMailMessage</type>
+	</children>
+	
+	<parents>
+		<type>$Root</type>
+		<type>$System</type>
+		<type>$root</type>
+		<type>$system</type>
+	</parents>
+
+	<modify>
+		<form> 
+			<title>Свойства рассылки</title>
+			<fields class="fieldset">
+				<field	class="set"
+					id="rcpt"
+					title="Доступные списки рассылок"
+					variant="multiselect"
+					lookup_expression="Recipients.getGroups()"
+					max="512"/>
+			</fields>
+		</form>
+	</modify>
+
+	<respond>
+		<behaviour>
+			<handle>any</handle>
+			<public>true</public>
+			<ttl>24h</ttl>
+			<cache>24h</cache>
+		</behaviour>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return {
+				title : this.getTitle(),
+				body : null
+			};
+		]]></script>
+	</respond>
+
+</type>

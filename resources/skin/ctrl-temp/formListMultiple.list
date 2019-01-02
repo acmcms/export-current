@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML><%
+%><HEAD><%
+	%><TITLE></TITLE><%
+	%><%INCLUDE: 'include-head' %><%
+
+	%><script id="scriptRequire" src="client/js/require.js"></script><%
+	%><script><%
+		%>requireScript("app/Listing.js");<%
+	%></script><%
+	
+	%><style>
+		BODY, TD{
+			cursor:default;
+			background-color:window;
+			color:windowtext;
+		}
+			.blockParent TD{
+				height:15px;
+				font-family:Tahoma, Arial;
+				font-size:8pt;
+				padding:0 15px 0 4px;
+				border-style:solid;
+				border-width:1px;
+				white-space:nowrap;
+			}
+			TH.listSelector{
+				border-bottom:solid 1px buttonshadow;
+				border-right:solid 1px buttonshadow;
+				border-top:solid 1px buttonhighlight;
+				border-left:solid 1px buttonhighlight;
+				background-color:buttonface;
+				color:buttontext;
+				margin:0;
+				padding:0;
+				width:15px;
+			}
+		.blockParent .icon{
+			padding:0;
+			border:0;
+			vertical-align:top;
+		}
+		.blockParent .title{
+			padding:1px 0 0 4px;
+			border:0;
+			vertical-align:top;
+		}
+		.listTDheader{
+			border-bottom:solid 1px buttonshadow;
+			border-right:solid 1px buttonshadow;
+			border-top:solid 1px buttonhighlight;
+			border-left:solid 1px buttonhighlight;
+			background-color:buttonface;
+			color:buttontext;
+			height:16px;
+			padding-left:4px;
+			padding-right:4px;
+			font-family: Tahoma, Arial;
+			font-size: 8pt;
+		}
+		.listTDheader TD{
+			font-family: Tahoma, Arial;
+			font-size: 8pt;
+			background-color:buttonface;
+			color:buttontext;
+		}
+		.listTDheader .switch{
+			font-family: Webdings;
+			font-size: 10px;
+			line-height: 6px;
+		}
+		.listTDheader .title{
+			padding-right:4px;
+		}
+		.listTDheader .titleSelect{
+			padding-right:4px;
+			font-weight: bold;
+		}
+		.listTDheaderWOborder{
+			font-family: Tahoma, Arial;
+			font-size: 8pt;
+			background-color:buttonface;
+			color:buttontext;
+			border:0;
+		}
+		INPUT, SELECT{
+			font-family: Tahoma, Arial;
+			font-size: 7pt;
+			border: 0;
+			background-color: activecaption;
+			color:captiontext;
+		}
+		.filter{
+			padding:1px;
+			margin-top:-1px;
+			margin-bottom:-1px;
+			width:100%;
+		}
+		</style><%
+		
+		%><script>
+		router = parent.router;
+		var myList = {};
+		myList.id = window.name;
+		myList.entryType = 'setlist';
+		
+		myList.container = parent.document.getElementById( window.name.split('Frm')[0] );
+		if(myList.container){
+			myList.container.onFire = Listing.setListFire;
+			router.register(myList.container,window.name);
+		}
+		
+		var selectedObjects = [];
+		
+		document.oncontextmenu = function(){
+			return true;
+		};
+		
+		document.onclick = function(e){
+			e || (e = window.event);
+			var obj = (e.srcElement || e.target);
+			var multipleFlag = (obj.selectFlag) ? true : false;
+			var selectParent = Dom.searchParentByAttribute(obj,"selectParent");
+		
+			blockHeader.currentInput && blockHeader.clearForm();
+		
+			if (!selectParent){
+				if (selectedObjects.length > 0){
+					for (var i=0; i < selectedObjects.length; ++i){
+						Dom.unSelectBlock(selectedObjects[i].Childs);
+						selectedObjects[i].select = false;
+					}
+					selectedObjects = [];
+				}else{
+					return;
+				}
+				router.fire('ItemUnselect',myList.id,false);
+				return;
+			}
+			selectParent.Childs || (selectParent.Childs = Dom.getSelectParentChild(selectParent));
+		
+			if (multipleFlag){
+				var allreadySelected = false;
+				for (var i=0; i < selectedObjects.length; ++i){
+					if(selectedObjects[i] == selectParent){
+						allreadySelected = true;
+						Dom.unSelectBlock(selectParent.Childs);
+						selectedObjects[i].select = false;
+						selectedObjects[i] = null;
+					}
+				}
+				selectedObjects = clearArrFromNull(selectedObjects);
+				if (!allreadySelected){
+					Dom.selectBlock(selectParent.Childs);
+					selectedObjects[selectedObjects.length] = selectParent;
+					selectParent.select = true;
+				}
+			}else{
+				if (selectParent.select && selectedObjects.length == 1){
+					return;
+				}
+				for (var i=0; i < selectedObjects.length; ++i){
+					Dom.unSelectBlock(selectedObjects[i].Childs);
+					selectedObjects[i].select = false;
+				}
+				selectedObjects = [];
+				Dom.selectBlock(selectParent.Childs);
+				selectedObjects[0] = selectParent;
+				selectParent.select = true;
+			}
+			if (selectedObjects.length == 0){
+				router.fire('ItemUnselect', myList.id, false);
+			}else
+			if (selectedObjects.length == 1){
+				router.fire('ItemSelect', myList.id, selectedObjects);
+			}else
+			if (selectedObjects.length > 1){
+				router.fire('ItemsSelect', myList.id, selectedObjects);
+			}
+		}
+		
+		function clearArrFromNull(arr){
+			var narr = [];
+			for (var i=0; i<arr.length; ++i){
+				(arr[i]!=null) && (narr[narr.length] = arr[i]);
+			}
+			return narr;
+		}
+		
+		function sortTimerSubmit(fieldID,value){
+			window.document.forms[0].sortfield.value = fieldID;
+			window.document.forms[0].sortvalue.value = value;
+			window.document.forms[0].submit();
+		}
+	</script><%
+%></HEAD><%
+
+%><%EXEC: Icon = 'item-unknown' %><%
+
+%><%EXEC: fieldname = Request.fieldname %><%
+%><%EXEC: session_form = Session[Request.id] %><%
+%><%EXEC: data = session_form.data.getData() %><%
+%><%EXEC: mapPaths = split(fieldname,'/') %><%
+%><%EXEC: fieldset = session_form.data.fieldset %><%
+
+%><%IF: mapPaths.size() > 1%><%
+	%><%ITERATE: path : mapPaths %><%
+		%><%EXEC: field = fieldset.getField(path) %><%
+		%><%EXEC: fieldset = field.attributes.fieldset %><%
+		%><%EXEC: data = (value || data) %><%
+		%><%EXEC: value = data[path] %><%
+		%><%EXEC: fieldname = path %><%
+	%><%/ITERATE%><%
+%><%/IF%><%
+
+%><%EXEC: field = fieldset.getField(fieldname) %><%
+%><%EXEC: attributes = field.attributes %><%
+
+%><%INCLUDE: 'lookupPrepare.inc' %><%
+
+
+%><%EXEC: rLetter = UpperCase(Request.letter) %><%
+%><%EXEC: Count=50 %><%
+
+%><%EXEC: contentsLength = lookupOrder.length %><%
+
+%><%EXEC: pages = ArraySplit(lookupOrder,Count) %><%
+%><%EXEC: Page = (Request.Page == "all") ? "all" : Int(Request.Page,0) %><%
+%><%EXEC: itemsPage = pages[Page] %><%
+
+%><body scroll="no" style="margin:0;cursor:default;overflow:hidden"><%
+	%><div style="overflow:hidden; position:relative"><%
+		%><table id=blockHeader style="BORDER-COLLAPSE: collapse" width="100%" selectParent=1><%
+			%><form method="POST" name=filter><%
+				%><tr><%
+					%><td fieldID="title" editor="string" class=listTDheader nowrap><%
+						%><%=field.getTitle() %><%
+					%></td><%
+				%></tr><%
+			%></form><%
+		%></table><%
+	%></div><%
+
+	%><div style="height:expression((document.body.clientHeight-this.previousSibling.firstChild.clientHeight)+'px'); width:100%; overflow:auto;"><%
+		%><table id=blockParent class=blockParent style="BORDER-COLLAPSE: collapse" width=100%><%
+		%><script>
+			try{
+				myList.container.onFire('setListPaging',['<%= contentsLength %>','<%= Page != 'all' ? Page + 1 : Page %>','<%= Count %>']);
+			}catch(Error){
+				//
+			}
+		</script><%
+
+		%><%ITERATE: item : itemsPage %><%
+			%><tr id="zzz<%=StringToUrl(item) %>" selectParent=1 title="<%= Format.xmlAttributeFragment( lookup[item] || item ) %>"><%
+				%><td canBeSelected=1 style="padding-left:2px;"><%
+					%><table border=0 cellpadding=0 cellspacing=0><%
+						%><tr><%
+							%><td class=icon canBeSelected=1><%
+								%><img src=icons/<%=Icon%>.16.gif height=16 width=16><%
+							%></td><%
+							%><td class=title noWrap canBeSelected=1><%
+								%><%= lookup[item] || item %><%
+							%></td><%
+						%></tr><%
+					%></table><%
+				%></td><%
+			%></tr><%
+		%><%/ITERATE%><%
+
+		%></table><%
+	%></div><%
+%></body><%
+%></HTML>

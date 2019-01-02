@@ -1,0 +1,112 @@
+<%
+
+%><%EXEC: requireCss.add('zakladki') %><%
+%><%EXEC: requireJs.add('app/Zakladki') %><%
+
+%><%EXEC: requireJs.add('fields/TextHtml') %><%
+
+
+%><tr id="fld<%= prefix %>__<%= name %>">
+	<td colspan=2 style="height:<%= singleField || oneBigField ? '100%' : '196px' %>; padding:5 0 5 0">
+		<table border=0 cellpadding=0 cellspacing=0 width=100% height=100% id="fld<%= prefix %>__<%= name %>_obj">
+			<tr>
+				<td>
+					<table border=0 cellpadding=0 cellspacing=0 class=zakladka width=100%><%
+						%><tr><%
+							%><td><%
+								%><script><%
+									%>document.write(app.Zakladki.tabSplitter3);<%
+								%></script><%
+							%></td><%
+							%><%CHOOSE: fieldAttributes.variant %><%
+								%><%MATCH: 'html' %><%
+									%><td class=TabOn id="holder" nowrap<%IF: !fieldAttributes.constant %> onclick="fields.TextHtml.getHtmlText('<%= prefix %>__<%= name %>')"<%/IF%>><%
+										%><div><%
+											%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+												%><tr><%
+													%><td nowrap><%
+														%><%= title %><%
+													%></td><%
+													%><td style="padding:0 5px"><%
+														%><img src="$files/toolbar/button.script.gif" width=21 height=20 style="margin-bottom:-2px"><%
+													%></td><%
+												%></tr><%
+											%></table><%
+										%></div><%
+									%></td><%
+								%><%MATCH%><%
+									%><td class=TabOn id="holder" nowrap onclick="mForm.switchWholeWindowMode('fld<%= prefix %>__<%= name %>')"><%
+										%><div><%
+											%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+												%><tr><%
+													%><td nowrap><%
+														%><%= title %><%
+													%></td><%
+													%><td style="font-family:Webdings; padding:0 10px"><%
+														%>5<%
+													%></td><%
+												%></tr><%
+											%></table><%
+										%></div><%
+									%></td><%
+							%><%/CHOOSE%><%
+							%><td><%
+								%><script><%
+									%>document.write(app.Zakladki.tabSplitter4);<%
+								%></script><%
+							%></td><%
+							%><td style="width:100%"><%
+							%></td><%
+						%></tr><%
+						%><tr class=border><%
+							%><td class=TabOffl><%
+								%><img width=0 height=0><%
+							%></td><%
+							%><td><%
+								%><img width=0 height=0><%
+							%></td><%
+							%><td class=TabOffr><%
+								%><img width=0 height=0><%
+							%></td><%
+							%><td class=TabOn><%
+								%><img width=0 height=0><%
+							%></td><%
+						%></tr><%
+					%></table><%
+				%></td><%
+			%></tr><%
+			%><tr><%
+				%><td height=100%><%
+					%><table<%
+						%> border=0<%
+						%> cellpadding=0<%
+						%> cellspacing=0<%
+						%> width=100%<%
+						%> style="<%
+							%>border-left: 1px solid buttonhighlight;<%
+							%>border-right: 1px solid buttonshadow;<%
+							%>border-bottom: 1px solid buttonshadow;<%
+							%>padding:5px;<%
+							%>height:100%"<%
+						%>><%
+						%><tr><%
+							%><td valign=top><%
+								%><iframe<%
+									%> src="form-calendar-view.htm"<%
+									%> name="<%= prefix %>__<%= name %>preview"<%
+									%> id="<%= prefix %>__<%= name %>preview"<%
+									%> style="width:100%; height:100%;"<%
+									%> frameborder=0<%
+									%> class=F2rameBorder<%
+								%>><%
+								%></iframe><%
+							%></td><%
+							%><input type=hidden name="<%= prefix %>__<%= name %>" value="<%= Format.xmlAttributeFragment(value) %>"><%
+						%></tr><%
+					%></table><%
+				%></td><%
+			%></tr><%
+		%></table><%
+	%></td><%
+%></tr><%
+%>

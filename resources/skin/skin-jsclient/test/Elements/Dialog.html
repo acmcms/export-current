@@ -1,0 +1,227 @@
+<html><head><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: head %><%
+	%><%= '<!' + '-- ' + 'begin' %>-->
+	<script> 
+		// <%FORMAT:'js'%>
+		require("lib/standard");
+		require("Utils/Coordinates");
+		require("Utils/Event");
+		require("Elements/ModalDiv");
+		require.style("lib/modaldiv.css");
+
+		var targets = [];
+		var selects = [];
+		
+		var prepare = function(){
+			// targets
+			['td','div'].forEach(function(elementName){
+				var list = document.getElementsByTagName(elementName);
+				for( var i = 0; i < list.length; ++i ) {
+					if(list[i].getAttribute("skip")){
+						continue;
+					}
+					var target = list[i];
+					['rel', 'abs'].forEach(function(ptype){
+						['modal', 'pane', 'temp'].forEach(function(wtype){
+							var b = document.createElement("button");
+							b.innerHTML = ptype + "<h3>"+wtype+"</h3>";
+							b.tttgt = 'rel' == ptype ? b : null;
+							b.wtype = wtype;
+							target.appendChild(b);
+							target.appendChild(document.createTextNode(" "));
+							targets.push( b );
+						});
+					});
+					
+				}
+			});
+		};
+		var clean = function(){
+			targets.forEach(function(target){
+				target.innerHTML = "";
+			});
+			selects = [];
+		};
+		var makeTargets = function(){
+			selects.length && clean();
+			for( var i = 0; i < targets.length; ++i ) {
+				targets[i].onclick = function(){
+					// var dialog = new Elements.ModalDiv(this);
+					createModalDialog("Title!!!", this.tttgt);
+				};
+				selects.push(targets[i]);
+			}
+		};
+
+		function createModalDialog(title, element){
+			var modal = new Elements.ModalDiv(element);
+			modal.modal.style.backgroundColor = "#DFD";
+			var image = modal.modal.ownerDocument.createElement("img");
+			image.style.position = "absolute";
+			image.style.right = "2px";
+			image.style.top = "2px";
+			image.style.width = "16px";
+			image.style.height = "16px";
+			image.src = "/!/public/resources/data/images/famfamfam.com/silk/cross.png";
+			image.title = "close / cancel";
+			image.onclick = function(){
+				modal.close();
+				return false;
+			};
+			modal.modal.appendChild(image);
+			var caption = modal.modal.ownerDocument.createElement("div");
+			caption.style.textAlign = "left";
+			caption.style.whiteSpace = "nowrap";
+			caption.style.fontWeight = "bold";
+			caption.style.marginRight = "20px";
+			caption.innerHTML = title;
+			modal.modal.appendChild(caption);
+			var div = modal.modal.ownerDocument.createElement("div");
+			div.style.position = "relative";
+			div.style.marginTop = "3px";
+			div.style.width = "100%";
+			div.style.textAlign = "left";
+			modal.modal.appendChild(div);
+			modal.modal = div;
+			return modal;
+		}
+		function showRecipientSelection(reportId, targetIds, element){
+			var modal = createModalDialog("Select e-mail recipients:", element);
+			var div = modal.modal;
+			var working = '\
+				<div style="position: absolute;vertical align: middle; text-align: center; left: 0; top: 0; width: 100%; height: 100%; background-color: white">\
+					<img src="/__i/famfamfam.com/silk/shourglass.png" width="16" height="16" align="venter" style="margin:auto;vertical-align:middle;margin-top: 40px">\
+				</div>\
+			';
+			div.innerHTML = working;
+			Utils.Comms.queryXmlAsync(
+				"recipients-get.report?id=" + reportId + "&r=" + Math.random(),
+				function(code, element, text){
+					element || text && (element = Engine.parseXmlString(text));
+					var execute = element ? element.getElementsByTagName("code") : [];
+					execute = execute[0]
+					execute = execute.innerHTML || execute.innerText || execute.textContent || execute.nodeValue || execute.firstChild && execute.firstChild.nodeValue;
+
+					div.innerHTML = '';
+					var container = div.ownerDocument.createElement("div");
+					container.style.marginTop = "3px";
+					container.style.width = "100%";
+					container.style.height = "200px";
+					container.style.backgroundColor = 'blue';
+					div.appendChild(container);
+					var controls = div.ownerDocument.createElement("div");
+					controls.style.marginTop = "5px";
+					controls.style.textAlign = "right";
+					var button = div.ownerDocument.createElement("button");
+					modal.onSubmit = button.onclick = function(){
+						modal.onSubmit = null;
+						var result = '';
+						for(var i = 0; i < button.select.options.length; ++i) {
+							String(button.select.options[i].getAttribute("selected")) == "true" && (result += "&recipient=" + button.select.options[i].value);
+						}
+						top.debug && debug("REPORT: SET RECIPIENTS: ids=" + result);
+						div.innerHTML = working;
+						/*
+							Engine.sjaxRPC("recipients-set.report?id=" + reportId + result + "&r=" + Math.random());
+						*/
+						Utils.Comms.queryXmlAsync(
+							"recipients-set.report?id=" + reportId + result + "&r=" + Math.random(),
+							function(code, element, text){
+								if(code != 200){
+									alert("ERROR: " + text);
+								}
+								modal.close();
+								window.location.reload();
+								return false;
+							}
+						);
+					};
+					button.innerHTML = "&nbsp;Save changes&nbsp;";
+					controls.appendChild(button);
+					div.appendChild(controls);
+					
+					var data = eval( execute );
+					var select = new Inputs.BoxSelect(container, "email", {}, true);
+					select.focus();
+					button.select = select;
+					select.redefine(data);
+					for(var i = 0; i < select.options.length; ++i) {
+						targetIds[select.options[i].value] && select.options[i].setAttribute("selected", "true");
+					}
+				}
+			);
+			return;
+		}
+		
+		function dummy(e){
+			e || (e = window.event);
+			e.cancelBubble = true; /* Microsoft */
+			e.stopPropagation && e.stopPropagation(); /* W3C */
+			return false;
+		}
+		
+		// <%/FORMAT%>
+	</script>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+	%><%IGNORE%> -->
+		<script type="text/javascript" src="../../js/require.js"></script>
+	</head>
+	<body>
+	<h1>Dialog test</h1>
+	<!-- <%/IGNORE%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %>-->
+	<p>two positioning modes: relative and absolute (center)</p>
+	<p>three dialog modes: modal, pane, temporary</p>
+	<table border="1" width="100%" style="border: 3px solid cyan">
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<table border="1" width="43%" style="width:33%;height:40px;border: 3px solid blue">
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<div style="float:right;width:220px;height:160px;border: 3px solid cyan">
+	</div>
+	<div style="width:220px;height:160px;border: 3px solid red">
+	</div>
+	<div style="position:fixed;top:15px;right:10px;width:120px;height:160px;border: 3px solid black">
+	</div>
+	<div style="position:absolute;top:15px;right:150px;width:120px;height:160px;border: 3px solid black">
+	</div>
+	<div 
+		skip="true" 
+		style="position:fixed;top:15px;right:300px;width:120px;height:120px;border: 3px solid green; background-color: pink; z-index: 1000; color: black" 
+		onmouseover="return dummy()" 
+		onmouseout="return dummy()" 
+		onmousemove="return dummy()" 
+		onmouseup="return dummy()" 
+		onmousedown="return dummy()"
+		>
+		Black hole.
+	</div>
+	<script>
+		// <%FORMAT:'js'%>
+		prepare();
+		makeTargets();
+		// <%/FORMAT%>
+	</script>
+	<div style="height: 800px; border: 1px dotted blue">&nbsp;</div>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Abstract: Elements.ModalDiv',
+		template	: "html-document",
+		useRequire	: true,
+		useDebug	: true,
+		head		: head,
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

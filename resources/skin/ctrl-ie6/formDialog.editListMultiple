@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE>Edit list</TITLE><%
+	
+	%><style>
+<%INCLUDE: 'frames.css' %>
+<%INCLUDE: 'editor_style.css' %>
+<%INCLUDE: 'editor_popup-style.css' %>
+
+.blockParent TD{
+	height:15px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-style:solid;
+	border-width:1px;
+}
+
+.blockParent .icon{
+	padding:0;
+	border:0px;
+}
+
+.blockParent .title{
+	padding:0 0 0 4;
+	border:0px;
+}
+
+.droppedItem{
+	filter: gray() alpha(opacity=30);
+}
+
+</style>
+<%INCLUDE: 'formFields.listmultiple.css' %>
+
+<%EXEC:fieldname = Request.fieldname %>
+<%EXEC:session_form = Session[Request.id] %>
+<%EXEC:data = session_form.data.getData()%>
+<%EXEC:mapPaths = split(fieldname,'/')%>
+<%EXEC:fieldset = session_form.data.getFieldset() %>
+
+<%IF: mapPaths && mapPaths.length > 1 %>
+	<%CALL:ForArray(mapPaths)%>
+		<%EXEC: field = fieldset.getField(Current) %>
+		<%EXEC: fieldset = field.getAttributes().fieldset %>
+		<%EXEC: data = (value || data) %>
+		<%EXEC: value = data[Current]%>
+		<%EXEC: fieldname = Current%>
+	<%/CALL%>
+<%/IF%>
+
+
+<script>
+<%INCLUDE: 'EventsMethods.js' %>
+var eventMethods = CreateEventMethods();
+window.returnValue = false;
+
+function listFrameIni(){
+	eventMethods.register(this,'itemsList');
+	this.onFire = function(eType,eValue,eObj){
+		this.returnValue = (eObj && eObj.returnValue);
+	}
+}
+
+function Start(){
+	var array = window.dialogArguments;
+	if(array){
+		valuesList.returnValue = array;
+	}
+
+	listFrameObj = document.all.listFrame;
+	listFrameObj.ini = listFrameIni;
+	listFrameObj.ini();
+}
+
+function Add(){
+	var obj = document.all.listFrame;
+	var value = obj.returnValue;
+	if(!value) return;
+	for(var i=0; i<value.length; ++i){
+		valuesList.add(value[i]);
+	}
+}
+
+function Remove(){
+	valuesList.remove();
+}
+
+
+function Submit(){
+	window.returnValue = valuesList.getValue();
+	window.close();
+}
+</script>
+
+<%EXEC:ARRAY_ALPHABET = {}%>
+<%EXEC:ARRAY_ALPHABET.en = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'%>
+<%EXEC:ARRAY_ALPHABET.ru = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'%>
+
+<%CALL:ForHash(ARRAY_ALPHABET)%>
+	<%EXEC:txt = Current%>
+	<%EXEC:arr = []%>
+	<%CALL:For(0,txt.length())%>
+		<%EXEC:arr.add( substr(txt,CurrentIndex,1) )%>
+	<%/CALL%>
+	<%EXEC:ARRAY_ALPHABET[CurrentKey] = arr%>
+<%/CALL%>
+
+<BODY onload = "Start()">
+<TABLE border=0 cellpadding=0 cellspacing=0 width=100% height=100%>
+	<TR>
+		<TD width=50% height=100%>
+			<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+			<%IGNORE%>
+				<TR>
+					<TD s2tyle="height:120">
+						<fieldset style="height:100%;">
+							<TABLE border=0 cellpadding=0 cellspacing=2 style="width:100%">
+							<form name=usersForm method=get target=listFrame action="formListMultiple.container">
+							
+							<input name=letter type=hidden>
+							<input name=fieldname type=hidden value="<%= fieldname %>">
+							<input name=id type=hidden value="<%= Request.id %>">
+
+							<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%">
+							<TR>
+								<TD width=100% style="padding:0 1 1 1"><div class="SubmenuFrame" onclick="var letter = event.srcElement.letter; if(!letter) return false; document.forms.usersForm.elements.letter.value = letter; document.forms.usersForm.submit();">
+								<%CALL:ForHash(ARRAY_ALPHABET)%>
+									<%CALL:ForArray(Current)%>
+										<a href=# letter="<%=Current%>"><%=Current%></a>
+									<%/CALL%>
+								<%/CALL%>
+								&nbsp; <a href=# letter="all" style="font-weight:bold">[ALL]</a>
+								</div></TD>
+							</TR>
+							</form>
+							</TABLE>
+						</fieldset>
+					</TD>
+				</TR>
+			<%/IGNORE%>
+			<TR>
+				<TD style="height:100%; padding: 2 0 0 0">
+					<div style="height:100%" class=FrameBorder>
+						<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+						<TR>
+							<TD style="height:100%; background-color:window">
+								<iframe id="listFrame" name="listFrame" src="formListMultiple.container?<%=Request.getParameterString()%>" style="width:100%; height:100%" frameborder=0></iframe>');
+							</TD>
+						</TR>
+						</TABLE>
+					</div>
+				</TD>
+			</TR>
+			</TABLE>
+		</TD>
+		<TD style="padding:2">
+			<button onclick="Add()" class="iconSymbol" style="font-size:10pt;" title="Add">4</button><br>
+			<button onclick="Remove()" class="iconSymbol" style="font-size:10pt;" title="Remove">3</button><br>
+		</TD>
+		<TD width=50%>
+			<div id="valuesList" style="width:100%; height:100%; overflow:auto; padding:0" class="FrameBorder formListTable">
+			<TABLE border=0 cellpadding=0 cellspacing=0 class=blockParent style="BORDER-COLLAPSE: collapse" width=100%>
+			</TABLE>
+			</div>
+		</TD>
+	</TR>
+	<TR>
+		<TD align=right style="padding:10,0,4,0" colspan=3><BUTTON onclick="Submit()" style="width:80px">Set</BUTTON>&nbsp;<BUTTON ONCLICK="window.close();" style="width:80px">Cancel</BUTTON></TD>
+	</TR>
+</TABLE>
+
+
+</BODY>
+</HTML>

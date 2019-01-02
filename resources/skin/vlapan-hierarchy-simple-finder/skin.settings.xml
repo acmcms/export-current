@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>vlapan Simple Finder</title>
+	<charset>UTF-8</charset>
+	<renderer>ACM.TPL</renderer>
+	<secure>true</secure>
+	<auth>true</auth>
+	<import namespace="example" package="vlapan-example"/>
+</settings>

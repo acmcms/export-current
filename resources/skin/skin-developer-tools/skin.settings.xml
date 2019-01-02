@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<!--  
+		<type>EXACT</type>
+		<type>PLAIN</type>
+	-->
+	<type>PLAIN</type>
+	<title>Tools: ACMCMS developer tools</title>
+	<abstract>true</abstract>
+	
+	<prototype>skin-standard-html</prototype>
+	
+	<default>developer-tools.htm</default>
+	<charset>UTF-8</charset>
+	
+	<keywords>developer tools, developer, tools, goodies, helpers, development</keywords>
+	
+	<footer>
+		skin-developer-tools by MyX, 2011
+	</footer>
+	
+	<renderer>ACM.TPL</renderer>
+</settings>

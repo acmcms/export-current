@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>Internet Explorer 6</title>
+	<charset>UTF-8</charset>
+	<renderer>ACM.TPL</renderer>
+	<secure>true</secure>
+	<auth>true</auth>
+	<import package="ctrl-ie6-linkchooser-modal" namespace="linkchooser-modal"/>
+</settings>

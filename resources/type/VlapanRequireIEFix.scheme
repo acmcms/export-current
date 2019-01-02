@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>IE PNG Fix</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>insert</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="IEVersion" class="string" default="IE9"/>
+			<field id="version" class="string" default="2.1(beta4)"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var url = 'http://ie7-js.googlecode.com/svn/version/' + version + '/' + IEVersion + '.js'
+			%>
+				<!--[if lt IE 9]>
+					<script src="<%= url %>">
+						IE7_PNG_SUFFIX=".png";
+					</script>
+				<![endif]-->
+			<%
+		]]></script>
+	</command>
+</type>

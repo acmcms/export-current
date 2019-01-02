@@ -1,0 +1,11 @@
+{
+	onLayoutExecute : function( context, layout ) {
+		return {
+			layout	: 'message',
+			code	: 500,
+			title	: 'Unknown Error',
+			text	: 'Unhandled error occured. Please, retry later.',
+			detail	: layout.detail
+		};
+	}
+}

@@ -1,0 +1,23 @@
+<%FINAL: 'text/x-component' %>
+<PUBLIC:ATTACH EVENT="onload"  ONEVENT="ini()" FOR="window"/>
+
+<SCRIPT LANGUAGE="JScript">
+
+function ini(){
+	for (var i=1; i < this.rows[0].cells.length - 1; ++i){
+		var oTD = this.rows[0].cells[i];
+		oTD.parent = this;
+	}
+
+	this.clearForm = function(){
+		if(!this.currentInput) return;
+		this.currentInput.innerHTML = this.currentInput.prevContent;
+		this.currentInput.status = 'ready';
+		this.currentInput.className = 'listTDheader';
+		this.currentInput.sort = 0;
+		this.currentInput = false;
+	}
+}
+
+</SCRIPT>
+<%/FINAL%>

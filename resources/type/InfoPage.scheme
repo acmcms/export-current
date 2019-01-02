@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Информационная страница</title>
+	<visibility>default</visibility>
+	<icon>document</icon>
+	<state>publish</state>
+	<statelist>
+		<state>publish</state>
+		<state>draft</state>
+	</statelist>
+	<folder>true</folder>
+	<modify>
+		<form>
+			<title>Form title.</title>
+			<fields class="fieldset">
+				<field class="string" type="text" variant="html" id="text" max="1000000"/>
+			</fields>
+		</form>
+	</modify>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			return this.fillSelection( content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.abilities = [ 
+						{ title : this.getTypeTitle(), id : "pageMenu", abilities : this.getAbilities() }
+					];
+					content.body = this.text;
+					return this.fillSelection( content );
+				}
+				case "addinfoform":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {
+						title : afterPoint( this.getTitle() ),
+						key : this.getKey(),
+						form : InfoPage.getCreateForm( this.getLocation() + "addinfo" )
+					};
+					return this.fillSelection( content );
+				}
+				case "addinfo":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var object = InfoPage.create( Request.getParameters(), this );
+					if( !object ) return $default.redirect( this.getLocation() + "addinfoform?error=1" );
+					return $default.redirect( object.getLocation() );
+				}
+				case "modifyform":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.form = this.getModifyForm();
+					return this.fillSelection( content );
+				}
+				case "modify":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var object = this.modify( Request.getParameters() );
+					if( !object ) return $default.redirect( this.getLocation() + "modifyform?error=1" );
+					return $default.redirect( object.getLocation() );
+				}
+				case "editform":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					User.requestAuthorization();
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.abilities = [
+						{
+							title : sentenceLeft( content.title, 10, 20, "..." ),
+							type : this.getTypeTitle(),
+							id : "pageMenu",
+							abilities : this.getAbilities()
+						}
+					];
+					content.images = this.getLocation() + "images";
+					content.editor = this.text ? this.text : true;
+					content.editorAction = this.getLocation() + "edit";
+					return this.fillSelection( content );
+				}
+				case "edit":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var object = this.editText( Request.xhtml );
+					if( !object ) return $default.redirect( this.getLocation() + "modifyform?error=1" );
+					return $default.redirect( this.getLocation() );
+				}
+				case "remove":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var redirect = this.getParent().getLocation();
+					var change = this.createChange();
+					change.unlink( true );
+					return $default.redirect( redirect );
+				}
+				case "imageadd":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var object = Image.create( Request.getParameters(), this );
+					if( object ) return $default.redirect( object.getLocation() );
+					return $default.redirect( this.getLocation() );
+				}
+				case "fckeditor":{
+					if( !registered ) return $default.redirect( this.getLocation() );
+					var contentType;
+					var data;
+					switch( Request.Command ){
+						case "GetFolders":{
+							contentType = "text/xml";
+							data = $FCKConnector.getFolders( Request.Type, Request.CurrentFolder );
+							break;
+						}
+						case "GetFoldersAndFiles":{
+							contentType = "text/xml";
+							data = $FCKConnector.getFoldersAndFiles( Request.Type, Request.CurrentFolder, this );
+							break;
+						}
+						case "FileUpload":{
+							contentType = "text/html";
+							data = $FCKConnector.addFile( this );
+							break;
+						}
+					}
+					if( data ){
+						return $base.final( contentType, data );
+					}
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>getTypeTitle</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return intl( en = "Page", ru = "Страница" );
+		]]></script>
+	</command>
+
+	<command>
+		<key>create</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+			<field id="parent" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName ) return false;
+			try{
+				var change = parent.createChild();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.$type = "InfoPage";
+//				Runtime.log("asd!!","!!!!","C:"+change.STATE_PUBLISH+":S:"+Storage.STATE_PUBLISH+":N:"+STATE_PUBLISH);
+				change.setState( change.STATE_PUBLISH );
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>getCreateForm</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="action" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = Create.list( $base.getDefaultFields() );
+			fields.add({
+				title: "",
+				name: "submit",
+				type: "submit",
+				value: "Создать"
+			});
+			return {
+				id: "form",
+				title: 'Создание страницы',
+				info: '',
+				focus: "titleName",
+				action: action ? action : "addinfo",
+				method: "post",
+				legend: "",
+				fields: fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>getModifyForm</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = Create.list( $base.getDefaultFields( this ) );
+			fields.add({
+				title: "",
+				name: "submit",
+				type: "submit",
+				value: "Сохранить"
+			});
+			return {
+				id: "form",
+				title: 'Редактирование страницы',
+				warning: Request.error ? "Заполните необходимые поля" : "",
+				info: '',
+				focus: "titleName",
+				action: "modify",
+				method: "post",
+				legend: "",
+				fields: fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>modify</key>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName ) return false;
+			try{
+				var change = this.createChange();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>editText</key>
+		<arguments class="fieldset">
+			<field id="text" class="string" default="$$"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( text == "$$") return false;
+			try{
+				var change = this.createChange();
+				change.text = text;
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>remove</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.delete();
+		]]></script>
+	</command>
+
+	<command>
+		<key>getAbilities</key>
+		<script class="script" type="ACM.CALC"><![CDATA[
+			[
+				{
+					title : "Добавить страницу",
+					icon : "img_add",
+					imgSrc : "/$files/image_add.png",
+					href : this.getLocation() + "addinfoform",
+					name : "infoAdd",
+					ajax : true
+				},{
+					title : "Редактировать",
+					icon : "app_edit",
+					imgSrc : "/$files/page_white_edit.png",
+					href : this.getLocation() + "editform"
+				},{
+					title : "Удалить",
+					icon : "app_delete",
+					imgSrc : "/$files/application_delete.png",
+					href : this.getLocation() + "remove",
+					confirm : true
+				},{
+					title : "Свойства",
+					icon : "cog_edit",
+					imgSrc : "/$files/application_edit.png",
+					href : this.getLocation() + "modifyform",
+					name : "catModify",
+					ajax : true
+				}
+			]
+		]]></script>
+	</command>
+</type>

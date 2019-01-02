@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>VlapanDocument</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>publish</state>
+	<statelist>
+		<state>publish</state>
+		<state>draft</state>
+	</statelist>
+	<folder>true</folder>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.abilities = [
+						{ title : this.getTypeTitle(), id : "pageMenu", abilities : this.getAbilities() }
+					];
+					content.body = this.text;
+					return this.fillSelection( content );
+				}
+				case "addinfoform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+						content.form = InfoPage.getCreateForm( this.getLocation() + "addinfo" );
+						return this.fillSelection( content = content );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "addinfo":{
+					if( registered ){
+						var object = InfoPage.create( Request.getParameters(), this );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "addinfoform?error=1" );
+						}
+						return $default.redirect( object.getLocation() );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "modifyform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+						content.form = this.getModifyForm();
+						return this.fillSelection( content = content );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "modify":{
+					if( registered ){
+						var object = this.modify( Request.getParameters() );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "modifyform?error=1" );
+						}
+						return $default.redirect( object.getLocation() );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "editform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+
+						content.abilities = [{
+							title: sentenceLeft( content.title, 10, 20, "..." ),
+							type: this.getTypeTitle(),
+							id: "pageMenu",
+							abilities: this.getAbilities()
+						}];
+
+						content.images = this.getLocation() + "images";
+						content.editor = this.text ? this.text : true;
+						content.editorAction = this.getLocation() + "edit";
+						return this.fillSelection( content = content );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "edit":{
+					if( registered ){
+						var object = this.editText( Request.xhtml );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "modifyform?error=1" );
+						}
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "remove":{
+					if( registered ){
+						var redirect = this.getParent().getLocation();
+						this.remove();
+						return $default.redirect( redirect );
+					}	
+					return $default.redirect( this.getLocation() );
+				}
+				case "imageadd":{
+					if( registered ){
+						var object = Image.create( Request.getParameters(), this );
+						if( object ){
+							return $default.redirect( object.getLocation() );
+						}
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "fckeditor":{
+					if( registered ){
+						var contentType;
+						var data;
+						switch( Request.Command ){
+							case "GetFolders":{
+								contentType = "text/xml";
+								data = $FCKConnector.getFolders( Request.Type, Request.CurrentFolder );
+								break;
+							}
+							case "GetFoldersAndFiles":{
+								contentType = "text/xml";
+								data = $FCKConnector.getFoldersAndFiles( Request.Type, Request.CurrentFolder, this );
+								break;
+							}
+							case "FileUpload":{
+								contentType = "text/html";
+								data = $FCKConnector.addFile( this );
+								break;
+							}
+						}
+						if( data ){
+							return $base.final( contentType, data );
+						}
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>create</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+			<field id="parent" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName ) return false;
+			try{
+				var change = parent.createChild();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.$type = "InfoPage";
+				change.$state = Storage.STATE_PUBLISH;
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>modify</key>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName ) return false;
+			try{
+				var change = this.createChange();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>editText</key>
+		<arguments class="fieldset">
+			<field id="text" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			try{
+				var change = this.createChange();
+				change.text = text;
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>remove</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.delete();
+		]]></script>
+	</command>
+</type>

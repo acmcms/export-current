@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<!--  
+		<type>EXACT</type>
+		<type>PLAIN</type>
+	-->
+	<type>PLAIN</type>
+	<title>AE3 documentation / information</title>
+	<abstract>false</abstract>
+	
+	<prototype>skin-standard-html</prototype>
+	
+	<default>ae3.htm</default>
+	<charset>UTF-8</charset>
+	
+	<keywords>documentation, ae3, myx.ae3, docs, doc, installation, administration, development</keywords>
+	
+	<renderer>ACM.TPL</renderer>
+</settings>

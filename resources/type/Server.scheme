@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Server</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>draft</state>
+	<statelist>
+		<state>draft</state>
+		<state>publish</state>
+	</statelist>
+	<folder>true</folder>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					return this.fillSelection( content );
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>create</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+			<field id="parent" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.server ) return false;
+			try{
+				var change = parent.createChild();
+				change.$title = data.server;
+				change.$key = data.server;
+				change.$type = "Server";
+				change.$state = Storage.STATE_DRAFT;
+				change.commit();
+				var object = Storage.getByGuid( change.getGuid() );
+				object.addCmd("fullreport");
+				return object;
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>modify</key>
+		<arguments class="fieldset">
+			<field id="title" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			try{
+				var change = this.createChange();
+				change.$title = title;
+				change.email = email;
+				change.commit();
+				return true;
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>addEvent</key>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChild();
+			change.$title = data.titleName;
+			change.$type = "Event";
+			change.$state = Storage.STATE_PUBLISH;
+			change.report = data.report;
+			change.commit();
+		]]></script>
+	</command>
+
+	<command>
+		<key>addCmd</key>
+		<arguments class="fieldset">
+			<field id="cmd" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var cmdpool = Create.list( this.cmdpool );
+			cmdpool.add( cmd );
+			var change = this.createChange();
+			change.cmdpool = cmdpool;
+			change.commit();
+		]]></script>
+	</command>
+
+	<command>
+		<key>getCmds</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			// status;restart devel;update test;
+			var i = 1;
+			var cmdpool = Create.list( this.cmdpool );
+			$output( cmdlist ){
+				for( var item in cmdpool ){
+					= item;
+					if( i++ != cmdpool.size() ){
+						%>,<%
+					}
+				}
+			}
+			return cmdlist;
+		]]></script>
+	</command>
+</type>

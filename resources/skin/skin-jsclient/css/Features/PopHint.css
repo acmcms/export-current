@@ -1,0 +1,24 @@
+popHint{
+	display: none;
+}
+.popHint-container{
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	box-shadow: 2px 2px 5px #777;
+	-moz-box-shadow: 2px 2px 5px #777;
+	-webkit-box-shadow: 2px 2px 5px #777;
+	
+	border: 1px solid black;
+	padding: 4px;
+	cursor: default;
+	font-family: Arial, Tahoma, Verdana, Sans-serif, sans;
+	min-width: 50px;
+	max-width: 500px;
+	color: black;
+	background-color: #fffff0;
+	vertical-align: middle;
+	white-space: normal;
+	text-align: left;
+	
+	opacity: 0.9;
+}

@@ -1,0 +1,42 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+// Returns layout example.
+//
+
+return {
+	layout	: "border",
+	content	: {
+		layout	: "grid",
+		width	: 2,
+		border	: true,
+		elements:[
+			[
+				{
+					layout	: "intl",
+					value	: {
+						en		: "Sample code:",
+						ru		: "К примеру, код:"
+					}
+				},
+				{
+					layout	: "code",
+					language: "javascript",
+					content	: Layouts.formatObject( layout.content )
+				},
+			],
+			[
+				{
+					layout	: "intl",
+					value	: {
+						en		: "Will produce:",
+						ru		: "Покажет следующий результат:"
+					}
+				},
+				layout.content
+			]
+		]
+	}
+};

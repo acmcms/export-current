@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Tasks</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>system</state>
+	<statelist>
+		<state>system</state>
+	</statelist>
+	<folder>true</folder>
+	<extends>AbstractService</extends>
+	<children>
+		<type>Todo</type>
+		<type>Project</type>
+	</children>
+
+	<command>
+		<key>getSiteRoot</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return this;
+		]]></script>
+	</command>
+
+	<command>
+		<key>getResponse</key>
+		<arguments class="fieldset">
+			<field id="cmd" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			$output( json ){
+				%>[<%
+				var i = 1;
+				var tasks = this.getChildrenListable(0,"");
+				for( var item in tasks ){
+					%>{title:"<%= item.getTitle() %>",description:"<%= item.getKey() %>"}<%
+					if( i++ != tasks.size() ){
+						%>,<%
+					}
+				}
+				%>]<%
+			}
+			return json;
+		]]></script>
+	</command>
+
+	<command>
+		<key>modify</key>
+		<arguments class="fieldset">
+			<field id="title" class="string"/>
+			<field id="email" class="string"/>
+			<field id="disabled" class="string"/>
+			<field id="showSiteMenu" class="string"/>
+			<field id="showTitle" class="string"/>
+			<field id="text" class="string"/>
+			<field id="bottomText" class="string"/>
+			<field id="logotype" class="binary"/>
+			<field id="bgtop" class="binary"/>
+			<field id="bgbottom" class="binary"/>
+			<field id="uacct" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			try{
+				var change = this.createChange();
+				change.$title = title;
+				change.email = email;
+				change.disabled = disabled;
+				change.showSiteMenu = showSiteMenu;
+				change.showTitle = showTitle;
+//				change.text = text;
+				change.bottomText = bottomText;
+				if( logotype ){
+					change.logotype = logotype;
+				}
+				if( bgtop ){
+					change.bgtop = bgtop;
+				}
+				if( bgbottom ){
+					change.bgbottom = bgbottom;
+				}
+				change.uacct = uacct;
+				change.commit();
+				return true;
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+</type>

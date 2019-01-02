@@ -1,0 +1,572 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML><%
+%><HEAD><%
+	%><TITLE></TITLE><%
+	%><%INCLUDE: 'include-head' %><%
+
+	%><script id="scriptRequire" src="client/js/require.js"></script><%
+	%><script><%
+		%>requireScript("app/Listing.js");<%
+		%>requireStyle("listing.css");<%
+	%></script><%
+	
+	%><%EXEC: FilterField = Request.filterfield%><%
+	%><%EXEC: FilterValue = Request.filtervalue%><%
+	%><script>
+		router = parent.router;
+		var myList = {};
+		myList.id = window.name;
+		myList.entryType = 'setlist';
+		
+		myList.container = parent.document.getElementById( window.name.split('Frm')[0] );
+		if(myList.container){
+			myList.container.onFire = Listing.setListFire;
+			router.register(myList.container,window.name);
+		}
+		
+		var selectedObjects = [];
+		
+		document.oncontextmenu = function(){
+			return true;
+		};
+		
+		document.ondblclick = function(e){
+			e || (e = window.event);
+			var obj = (e.srcElement || e.target);
+			var selectParent = Dom.searchParentByAttribute(obj,"selectParent");
+			if (!selectParent){
+				if (selectedObjects.length > 0){
+					for (var i=0; i < selectedObjects.length; ++i){
+						Dom.unSelectBlock(selectedObjects[i].Childs);
+						selectedObjects[i].select = false;
+					}
+					selectedObjects = [];
+				}
+				return;
+			}
+			if (selectParent.isNode == 'false'){
+				return;
+			}
+			if (!selectParent.Childs){
+				selectParent.Childs = Dom.getSelectParentChild(selectParent);
+			}
+			for (var i=0; i < selectedObjects.length; ++i){
+				Dom.unSelectBlock(selectedObjects[i].Childs);
+				selectedObjects[i].select = false;
+			}
+			selectedObjects = [];
+			Dom.selectBlock(selectParent.Childs);
+			selectedObjects[0] = selectParent;
+			selectParent.select = true;
+			if (selectedObjects.length > 0){
+				router.fire('ItemActivate',myList.id,selectedObjects);
+			}
+		};
+		
+		document.onclick = function(e){
+			e || (e = window.event);
+			var obj = (e.srcElement || e.target);
+			var multipleFlag = (obj.selectFlag) ? true : false;
+			var selectParent = Dom.searchParentByAttribute(obj,"selectParent");
+			if (selectParent && selectParent.id == 'blockHeader'){
+				SearchByField(obj);
+				return;
+			}
+			blockHeader.currentInput && blockHeader.clearForm();
+		
+			if (!selectParent){
+				if (selectedObjects.length > 0){
+					for (var i=0; i < selectedObjects.length; ++i){
+						Dom.unSelectBlock(selectedObjects[i].Childs);
+						selectedObjects[i].select = false;
+					}
+					selectedObjects = [];
+				}else{
+					return;
+				}
+				router.fire('ItemUnselect',myList.id,false);
+				return;
+			}
+			if (!selectParent.Childs){
+				selectParent.Childs = Dom.getSelectParentChild(selectParent);
+			}
+			if (multipleFlag){
+				var allreadySelected = false;
+				for (var i=0; i < selectedObjects.length; ++i){
+					if(selectedObjects[i] == selectParent){
+						allreadySelected = true;
+						Dom.unSelectBlock(selectParent.Childs);
+						selectedObjects[i].select = false;
+						selectedObjects[i] = null;
+					}
+				}
+				selectedObjects = clearArrFromNull(selectedObjects);
+				if (!allreadySelected){
+					Dom.selectBlock(selectParent.Childs);
+					selectedObjects[selectedObjects.length] = selectParent;
+					selectParent.select = true;
+				}
+			}else{
+				if (selectParent.select && selectedObjects.length == 1) return;
+				for (var i=0; i < selectedObjects.length; ++i){
+					Dom.unSelectBlock(selectedObjects[i].Childs);
+					selectedObjects[i].select = false;
+				}
+				selectedObjects = [];
+				Dom.selectBlock(selectParent.Childs);
+				selectedObjects[0] = selectParent;
+				selectParent.select = true;
+			}
+			if (selectedObjects.length > 0){
+				router.fire('ItemSelect',myList.id,selectedObjects);
+			}
+		};
+		
+		function clearArrFromNull(arr){
+			var narr = [];
+			for (var i=0; i<arr.length; ++i){
+				if(arr[i]!=null) narr[narr.length] = arr[i];
+			}
+			return narr;
+		}
+		
+		function setColumnWidth(){
+			try{
+				if (blockParent.cells.length < 1){
+					for (var i = 1; i < blockHeader.cells.length - 1; ++i){
+						blockHeader.cells[i].width = Math.max(100, blockHeader.cells[i].offsetWidth);
+					}
+					return;
+				}
+				for (var i = 1; i < blockParent.rows[0].cells.length - 1; ++i){
+					var W = Math.max(blockParent.cells[i].offsetWidth, blockHeader.cells[i].offsetWidth);
+					blockHeader.cells[i].width = W;
+					blockParent.cells[i].width = W;
+				}
+			}catch(e){
+				window.top.debug && window.top.debug("setColumnWidth: error: " + e);
+				setTimeout("setColumnWidth()",1000);
+			}
+		}
+		
+		function setPreviousPosition(){
+			myList.container && (Dom.parentElement(blockParent).scrollTop = myList.container.lastScrollPosition);
+		}
+		
+		function setPreviousValue(){
+			if(!myList.container || !myList.container.returnValue){
+				return;
+			}
+			var arr = myList.container.returnValue;
+			var Flag = false;
+			for (var i=0; i < arr.length; ++i){
+				try{
+					var ID = String(arr[i].id)
+					var obj = document.getElementById(ID);
+					obj.firstChild.click();
+					Flag = true;
+				}catch(e){
+					window.top.debug && window.top.debug("setPreviousValue: error: " + e);
+				}
+			}
+			if(!Flag){
+				router.fire('ItemUnselect',myList.id,false);
+			}
+		}
+		
+		function Start(){
+			setColumnWidth();
+			setPreviousPosition();
+			setPreviousValue();
+		}
+		
+		function SearchByFieldIni(obj){
+			var oTable = blockHeader;
+			oTable.ini = true;
+			oTable.clearForm = function(){
+				if(!this.currentInput){
+					return;
+				}
+				this.currentInput.innerHTML = oTable.currentInput.prevContent;
+				this.currentInput.status = 'ready';
+				this.currentInput.className = 'listTDheader';
+				this.currentInput = false;
+			}
+			for (var i=1; i < oTable.rows[0].cells.length - 1; ++i){
+				var oTD = oTable.rows[0].cells[i];
+				if(!oTD.editor){
+					continue;
+				}
+				oTD.status = 'ready';
+				oTD.onClick = function(){
+					if(this.status == 'edit'){
+						return;
+					}
+					this.status = 'edit';
+					document.forms[0].filterfield.value=this.fieldID;
+					oTable.clearForm();
+					this.prevContent = this.innerHTML;
+					this.innerHTML = '';
+					switch(this.editor){
+						case 'string':
+							var oObj = document.createElement("INPUT");
+							oObj.name = 'filtervalue';
+							oObj.type = 'text';
+							oObj.className = 'filter';
+							this.insertBefore(oObj, this.firstChild);
+							oObj.focus();
+							break;
+						case 'select':
+							this.className = 'listTDheaderWOborder';
+							var oObj = document.createElement("SELECT");
+							oObj.name = 'filtervalue';
+							oObj.className = 'filter';
+
+							this.insertBefore(oObj, this.firstChild);
+							var arr = this.editorValue.split(';');
+							for(var i=0; i<arr.length; ++i){
+								var oOption = document.createElement("OPTION");
+								var cArr = arr[i].split(':');
+								oOption.text=cArr[1];
+								oOption.value=cArr[0];
+								oObj.add(oOption);
+							}
+							oObj.onchange = function(){
+								document.forms.filter.submit();
+							};
+							oObj.focus();
+							break;
+					}
+					oTable.currentInput = this;
+				}
+			}
+		}
+		
+		function SearchByField(obj){
+			if(!blockHeader.ini){
+				SearchByFieldIni();
+			}
+			var o = Dom.searchParentByAttribute(obj,"editor");
+			if(!o){
+				return;
+			}
+			try{
+				o.onClick();
+			}catch(Error){
+				//
+			}
+		}
+	</script><%
+%></head><%
+%><body scroll="no" style="margin:0;cursor:default;overflow:hidden"><%
+
+	%><%EXEC: form = Session[Request.id] %><%
+	%><%IF: !form %><%
+		%><%RETURN: {
+			template	: '500',
+			title		: 'Error',
+			body		: 'No form available, please retry.'
+		} %><%
+	%><%/IF%><%
+
+	%><%EXEC: data = form.data %><%
+	
+	%><%EXEC: fieldName = Request.data %><%
+	%><%IF: fieldName.startsWith("tomap_") %><%
+		%><%EXEC: mapName = fieldName.substring(6) %><%
+		%><%EXEC: mapName = mapName.substring(0, mapName.indexOf('___') ) %><%
+		%><%EXEC: mapField = data.fieldset.getField(mapName) %><%
+		%><%EXEC: fieldset = mapField.attributes.fieldset %><%
+		%><%EXEC: fieldName = fieldName.substring( fieldName.indexOf('___') + 3 ) %><%
+		%><%EXEC: field = fieldset.getField(fieldName) %><%
+		%><%EXEC: contents = data[mapName][fieldName] %><%
+		%><%EXEC: definition = field.attributes.content_fieldset %><%
+	%><%ELSE%><%
+		%><%EXEC: field = data.fieldset.getField(fieldName) %><%
+		%><%EXEC: contents = data[fieldName] %><%
+		%><%EXEC: definition = field.attributes.content_fieldset %><%
+	%><%/ELSE%><%
+	%><%/IF%><%
+
+	%><div style="position:relative;overflow:hidden;left:expression((0-this.nextSibling.scrollLeft)+'px')"><%
+		%><table id=blockHeader style="BORDER-COLLAPSE: collapse" width="100%" selectParent=1><%
+			%><form method="POST" name=filter><%
+				%><tr><%
+					%><th class=listSelector><%
+						%><img src=/__i/1.gif width=15 height=5><%
+					%></th><%
+					%><%IF: ControlAPI.isListing(contents) && definition %><%
+						%><%IF: !definition %><%
+							%><td fieldID="name" editor="string" class=listTDheader nowrap style="padding-left:1px; padding-right:1px;"><%
+								%><table border=0 cellpadding=0 cellspacing=0><%
+									%><tr><%
+										%><td class=switch>4</td><%
+										%><td class=title nowrap><%= intl( en = "Name", ru = "Имя" ) %></td><%
+									%></tr><%
+								%></table><%
+							%></td><%
+							%><td fieldID="title" editor="string" class=listTDheader nowrap style="padding-left:1px; padding-right:1px;"><%
+								%><table border=0 cellpadding=0 cellspacing=0><%
+									%><tr><%
+										%><td class=switch>4</td><%
+										%><td class=title nowrap><%= intl( en = "Title", ru = "Заголовок" ) %></td><%
+									%></tr><%
+								%></table><%
+							%></td><%
+						%><%/IF%><%
+					
+						%><%EXEC: FieldsID = [] %><%
+						%><%EXEC: FieldsLookup = {} %><%
+		
+						%><%IF: definition %><%
+							%><%ITERATE: currentField : definition %><%
+								%><%EXEC: attributes = currentField.attributes %><%
+								%><%EXEC: id = currentField.getKey() %><%
+								%><%EXEC: title = currentField.getTitle() %><%
+								%><%EXEC: Editor = attributes.type %><%
+								%><%EXEC: Hint = attributes.hint %><%
+		
+								%><%EXEC: attributes.lookup && (FieldsLookup[id] = attributes.lookup) %><%
+								%><%EXEC: ArrayAppend(FieldsID,id) %><%
+		
+								%><%EXEC: i = i + 1 %><%
+								%><%IF: Editor == 'string' || Editor == 'select' %><%
+									%><%EXEC: FieldTitle = title %><%
+									%><td fieldID="<%=id%>" editor="<%=Editor%>"<%
+										%><%CHOOSE: Editor%><%
+											%><%MATCH:'select','viewString' %><%
+											%> editorValue = ":;:All<%
+											%><%EXEC: lookup = attributes.lookup %><%
+											%><%IF: lookup %><%
+												%> <%
+												%><%ITERATE: key : lookup %><%
+													%>;<%= StringToXml(key) %>:<%= StringToXml(lookup[key]) %><%
+												%><%/ITERATE%><%
+											%><%/IF%>"<%
+										%><%/CHOOSE%><%
+										%> title="<%= Format.xmlAttributeFragment( Hint || FieldTitle ) %>"<%
+										%> class=listTDheader<%
+										%> nowrap<%
+										%> style="padding-left:1px; padding-right:1px;"><%
+										%><table border=0 cellpadding=0 cellspacing=0><%
+											%><tr><%
+												%><td class=switch>4</td><%
+												%><td class=title nowrap<%IF: filterfield == id%>select<%/IF%>><%=FieldTitle%></td><%
+											%></tr><%
+										%></table><%
+									%></td><%
+								%><%ELSE%><%
+									%><td title="<%= Format.xmlAttributeFragment( Hint || title ) %>" class=listTDheader nowrap><%=title%></td><%
+								%><%/ELSE%><%
+								%><%/IF%><%
+							%><%/ITERATE%><%
+						%><%/IF%><%
+		
+						%><td width=100% class=listTDheader><input type="hidden" name="filterfield" value="">&nbsp;</td><%
+					%><%ELSE%><%
+						%><td fieldID="index" editor="string" class=listTDheader nowrap style="padding-left:1px; padding-right:1px;" width=100%><%
+							%><table border=0 cellpadding=0 cellspacing=0><%
+								%><tr><%
+									%><td class=switch>4</td><%
+								%></tr><%
+							%></table><%
+						%></td><%
+					%><%/ELSE%><%
+					%><%/IF%><%
+				%></tr><%
+			%></form><%
+		%></table><%
+	%></div><%
+
+
+	%><div style="height:expression((document.body.clientHeight-this.previousSibling.firstChild.clientHeight)+'px'); width:100%; height:100%; overflow:auto;"><%
+		%><table id=blockParent class=blockParent style="BORDER-COLLAPSE: collapse" width=100%><%
+		%><%EXEC: RetrieveString='' %><%
+		%><%EXEC: MaxLength=Int(User.getUser().getProfile('mwmAdmin',true).TitleLimit,60) %><%
+		%><%EXEC: Count=Int(User.getUser().getProfile('mwmAdmin',true).ListingLimit,50) %><%
+		%><%IF: Request.Page == 'all' || (FilterField && FilterValue) %><%
+			%><%EXEC: Page = Request.Page %><%
+			%><%EXEC: Start = 0 %><%
+			%><%EXEC: End = ArrayLength(contents) %><%
+		%><%ELSE%><%
+			%><%EXEC: Page = Integer(Request.Page) %><%
+			%><%EXEC: Start = Page * Count %><%
+			%><%EXEC: End = (Page+1) * Count %><%
+		%><%/ELSE%><%
+		%><%/IF%><%
+
+		%><%IF: !FilterField || !FilterValue %><%
+			%><script><%
+				%>router.fire(<%
+					%>'setListPaging',<%
+					%>myList.id,<%
+					%>{<%
+						%>size : <%= ArrayLength(contents) %>,<%
+						%>page : <%= Page != 'all' ? Page + 1 : Page %>',<%
+						%>count: <%= Count %>});<%
+			%></script><%
+		%><%/IF%><%
+
+		%><%EXEC: cnt=0 %><%
+
+		%><%IF: ControlAPI.isListing(contents) && definition %><%
+			%><%CALL: ForArray(contents,Start,End) %><%
+				%><%EXEC: Record = Current.getData() || Current.attributes %><%
+				%><%EXEC: Icon = ControlAPI.getIcon(Current) %><%
+				%><%TRY%><%
+					%><%EXEC: cKey = listIndex = Current.getKey() %><%
+					%><%EXEC: cTitle = Current.getTitle() %><%
+				%><%CATCH%><%
+					%><%EXEC: listIndex = null %><%
+					%><%EXEC: cTitle = cKey = Current %><%
+				%><%/TRY%><%
+
+				%><%EXEC: show = true %><%
+
+				%><%IF: FilterField && FilterValue %><%
+					%><%IF: !definition %><%
+						%><%EXEC: (FilterField == "name")  && (fField = Current.getKey()) %><%
+						%><%EXEC: (FilterField == "title") && (fField = Current.getTitle()) %><%
+						%><%EXEC: show = StartsWith(FilterValue,'^')
+									? indexOf( UpperCase(fField) , UpperCase(substr(FilterValue,1)) ) == 0 
+									: indexOf( UpperCase(fField) , UpperCase(FilterValue) ) >= 0 %><%
+					%><%/IF%><%
+
+					%><%IF: Record %><%
+						%><%EXEC: show = FieldsLookup[FilterField]
+											? Record[FilterField] == FilterValue 
+											: (StartsWith(FilterValue,'^')
+												? indexOf( UpperCase(Record[FilterField]) , UpperCase(substr(FilterValue,1)) ) == 0 
+												: indexOf( UpperCase(Record[FilterField]) , UpperCase(FilterValue) ) >= 0) %><%
+					%><%/IF%><%
+				%><%/IF%><%
+
+				%><%IF: show %><%
+					%><%EXEC: cnt = cnt + 1 %><%
+					%><%EXEC: i == 0 && (i = 1) %><%
+					%><tr id="zzz<%=listIndex%>" type="content" selectParent=1><%
+						%><th class=listSelector canBeSelected=1 selectFlag=1><%
+							%><img src=/__i/1.gif width=15 height=5><%
+						%></th><%
+						%><%IF: !definition%><%
+							%><td canBeSelected=1 style="padding-left:2px"><%
+								%><table border=0 cellpadding=0 cellspacing=0><%
+									%><tr><%
+										%><td class=icon canBeSelected=1><%
+											%><img src=icons/<%=Icon%>.16.gif height=16 width=16><%
+										%></td><%
+										%><td class=title noWrap canBeSelected=1><%
+											%><%= Format.xmlNodeValue( LimitString( cKey, MaxLength, '...' ) ) %><%
+										%></td><%
+									%></tr><%
+								%></table><%
+							%></td><%
+							%><td noWrap canBeSelected=1><%
+								%><%= Format.xmlNodeValue( LimitString( cTitle, MaxLength, '...' ) ) %><%
+							%></td><%
+						%><%/IF%>
+
+						<%IF: Record %>
+							<%CALL: ForArray(FieldsID) %>
+								<%EXEC: value = FieldsLookup[Current] ? FieldsLookup[Current][Record[Current]] : Record[Current] %>
+								<%EXEC: line = ControlAPI.toLine(value) %>
+								<%IF: definition && First %><%
+									%><td canBeSelected=1 style="padding-left:2px"><%
+										%><table border=0 cellpadding=0 cellspacing=0><%
+											%><tr><%
+												%><td class=icon canBeSelected=1><%
+													%><img src=icons/<%=Icon%>.16.gif height=16 width=16><%
+												%></td><%
+												%><td class=title noWrap canBeSelected=1><%
+													%><%IF: line == Format.jsObject(value) %><%
+														%><%= Format.xmlNodeValue( line ) %><%
+													%><%ELSE%><%
+														%><a href="show.field?type=form&fromlist=<%=Request.data%>&fromdata=<%=Current%>&index=<%=listIndex%>&<%=Request.getParameterString() %>" target=_blank><%
+															%><%= Format.xmlNodeValue( line ) %><%
+														%></a><%
+													%><%/ELSE%><%
+													%><%/IF%><%
+												%></td><%
+											%></tr><%
+										%></table><%
+									%></td><%
+								%><%ELSE%><%
+									%><td noWrap canBeSelected=1><%
+										%><%IF: line == Format.jsObject(value) %><%
+											%><%= Format.xmlNodeValue( line ) %><%
+										%><%ELSE%><%
+											%><a href="show.field?type=form&fromlist=<%=Request.data%>&fromdata=<%=Current%>&index=<%=listIndex%>&<%=Request.getParameterString() %>" target=_blank><%
+												%><%= Format.xmlNodeValue( line ) %><%
+											%></a><%
+										%><%/ELSE%><%
+										%><%/IF%><%
+									%></td><%
+								%><%/ELSE%><%
+								%><%/IF%><%
+							%><%/CALL%><%
+						%><%/IF%><%
+						%><td width=100%>&nbsp;</td><%
+					%></tr><%
+				%><%/IF%><%
+			%><%/CALL%><%
+		%><%ELSE%><%
+			%><%EXEC: lookup = field.attributes.lookup %><%
+			%><%CALL: ForArray(contents, Start, End) %><%
+				%><%EXEC: lookup && (Current = lookup[Current] || Current) %><%
+				%><%EXEC: listIndex = CurrentIndex %><%
+				%><%EXEC: line = ControlAPI.toLine(Current) %><%
+				%><%EXEC: show = true%><%
+				%><%IF: FilterField == 'index' && FilterValue %><%
+					%><%EXEC: show = StartsWith(FilterValue,'^')
+								? indexOf( UpperCase(line) , UpperCase(substr(FilterValue,1)) ) == 0 
+								: indexOf( UpperCase(line) , UpperCase(FilterValue) ) >= 0 %><%
+				%><%/IF%><%
+
+				%><%IF: show%><%
+					%><%EXEC: cnt ++ %><%
+					%><%EXEC: i || (i = 1) %><%
+					%><tr id="zzz<%=listIndex%>" type="content" selectParent=1><%
+						%><th class=listSelector canBeSelected=1 selectFlag=1><%
+							%><img src=/__i/1.gif width=15 height=5><%
+						%></th><%
+						%><td canBeSelected=1 style="padding-left:2px" width=100%><%
+							%><table border=0 cellpadding=0 cellspacing=0><%
+								%><tr><%
+									%><td class=icon canBeSelected=1><%
+										%><img src=icons/item-unknown.16.gif height=16 width=16><%
+									%></td><%
+									%><td class=title noWrap canBeSelected=1><%
+										%><%IF: line == Format.jsObject(Current) %><%
+											%><%= Format.xmlNodeValue(line) %><%
+										%><%ELSE%><%
+											%><a href="show.field?type=form&fromlist=<%=Request.data%>&fromdata=<%=Current%>&index=<%=CurrentIndex%>&<%=Request.getParameterString() %>" target=_blank><%
+												%><%= Format.xmlNodeValue(line) %><%
+											%></a><%
+										%><%/ELSE%><%
+										%><%/IF%><%
+									%></td><%
+								%></tr><%
+							%></table><%
+						%></td><%
+					%></tr><%
+				%><%/IF%><%
+			%><%/CALL%><%
+
+		%><%/ELSE%><%
+		%><%/IF%><%
+
+		%></table><%
+	%></div><%
+
+	%><%IF: FilterField && FilterValue %><%
+		%><script><%
+			%>router.fire('setListPaging',myList.id,{size : <%= cnt %>,title : '<%= intl( en = "Find", ru = "Найдено" ) %>'});<%
+		%></script><%
+	%><%/IF%><%
+
+	%><script><%
+		%>Start();<%
+	%></script><%
+
+%></body><%
+%></HTML>

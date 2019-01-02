@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>Simple (Plain HTML / Any browser)</title>
+
+	<prototype>ctrl-simple-abstract</prototype>
+	
+	<import package="skin-jsclient" namespace="client"/>
+	<import package="ctrl-simple-browse" namespace="Browse"/>
+	<import package="ctrl-simple-form" namespace="Form"/>
+	
+	<charset>UTF-8</charset>
+	<default>welcome.htm</default>
+	
+	<renderer>
+		<type>ACM.TPL</type>
+		<suffix>.tpl</suffix>
+	</renderer>
+	<!--  renderer>
+		<type>IDENTITY</type>
+		<suffix>.css</suffix>
+	</renderer>-->
+	
+	<secure>true</secure>
+	<auth>true</auth>
+</settings>

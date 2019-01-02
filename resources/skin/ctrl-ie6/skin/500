@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+
+%><%IGNORE%><%
+%><%IF: Request.UserAgent() && (-1 == indexOf( Request.UserAgent(), 'IE' ))%><%
+	%><%FINAL:'text/html'%><%
+		%>This backoffice interface designed only for <a href="http://www.microsoft.com/windows/ie/">Microsoft Internet Explorer</a> for Windows (or later). <%
+	%><%/FINAL%><%
+%><%/IF%><%
+%><%/IGNORE%><%
+
+%><HTML><%
+%><HEAD><%
+	%><meta http-equiv="X-UA-Compatible" content="IE=5" /><%
+	%><% //
+			^^^ IE11 special mode 
+	%><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><%
+	%><META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, maxage=0, s-maxage=0" /><% 
+	%><TITLE> Axiom.CM </TITLE><%
+
+%><LINK HREF="frames.css" REL=stylesheet>
+</HEAD>
+<BODY BGCOLOR="buttonface" scroll="no" style="cursor:default; margin:10px">
+
+<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%; padding:3px">
+<TR>
+	<TD valign=top><img src=icons/status-error.32.gif></TD>
+	<TD valign=top style="padding-top:12px" width=100%><h1><%= Flags.ContentBody %></h1></TD>
+</TR>
+<TR>
+	<TD height=100% colspan=2><textarea wrap=off style="width:100%; height:100%; background-color:window; font-size:9pt" class=FrameBorder><%= Format.throwableAsPlainText(Flags.exception) %></textarea></TD>
+</TR>
+</TABLE>
+
+</BODY>
+</HTML>

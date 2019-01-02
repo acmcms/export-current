@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>System: Member</title>
+	<visibility>default</visibility>
+	<icon>document</icon>
+	<state>publish</state>
+	<statelist>
+		<state>publish</state>
+		<state>archive</state>
+	</statelist>
+	<folder>true</folder>
+	<modify>
+		<form> 
+			<fields class="fieldset">
+				<field 	class="string"
+						id="lastname"
+						title="фамилия"/>
+				<field 	class="string"
+						id="firstname"
+						title="имя"/>
+				<field 	class="string"
+						id="middlename"
+						title="отчество"/>
+				<field 	class="string"
+						id="birthdate"
+						title="дата рождения"/>
+				<field 	class="string"
+						type="text"
+						id="workplace"
+						title="место работы"/>
+				<field 	class="string"
+						type="text"
+						id="post"
+						title="должность"/>
+				<field 	class="string"
+						id="degree"
+						title="ученая степень"/>
+				<field 	class="string"
+						id="rank"
+						title="ученое звание"/>
+				<field 	class="string"
+						type="text"
+						id="dissertation"
+						title="тема диссертации"/>
+				<field 	class="string"
+						type="text"
+						id="fieldofresearch"
+						title="сфера научных интересов"/>
+				<field 	class="string"
+						type="text"
+						id="courses"
+						title="читаемые курсы"/>
+				<field 	class="string"
+						type="text"
+						id="publications"
+						title="общие кол-во публикаций"/>
+				<field 	class="string"
+						type="text"
+						id="commonpub"
+						title="основные публикации"/>
+				<field 	class="string"
+						type="text"
+						id="projectsshare"
+						title="проекты - принимали участие"/>
+				<field 	class="string"
+						type="text"
+						id="projectsplan"
+						title="проекты - планы"/>
+				<field 	class="string"
+						type="text"
+						id="ideas"
+						title="идеи"/>
+				<field 	class="string"
+						id="city"
+						title="город"/>
+				<field 	class="string"
+						id="workaddress"
+						title="рабочий адрес"/>
+				<field 	class="string"
+						id="homeaddress"
+						title="домашний адрес"/>
+				<field 	class="string"
+						id="worktelephone"
+						title="рабочий телефон"/>
+				<field 	class="string"
+						id="hometelephone"
+						title="домашний телефон"/>
+				<field 	class="string"
+						id="fax"
+						title="факс"/>
+				<field 	class="string"
+						id="email"
+						title="e-mail"/>
+			</fields>
+		</form>
+		<trigger class="script" type="ACM.ECMA"><![CDATA[
+			var title = change.lastname + " " + change.firstname + " " + change.middlename;
+			change.$title = title;
+		]]></trigger>
+	</modify>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>false</anonymous>
+			<public>false</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":
+				case "/":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.this = this;
+					var supervisor = User.getUser().isInGroup( "def.supervisor" );
+					var authorized = User.getState() == User.US_AUTHORIZED;
+					if( authorized && ( supervisor || User.getUser().getLogin() == this.getKey() ) ){
+						content.supervisor = [];
+						if( supervisor && ( !this.activate || this.activate == "false" ) ){
+							$output( menu1 ){
+								%><a href="<%= this.getLocation() %>activate" onclick="if(confirm('Вы подтверждаете действие?')==false){return false;}">активировать</a><%
+							}
+							content.supervisor.add( menu1 );
+							$output( menu2 ){
+								%><a href="<%= this.getLocation() %>delete" onclick="if(confirm('Вы подтверждаете действие?')==false){return false;}">отказать/удалить</a><%
+							}
+							content.supervisor.add( menu2 );
+						}
+						$output( menu3 ){
+							%><a href="<%= this.getLocation() %>?edit=true">редактировать анкету</a><%
+						}
+						content.supervisor.add( menu3 );
+						$output( menu4 ){
+							%><a href="<%= this.getLocation() %>chgpass">изменить пароль</a><%
+						}
+						content.supervisor.add( menu4 );
+					}
+					return this.fillSelection( content = content );
+				}
+				case "chgpass":
+				case "chgpass/":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					var supervisor = User.getUser().isInGroup( "def.supervisor" );
+					if( supervisor || User.getUser().getLogin() == this.getKey() ){
+						if( Request.pass1 && Request.pass1 == Request.pass2 ) {
+							var password = Request.pass1.trim();
+							user = UserManager.getUserByLogin( this.getKey(), false );
+							if( user ){
+								user.setPassword( password );
+								user.commit();
+								content.body = "Пароль изменен! Робот послал вам сообщение с новым паролем.";		    				
+								Runtime.SendMail(
+									From = Request.getSettings().robot,
+									To = this.email,
+									Subject = this.lastname + " " +  this.firstname + " " + this.middlename + " :: изменение пароля",
+									Format = "html",
+									Body = "Здраствуйте, это сообщение посланно роботом." +
+										"<br/>Имя пользователя: " + this.getKey() +
+										"<br/>Новый пароль: " + password +
+										"<br/> С Уважением, " + Request.getSettings().siteName
+								);
+							}else{
+								content.body = "Ошибка!";
+							}
+						}else{
+							$output( content.body ){
+								%><form action="" method="post"><%
+								%>новый пароль<br/><%
+								%><input type="password" name="pass1"/><br/><%
+								%>повторите пароль<br/><%
+								%><input type="password" name="pass2"/><br/><%
+								%><input type="submit" value="изменить"/><%
+								%></form><%
+							}
+						}
+					}
+					return this.fillSelection( content = content );							
+				}
+				case "edit":
+				case "edit/":{
+					var supervisor = User.getUser().isInGroup( "def.supervisor" );
+					if( supervisor || User.getUser().getLogin() == this.getKey() ){
+						var change = this.createChange();
+						change.lastname = Request.lastname.trim();
+						change.firstname = Request.firstname.trim();
+						change.middlename = Request.middlename.trim();
+						change.birthdate = Request.birthdate.trim();
+						change.workplace = Request.workplace.trim();
+						change.post = Request.post.trim();
+						change.degree = Request.degree.trim();
+						change.rank = Request.rank.trim();
+						change.dissertation = Request.dissertation.trim();
+						change.fieldofresearch = Request.fieldofresearch.trim();
+						change.courses = Request.courses.trim();
+						change.publications = Request.publications.trim();
+						change.commonpub = Request.commonpub.trim();
+						change.projectsshare = Request.projectsshare.trim();
+						change.projectsplan = Request.projectsplan.trim();
+						change.ideas = Request.ideas.trim();
+						change.city = Request.city.trim();
+						change.workaddress = Request.workaddress.trim();
+						change.homeaddress = Request.homeaddress.trim();
+						change.worktelephone = Request.worktelephone.trim();
+						change.hometelephone = Request.hometelephone.trim();
+						change.fax = Request.fax.trim();
+						change.email = Request.email.trim();
+						change.changed = true;
+						change.commit();
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "delete":
+				case "delete/":{
+					var parent = this.getParent();
+					var supervisor = User.getUser().isInGroup( "def.supervisor" );
+					if( supervisor ){
+						user = UserManager.getUserByLogin( this.getKey(), false );
+						if( user ){
+							user.setType(0);
+						}
+						this.createChange().unlink();
+					}
+					return $default.redirect( parent.getLocation() );
+				}
+				case "activate":
+				case "activate/":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.body = "Невозможно активировать пользователя";
+					var supervisor = User.getUser().isInGroup( "def.supervisor" );
+					var change = this.createChange();
+					change.activate = false;
+					change.commit();
+					if( supervisor && ( !this.activate || this.activate == false ) ){
+						if( !ArrayFilled( UserManager.searchUsers( "", this.email, -1L, -1L) ) ){
+							var password = UserManager.generatePassword( 8, true, true);
+							var user = UserManager.getUser( UserManager.registerUser( "", this.getKey(), this.email, password, {} ) );
+							user.setActive();
+							user.groupAdd( UserManager.getGroup("def.registered", false) );
+							user.commit();
+							$output( content.body ){
+								%>Пользователь активирован!<br/><a href="<%= this.getLocation() %>">вернуться</a><%
+							}
+							var change = this.createChange();
+							change.setState( Storage.STATE_PUBLISH );
+							change.$owner = UserManager.getUserByLogin( this.getKey(), true ).getKey();
+							change.activate = true;
+							change.commit();
+							$output( body ){
+								%><html><%
+								%><body><%
+									%>Здравствуйте, это сообщение послано роботом с целью подтверждения <%
+									%>регистрации на сайте <a href="http://<%= Request.getTarget() %>/"><%= Request.getSettings().siteName %></a><%
+									%><br/> Имя пользователя: <%= this.getKey() %> <%
+									%><br/> Пароль: <%= password %> <%
+									%><br/> С уважением, <a href="http://<%= Request.getTarget() %>/"><%= Request.getSettings().siteName %></a><%
+								%></body><%
+								%></html><%
+							}
+							Runtime.SendMail(
+								From = Request.getSettings().robot,
+								To = this.email,
+								Subject = Request.getSettings().siteName + " :: " + this.lastname + " " +  this.firstname + " " + this.middlename + " :: подтверждение регистрации",
+								Format = "html",
+								Body = body );
+						}
+					}
+					return this.fillSelection( content = content );
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+	<command>
+		<key>displayBlock</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var edit = Request.edit ? true : false;
+			if( edit ){
+				%><form action="edit" method="post"><%
+			}
+			%><table cellpadding="3" cellspacing="0" border="1"><%
+				%><tr style="font-weight:bold"><td>фамилия</td><td>имя</td><td colspan="2">отчество</td></tr><%
+				%><tr><%
+					%><td><%
+						if( edit ){
+							%><input name="lastname" type="string" value="<%= this.lastname %>"/><%
+						}else{
+							= this.lastname;
+						}
+					%></td><td><%
+						if( edit ){
+							%><input name="firstname" type="string" value="<%= this.firstname %>"/><%
+						}else{
+							= this.firstname;
+						}
+					%></td><td colspan="2"><%
+						if( edit ){
+							%><input name="middlename" type="string" value="<%= this.middlename %>"/><%
+						}else{
+							= this.middlename;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>дата рождения</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="birthdate" type="string" value="<%= this.birthdate %>"/><%
+						}else{
+							= this.birthdate;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>место работы</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="workplace" type="string" value="<%= this.workplace %>"/><%
+						}else{
+							= this.workplace;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>должность</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="post" type="string" value="<%= this.post %>"/><%
+						}else{
+							= this.post;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>ученая степень</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="degree" type="string" value="<%= this.degree %>"/><%
+						}else{
+							= this.degree;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>ученое звание</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="rank" type="string" value="<%= this.rank %>"/><%
+						}else{
+							= this.rank;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>тема диссертации</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="dissertation" type="string" value="<%= this.dissertation %>"/><%
+						}else{
+							= this.dissertation;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>сфера научных интересов</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="fieldofresearch" type="string" value="<%= this.fieldofresearch %>"/><%
+						}else{
+							= this.fieldofresearch;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>читаемые курсы</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="courses" type="string" value="<%= this.courses %>"/><%
+						}else{
+							= this.courses;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>общее кол-во публикаций</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="publications" type="string" value="<%= this.publications %>"/><%
+						}else{
+							= this.publications;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>основные публикации</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="commonpub" type="string" value="<%= this.commonpub %>"/><%
+						}else{
+							= this.commonpub;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>проекты - принимали участие</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="projectsshare" type="string" value="<%= this.projectsshare %>"/><%
+						}else{
+							= this.projectsshare;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>проекты - планы</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="projectsplan" type="string" value="<%= this.projectsplan %>"/><%
+						}else{
+							= this.projectsplan;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>идеи</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="ideas" type="string" value="<%= this.ideas %>"/><%
+						}else{
+							= this.ideas;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>город</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="city" type="string" value="<%= this.city %>"/><%
+						}else{
+							= this.city;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>адрес рабочий</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="workaddress" type="string" value="<%= this.workaddress %>"/><%
+						}else{
+							= this.workaddress;
+						}
+					%></td><%
+				%></tr><%
+				%><tr><td colspan="4"><b>адрес домашний</b></td></tr><%
+				%><tr><%
+					%><td colspan="4"><%
+						if( edit ){
+							%><input name="homeaddress" type="string" value="<%= this.homeaddress %>"/><%
+						}else{
+							= this.homeaddress;
+						}
+					%></td><%
+				%></tr><%
+				%><tr style="font-weight:bold"><td>телефон рабочий</td><td>телефон домашний</td><td>факс</td><td>e-mail</td></tr><%
+				%><tr><%
+					%><td><%
+						if( edit ){
+							%><input name="worktelephone" type="string" value="<%= this.worktelephone %>"/><%
+						}else{
+							= this.worktelephone;
+						}
+					%></td><td><%
+						if( edit ){
+							%><input name="hometelephone" type="string" value="<%= this.hometelephone %>"/><%
+						}else{
+							= this.hometelephone;
+						}
+					%></td><td><%
+						if( edit ){
+							%><input name="fax" type="string" value="<%= this.fax %>"/><%
+						}else{
+							= this.fax;
+						}
+					%></td><td><%
+						if( edit ){
+							%><input name="email" type="string" value="<%= this.email %>"/><%
+						}else{
+							= this.email;
+						}
+					%></td><%
+				%></tr><%
+			%></table><%
+			if( edit ){
+				%><input type="submit" value="отправить"/><%
+				%></form><%
+			}
+		]]></script>
+	</command>
+</type>

@@ -1,0 +1,21 @@
+var content = Create.map(content);
+
+$output(body){
+	%><body><%
+		for(var key in Request.getParameters()){
+			= key +" : " + Request.getParameters()[key];
+			%><br/><%
+		}
+	%></body><%
+}
+
+return {
+	title: "received parameters",
+	template: "html-page",
+	pathPrefix: "/$build/",
+	requireCss: null,
+	requireJs: null,
+	useDebug: false,
+	head: null,
+	body: body
+};

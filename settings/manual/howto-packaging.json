@@ -1,0 +1,7 @@
+{
+	type : "ae3.Manual",
+	title : "howto: make a package",
+	name : "howto-packaging",
+	group : "developer",
+	url : "/!/skin/skin-ae3-info/ae3/howto-packaging.htm",
+}

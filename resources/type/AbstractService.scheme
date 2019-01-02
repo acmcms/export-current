@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>AbstractService</title>
+	<visibility>default</visibility>
+	<extends>$System</extends>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					return this.fillSelection( content );
+				}
+				case "cmd":{
+					var content = {};
+					var response = null;
+					content.title = afterPoint( this.getTitle() );
+					content.dataOnly = true;
+					if( Request.cmd ){
+						response = this.getResponse( Request.cmd );
+					}
+					content.response = response;
+					return this.fillSelection( content );
+				}
+				default:{
+					if( target.endsWith(".png") ){
+						return $base.getSecImage();
+					}
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+</type>

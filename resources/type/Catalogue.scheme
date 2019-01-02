@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Catalogue - Каталог</title>
+	<visibility>default</visibility>
+	<icon>storage</icon>
+	<state>publish</state>
+	<statelist>
+		<state>system</state>
+		<state>publish</state>
+		<state>draft</state>
+	</statelist>
+	<folder>true</folder>
+	<children>
+		<type>Category</type>
+	</children>
+	<replacement>Portfolio</replacement>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>0</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+
+					content.abilities = [
+						{
+							title : this.getTypeTitle(),
+							id : "pageMenu",
+							abilities : this.getAbilities()
+						}
+					];
+
+					content.layout2 = HashFilled( this.layout ) ? this.layout : xmlToMap( this.getDefaultLayout() );
+					return this.fillSelection( content );
+				}
+				case "images.png":{
+					var children = this.getChildrenListable(0, "");
+					var images = [];
+					var widthSum = 0;
+					var heightMax = 0;
+					var css = ".image{width:160px;height:160px;}";
+					for ( var item in children ) {
+						if ( item.image ) {
+							var image = Imaging.imageForBinary( item.image );
+							var imageSize = Imaging.getImageDimensions( image );
+							css +=".image_" + item.name + "{background:url('" + this.getLocation() + "images.png') no-repeat -"+ widthSum +" 0} ";
+							images.add( image );
+							if ( imageSize.height > heightMax ) heightMax = imageSize.height;
+							widthSum += imageSize.width;
+						}
+					}
+					var fullimage = Imaging.createImage(widthSum,heightMax);
+					var graphics = fullimage.getGraphics();
+					var offset = 0;
+					var padding = 0;
+					for ( var image in images ) {
+							var imageSize = Imaging.getImageDimensions( image );
+							Imaging.graphicsDrawImage( graphics, image, offset, 0);
+							offset = offset + imageSize.width + padding;
+					}
+					return Imaging.encodePngBinary( fullimage );
+				}
+				case "addinfoform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+						content.form = InfoPage.getCreateForm();
+						return this.fillSelection( content = content );
+					}
+				}
+				case "addinfo":{
+					if( registered ){
+						var object = InfoPage.create( Request.getParameters(), this );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "addinfoform?error=1" );
+						}
+						return $default.redirect( object.getLocation() );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "addform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+
+						content.form = Category.getCreateForm();
+
+						return this.fillSelection( content = content );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "add":{
+					if( registered ){
+						var object = Category.create( Request.getParameters(), this );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "addform?error=1" );
+						}
+						return $default.redirect( object.getLocation() );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "modifyform":{
+					if( registered ){
+						var content = {};
+						content.title = afterPoint( this.getTitle() );
+						content.key = this.getKey();
+						content.form = this.getModifyForm();
+						return this.fillSelection( content = content );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "modify":{
+					if( registered ){
+						var object = this.modify( Request.getParameters() );
+						if( !object ){
+							return $default.redirect( this.getLocation() + "modifyform?error=1" );
+						}
+						return $default.redirect( object.getLocation() );
+					}
+					return $default.redirect( this.getLocation() );
+				}
+				case "remove":{
+					if( registered ){
+						var redirect = this.getParent().getLocation();
+						var change = this.createChange();
+						change.delete();
+						return $default.redirect( redirect );
+					}	
+					return $default.redirect( this.getLocation() );
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>getChildrenNames</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return [ "InfoPage" ];
+		]]></script>
+	</command>
+
+	<command>
+		<key>getCatalogueRoot</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return this;
+		]]></script>
+	</command>
+
+	<command>
+		<key>create</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+			<field id="parent" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName ) return false;
+			try{
+				var change = parent.createChild();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.$type = "Catalogue";
+				change.$state = Storage.STATE_PUBLISH;
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>getCreateForm</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="action" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = [
+				{ title : "Название", name : "titleName", type : "text", required : true },
+				{ title : "", name : "submit", type : "submit", value : "Опубликовать" }
+			];
+			return {
+				id : "form",
+				title : 'Добавление каталога',
+				info : '',
+				focus : "titleName",
+				action : action ? action : "addcat",
+				method : "post",
+				legend : "",
+				fields : fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>modify</key>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName ) return false;
+			try{
+				var change = this.createChange();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.depth = data.depth ? data.depth : 0;
+				try{
+					change.layout = xmlToMap( data.layout );
+					change.xmlLayout = data.layout;
+				}
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>getModifyForm</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = Create.list( $base.getDefaultFields( this ) );
+			fields.add({
+				title: $dictionary.translate("depth"),
+				name: "depth",
+				type: "text",
+				value: this.depth ? this.depth : 0,
+				required: true,
+				hint: "Этот параметр служит для ограничения глубины данного каталога. Нужно указать число от 0 до 5. При глубине 0, в каталоге нельзя будет создать категорий, внутри сразу будут страницы."
+			});
+			fields.add({
+				title: "Структура вывода",
+				name: "layout",
+				type: "textarea",
+				value: this.xmlLayout ? this.xmlLayout : this.getDefaultLayout()
+			});
+			fields.add({
+				title: "Структура вывода",
+				name: "layout2",
+				type: "ckeditor",
+				value: this.xmlLayout ? this.xmlLayout : this.getDefaultLayout()
+			});
+			fields.add({
+				title: "",
+				name: "submit",
+				type: "submit",
+				value: "Опубликовать"
+			});
+			return {
+				id: "form",
+				title: 'Редактирование каталога',
+				warning: Request.error ? "Заполните необходимые поля" : "",
+				info: '',
+				focus: "titleName",
+				action: "modify",
+				method: "post",
+				legend: "",
+				fields: fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>getTypeTitle</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return intl( en = "Catalog", ru = "Каталог" );
+		]]></script>
+	</command>
+
+	<command>
+		<key>getAbilities</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var abilities = [];
+			if( this.depth && this.depth > 0 ){
+				abilities.add( { title : "Добавить категорию", icon : "app_add", href : this.getLocation() + "addform", name : "catAdd", ajax : true } );
+			}else{
+				abilities.add( { title : "Добавить работу", icon : "img_add", href : this.getLocation() + "addworkform", name : "workAdd", ajax : true } );
+				abilities.add( { title : "Добавить страницу", icon : "img_add", href : this.getLocation() + "addinfoform", name : "pageAdd", ajax : true } );
+			}
+			abilities.add( { title : "Свойства", icon : "app_edit", href : this.getLocation() + "modifyform", name : "catModify", ajax : true } );
+			abilities.add( { title : "Удалить", icon : "app_delete", href : this.getLocation() + "remove", confirm : true } );
+			return abilities;
+		]]></script>
+	</command>
+
+	<command>
+		<key>getDefaultLayout</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><layout><%
+				%><box className="categoryList"><%
+					%><list source="$this"><%
+						%><box className="categoryItem"><%
+							%><link href="$item"><%
+								%><string field="title"/><%
+							%></link><%
+						%></box><%
+					%></list><%
+				%></box><%
+			%></layout><%
+		]]></script>
+	</command>
+</type>

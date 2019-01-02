@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<TITLE></TITLE>
+	<style id=Tree>
+		BODY {
+			background-color: window;
+			margin:2px;
+		}
+		.fldImg {
+			height: 16px;
+			width: 16px;
+			border-width:0;
+			border:0;
+		}
+		.thread1 {
+			height: 16px;
+			width: 16px;
+			background-image: URL($files/thread1.gif);
+		}
+		.thread2 {
+			height: 16px;
+			width:16px;
+			background-image: URL($files/thread2.gif);
+		}
+		.thread3 {
+			height: 16px;
+			width:16px;
+			background-image: URL($files/thread3.gif);
+		}
+		.thread4 {
+			height: 16px;
+			width:16px;
+			background-image: URL($files/thread4.gif);
+		}
+		.thread5 {
+			height: 16px;
+			width:16px;
+			background-image: URL($files/thread5.gif);
+		}
+		.table {
+			border: 0;
+			border-width: 0;
+		}
+		.fldTxt {
+			font-family:Tahoma,Arial;
+			font-size:8pt;
+			padding-left:3pt;
+			padding-right:3pt;
+			color:windowtext;
+		}
+		.fldTxtOn {
+			font-family:Tahoma,Arial;
+			font-size:8pt;
+			padding-left:3pt;
+			padding-right:3pt;
+			background-color: highlight;
+			color: highlighttext;
+		}
+	</style>
+	
+	%><script id="scriptRequire" src="client/js/require.js"></script><%
+
+	%><script><%
+		%>requireStyle('editor_style.css');<%
+		%>requireStyle('editor_popup-style.css');<%
+	%></style><%
+	
+%></HEAD><%
+
+%><body><%
+	%><script><%
+		router = parent.router;
+		%>requireScript("app/Tree.js");<%
+		%>Tree.prototype.reloadPeriod = <%= User.getUser().getProfile('mwmAdmin',true).TreeReloadPeriod || '60000' %>;<%
+		%>tree = new Tree(document.body, "TreeData.xml", '/');<%
+
+		%>document.oncontextmenu = function(e){<%
+			%>e || (e = window.event);<%
+			%>var o = (e.srcElement || e.target);<%
+			%>o.click();<%
+			%>return true;<%
+		%>};<%
+		
+		%>document.onselectstart = function(){<%
+			%>return false;<%
+		%>};<%
+		
+		%>document.ondblclick = function(){<%
+			%>tree.searchOpenThreads();<%
+		%>};<%
+	%></script><%
+%></body><%
+%></HTML>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<visibility>hidden</visibility>
+	<command>
+		<key>displayInline</key>
+		<arguments class="fieldset">
+			<field id="drawText" class="boolean" default="false"/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%EXEC: children = this.searchLocal(0, true, "history", -1L, -1L, "$state=publish || $state=archive || $state=system") %><%
+			%><%ITERATE: item : children %><%
+				%><%= item.displayInline() %><%
+				%><%BREAK%><%
+			%><%/ITERATE%><%
+			%><%IF: drawText %><%
+				%><br/><span class="keyName"><%= afterPoint( this.getTitle() ) %>&nbsp;&lt;<%= ArrayLength( children ) %>&gt;</span><%
+			%><%/IF%><%
+		%>]]></script>
+	</command>
+
+	<command>
+		<key>displayBlock</key>
+		<arguments class="fieldset">
+			<field id="textAppend" class="string" default=""/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><%EXEC: drawText = true %><%
+			%><%EXEC: children = this.searchLocal(0, true, "history", -1L, -1L, "$state=publish || $state=archive || $state=system") %><%
+			%><%EXEC: location = this.getLocation() %><%
+			%><div class="matrixtitle"><%
+				%><a href="<%= location %>"><%
+					%><%= afterPoint( this.getTitle() ) %><%
+				%></a><%
+				%>&nbsp;&lt;<%= ArrayLength( children ) %>&gt;<%
+			%></div><%
+			%><div class="dbFolderContainer"><%
+				%><div class="showAll"><a href="<%= location %>">&nbsp;<%= ArrayLength( children ) %>&nbsp;</a></div><%
+				%><%EXEC: left = 10 %><%
+				%><%ITERATE: item : children %><%
+					%><div onmouseout="this.className='keyHolderNormal';" onmouseover="this.className='keyHolderSelected';" title="<%= item.getTitle() %>"><%
+						%><a href="<%= item.getLocation() %>"><%
+							%><%= item.displayInline( drawText ) %><%
+						%></a><%
+					%></div><%
+					%><%BREAK: UNLESS: left-- %><%
+				%><%/ITERATE%><%
+				%><img src="/__i/1.gif" width="270" height="1" border="0"/><%
+			%></div><%
+			%><%= textAppend %><%
+		%>]]></script>
+	</command>
+</type>

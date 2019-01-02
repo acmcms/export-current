@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Sysytem: jqm</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>drawWindow</key>
+		<static>true</static>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var message = intl( en = "Loading", ru = "Загрузка" );
+			%><div class="jqmWindow" id="jqmWindow"><%
+				%><%= message %>...<%
+				%><img src="/$files/loader.gif" alt="<%= message %>"/><%
+			%></div><%
+			
+			%><script type="text/javascript" language="javascript"><%
+				%><!--
+				jQuery(document).ready(function(){<%
+					%>var show=function(hash){hash.w.fadeIn("fast");};<%
+					%>var hide=function(hash){hash.w.fadeOut("fast",function(){hash.o.remove();});};<%
+					%>var load=function(hash){<%
+//						%>$("input[@type!='file'],textarea").focusFields();<%
+					%>};<%
+					%>$('#jqmWindow').jqm({ajax:'@href',trigger:'.jqm',onLoad:load,onHide:hide,onShow:show});<%
+				%>});
+				//--><%
+			%></script><%
+		]]></script>
+	</command>
+</type>

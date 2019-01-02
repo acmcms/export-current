@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?>
+<xml namespacePrefix="AE3::" layout="documentation">
+	<title>AE3 Quick Reference</title>
+
+	<article>
+		<name>AE3 API Object Reference</name>
+		<text>
+			<paragraph>AE3 API provides convenient access to different API's to work
+			with system objects and to help with general logic.</paragraph>
+			<paragraph>Obtain the instance of AE3 API.</paragraph>
+			<code>const ae3 = require('ae3');</code>
+			<paragraph>API's provided through 'ae3' object:</paragraph>
+			<code>const Concurrent = ae3.Concurrent;</code>
+			<code>const Flow = ae3.Flow;</code>
+			<code>const Reply = ae3.Reply;</code>
+			<code>const Request = ae3.Request;</code>
+			<code>const Transfer = ae3.Transfer;</code>
+			<code>const Util = ae3.Util;</code>
+			<code>const vfs = ae3.vfs;</code>
+			<paragraph>Utility package provides some helpers:</paragraph>
+			<code>const Cache = ae3.Util.Cache;</code>
+			<code>const Codecs = ae3.Util.Codecs;</code>
+			<code>const Xml = ae3.Util.Xml;</code>
+		</text>
+	</article>
+
+
+	<article>
+		<name>VFS Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of VFS API.</paragraph>
+			<code>const vfs = require('ae3/vfs');</code>
+			<paragraph>or</paragraph>
+			<code><![CDATA[
+const ae3 = require('ae3');
+const vfs = ae3.vfs;
+			]]></code>
+			<paragraph>VFS collection iteration methods:</paragraph>
+			<code>vfs.every( entryFolder, function cb(entry){...}, thisValue );</code>
+			<code>vfs.some( entryFolder, function cb(entry){...}, thisValue );</code>
+			<code>vfs.forEach( entryFolder, function cb(entry){...}, thisValue );</code>
+			<paragraph>VFS constants:</paragraph>
+			<code>vfs.SHARED;</code>
+			<code>vfs.ROOT;</code>
+			<code>vfs.PRIVATE;</code>
+			<code>vfs.PROTECTED;</code>
+			<code>vfs.PROTECTED_LIB;</code>
+			<code>vfs.PROTECTED_RESOURCES;</code>
+			<code>vfs.PROTECTED_SETTINGS;</code>
+			<code>vfs.PUBLIC;</code>
+			<code>vfs.PUBLIC_LIB;</code>
+			<code>vfs.PUBLIC_RESOURCES;</code>
+			<code>vfs.PUBLIC_SETTINGS;</code>
+			<code>vfs.UNION;</code>
+			<code>vfs.UNION_LIB;</code>
+			<code>vfs.UNION_RESOURCES;</code>
+			<code>vfs.UNION_SETTINGS;</code>
+			
+			<paragraph>VFS extra methods:</paragraph>
+			<code>vfs.setContentsFromMap( container, map );</code>
+			<code>container.relativeFolder( relativePath );</code>
+			<code>container.relativeFile( relativePath );</code>
+			<code>container.relativeFolderEnsure( relativePath );</code>
+			<code>container.relativeFileEnsure( relativePath );</code>
+
+			<code>vfs.copy( entry , target );</code>
+			<code>vfs.move( entry , target );</code>
+			<code>entryContainer.unlinkRecursive();</code>
+			
+			<paragraph>Some simple default array filters available:</paragraph>
+			<code>entries = entries.filter( vfs.isContainer );</code>
+			<code>entries = entries.filter( vfs.isExist );</code>
+			<code>entries = entries.filter( vfs.isFile );</code>
+			<code>entries = entries.filter( vfs.isHidden );</code>
+			<code>entries = entries.filter( vfs.isNotHidden );</code>
+			<code>entries = entries.filter( vfs.isPrimitive );</code>
+
+			<paragraph>Some simple default array sorters available:</paragraph>
+			<code>entries.sort( <b>vfs.SORTER_KEY_ASC</b> );</code>
+			<code>entries.sort( <b>vfs.SORTER_KEY_DESC</b> );</code>
+			
+			<paragraph>VFS Entry:</paragraph>
+			<code>var entryKey = entry.key;</code>
+			<code>var parentEntry = entry.parent;</code>
+			<code>var modifiedMillis = entry.lastModified;</code>
+			<code>var vfsPath = entry.location;</code>
+			<code>var object = entry.value;</code>
+			<code>var boolean = entry.isContainer();</code>
+			<code>var boolean = entry.isExist();</code>
+			<code>var boolean = entry.isFile();</code>
+			<code>var boolean = entry.isPrimitive();</code>
+			<code>var boolean = entry.isBinary();</code>
+			<code>var boolean = entry.isCharacter();</code>
+			
+			<code>var containerEntry = entry.toContainer();</code>
+
+			<code>var primitiveEntry = entry.toPrimitive();</code>
+			<code>var binaryEntry = entry.toBinary();</code>
+			<code>var characterEntry = entry.toCharacter();</code>
+			
+			<paragraph>Note that VFS Entry could be 'container' and hold value 
+			(one of 'primitive', 'binary' or 'character') at the same time. 
+			'isFile'/'isContainer' means representation in the tree and entries still
+			could have children entries, regardless of them being a 'file'.</paragraph>
+
+			<paragraph>VFS EntryPrimitive (primitive value):</paragraph>
+			<code>var primGuid = entryPrimitive.primitiveGuid;</code>
+			<code>var primValue = entryPrimitive.primitiveValue;</code>
+			
+			<paragraph>VFS EntryBinary (binary value):</paragraph>
+			<code>var binary = entryBinary.binary;</code>
+			<code>var binaryOrFuture = entryBinary.binaryContent;</code>
+			<code>var binaryLength = entryBinary.binaryContentLength;</code>
+			
+			<paragraph>VFS EntryCharacter (character value):</paragraph>
+			<code>var text = entryCharacter.text;</code>
+			<code>var textOrFuture = entryCharacter.textContent;</code>
+			<code>var textLength = entryCharacter.characterContentLength;</code>
+			
+			<paragraph>VFS EntryContainer (work with children):</paragraph>
+			<code>var isEmpty = entryContainer.isContainerEmpty();</code>
+			<code>var value = entryContainer.getContentValue(key);</code>
+			<code>var primitive = entryContainer.getContentPrimitive(key[, defaultValue]);</code>
+			<code>var task = entryContainer.setContentUndefined(key);</code>
+			
+			<paragraph>Some examples:</paragraph>
+			<code><![CDATA[
+
+	const map = Xml.toBase("xml-track", vfsTrack.textContent, null, null, null) || {};
+	
+
+if(vfsTrack.isBinary()){
+	// enforce UTF-8
+	const content = vfsTrack.toBinary().binaryContent.toStringUtf8();
+	const map = Xml.toBase("xml-track", content, null, null, null) || {};
+}
+
+var folder = vfs.ROOT.relativeFolderEnsure("storage/data/pkg-db");
+			]]></code>
+		</text>
+	</article>
+
+	<article>
+		<name>'http'-client Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of HTTP Client API.</paragraph>
+			<code>const HTTP = require('http');</code>
+			<paragraph>Basic stuff, doesn't follow redirects by default, return a message object as is (including 3xx, 4xx, 5xx result codes):</paragraph>
+			<code>var reply = HTTP.get('https://microsoft.co.nz/');</code>
+			<code><![CDATA[
+var reply = HTTP.post('https://microsoft.co.nz/', { 
+	a : 5, 
+	b : 'hello' 
+});
+			]]></code>
+			<code><![CDATA[
+var reply = HTTP.post({
+	hostname : 'myx.ru', 
+	port : 443, 
+	path : '/info/', 
+}, { 
+	a : 5, 
+	b : 'hello' 
+});
+			]]></code>
+			<paragraph>Raw request:</paragraph>
+			<code><![CDATA[
+var resp = HTTP.request({
+	hostname : 'myx.ru', 
+	port : 443, 
+	method : 'GET', 
+	path : '/info/', 
+	headers : { 
+		a : 5 
+	}, 
+	body : ''
+});
+			]]></code>
+			<code><![CDATA[
+var resp = HTTP.request({
+	hostname : 'myx.ru', 
+	port : 80, 
+	method : 'POST',
+	path : '/info/', 
+	headers : { 
+		"X-Origin" : "DEMO-RQ-POST",
+		'Content-Type' : 'application/x-www-form-urlencoded; charset=utf-8'
+	}, 
+	body : 'test=true&amp;a=5'
+});
+			]]></code>
+			<code><![CDATA[
+var resp = HTTP.request({
+	hostname : 'myx.ru', 
+	port : 80, 
+	method : 'POST',
+	path : '/info/', 
+	headers : { 
+		"X-Origin" : "DEMO-RQ-POST",
+		'Content-Type' : 'application/x-www-form-urlencoded; charset=utf-8'
+	}, 
+	body : require('querystring').stringify({
+		test : true,
+		a : 5,
+		s : 'Hello World!'
+	}
+});
+			]]></code>
+			<paragraph>'asString' and 'asBinary', exceptions on non-success reply, follow redirects:</paragraph>
+			<code>var string = HTTP.get.asString('https://microsoft.co.nz/');</code>
+			<code><![CDATA[
+var string = HTTP.post.asString('https://microsoft.co.nz/', { 
+	a : 5, 
+	b : 'hello' 
+});
+			]]></code>
+			<code>var binary = HTTP.get.asBinary('https://microsoft.co.nz/');</code>
+			<code><![CDATA[
+var binary = HTTP.post.asBinary('https://microsoft.co.nz/', { 
+	a : 5, 
+	b : 'hello' 
+});
+			]]></code>
+			<code><![CDATA[
+var string = HTTP.request.asString({
+	hostname : 'myx.ru', 
+	port : 80, 
+	method : 'GET',
+	path : '/info/', 
+	headers : { 
+		a : 5 
+	}, 
+	body : ''
+});
+			]]></code>
+			<code><![CDATA[
+var responseXml = require('http').request.asString({
+	protocol : 'https:',
+	hostname : this.host, 
+	port : this.port, 
+	method : 'GET',
+	path : uri,
+	headers : { 
+		"X-Origin" : "DEMO-RQ" 
+	}, 
+	body : ''
+});
+			]]></code>
+			<code><![CDATA[
+var responseXml = require('http').request.asString({
+	protocol : 'https:',
+	hostname : this.host, 
+	port : this.port, 
+	method : 'POST',
+	path : uri,
+	headers : { 
+		"X-Origin" : "DEMO-RQ-POST",
+		'Content-Type' : 'application/x-www-form-urlencoded; charset=utf-8'
+	}, 
+	body : require('querystring').stringify({
+		test : true,
+		a : 5,
+		s : 'Hello World!'
+	}
+});
+			]]></code>
+			<code><![CDATA[
+var binaryResponse = HTTP.request.asBinary({
+	hostname : 'myx.ru', 
+	port : 80, 
+	method : 'GET',
+	path : '/info/', 
+	headers : { 
+		a : 5 
+	}, 
+	body : ''
+});
+			]]></code>
+		</text>
+	</article>
+
+	<article>
+		<name>'binary' Object Quick Reference</name>
+		<text>
+			<paragraph>Creation.</paragraph>
+			<paragraph>Methods.</paragraph>
+			<code>var length = binary.length;</code>
+			<code>var string = binary.toStringUtf8();</code>
+			<code>var md5 = Format.binaryAsHex(binary.messageDigest.digest());</code>
+		</text>
+	</article>
+
+	<article>
+		<name>'message/query/reply' Object Quick Reference</name>
+		<text>
+			<paragraph>Creation.</paragraph>
+			<paragraph>Note that 'query' and 'reply' objects are also 'message' 
+			objects, but have some extra properties and methods.</paragraph>
+			<paragraph>Methods:</paragraph>
+			<code>var attributes = message.attributes;</code>
+			<code>var stringBody = message.toCharacter().text;</code>
+			<code>var stringBody = message.toCharacter().textContent;</code>
+			<code>var binaryBody = message.toBinary().binary;</code>
+			<code>var binaryBody = message.toBinary().binaryContent;</code>
+			<code>var targetHostName = query.target;</code>
+			<code>var requestMethod = query.verb;</code>
+			<code>var responseCode = reply.code;</code>
+		</text>
+	</article>
+
+
+
+
+	<article>
+		<name>'Flow' API Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of Flow Client API.</paragraph>
+			<code>const Flow = require('ae3/Flow');</code>
+			<paragraph>or</paragraph>
+			<code><![CDATA[
+const ae3 = require('ae3');
+const Flow = ae3.Flow;
+			]]></code>
+			<code>var message = Flow.NUL_MESSAGE;</code>
+			<code>var message = Flow.binary(owner, title, attrs, binary);</code>
+			<code>var message = Flow.binary(owner, title, contentType, binary);</code>
+			<code>var message = Flow.entry(owner, title, attrs, entry, fileName);</code>
+			<code>var message = Flow.entry(owner, title, attrs, entry);</code>
+		</text>
+	</article>
+
+
+
+
+	<article>
+		<name>'Reply' API Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of Reply Client API.</paragraph>
+			<paragraph>
+				<code>const Reply = require('ae3/Reply');</code>
+				<paragraph>or</paragraph>
+				<code><![CDATA[
+const ae3 = require('ae3');
+const Reply = ae3.Reply;
+				]]></code>
+					<code>Reply.ASYNC</code>
+					<code>Reply.async(ownerString, queryObject)</code>
+					<code>Reply.binary(ownerString, queryObject, bodyBinary)</code>
+					<code>Reply.binary(ownerString, queryObject, bodyBinary, fileNameString)</code>
+					<code>Reply.binary(ownerString, queryObject, attributesMap, bodyBinary)</code>
+					<code>Reply.binary(ownerString, queryObject, attributesMap, bodyBinary, fileNameString)</code>
+					<code>Reply.character(ownerString, queryObject, bodyString)</code>
+					<code>Reply.character(ownerString, queryObject, attributesMap, bodyString)</code>
+					<code>Reply.empty(ownerString, queryObject)</code>
+					<code>Reply.empty(ownerString, queryObject, attributesMap)</code>
+					<code>Reply.string(ownerString, queryObject, bodyString)</code>
+					<code>Reply.string(ownerString, queryObject, attributesMap, bodyString)</code>
+					<code>Reply.redirect(ownerString, queryObject, movedBoolean, locationString)</code>
+			</paragraph>
+			<paragraph>
+				<code><![CDATA[
+const Reply = ae3.Reply;
+
+...
+
+Reply.sendReply(context, reply);
+Reply.sendReply(query, reply);
+Reply.sendReply(query, Reply.fromObject("MY-SRV", context, {
+	layout : 'xml',
+	code : Reply.CD_UNKNOWN /* 404 */,
+	xsl : '/skin.xsl',
+	content : xml
+}));
+
+...
+
+const filename = 'Oceans.2009.avi';
+const entry = vfs.SHARED.relativeFile('acm-farm/share/protected/movie/documentary/oceans-2009/Oceans.2009.avi');
+
+return Reply.entry(
+		"MY-WS", 
+		query, 
+		entry, 
+		fileName
+	)
+	.setContentDisposition(mode === 'save' ? 'attachment' : 'inline')
+	.setFinal();
+	
+...
+
+return Reply.binary(
+		"DAV-UI", 
+		query, 
+		{
+			"Content-Type" : "application/zip",
+			"Content-Disposition" : 'attachment; filename=' + fileName,
+		},
+		require('ae3.util/Codecs').mapToZip(folder), 
+		fileName
+	)
+	.setFinal();
+					]]></code>
+					<code>return Reply.string( "DAV", this.query, "Resource was not found!" ).setCode( Reply.CD_UNKNOWN );</code>
+					<code>return Reply.string( "DAV", this.query, "No write access!" ).setCode( Reply.CD_DENIED );</code>
+			</paragraph>
+			<paragraph>See also: <a href="/!/skin/skin-ae3-info/jdoc-ae3.api/ru/myx/ae3/answer/Reply.html">/!/skin/skin-ae3-info/jdoc-ae3.api/ru/myx/ae3/answer/Reply.html</a></paragraph>
+		</text>
+	</article>
+
+
+
+
+	<article>
+		<name>'Request' API Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of Request Client API.</paragraph>
+			<code>const Request = require('ae3/Request');</code>
+			<paragraph>or</paragraph>
+			<code><![CDATA[
+const ae3 = require('ae3');
+const Request = ae3.Request;
+			]]></code>
+			<paragraph>See also: <a href="/!/skin/skin-ae3-info/jdoc-ae3.api/ru/myx/ae3/serve/Request.html">/!/skin/skin-ae3-info/jdoc-ae3.api/ru/myx/ae3/serve/Request.html</a></paragraph>
+		</text>
+	</article>
+
+
+
+
+
+
+	<article>
+		<name>'Transfer' API Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of Transfer API.</paragraph>
+			<code>const Transfer = require('ae3/Transfer');</code>
+			<paragraph>or</paragraph>
+			<code><![CDATA[
+const ae3 = require('ae3');
+const Transfer = ae3.Transfer;
+			]]></code>
+			<paragraph>Transfer API provides some useful methods to work with 
+			'binary' objects.</paragraph>
+			<code>Transfer.createCopier(object);</code>
+			<code>Transfer.createCopier(javaInputStream);</code>
+			<code>Transfer.createCopierUtf8(string);</code>
+			<code>Transfer.createCopierFromBinary(anyBinary);</code>
+			<code>Transfer.createCollector();</code>
+			<paragraph>Transfer API also provides some constants.</paragraph>
+			<paragraph>Zero length byte array:</paragraph>
+			<code>Transfer.EMPTY_BYTE_ARRAY</code>
+			<paragraph>Empty java.io.Reader instance:</paragraph>
+			<code>Transfer.EMPTY_READER</code>
+			<paragraph>Empty java.io.InputStream instance:</paragraph>
+			<code>Transfer.EMPTY_STREAM</code>
+			<paragraph>Some examples:</paragraph>
+			<code><![CDATA[
+/**
+ * makes NULL copier
+ */
+body = Transfer.createCopierUtf8(null);
+/**
+ * get the output as string
+ */
+var input = Transfer.createCopier(process.getInputStream())
+		.toStringUtf8();
+			]]></code>
+		</text>
+	</article>
+
+
+
+
+
+
+	<article>
+		<name>'Cache' API Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of Cache Client API.</paragraph>
+			<code>const Cache = require('ae3.util/Cache');</code>
+			<paragraph>or</paragraph>
+			<code><![CDATA[
+const ae3 = require('ae3');
+const Cache = ae3.Util.Cache;
+			]]></code>
+		</text>
+	</article>
+
+
+
+
+	<article>
+		<name>'Codecs' API Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of Codecs Client API.</paragraph>
+			<code>const Codecs = require('ae3.util/Codecs');</code>
+			<paragraph>or</paragraph>
+			<code><![CDATA[
+const ae3 = require('ae3');
+const Codecs = ae3.Util.Codecs;
+			]]></code>
+			<paragraph>Codecs API provides some methods to manipulate formats like
+			archives.</paragraph>
+			<code><![CDATA[
+var binary = Codecs.mapToZip(result)
+			]]></code>
+			<code><![CDATA[
+var map = Codecs.unzipToMap(archiveBinary)
+			]]></code>
+			<code><![CDATA[
+var map = Codecs.untarToMap(archiveBinary)
+			]]></code>
+			<code><![CDATA[
+var map = Codecs.untargzToMap(archiveBinary)
+			]]></code>
+			<paragraph>Some examples:</paragraph>
+			<code><![CDATA[
+var binary = Transfer.createCopierFromBinary(Codecs.mapToZip(result))
+			]]></code>
+		</text>
+	</article>
+
+
+
+	<article>
+		<name>'Concurrent' API Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of Codecs Client API.</paragraph>
+			<code>const Concurrent = require('ae3/Concurrent');</code>
+			<paragraph>or</paragraph>
+			<code><![CDATA[
+const ae3 = require('ae3');
+const Concurrent = ae3.Concurrent;
+			]]></code>
+			<paragraph>Concurrent API provides some useful classes.</paragraph>
+			<code><![CDATA[
+const FutureSimpleObject = ae3.Concurrent.FutureSimpleUnknown;
+			]]></code>
+			<code><![CDATA[
+const FutureSimpleString = ae3.Concurrent.FutureSimpleString;
+			]]></code>
+			<code><![CDATA[
+const FutureSimpleBinary = ae3.Concurrent.FutureSimpleBinary;
+			]]></code>
+			<paragraph>Future objects are returned as results before computation 
+			is complete, some background task or event handler (callback) then 
+			could set task result or failure. When use explicitly requires future's
+			value the execution is stopped until one is available.</paragraph>
+			<code><![CDATA[
+function internCallbackSetFuture(parameters, message, code, error){
+	if(message !== null) {
+		this.setResult(message);
+	}else{
+		this.setError(error || "Unspecified Error!");
+	}
+}
+const FutureSimpleString = ae3.Concurrent.FutureSimpleString;
+const future = new FutureSimpleString();
+/*future.cancellable = */httpRequestReturnString(parameters, internCallbackSetFuture.bind(future, parameters));
+return future;
+			]]></code>
+			<paragraph>Future objects are generally transparent and you can use 
+			them in classical procedural way, in given example all three HTTP 
+			requests will run concurrently because results are returned as instances
+			of future objects:</paragraph>
+			<code><![CDATA[
+var a = require('http').get.asString('http://test.local/1.xml');
+var b = require('http').get.asString('http://test.local/2.xml');
+var c = require('http').get.asString('http://test.local/3.xml');
+if(!a || !b || !c){
+	throw 'Error!';
+}
+			]]></code>
+		</text>
+	</article>
+
+
+
+	<article>
+		<name>'Xml' API Quick Reference</name>
+		<text>
+			<paragraph>Obtain the instance of util.Xml Client API.</paragraph>
+			<code>const Xml = require('ae3.util/Xml');</code>
+			<paragraph>or</paragraph>
+			<code><![CDATA[
+const ae3 = require('ae3');
+const Xml = ae3.Util.Xml;
+			]]></code>
+
+
+			<paragraph>Methods: serialization</paragraph>
+			<code>var xmlBinary = Xml.toXmlBinary(rootName, sourceObj, isReadable, null, null, 0);</code>
+			<code>var xmlBinary = Xml.toXmlBinary(rootName, sourceObj, isReadable, handler, attachment, maxFieldLength);</code>
+			<code>var xmlString = Xml.toXmlString(rootName, sourceObj, isReadable);</code>
+			<code>var xmlString = Xml.toXmlString(rootName, sourceObj, isReadable, handler, attachment, maxFieldLength);</code>
+			<code>var domElement = Xml.toElement(rootName, sourceObj, isReadable);</code>
+			<code>var domElement = Xml.toElement(rootName, sourceObj, isReadable, handler, attachment, maxFieldLength);</code>
+			
+			<paragraph>Methods: materialization</paragraph>
+			<code>var obj = Xml.toBase(identity, xmlString, null, null, null);</code>
+			<code>var obj = Xml.toBase(identity, xmlString, uri, handler, attachment);</code>
+			<code>var obj = Xml.toBase(identity, xmlBinary, null, null, null, null);</code>
+			<code>var obj = Xml.toBase(identity, xmlBinary, charsetOverride, uri, handler, attachment);</code>
+			<code>var map = Xml.toMap(identity, xmlString, uri, targetMap, handler, attachment);</code>
+			<code>var map = Xml.toMap(identity, xmlBinary, charsetOverride, uri, targetMap, handler, attachment);</code>
+	
+			<paragraph>Examples:</paragraph>
+			<code><![CDATA[
+var xmlBinary = Xml.toXmlBinary("track", {
+	key : key,
+	date : date,
+	command : command,
+	properties : properties,
+	byUser : byUser.userId || byUser.id || byUser,
+	asUser : byUser.id || byUser,
+	byAddress : byAddress,
+	byGeo : byGeo,
+}, true, null, null, 0);
+
+var xmlString = Xml.toXmlString("track", {
+	key : key,
+	date : date,
+	command : command,
+	properties : properties,
+	byUser : byUser.userId || byUser.id || byUser,
+	asUser : byUser.id || byUser,
+	byAddress : byAddress,
+	byGeo : byGeo,
+}, true, null, null, 0);
+
+var map = {};
+Xml.toMap("example-xml", xmlBinary, null, null, map, null, null);
+Xml.toMap("example-xml", xmlString, null, map, null, null);
+
+var obj = Xml.toBase("example-xml", xmlString, null, null, null);
+			]]></code>
+		</text>
+	</article>
+
+
+
+
+</xml>

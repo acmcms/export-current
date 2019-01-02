@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>vlapan example</title>
+	<charset>UTF-8</charset>
+	<secure>false</secure>
+	<auth>false</auth>
+	<abstract>true</abstract>
+
+	<prototype>vlapan-default</prototype>
+
+	<renderer>
+		<type>ACM.ECMA</type>
+		<suffix>.ecma</suffix>
+	</renderer>
+</settings>

@@ -1,0 +1,59 @@
+BODY {
+	position: relative;
+	padding: 4px;
+	background-color: buttonface;
+
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing:border-box;
+	box-sizing: border-box;
+}
+
+LEGEND,TD,DIV {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	color: buttontext;
+
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing:border-box;
+	box-sizing: border-box;
+}
+
+BUTTON {
+	background-color: buttonface;
+	border-color: buttonhighlight;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding: 0;
+	border-width: 1px;
+	color: buttontext;
+
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing:border-box;
+	box-sizing: border-box;
+}
+
+.th,TH {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	text-align: right;
+}
+
+INPUT,SELECT {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding: 1px;
+	margin: 0;
+	border-width: 1px;
+	border-left-color: buttonshadow;
+	border-top-color: buttonshadow;
+	border-right-color: buttonhighlight;
+	border-bottom-color: buttonhighlight;
+
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing:border-box;
+	box-sizing: border-box;
+}

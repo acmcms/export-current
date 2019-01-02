@@ -1,0 +1,19 @@
+//
+// Abstract. JS Object
+//
+//
+// While file must evaluate to a single object in form of one expression. 
+//
+// 
+//
+// Example:
+//
+{
+	title			: "Abstract something w/o any particular meaning",
+	onLayoutExecute	: function(layout){
+		return	layout.elements || 	// sequence rule
+				layout.content || 	// container rule
+				layout.value || 	// third rule
+				null;				// 'false' otherwise will be a result.
+	}
+}

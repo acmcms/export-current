@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>Entry - Запись</title>
+	<visibility>default</visibility>
+	<icon>document</icon>
+	<state>publish</state>
+	<statelist>
+		<state>publish</state>
+	</statelist>
+	<folder>true</folder>
+	<respond>
+		<behavior>
+			<handle>any</handle>
+			<anonymous>true</anonymous>
+			<public>true</public>
+			<ttl>2h</ttl>
+			<cache>2h</cache>
+		</behavior>
+		<filter class="script" type="ACM.ECMA"><![CDATA[
+			if( !HashFilled( content ) ) return content;
+			var content = Create.map( content );
+			return this.fillSelection( content = content );
+		]]></filter>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var registered = User.getUser().isInGroup("def.registered");
+			var target = Request.getResourceIdentifier();
+			switch( target ){
+				case "":{
+					var content = {};
+					content.title = afterPoint( this.getTitle() );
+					content.key = this.getKey();
+					content.abilities = [
+						{ title : this.getTitle(), type : this.getTypeTitle(), id : "pageMenu", abilities : this.getAbilities() }
+					];
+					content.layout = this.getLayout();
+					return this.fillSelection( content = content );
+				}
+				case "remove":{
+					if( registered ){
+						var redirect = this.getParent().getLocation();
+						this.remove();
+						return $default.redirect( redirect );
+					}	
+					return $default.redirect( this.getLocation() );
+				}
+				default:{
+					return $default.redirect( this.getLocation() );
+				}
+			}
+		]]></script>
+	</respond>
+
+	<command>
+		<key>create</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="data" class="map"/>
+			<field id="parent" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( !data.titleName || !data.image ) return false;
+			try{
+				var change = parent.createChild();
+				change.$title = data.titleName;
+				change.$key = data.key ? data.key : $base.titleToKey( data.titleName );
+				change.$type = "Entry";
+				change.$state = Storage.STATE_PUBLISH;
+				change.text = data.text;
+				change.commit();
+				return Storage.getByGuid( change.getGuid() );
+			}catch(e){
+				return false;
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<key>getTypeTitle</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return intl( en = "Entry", ru = "Запись" );
+		]]></script>
+	</command>
+
+	<command>
+		<key>remove</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var change = this.createChange();
+			change.delete();
+		]]></script>
+	</command>
+
+	<command>
+		<key>getCreateForm</key>
+		<static>true</static>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var fields = [
+				{ title : "Название", name : "titleName", type : "text", required : true },
+				{ title : "Описание", name : "text", type : "textarea" },
+				{ title : "", name : "submit", type : "submit", value : "Опубликовать" }
+			];
+			return {
+				id : "form",
+				name : "entry",
+				title : 'Добавить запись',
+				info : '',
+				focus : "titleName",
+				action : "add",
+				method : "post",
+				legend : "",
+				fields : fields
+			};
+		]]></script>
+	</command>
+
+	<command>
+		<key>getChildrenNames</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return [];
+		]]></script>
+	</command>
+
+	<command>
+		<key>getAbilities</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			return [
+				{ title : "Удалить запись", imgSrc : "/$files/image_delete.png", href : this.getLocation() + "remove", confirm : true }
+			];
+		]]></script>
+	</command>
+
+	<command>
+		<key>getLayout</key>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var prev = '';
+			var next = '';
+			var siblings = this.getParent().getChildrenListable( 0, "$title" );
+			var siblingsSize = siblings.size();
+			for( CurrentIndex = 0; CurrentIndex < siblingsSize; CurrentIndex++  ){
+				var item = siblings[ CurrentIndex ];
+				if( item == this ){
+					if( CurrentIndex != siblingsSize - 1 ) next = siblings[ CurrentIndex + 1 ].getLocation() + "#image";
+					if( CurrentIndex ) prev = siblings[ CurrentIndex - 1 ].getLocation() + "#image";
+				}
+			}
+			var layout = [];
+			if( prev ) layout.add( { layout : "link", className : "ctrl", src : prev, element : { layout : "string", value : "&#8592;" } } );
+			if( next ) layout.add( { layout : "link", className : "ctrl", src : next, element : { layout : "string", value : "&#8594;" } } );
+			layout.add( { layout : "image", id : "image", title : this.getTitle(), src : this.getLocation() + "image.png" } );
+			if( prev ) layout.add( { layout : "link", className : "ctrl", src : prev, element : { layout : "string", value : "&#8592;" } } );
+			if( next ) layout.add( { layout : "link", className : "ctrl", src : next, element : { layout : "string", value : "&#8594;" } } );
+			layout.add( { layout : "text", value : this.text } );
+			return { layout : "box", className : "work", elements : layout };
+		]]></script>
+	</command>
+</type>

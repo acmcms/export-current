@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<title>CKEditor modal</title>
+<script type="text/javascript" src="/$files/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+	function getData() {
+		try {
+			return CKEDITOR.instances['ckeditor1'].getData();
+		} catch (err) {
+			return null;
+		}
+	}
+	CKEDITOR.on('instanceReady', function(evt) {
+		evt.editor.execCommand('maximize');
+	});
+	CKEDITOR.config.allowedContent = true;
+</script>
+<style type="text/css">
+html,body {
+	width: 100%;
+	height: 100%;
+}
+</style>
+</head>
+<body>
+	<form action="#" onsubmit="sendModalResult();return false;">
+		<textarea id="ckeditor1" name="ckeditor1"
+			style="width: 100%; height: 300px;"></textarea>
+		<input type="submit" name="submit" value="сохранить" /> <input
+			type="button" value="отменить" onclick="window.close();return false;" />
+	</form>
+	<script type="text/javascript">
+		function sendModalResult() {
+			var returnValue = getData();
+			if (returnValue) {
+				window.returnValue = returnValue;
+			} else {
+				window.returnValue = document.getElementById('ckeditor1').value;
+			}
+			window.close();
+		}
+		var args = window.dialogArguments;
+		if (args) {
+			document.getElementById("ckeditor1").value = args.value;
+		}
+	</script>
+
+	<script type="text/javascript">
+		var options = {
+			filebrowserBrowseUrl : '/editor_link.control',
+			// toolbar : 'MyToolbar',
+			autoParagraph : false,
+			/**
+			toolbar_MyToolbar : [
+				{
+					name : 'control',
+					items : [ 'Save' ]
+				},
+				{
+					name : 'clipboard',
+					items : [ 'Cut', 'Copy', 'Paste', 'PasteText',
+							'PasteFromWord', '-', 'Undo', 'Redo' ]
+				},
+				{
+					name : 'editing',
+					items : [ 'Find', 'Replace', '-', 'SelectAll', '-',
+							'Scayt' ]
+				},
+				{
+					name : 'insert',
+					items : [ 'Image', 'HorizontalRule', 'SpecialChar' ]
+				},
+				{
+					name : 'links',
+					items : [ 'Link', 'Unlink', 'Anchor' ]
+				},
+				'/',
+				{
+					name : 'styles',
+					items : [ 'Format', 'Font', 'FontSize' ]
+				},
+				{
+					name : 'basicstyles',
+					items : [ 'Bold', 'Italic', 'Strike', '-',
+							'RemoveFormat' ]
+				},
+				{
+					name : 'paragraph',
+					items : [ 'NumberedList', 'BulletedList', '-',
+							'Outdent', 'Indent', '-', 'Blockquote' ]
+				}, {
+					name : 'tools',
+					items : [ 'Maximize', 'Source', '-', 'About' ]
+				} 
+			]
+			**/
+		};
+		CKEDITOR.replace('ckeditor1', options);
+	</script>
+</body>
+</html>

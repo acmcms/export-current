@@ -1,0 +1,365 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE></TITLE><%
+	
+%></HEAD>
+
+<style>
+BODY, TD{
+	cursor:default;
+	background-color:window;
+	color:windowtext;
+}
+
+
+#blockParent DIV{
+	display:inline;
+	width:100;
+	height:70;
+	padding:10;
+	text-align:center;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	overflow:hidden;
+}
+</style>
+
+
+<script>
+eventMethods = parent.eventMethods;
+var myList = {};
+myList.id = window.name;
+myList.entryType = 'setlist';
+
+
+myList.container = parent.document.all[ window.name.split('Frm')[0] ];
+if(myList.container){
+	myList.container.onFire = parent.setListFire;
+	eventMethods.register(myList.container,window.name);
+}
+
+var selectedObjects = [];
+
+document.oncontextmenu = function(){
+//	event.srcElement.click();
+//	return false;
+}
+
+
+document.ondblclick = function(){
+
+	var obj = event.srcElement;
+	var selectParent = getSelectParent(obj,"selectParent");
+
+//	if (selectParent && selectParent.id == 'blockHeader'){
+//		SearchByField(obj);
+//		return;
+//	}
+//	if(blockHeader.currentInput) blockHeader.clearForm();
+
+	if (!selectParent){
+		if (selectedObjects.length > 0){
+			for (var i=0; i < selectedObjects.length; ++i){
+				unSelectBlock(selectedObjects[i].Childs);
+				selectedObjects[i].select = false;
+			}
+			selectedObjects = [];
+		}else{
+			return;
+		}
+		try{
+//			eventMethods.fire('SetListUnselected',myList.id,false);
+		}catch(Error){}
+		return;
+	}
+
+	if (!selectParent.Childs){
+		selectParent.Childs = getSelectParentChild(selectParent);
+	}
+
+	for (var i=0; i < selectedObjects.length; ++i){
+		unSelectBlock(selectedObjects[i].Childs);
+		selectedObjects[i].select = false;
+	}
+	selectedObjects = [];
+	selectBlock(selectParent.Childs);
+	selectedObjects[0] = selectParent;
+	selectParent.select = true;
+
+
+	if (selectedObjects.length > 0){
+		try{
+			eventMethods.fire('ItemActivate',myList.id,selectedObjects);
+		}catch(Error){}
+	}
+}
+
+
+
+
+document.onclick = function(){
+//	return;
+	var obj = event.srcElement;
+	var multipleFlag = (obj.selectFlag) ? true : false;
+	var selectParent = getSelectParent(obj,"selectParent");
+
+//	if (selectParent && selectParent.id == 'blockHeader'){
+//		SearchByField(obj);
+//		return;
+//	}
+//	if(blockHeader.currentInput) blockHeader.clearForm();
+
+	if (!selectParent){
+		if (selectedObjects.length > 0){
+			for (var i=0; i < selectedObjects.length; ++i){
+				unSelectBlock(selectedObjects[i].Childs);
+				selectedObjects[i].select = false;
+			}
+			selectedObjects = [];
+		}else{
+			return;
+		}
+		try{
+			eventMethods.fire('SetListUnselected',myList.id,false);
+		}catch(Error){}
+		return;
+	}
+	if (!selectParent.Childs){
+		selectParent.Childs = getSelectParentChild(selectParent);
+	}
+
+	if (multipleFlag){
+		var allreadySelected = false;
+		for (var i=0; i < selectedObjects.length; ++i){
+			if(selectedObjects[i] == selectParent){
+				allreadySelected = true;
+				unSelectBlock(selectParent.Childs);
+				selectedObjects[i].select = false;
+				selectedObjects[i] = null;
+			}
+		}
+		selectedObjects = clearArrFromNull(selectedObjects);
+		if (!allreadySelected){
+			selectBlock(selectParent.Childs);
+			selectedObjects[selectedObjects.length] = selectParent;
+			selectParent.select = true;
+		}
+	}else{
+		if (selectParent.select && selectedObjects.length == 1) return;
+		for (var i=0; i < selectedObjects.length; ++i){
+			unSelectBlock(selectedObjects[i].Childs);
+			selectedObjects[i].select = false;
+		}
+		selectedObjects = [];
+		selectBlock(selectParent.Childs);
+		selectedObjects[0] = selectParent;
+		selectParent.select = true;
+	}
+	if (selectedObjects.length > 0){
+		try{
+			eventMethods.fire('ItemSelect',myList.id,selectedObjects);
+		}catch(Error){}
+	}
+}
+
+
+
+function clearArrFromNull(arr){
+	var narr = [];
+	for (var i=0; i<arr.length; ++i){
+		if(arr[i]!=null) narr[narr.length] = arr[i];
+	}
+	return narr;
+}
+
+
+function getSelectParent(obj,atr){
+	while(obj.parentNode){
+		if (obj.getAttribute(atr)) return obj;
+		obj = obj.parentNode
+	}
+	return false;
+}
+
+function getSelectParentChild(obj,arr){
+	if (!arr) arr = [];
+	if (obj.canBeSelected) arr[arr.length] = obj;
+	for (var i=0; i<obj.childNodes.length; ++i){
+		arr = getSelectParentChild(obj.childNodes.item(i), arr);
+	}
+	return arr;
+}
+
+function selectBlock(arr){
+	for (var i=0; i< arr.length; ++i){
+		arr[i].style.backgroundColor = 'highlight';
+		arr[i].style.color = 'highlighttext';
+	}
+}
+
+function unSelectBlock(arr){
+	for (var i=0; i< arr.length; ++i){
+		arr[i].style.backgroundColor = '';
+		arr[i].style.color = '';
+	}
+}
+
+
+function setColumnWidth(){
+	try{
+		if (blockParent.cells.length < 1){
+			for (var i=1; i<blockHeader.cells.length - 1; ++i){
+				blockHeader.cells[i].width = Math.max(100, blockHeader.cells[i].offsetWidth);
+			}
+			return;
+		}
+		for (var i=1; i<blockParent.rows[0].cells.length - 1; ++i){
+			var W = blockParent.cells[i].offsetWidth;
+//			W = (W < 80) ? 80 : W;
+			if ( blockHeader.cells[i].offsetWidth > W ) {
+				blockHeader.cells[i].width = blockHeader.cells[i].offsetWidth;
+				blockParent.cells[i].width = blockHeader.cells[i].offsetWidth;
+			}else{
+				blockHeader.cells[i].width = W;
+				blockParent.cells[i].width = W;
+			}
+		}
+	}catch(Error){
+		setTimeout("setColumnWidth()",100);
+	}
+}
+
+function setPreviousPosition(){
+	if(!myList.container)return;
+	blockParent.parentNode.scrollTop = myList.container.lastScrollPosition;
+}
+
+function setPreviousValue(){
+	if(!myList.container || !myList.container.returnValue)return;
+	var arr = myList.container.returnValue;
+	var Flag = false;
+	for (var i=0; i < arr.length; ++i){
+		try{
+			var ID = String(arr[i].id)
+			var obj = document.all[ID];
+			obj.firstChild.click();
+			Flag = true;
+		}catch(Error){}
+	}
+	if(!Flag){
+		parent.oMenu.onFire('SetListUnselected','path=<%=Request.path%>',myList.container);
+	}
+}
+
+function Start(){
+	setColumnWidth();
+	setPreviousPosition();
+	setPreviousValue();
+}
+
+
+function SearchByFieldIni(obj){
+	var oTable = blockHeader;
+	oTable.ini = true;
+	oTable.clearForm = function(){
+		if(!this.currentInput) return;
+		this.currentInput.innerHTML = oTable.currentInput.prevContent;
+		this.currentInput.status = 'ready';
+		this.currentInput.className = 'listTDheader';
+		this.currentInput = false;
+	}
+	for (var i=1; i < oTable.rows[0].cells.length - 1; ++i){
+		var oTD = oTable.rows[0].cells[i];
+		if(!oTD.editor) continue;
+		oTD.status = 'ready';
+		oTD.onClick = function(){
+			if(this.status == 'edit') return;
+			this.status = 'edit';
+			document.forms[0].filterfield.value=this.fieldID;
+			oTable.clearForm();
+			this.prevContent = this.innerHTML;
+			this.innerHTML = '';
+			switch(this.editor){
+				case 'string':
+					var oObj = document.createElement("INPUT");
+					oObj.name = 'filtervalue';
+					oObj.type = 'text';
+					oObj.className = 'filter';
+					this.insertAdjacentElement("afterBegin",oObj);
+					oObj.focus();
+					break;
+				case 'select':
+					this.className = 'listTDheaderWOborder';
+					var oObj = document.createElement("SELECT");
+					oObj.name = 'filtervalue';
+					oObj.className = 'filter';
+					this.insertAdjacentElement("afterBegin",oObj);
+					var arr = this.editorValue.split(';');
+					for(var i=0; i<arr.length; ++i){
+						var oOption = document.createElement("OPTION");
+						var cArr = arr[i].split(':');
+						oOption.text=cArr[1];
+						oOption.value=cArr[0];
+						oObj.add(oOption);
+					}
+					oObj.onchange = function(){document.forms['filter'].submit();}
+					oObj.focus();
+					break;
+			}
+			oTable.currentInput = this;
+		}
+	}
+}
+
+
+function SearchByField(obj){
+	if(!blockHeader.ini){
+		SearchByFieldIni();
+	}
+	var o = getSelectParent(obj,"editor");
+	if(!o) return;
+	try{o.onClick();}catch(Error){}
+}
+</script>
+
+
+<%FORMAT: 'xml'%><%
+%><body scroll="no" style="margin:0;cursor:default"><%
+	%><div id="blockParent" style="height:100%; overflow-Y:auto;"><%
+		%><%IF:strlen(Request.path) > 2%><%
+			%><div id=".." p2ath="<%=substr(Request.path,0,lastIndexOf( substr(Request.path,0,strlen(Request.path)-1),'/') + 1)%>" selectParent=1><%
+				%><img <%
+					%>src="icons/command-escape.32.gif" <%
+					%>width=32 <%
+					%>height=32 <%
+					%>alt="<%=substr(Request.path,0,lastIndexOf( substr(Request.path,0,strlen(Request.path)-1),'/') + 1)%>"<%
+				%>><%
+				%><br><%
+				%><span canBeSelected=1>..</span><%
+			%></div><%
+		%><%/IF%><%
+
+		%><%EXEC: cNode = ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+		%><%EXEC: Request.path && (cNode = ControlAPI.childForPath(cNode, Request.path)) %><%
+
+		%><%EXEC:children = cNode.getChildren()%><%
+
+		%><%CALL:ForArray(children)%><%
+			%><%IF:ControlAPI.isAccessible(Current)%><%
+				%><div id="zzz<%=Current.getName()%>" selectParent=1><%
+					%><img src="icons/<%=ControlAPI.getIcon(Current)%>.32.gif" width=32 height=32><br><span canBeSelected=1><%=Format.xmlNodeValue(Current.getTitle())%></span><%
+				%></div><%
+			%><%/IF%><%
+		%><%/CALL%><%
+	%></div><%
+	%><script><%
+		%>Start();<%
+	%></script><%
+%></body><%
+%></HTML><%
+%><%/FORMAT%>

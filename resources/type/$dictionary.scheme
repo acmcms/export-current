@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Abstract: dictionary</title>
+	<visibility>hidden</visibility>
+	<icon>document</icon>
+
+	<command>
+		<key>translate</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="key" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+//			Runtime.log("!!!!","$$$$$","asdasd:"+key+":"+$dictionary.KEYMAP()+":"+$dictionary.KEYMAP()[key]);
+			return $dictionary.KEYMAP()[key];
+		]]></script>
+	</command>
+	<command>
+		<key>KEYMAP</key>
+		<static>true</static>
+		<script class="script" type="ACM.CALC"><![CDATA[
+			{
+				title : "Название",
+				key : "Системное имя",
+				depth : "Глубина"
+			}
+		]]></script>
+	</command>
+</type>

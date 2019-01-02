@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>LAYOUT</type>
+	<title>Web: Unknown Server skin</title>
+	<abstract>true</abstract>
+	
+	<prototype>skin-web-abstract</prototype>
+	
+	<!-- for: client/js/require.js -->
+	<import package="skin-jsclient" namespace="client"/>
+	
+	<charset>UTF-8</charset>
+	<renderer>
+		<type>ACM.TPL</type>
+		<suffix>.tpl</suffix>
+	</renderer>
+</settings>

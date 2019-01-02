@@ -1,0 +1,176 @@
+<%
+%><%EXEC: lastPath = Request.path || Session.getParameters().path %><%
+
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add('frames') %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add("require") %><%
+%><%EXEC: requireJs.add("app/Router") %><%
+%><%EXEC: requireJs.add("Utils/Cookies") %><%
+%><%EXEC: requireJs.add("Utils/Event") %><%
+%><%EXEC: requireJs.add("Utils/Comms") %><%
+
+%><%OUTPUT: head %><%
+	%><!-- version: 4 --><%
+	%><style><%
+		%><%FORMAT: 'css' %>
+			IFRAME{
+				position:absolute;
+				left:0;
+				top:0;
+				width:100%;
+				height:100%;
+				background-color:white;
+				
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+				-ms-box-sizing: border-box;
+				box-sizing: border-box;
+			}
+			INPUT, SELECT{
+				font-family: Tahoma, Arial;
+				font-size: 7pt;
+				border: 0;
+				background-color: ActiveCaption;
+				color: CaptionText;
+			}
+		<%/FORMAT%><%
+	%></style><%
+	
+	%><script><%
+		%><%CODE: 'ACM.ECMA' %>
+			cookie = "tree-width-none";
+			var response = Request.querySkin({
+				timeout		: 0,
+				verb		: "GET",
+				/**
+				 * TODO: Request.getSkinnerName() or something like this.
+				 */
+				skinner		: "ctrl-temp-ie6",
+				resource	: "/browse.htm",
+				parameters	: {
+					path	: lastPath || '/',
+					mode	: "none",
+					cols	: "280px,*",
+					cookie	: cookie 
+				},
+				attributes	: {
+					Secure : true
+				}
+			});
+			preload = response ? response.toCharacter().text : "Not found";
+			(!response || response.getCode() != 200) && 
+				(preload = "<script>alert(\"FATAL: preload error: " + Format.jsStringFragment( preload ) + "\")</"+"script>");
+			preload || (preload = "Nothing in preload, however response is here, its class is: " + reponse.getClass() + ", character response class is: " + response.toCharacter().getClass());
+		<%/CODE%><%
+		%><%FORMAT: 'js' %>
+			router = new app.Router("root");
+
+			function getMainFrameset(){
+				var W = parseInt(Utils.Cookies.read(<%= Format.jsString( cookie ) %>, "")) || 280;
+				var cols = (W && W != Number.NaN ? W : 280) + "px,*";
+				return <%= Format.jsString( preload ) %>.replace("280px,*", cols);
+			}
+		<%/FORMAT%><%
+	%></script><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body><%
+		%><table border=0 cellpadding=0 cellspacing=0 height=100% width=100% style="padding:1px" class="BorderBox"><%
+			%><tr><%
+				%><td><%
+			 		%><div style="height:100%;" class="FrameBorder BorderBox"><%
+						%><div style="height:100%;" class="FrameBorder2 BorderBox"><%
+							%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+								%><tr><%
+									%><td class="BorderBox" style="padding:0 4px 0 4px;white-space:nowrap" width=100%><%
+										%><button style="margin:0" class=Menu style="width:expression(this.firstChild.offsetWidth + 16)" onclick="frame.contentWindow.switchLeftFrame()" onmouseover="this.className='MenuOn'" onmouseout="this.className='Menu'"><%
+											%><span><%
+												%><img src="$files/ico-tree.gif" height=16 width=16 align=absmiddle><%
+												%><%= intl( en = "Tree", ru = "Дерево" ) %><%
+											%></span><%
+										%></button><%
+										%><button style="margin:0" class=Menu style="width:expression(this.firstChild.offsetWidth + 16)" onclick="router.fire('setLocation','sysmenu','default.htm');" onmouseover="this.className='MenuOn'" onmouseout="this.className='Menu'"><%
+											%><span><%
+												%><img src="icons/object-system.16.gif" height=16 width=16 align=absmiddle><%
+												%><%= intl( en = "System properties", ru = "Системные свойства" ) %><%
+											%></span><%
+										%></button><%
+									%></td><%
+									%><td class="BorderBox" style="padding:0 0 0 4px;white-space:nowrap" width=100% align=right><%
+										%><button <%
+												%>style="margin:0" <%
+												%>class="Menu" <%
+												%>style="width:expression(this.firstChild.offsetWidth + 16)" <%
+												%>onclick="location.assign('/_sys/logout?back=<%= Runtime.ENTRANCE%>')" <%
+												%>onmouseover="this.className='MenuOn'" <%
+												%>onmouseout="this.className='Menu'"<%
+											%>><%
+											%><span><%
+												%><img src="$files/ico-logout.gif" height=16 width=16 align=absmiddle><%
+												%><%= intl( en = "Logout", ru = "Выйти" ) %><%
+											%></span><%
+										%></button><%
+										%><button <%
+												%>style="margin:0" <%
+												%>class=Menu <%
+												%>style="width:expression(this.firstChild.offsetWidth + 16)" <%
+												%>onclick="location.assign('re-login?uid=<%= User.UserID %>')" <%
+												%>onmouseover="this.className='MenuOn'" <%
+												%>onmouseout="this.className='Menu'"<%
+											%>><%
+											%><span><%
+												%><img src="$files/ico-relogin.gif" height=16 width=16 align=absmiddle><%
+												%><%= intl( en = "Re-Login", ru = "Перезайти" ) %><%
+											%></span><%
+										%></button><%
+									%></td><%
+									%><td style="padding:0 4px 0 4px" width=100% align=right><%
+										%><select style="width:130px" onchange="location.assign(this.value)"><%
+											%><%EXEC: languageName = Runtime.getLanguage() %><%
+											%><%EXEC: languages = Runtime.getLanguages() %><%
+											%><%ITERATE: language : languages %><%
+												%><option <%
+												%><%IF: languageName == language.name %><%
+													%>selected="selected" <%
+												%><%/IF%><%
+													%>value="<%= Runtime.getLanguageSelectionUrl( language.name, Session.mwmAdminUrlPath ) %>"><%
+														%><%= language.nativeName %> (<%= language.commonName %>) <%
+												%></option><%
+											%><%/ITERATE%><%
+										%></select><%
+									%></td><%
+								%></tr><%
+							%></table><%
+			 			%></div><%
+					%></div><%
+				%></td><%
+			%></tr><%
+			%><tr><%
+				%><td height=100% style="overflow:hidden"><%
+					%><div id="mainframediv" style="position:relative;width:100%;height:100%;overflow:hidden"><%
+					%></div><%
+					%><script><%
+						%><%FORMAT: 'js' %>
+							var frame = Utils.Comms.createFrameStatic(
+								document.getElementById("mainframediv"),
+								getMainFrameset()
+							);
+						<%/FORMAT%><%
+					%></script><%
+				%></td><%
+			%></tr><%
+		%></table><%
+	%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: Runtime.getSystemName() + " @ " + Request.getTarget(),
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

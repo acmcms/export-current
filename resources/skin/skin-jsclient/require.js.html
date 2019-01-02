@@ -1,0 +1,88 @@
+<html><body><h1>require.js</h1><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<p>for script to be able to access some classes, other scripts, report data, 
+		etc. from the server.</p>
+		<code><!-- <%FORMAT: 'default' %> -->
+	// Usage like this:
+	//
+	//		require( "[&lt;namespace>,...]<class>" );
+	//				example: var Layout = require("Layouts.Layout");
+	//				example: var Coordinates = require("Utils.Coordinates");
+	//
+	//		--------------------------------------------------------------------
+	//
+	//		requireScript( &lt;javaScriptFileName>[, dynamic ] );
+	//				Returns script execution result.
+	//				Script will be executed only once in every window where this method is called.
+	//				Script sources will be searched in parent windows and cached in current window.
+	//				Dynamic scripts are not cached ever, use them for data access, be sure not to
+	//					initialize global variables in you scripts.
+	//				example: var Layout = requireScript("Layouts/Layout.js");
+	//				example: var data = requireScript("/data.xml?id=" + id, true);
+	//
+	//
+	//		--------------------------------------------------------------------
+	//
+	//		require.script( &lt;javaScriptFileName>[, callback ] );
+	//				Returns script execution result.
+	//				Script will be executed only once in every window where this method is called.
+	//				Script sources will be searched in parent windows and cached in current window.
+	//				Dynamic scripts are not cached ever, use them for data access, be sure not to
+	//					initialize global variables in you scripts.
+	//				example: requireScript("Layouts/Layout.js", function(Layout){});
+	//
+	//		--------------------------------------------------------------------
+	//
+	//		requireSource( &lt;javaScriptFileName>[, dynamic ] );
+	//				Returns script source.
+	//				example: var data = requireSource("data/index.jsld");
+	//
+	//		--------------------------------------------------------------------
+	//
+	//
+	//		require.source( &lt;javaScriptFileName>[, callback ] );
+	//				Returns script source.
+	//				example: requireSource("data/index.jsld", function(str){});
+	//
+	//		--------------------------------------------------------------------
+	//
+	//		require.style( &lt;cssFileName>[, callback ] );
+	//				Applies style to this window.
+	//				Style will be applied only once in every window where this method is called.
+	//				Style sources will be searched in parent windows and cached in current window.
+	//				example: require.style("controls/menu/menu.css");
+	//				example: require.style("controls/menu/menu.css", function(x){x.destroy()});
+	//
+	//			Resulting object will have following properties:
+	//				name, // value, name
+	//				style, // value, actual style element
+	//				destroy, // method, destroys style object, removes stylesheet from document
+	//				release, // method, when last reference released destroy() called automatically
+	//
+	//			In case of failure the callback argument is null.
+	//		--------------------------------------------------------------------
+	//
+	//
+	//
+	//		will search scripts in own folder + "/js", will search styles in own folder + "/css".
+	//		if require's path ends with "/js/" than 'own' path will be one folder up.
+		<!-- <%/FORMAT%> --></code>
+		<ul>
+			<li><a href="/!/public/resources/skin/skin-jsclient/js/require.js">require</a>
+				 - script source code (for studying the code and comments).
+			</li>
+			<li><a href="/!/skin/skin-jsclient/js/require.js">require</a>
+				 - minified location (for actual usage in a web page).
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'require.js',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

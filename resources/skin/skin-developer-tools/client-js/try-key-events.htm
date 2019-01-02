@@ -1,0 +1,88 @@
+<html><body><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<p>You are welcome to press keys. We are going to show you keyboard event properties.</p>
+		<p>&nbsp;</p>
+		<p><input type="checkbox" name="suppress" id="suppress" /> suppress propagation</p>
+		<%FORMAT: 'js'%>
+		<style>
+			th{font-size:130%;}
+		</style>
+		<%/FORMAT%>
+		<table id="log" border="1">
+			<tr>
+				<th>date</th>
+				
+				<th>e.type</th>
+				<th>e.keyCode</th>
+				
+				<th>e.charCode</th>
+				
+				<th>e.altKey</th>
+				<!-- th>e.altLeft</th -->
+				
+				<th>e.ctrlKey</th>
+				<!-- th>e.ctrlLeft</th -->
+				
+				<th>e.shiftKey</th>
+				<!-- th>e.shiftLeft</th -->
+				
+				<th>e.metaKey</th>
+			</tr>
+		</table>
+		<%FORMAT: 'js'%>
+		<script>
+			function key(e){
+				e || (e = window.event);
+				var suppress = document.getElementById("suppress").checked,
+					table = document.getElementById("log"),
+					row = table.insertRow(1),
+					date = new Date();
+				
+				row.style.backgroundColor = "hsl("+(Math.round(360 * Math.random()))+",75%,90%)";
+				
+				row.insertCell(-1).innerHTML = date.toLocaleTimeString();
+
+				row.insertCell(-1).innerHTML = e.type;
+				row.insertCell(-1).innerHTML = e.keyCode;
+				
+				row.insertCell(-1).innerHTML = e.charCode;
+				
+				row.insertCell(-1).innerHTML = e.altKey;
+				// row.insertCell(-1).innerHTML = e.altLeft;
+				
+				row.insertCell(-1).innerHTML = e.ctrlKey;
+				// row.insertCell(-1).innerHTML = e.ctrlLeft;
+				
+				row.insertCell(-1).innerHTML = e.shiftKey;
+				// row.insertCell(-1).innerHTML = e.shiftLeft;
+				
+				row.insertCell(-1).innerHTML = e.metaKey;
+				
+				for(var i = 0; row; ++i, row = row.nextSibling){
+					i > 10 && row.parentNode.removeChild(row);
+				}
+				
+				if(suppress){
+					e.cancelBubble = true; /* Microsoft */
+					e.stopPropagation && e.stopPropagation(); /* W3C */
+				}
+				
+				return !suppress;
+			};
+		
+			document.onkeydown = key;
+			document.onkeyup = key;
+			document.onkeypress = key;
+		</script>
+		<%/FORMAT%>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Client: try key events',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

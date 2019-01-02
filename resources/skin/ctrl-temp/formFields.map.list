@@ -1,0 +1,389 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML><%
+%><HEAD><%
+	%><%EXEC: FilterField = Request.filterfield%><%
+	%><%EXEC: FilterValue = Request.filtervalue%><%
+	%><TITLE></TITLE><%
+	%><%INCLUDE: 'include-head' %><%
+
+	%><script id="scriptRequire" src="client/js/require.js"></script><%
+	%><script><%
+		%>requireScript("app/Listing.js");<%
+		%>requireStyle("listing.css");<%
+	%></script><%
+	
+	%><script>
+		router = parent.router;
+		var myList = {};
+		myList.id = window.name;
+		myList.entryType = 'setlist';
+		
+		myList.container = parent.document.getElementById( window.name.split('Frm')[0] );
+		if(myList.container){
+			myList.container.onFire = Listing.setListFire;
+			router.register(myList.container,window.name);
+		}
+		
+		var selectedObjects = [];
+		
+		document.oncontextmenu = function(){
+			return true;
+		};
+		
+		document.ondblclick = function(e){
+			e || (e = window.event);
+			var obj = (e.srcElement || e.target);
+			var selectParent = window.top.Dom.searchParentByAttribute(obj,"selectParent");
+		
+			if (!selectParent){
+				if (selectedObjects.length > 0){
+					for (var i=0; i < selectedObjects.length; ++i){
+						Dom.unSelectBlock(selectedObjects[i].Childs);
+						selectedObjects[i].select = false;
+					}
+					selectedObjects = [];
+				}
+				return;
+			}
+			if (selectParent.isNode == 'false'){
+				return;
+			}
+			selectParent.Childs || (selectParent.Childs = window.top.Dom.getSelectParentChild(selectParent));
+			for (var i=0; i < selectedObjects.length; ++i){
+				Dom.unSelectBlock(selectedObjects[i].Childs);
+				selectedObjects[i].select = false;
+			}
+			selectedObjects = [];
+			Dom.selectBlock(selectParent.Childs);
+			selectedObjects[0] = selectParent;
+			selectParent.select = true;
+			if (selectedObjects.length > 0){
+				router.fire('ItemActivate',myList.id,selectedObjects);
+			}
+		};
+		
+		document.onclick = function(e){
+			e || (e = window.event);
+			var obj = (e.srcElement || e.target);
+			var multipleFlag = (obj.selectFlag) ? true : false;
+			var selectParent = window.top.Dom.searchParentByAttribute(obj,"selectParent");
+			if (selectParent && selectParent.id == 'blockHeader'){
+				SearchByField(obj);
+				return;
+			}
+			blockHeader.currentInput && blockHeader.clearForm();
+			if (!selectParent){
+				if (selectedObjects.length > 0){
+					for (var i=0; i < selectedObjects.length; ++i){
+						Dom.unSelectBlock(selectedObjects[i].Childs);
+						selectedObjects[i].select = false;
+					}
+					selectedObjects = [];
+				}else{
+					return;
+				}
+				router.fire('ItemUnselect',myList.id,false);
+				return;
+			}
+			selectParent.Childs || (selectParent.Childs = window.top.Dom.getSelectParentChild(selectParent));
+			if (multipleFlag){
+				var allreadySelected = false;
+				for (var i=0; i < selectedObjects.length; ++i){
+					if(selectedObjects[i] == selectParent){
+						allreadySelected = true;
+						Dom.unSelectBlock(selectParent.Childs);
+						selectedObjects[i].select = false;
+						selectedObjects[i] = null;
+					}
+				}
+				selectedObjects = clearArrFromNull(selectedObjects);
+				if (!allreadySelected){
+					Dom.selectBlock(selectParent.Childs);
+					selectedObjects[selectedObjects.length] = selectParent;
+					selectParent.select = true;
+				}
+			}else{
+				if (selectParent.select && selectedObjects.length == 1){
+					return;
+				}
+				for (var i=0; i < selectedObjects.length; ++i){
+					Dom.unSelectBlock(selectedObjects[i].Childs);
+					selectedObjects[i].select = false;
+				}
+				selectedObjects = [];
+				Dom.selectBlock(selectParent.Childs);
+				selectedObjects[0] = selectParent;
+				selectParent.select = true;
+			}
+			if (selectedObjects.length > 0){
+				router.fire('ItemSelect',myList.id,selectedObjects);
+			}
+		};
+		
+		function clearArrFromNull(arr){
+			var narr = [];
+			for (var i=0; i<arr.length; ++i){
+				arr[i] != null && (narr[narr.length] = arr[i]);
+			}
+			return narr;
+		}
+		
+		function setColumnWidth(){
+			try{
+				if (blockParent.cells.length < 1){
+					for (var i=1; i<blockHeader.cells.length - 1; ++i){
+						blockHeader.cells[i].width = Math.max(100, blockHeader.cells[i].offsetWidth);
+					}
+					return;
+				}
+				for (var i=1; i<blockParent.rows[0].cells.length - 1; ++i){
+					var W = blockParent.cells[i].offsetWidth;
+					if ( blockHeader.cells[i].offsetWidth > W ) {
+						blockHeader.cells[i].width = blockHeader.cells[i].offsetWidth;
+						blockParent.cells[i].width = blockHeader.cells[i].offsetWidth;
+					}else{
+						blockHeader.cells[i].width = W;
+						blockParent.cells[i].width = W;
+					}
+				}
+			}catch(Error){
+				setTimeout("setColumnWidth()",100);
+			}
+		}
+		
+		function setPreviousPosition(){
+			myList.container && (Dom.parentElement(blockParent).scrollTop = myList.container.lastScrollPosition);
+		}
+		
+		function setPreviousValue(){
+			if(!myList.container || !myList.container.returnValue){
+				return;
+			}
+			var arr = myList.container.returnValue;
+			var flag = false;
+			for (var i=0; i < arr.length; ++i){
+				try{
+					var ID = String(arr[i].id)
+					var obj = document.getElementById(ID);
+					obj.firstChild.click();
+					flag = true;
+				}catch(Error){
+					//
+				}
+			}
+			flag || router.fire('ItemUnselect',myList.id,false);
+		}
+		
+		function Start(){
+			setColumnWidth();
+			setPreviousPosition();
+			setPreviousValue();
+		}
+		
+		function SearchByFieldIni(obj){
+			var oTable = blockHeader;
+			oTable.ini = true;
+			oTable.clearForm = function(){
+				if(!this.currentInput){
+					return;
+				}
+				this.currentInput.innerHTML = oTable.currentInput.prevContent;
+				this.currentInput.status = 'ready';
+				this.currentInput.className = 'listTDheader';
+				this.currentInput = false;
+			}
+			for (var i=1; i < oTable.rows[0].cells.length - 1; ++i){
+				var oTD = oTable.rows[0].cells[i];
+				if(!oTD.editor){
+					continue;
+				}
+				oTD.status = 'ready';
+				oTD.onClick = function(){
+					if(this.status == 'edit'){
+						return;
+					}
+					this.status = 'edit';
+					document.forms[0].filterfield.value=this.fieldID;
+					oTable.clearForm();
+					this.prevContent = this.innerHTML;
+					this.innerHTML = '';
+					switch(this.editor){
+						case 'string':
+							var oObj = document.createElement("INPUT");
+							oObj.name = 'filtervalue';
+							oObj.type = 'text';
+							oObj.className = 'filter';
+							this.insertBefore(oObj, this.firstChild);
+							oObj.focus();
+							break;
+						case 'select':
+							this.className = 'listTDheaderWOborder';
+							var oObj = document.createElement("SELECT");
+							oObj.name = 'filtervalue';
+							oObj.className = 'filter';
+							this.insertBefore(oObj, this.firstChild);
+							var arr = this.editorValue.split(';');
+							for(var i=0; i<arr.length; ++i){
+								var oOption = document.createElement("OPTION");
+								var cArr = arr[i].split(':');
+								oOption.text=cArr[1];
+								oOption.value=cArr[0];
+								oObj.add(oOption);
+							}
+							oObj.onchange = function(){
+								document.forms.filter.submit();
+							};
+							oObj.focus();
+							break;
+					}
+					oTable.currentInput = this;
+				}
+			}
+		}
+		
+		function SearchByField(obj){
+			if(!blockHeader.ini){
+				SearchByFieldIni();
+			}
+			var o = window.top.Dom.searchParentByAttribute(obj,"editor");
+			if(!o){
+				return;
+			}
+			try{
+				o.onClick();
+			}catch(Error){
+				//
+			}
+		}
+	</script><%
+%></HEAD><%
+
+%><body scroll="no" style="margin:0;cursor:default;overflow:hidden"><%
+
+	%><%EXEC: form = Session[Request.id] %><%
+	%><%IF: !form %><%
+		%><%RETURN: {
+			template	: '500',
+			title		: 'Error',
+			body		: 'No form available, please retry.'
+		} %><%
+	%><%/IF%><%
+	%><%EXEC: data = form.data %><%
+
+	%><%EXEC: mapPaths = split(Request.data,'/') %><%
+	%><%EXEC: contents = data.getData() %><%
+	%><%ITERATE: path : mapPaths %><%
+		%><%EXEC: contents = contents[path] %><%
+	%><%/ITERATE%><%
+
+	%><div style="position:relative;overflow:hidden;left:expression((0-this.nextSibling.scrollLeft)+'px')"><%
+		%><table id=blockHeader style="BORDER-COLLAPSE: collapse" width="100%" selectParent=1><%
+			%><form method="POST" name=filter><%
+				%><tr><%
+					%><th class=listSelector><%
+						%><img src=/__i/1.gif width=15 height=5><%
+					%></th><%
+					%><td fieldID="key" editor="string" class=listTDheader nowrap style="padding-left:1px; padding-right:1px;"><%
+						%><table border=0 cellpadding=0 cellspacing=0><%
+							%><tr><%
+								%><td class=switch><%
+									%>4<%
+								%></td><%
+								%><td class=title nowrap><%
+									%><%= intl( en = "Key", ru = "Ключ" ) %><%
+								%></td><%
+							%></tr><%
+						%></table><%
+					%></td><%
+					%><td fieldID="value" editor="string" class=listTDheader nowrap style="padding-left:1px; padding-right:1px;"><%
+						%><table border=0 cellpadding=0 cellspacing=0><%
+							%><tr><%
+								%><td class=switch><%
+									%>4<%
+								%></td><%
+								%><td class=title nowrap><%
+									%><%= intl( en = "Value", ru = "Значение" ) %><%
+								%></td><%
+							%></tr><%
+						%></table><%
+					%></td><%
+					%><td width=100% class=listTDheader><%
+						%><input type="hidden" name="filterfield" value="">&nbsp;<%
+					%></td><%
+				%></tr><%
+			%></form><%
+		%></table><%
+	%></div><%
+
+
+	%><div style="height:expression((document.body.clientHeight-this.previousSibling.firstChild.clientHeight)+'px'); width:100%; height:100%; overflow:auto;"><%
+		%><table id=blockParent class=blockParent style="BORDER-COLLAPSE: collapse" width=100%><%
+			%><%EXEC: MaxLength=Int(User.getUser().getProfile('mwmAdmin',true).TitleLimit,60) %><%
+			%><%IF: !FilterField || !FilterValue %><%
+				%><script><%
+					%>router.fire('setListPaging',myList.id,{size : <%= HashSize(contents) %>});<%
+				%></script><%
+			%><%/IF%><%
+	
+			%><%EXEC: cnt = 0 %><%
+	
+			%><%CALL:ForHash(contents) %><%
+				%><%EXEC: line = ControlAPI.toLine(Current) %><%
+				%><%EXEC: show = true %><%
+				%><%IF: FilterField && FilterValue %><%
+					%><%EXEC: (FilterField == "key") && (fField = CurrentKey) %><%
+					%><%EXEC: (FilterField == "value") && (fField = line) %><%
+					%><%EXEC: show = StartsWith(FilterValue,'^') 
+										? indexOf( UpperCase(fField) , UpperCase(substr(FilterValue,1)) ) == 0
+										: indexOf( UpperCase(fField) , UpperCase(FilterValue) ) >= 0 %><%	
+				%><%/IF%><%
+				%><%IF: show%><%
+					%><%EXEC: cnt = cnt + 1 %><%
+					%><%EXEC: i == 0 && (i = 1) %><%
+					%><tr id="zzz<%= CurrentKey %>" type="content" selectParent=1><%
+						%><th class=listSelector canBeSelected=1 selectFlag=1><%
+							%><img src=/__i/1.gif width=15 height=5><%
+						%></th><%
+						%><td canBeSelected=1 style="padding-left:2px"><%
+							%><table border=0 cellpadding=0 cellspacing=0><%
+								%><tr><%
+									%><td class=icon canBeSelected=1><%
+										%><img src=icons/item-unknown.16.gif height=16 width=16><%
+									%></td><%
+									%><td class=title noWrap canBeSelected=1><%
+										%><%= Format.xmlNodeValue( LimitString( CurrentKey, MaxLength, '...' ) ) %><%
+									%></td><%
+								%></tr><%
+							%></table><%
+						%></td><%
+						%><td noWrap canBeSelected=1><%
+							%><%IF: line == Format.jsObject(Current) %><%
+								%><%= Format.xmlNodeValue( line ) %><%
+							%><%ELSE%><%
+								%><a href="show.field?type=form&frommap=<%= Request.data %>&fieldname=<%= CurrentKey %>&<%= Request.getParameterString() %>" target=_blank><%
+									%><%= Format.xmlNodeValue( line ) %><%
+								%></a><%
+							%><%/ELSE%><%
+							%><%/IF%><%
+						%></td><%
+						%><td width=100%><%
+							%>&nbsp;<%
+						%></td><%
+					%></tr><%
+				%><%/IF%><%
+			%><%/CALL%><%
+		%></table><%
+	%></div><%
+
+	%><%IF: FilterField && FilterValue %><%
+		%><script><%
+			%>router.fire('setListPaging',myList.id,{size : <%=cnt%>,title:'<%= intl(en = "Find", ru = "Найдено" ) %>'});<%
+		%></script><%
+	%><%/IF%><%
+	
+	%><script><%
+		%>Start();<%
+	%></script><%
+	
+%></body><%
+%></HTML>

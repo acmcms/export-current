@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>JQModal</title>
+	<visibility>hidden</visibility>
+	<command>
+		<key>get</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="version" class="string" default="r14" />
+			<field id="local" class="boolean" default="false" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var package = {js:[], css:[], head:[]};
+			package.js.push("/$files/jqmodal/" + version + "/jqModal");
+			package.css.push("/$files/jqmodal/" + version + "/jqModal");
+			return package;
+		]]></script>
+	</command>
+</type>

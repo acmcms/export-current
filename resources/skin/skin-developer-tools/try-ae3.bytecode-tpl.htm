@@ -1,0 +1,94 @@
+<%FORMAT: 'default' %><%
+
+%><%OUTPUT: defaultSource %><%
+%>
+/**
+ * ACM.TPL (Axiom.TPL) compiler test, byte-code preview.
+ *
+ */
+ 
+<% = 'Hello!' %>
+
+<%IGNORE%>
+	<%CODE: 'text/plain' %>
+	<%/CODE%>
+<%/IGNORE%>
+
+<% = '<'+'%'; %>FORMAT: 'xml' <% = '%'+'>'; %>
+	<% = '<'+'%'; %>EXEC: test = '-hell-' <% = '%'+'>'; %>
+
+	<% = '<'+'%'; %>EXEC: test = Create.mapFor(a = 5, b = 6, c = 6) <% = '%'+'>'; %>
+
+
+	<% = '<'+'%'; %>RECURSION: a1 = 1, a2 = 'test', a3 = test <% = '%'+'>'; %> 
+	<% = '<'+'%'; %>/RECURSION<% = '%'+'>'; %>
+
+	<% = '<'+'%'; %>RECURSION: a1 = 1, a2 = 'test', a3 = test <% = '%'+'>'; %><% = '<'+'%'; %>
+		%><% = '<'+'%'; %>IF: a1 < 5 <% = '%'+'>'; %><% = '<'+'%'; %>
+			%><% = '<'+'%'; %>DEEPER: a1 = a1 + 1, a3 = a3 + '.' <% = '%'+'>'; %><% = '<'+'%'; %>
+		%><% = '<'+'%'; %>/IF<% = '%'+'>'; %><% = '<'+'%'; %>
+	%><% = '<'+'%'; %>/RECURSION<% = '%'+'>'; %>
+<% = '<'+'%'; %>/FORMAT<% = '%'+'>'; %>
+
+<% = '<'+'%'; %>OUTPUT: bbb <% = '%'+'>'; %>
+
+	<% = '<'+'%'; %>   = xxx + 'sdasdas';<% = '%'+'>'; %>
+
+	<% = '<'+'%'; %>WHILE:a == 2<% = '%'+'>'; %>
+		<% = '<'+'%'; %>   = zzz + 'AsasSDf';<% = '%'+'>'; %>
+	<% = '<'+'%'; %>/WHILE<% = '%'+'>'; %>
+
+<% = '<'+'%'; %>/OUTPUT<% = '%'+'>'; %>
+
+<% = '<'+'%'; %>OUTAPPEND: bbb <% = '%'+'>'; %>
+
+	<% = '<'+'%'; %>   = xxx + 'sdasdas';<% = '%'+'>'; %>
+
+<% = '<'+'%'; %>/OUTAPPEND<% = '%'+'>'; %>
+
+<% = '<'+'%'; %>IF: 'text/plain' <% = '%'+'>'; %>
+
+	<% = '<'+'%'; %>   = xxx + 'sdasdas';<% = '%'+'>'; %>
+
+	<% = '<'+'%'; %>WHILE:a == 2<% = '%'+'>'; %>
+		<% = '<'+'%'; %>   = zzz + 'AsasSDf';<% = '%'+'>'; %>
+	<% = '<'+'%'; %>/WHILE<% = '%'+'>'; %>
+
+<% = '<'+'%'; %>/IF<% = '%'+'>'; %>
+
+	<% = '<'+'%'; %>   = xxx + 'sdasdas' + bbb;<% = '%'+'>'; %>
+
+
+<% = '<'+'%'; %>FINAL: 'text/plain' <% = '%'+'>'; %>
+
+	<% = '<'+'%'; %>   = xxx + 'sdasdas';<% = '%'+'>'; %>
+
+	<% = '<'+'%'; %>WHILE:a == 2<% = '%'+'>'; %>
+		<% = '<'+'%'; %>   = zzz + 'AsasSDf';<% = '%'+'>'; %>
+	<% = '<'+'%'; %>/WHILE<% = '%'+'>'; %>
+
+<% = '<'+'%'; %>/FINAL<% = '%'+'>'; %>
+
+
+<%
+%><%/OUTPUT%><%
+
+%><%RETURN: {
+	title			: 'AE3BYTECODE',
+	template		: "try.tpl",
+	useRequire		: true,
+	defaultSource	: defaultSource,
+	keywords		: "ae3bytecode try it yourself, ae3bytecode code preview",
+	previewFunction	: function(x){
+		import ru.myx.ae3.eval.Evaluate;
+		import ru.myx.renderer.tpl.AcmTplLanguageImpl;
+		return {
+			template : 'html-screen',
+			title : 'ae3 bytecode (TPL) preview',
+			suppressTitle : true,
+			body : '<code style="overflow:scroll;border:0;max-height:100%;max-width:100%;width:100%;height:100%;position:absolute;">'+Format.xmlNodeValue(Evaluate.compileProgram(AcmTplLanguageImpl.INSTANCE, "AE3BYTECODE-TPL", x))+'</code>'
+		};
+	}
+} %><%
+
+%><%/FORMAT%>

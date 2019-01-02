@@ -1,0 +1,68 @@
+<%CODE: 'ACM.ECMA' %>
+	var path = Request.path || '/';
+
+	var address, parameters, initial;
+	
+	if( !path ) {
+		address = initial = "default.htm";
+	}else
+	if( Request.mode == "link" ) {
+		Session.getParameters().pathLink = path;
+		initial = "listing.htm?mode=link&path=" + StringToUrl(path);
+		address = "listing.htm";
+		parameters = {
+			mode : "link",
+			path : path
+		};
+	}else{
+		var root = ControlAPI.nodeForObject(Request.getSharedObject());
+		var node = ControlAPI.childForPath(root, path);
+		
+		while( !node ){
+			path = path.substring(0, path.lastIndexOf('/'));
+			node = ControlAPI.childForPath(root, path);
+		}
+		Session.getParameters().path = path;
+		initial = "listing.htm?path=" + StringToUrl(path);
+		address = "listing.htm";
+		parameters = {
+			mode : "none",
+			path : path
+		};
+	}
+
+	var response = Request.querySkin({
+		timeout		: 0,
+		verb		: "GET",
+		skinner		: "ctrl-temp-ie6",
+		resource	: "/" + address,
+		parameters	: parameters,
+		attributes	: {
+			Secure : true
+		}
+	});
+	
+	if(response && response.getCode() == 200){
+		return response;
+	}
+	
+	var preload = response 
+		? "code=" + response.getCode() + ", text=" + response.toCharacter().text 
+		: "Not found";
+
+	%><html><%
+		%><head><%
+			%><script><%
+				%>alert("pre-load error: <%= Format.jsStringFragment( preload ) %>")<%
+				%>location.replace(<%
+					= Format.jsString( initial );
+				%>);<%
+			%></script><%
+		%></head><%
+		%><body><%
+			%><h1>preload error, redirecting to normal location</h1><%
+			%>which is: <a href="<%= Format.xmlAttributeFragment( initial ) %>"><%= initial %></a><%
+		%></body><%
+	%></html><%
+	// end of ecma code
+<%/CODE%>

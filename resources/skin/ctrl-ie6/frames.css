@@ -1,0 +1,250 @@
+H1{
+	font-family: Tahoma, Arial;
+	font-size: 14pt;
+	margin:0;
+}
+
+.FrameBorder{
+	border-bottom:solid 1px buttonhighlight;
+	border-right:solid 1px buttonhighlight;
+	border-top:solid 1px buttonshadow;
+	border-left:solid 1px buttonshadow;
+}
+
+.FrameBorder2{
+	border-bottom:solid 1px buttonshadow;
+	border-right:solid 1px buttonshadow;
+	border-top:solid 1px buttonhighlight;
+	border-left:solid 1px buttonhighlight;
+	background-color:buttonface;
+}
+
+.FrameHeader{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	background-color:activecaption;
+	color:captiontext;
+	padding:2px 4px 2px 4px;
+	font-weight: bold;
+	border-bottom:solid 1px buttonhighlight;
+	border-right:solid 1px buttonhighlight;
+	border-top:solid 1px buttonshadow;
+	border-left:solid 1px buttonshadow;
+}
+
+.TopMenu{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border:solid 1px buttonface;
+	text-align: center;
+	padding: 0 10px 0 10px;
+}
+
+.Menu{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	padding:0;
+	margin:0;
+	border:solid 1px buttonface;
+}
+
+.MenuOn{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	margin-right: 10px;
+	padding:0;
+	margin:0;
+	border-bottom:solid 1px buttonshadow;
+	border-right:solid 1px buttonshadow;
+	border-top:solid 1px buttonhighlight;
+	border-left:solid 1px buttonhighlight;
+}
+
+.MenuHighlight{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	margin-right: 10px;
+	padding:0;
+	margin:0;
+	background-color:threedhighlight;
+	border-bottom:solid 1px buttonshadow;
+	border-right:solid 1px buttonshadow;
+	border-top:solid 1px buttonhighlight;
+	border-left:solid 1px buttonhighlight;
+}
+
+.MenuHighlightActive{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	margin-right: 10px;
+	padding:0;
+	margin:0;
+	background-color:threedhighlight;
+	border-bottom:solid 1px buttonhighlight;
+	border-right:solid 1px buttonhighlight;
+	border-top:solid 1px buttonshadow;
+	border-left:solid 1px buttonshadow;
+}
+
+.Menu IMG, .MenuOn IMG{
+	margin:0 3px 0 0;
+}
+
+
+.SubmenuFrame{
+	background-color:activecaption;
+	color:captiontext;
+	padding:3px;
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+	border-bottom:solid 1px buttonhighlight;
+	border-right:solid 1px buttonhighlight;
+	border-top:solid 1px buttonshadow;
+	border-left:solid 1px buttonshadow;
+}
+
+
+.SubmenuFrame TD, .SubmenuFrame DIV{
+	color: captiontext;
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+}
+
+.SubmenuFrame INPUT{
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+	border: 0;
+	background-color: activecaption;
+	color:captiontext;
+}
+
+.SubmenuFrame A{
+	color: captiontext;
+	text-decoration:none;
+}
+
+.SubmenuFrame A:hover{
+	color: captiontext;
+	text-decoration:underline;
+}
+
+
+
+.SubmenuHeader{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-bottom:solid 1px buttonshadow;
+	border-right:solid 1px buttonshadow;
+	border-top:solid 1px buttonhighlight;
+	border-left:solid 1px buttonhighlight;
+}
+
+.SubmenuHeaderActive{
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-bottom:solid 1px appworkspace;
+	background-color: appworkspace;
+}
+
+.SubmenuHeaderActive TD{
+	padding:2px 3px 2px 3px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	color: highlighttext;
+}
+
+.SubmenuHeader TD{
+	padding:2px 3px 2px 3px;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+}
+
+
+.SubmenuButton TD{
+	color: buttontext;
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+}
+
+
+.SubmenuButton .on{
+	background-color: highlight;
+}
+
+.SubmenuButton .on TD{
+	color: highlighttext;
+}
+
+
+
+.Description{
+	background-color: infobackground;
+	color: infotext;
+	border-bottom:solid 1px buttonhighlight;
+	border-right:solid 1px buttonhighlight;
+	border-top:solid 1px buttonshadow;
+	border-left:solid 1px buttonshadow;
+	padding:1px 5px 1px 5px;
+}
+
+.Description, .Description TD, .Description DIV{
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+}
+
+.Description A{
+	color: infotext;
+	text-decoration:underline;
+}
+
+.Description UL{
+	margin:4pt 12pt 4pt 12pt;
+}
+.Description LI{
+	margin:2pt;
+}
+
+.DescriptionPlain{
+	color: buttontext;
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+}
+
+
+.FrameButton{
+	font-family: Webdings;
+	font-size: 8pt;
+	color: buttontext;
+	border:solid 1px buttonface;
+	height:16px;
+	padding:0;
+}
+
+.FrameButtonOn{
+	font-family: Webdings;
+	font-size: 8pt;
+	color: buttontext;
+	height:16px;
+	padding:0;
+
+	border-bottom:solid 1px buttonshadow;
+	border-right:solid 1px buttonshadow;
+	border-top:solid 1px buttonhighlight;
+	border-left:solid 1px buttonhighlight;
+}
+
+
+.iconSymbol {
+	font-family: Webdings;
+	font-size: 8pt;
+	border:solid 1px buttonface;
+	behavior: url(_icon.htc);
+}
+
+.iconText {
+	font-family: Tahoma, Arial;
+	font-size: 7pt;
+	border:solid 1px buttonface;
+	behavior: url(_icon.htc);
+	height: 21px;
+}

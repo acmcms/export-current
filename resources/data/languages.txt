@@ -1,0 +1,20 @@
+###########################################################################
+#
+# File encoding is UTF-8 (used for any localized characters), tab size: 4
+#
+# File format is: 
+#   line starting with '#' sign is a comment line - this lines, as well as empty lines are ignored
+#   data line format is:
+#           define    <name> <web-encoding> <java-encoding> <short> <common> <native> <country> <variant>
+#
+# Strings containing white-spaces should be quoted.
+#
+
+define	en		ISO-8859-1    ISO-8859-1  ENG  "English"    "English"          US  WIN
+define	enGB	ISO-8859-1    ISO-8859-1  ENG  "English"    "English"          GB  WIN
+define	ru		windows-1251  Cp1251      RUS  "Russian"    "Русский"          RU  WIN
+define	ua		windows-1251  Cp1251      UKR  "Ukrainian"  "Украї́нська мо́ва"  UA  WIN
+define	kz		windows-1251  Cp1251      KAZ  "Kazakh"     "Қазақ тілі"       KZ  WIN
+define	fr		windows-1250  Cp1250      FR   "French"     "Français"         FR  WIN
+define	de		windows-1250  Cp1250      GER  "German"     "Deutsch"          DE  WIN
+define	lv		windows-1257  Cp1257      LAT  "Latvijan"   "Latviski"         LV  WIN

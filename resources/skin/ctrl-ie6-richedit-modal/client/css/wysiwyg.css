@@ -1,0 +1,45 @@
+.FrameBorder2 {
+	border-bottom: solid 1px buttonshadow;
+	border-right: solid 1px buttonshadow;
+	border-top: solid 1px buttonhighlight;
+	border-left: solid 1px buttonhighlight;
+	background-color: buttonface;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-ms-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+}
+
+.border TD {
+	height: 1px
+}
+
+.border .TabOn {
+	background-color: buttonshadow;
+}
+
+.border .TabOffl {
+	border-left: solid 1px buttonhighlight;
+}
+
+.border .offr {
+	border-right: solid 1px buttonhighlight;
+}
+
+.zakladka .TabOff DIV {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-bottom: solid 1px buttonshadow;
+	height: 16px;
+	padding: 0 8px;
+	white-space: nowrap;
+}
+
+.zakladka .TabOn DIV {
+	font-family: Tahoma, Arial;
+	font-size: 8pt;
+	border-bottom: solid 1px buttonshadow;
+	height: 20px;
+	padding: 4px 8px 0 8px;
+	white-space: nowrap;
+}

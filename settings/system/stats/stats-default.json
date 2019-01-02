@@ -1,0 +1,7 @@
+{
+	type : "ae3.stats/Group",
+	name : 'ae3.base',
+	title : 'System',
+	keywords : '*',
+	reference : "ru.myx.ae3.internal/stats/DefaultCounters"
+}

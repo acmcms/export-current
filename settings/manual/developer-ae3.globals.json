@@ -1,0 +1,7 @@
+{
+	type : "ae3.Manual",
+	title : "Context Global Objects",
+	name : "developer-ae3.globals",
+	group : "developer",
+	vfs : "/resources/lib/ru.myx.ae3.manual/docs/reference-context-global-objects.xml"
+}

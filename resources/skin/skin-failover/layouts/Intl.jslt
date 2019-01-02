@@ -1,0 +1,19 @@
+//
+//
+// Arguments:
+//	layout - current layout
+//
+// Description:
+//	Simple one - returns an English variant.
+//
+// Example:
+//	{
+//		layout	: "intl",
+//		value	: {
+//			en		: "English",
+//			ru		: "Russian"
+//		}
+//	}
+//
+
+return layout.value.en;

@@ -1,0 +1,160 @@
+<html><head><!-- <%FORMAT:'html'%><%
+	%><%IGNORE%> -->  
+		<script type="text/javascript" src="../../js/require.js"></script>
+	<!-- <%/IGNORE%><%
+%><%OUTPUT: head %><%
+	%><%= '<!' + '-- ' + 'begin' %>-->
+	<style>
+		scalableImage{
+			min-height: 32px;
+			height: 32px;
+		}
+	</style>
+	<script> 
+		// <%FORMAT:'js'%>
+		require("lib/standard");
+		require("Utils/Coordinates");
+		require("Utils/Event");
+		require("Utils/Comms");
+		require("Elements/ScalableImage");
+		require.style("lib/scalableImage.css");
+
+		var targets = [];
+		var selects = [];
+		
+		var prepare = function(){
+			['td','div'].forEach(function(item){
+				var list = document.getElementsByTagName(item);
+				for( var i = 0; i < list.length; ++i ) {
+					list[i].getAttribute("skip") || targets.push( list[i] );
+				}
+			});
+		};
+		var clean = function(){
+			targets.forEach(function(target){
+				target.innerHTML = "";
+			});
+			selects = [];
+		};
+		var makeTargets = function(contents){
+			selects.length && clean();
+			targets.forEach(function(target){
+				var holder = document.createElement("scalableImage");
+				holder.setAttribute("src", "/!/public/resources/data/images/famfamfam.com/silk/house.png");
+				selects.push(new Elements.ScalableImage(target.appendChild(holder)));
+			});
+		};
+
+		function fn(e){
+			return "/!/public/resources/data/images/famfamfam.com/silk/cross.png";
+		}
+		
+		function dummy(e){
+			e || (e = window.event);
+			e.cancelBubble = true; /* Microsoft */
+			e.stopPropagation && e.stopPropagation(); /* W3C */
+			return false;
+		}
+		
+		function fnw(e){
+			return Math.round((e.clientWidth || e.innerWidth || e.offsetWidth) * 2 / 3);
+		}
+		
+		// <%/FORMAT%>
+	</script>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+	%><%IGNORE%> -->
+	</head>
+	<body>
+	<h1>Scalable Image</h1>
+	<!-- <%/IGNORE%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %>-->
+	<p>Image respecting container size.</p>
+	<code><%FORMAT: 'default' %>
+	// element:
+	//		scalableImage
+	//
+	// attributes:
+	//		src
+	//		src_expression
+	//		width_expression
+	//		height_expression
+	//
+	// uses CSS:
+	//		.shadow-plane - shadow plane,
+	//
+	// Usage:
+	//		Elements.ScalableImage.initAllElements([document]) - to find and attach to all scalableImage elements in current [given] document.
+	//
+	<%/FORMAT%></code>
+	
+	<table height="250px" style="margin: 3px">
+		<tr>
+			<td></td>
+			<td></td>
+			<th valign="bottom">
+				<a href="../../tests.html">
+					&gt; click for tests.html &lt;
+				</a>
+			</th>
+		</tr>
+	</table>
+	<table width="100%" style="border: 3px solid black">
+		<tr>
+			<td skip="true"><scalableImage src="/!/public/resources/data/images/famfamfam.com/silk/anchor.png" height_expression="fnw(this)"></scalableImage></td>
+			<td skip="true"><scalableImage src="/!/public/resources/data/images/famfamfam.com/silk/anchor.png"></scalableImage></td>
+		</tr>
+	</table>
+	<table width="100%" style="border: 3px solid green">
+		<tr>
+			<td skip="true"><scalableImage src_expression="'/!/public/resources/data/images/famfamfam.com/silk/anchor.png'" height_expression="Math.round((this.clientWidth || this.innerWidth || this.offsetWidth) * 2 / 3)"></scalableImage></td>
+			<td skip="true"><scalableImage src_expression="'/!/public/resources/data/images/famfamfam.com/silk/anchor.png'"></scalableImage></td>
+		</tr>
+	</table>
+	<table width="100%" style="border: 3px solid yellow">
+		<tr>
+			<td skip="true"><scalableImage src_expression="fn(this)" height_expression="fnw(this)"></scalableImage></td>
+			<td skip="true"><scalableImage src_expression="fn(this)"></scalableImage></td>
+		</tr>
+	</table>
+	<table width="100%" style="border: 3px solid cyan">
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<table width="33%" style="width:33%;height:40px;border: 3px solid blue">
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<div style="width:120px;height:120px;border: 3px solid red">
+	</div>
+	<div style="position:fixed;top:30px;right:10px;width:120px;height:120px;border: 3px solid black">
+	</div>
+	<div style="position:absolute;top:30px;right:150px;width:120px;height:120px;border: 3px solid black">
+	</div>
+	<script>
+		// <%FORMAT:'js'%>
+		Elements.ScalableImage.initAllElements(document);
+		prepare();
+		makeTargets();
+		// <%/FORMAT%>
+	</script>
+	<div style="height: 800px; border: 1px dotted blue">&nbsp;</div>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Abstract: Elements.ScalableImage',
+		template	: "html-document",
+		useRequire	: true,
+		useDebug	: true,
+		head		: head,
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

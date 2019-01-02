@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<type>
+
+	<title>Static: Hierarchy Helper Library</title>
+	<visibility>hidden</visibility>
+
+	<command>
+		<type>hidden</type>
+		<key>doCopyCheckItem</key>
+		<static>true</static>
+		<result>Object</result>
+		<arguments class="fieldset">
+			<field id="source" class="object"/>
+			<field id="targetFolder" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var result = targetFolder.getChildByName( source.getKey() );
+			if( !result ){
+				var change = targetFolder.createChild();
+				change.setKey( source.getKey() );
+				change.setTitle( source.getTitle() );
+				change.setTypeName( source.getTypeName() );
+				change.setState( source.getState() );
+				change.setFolder( source.isFolder() );
+				change.getData().putAll( source.getData() );
+				change.commit();
+				result = Storage.getByGuid( change.getGuid() );
+			}else{
+				if( source.text && source.anounce ){
+					if( result.getTitle() != source.getTitle() || 
+						result.getState() != source.getState() || 
+						result.getTypeName() != source.getTypeName() || 
+						result.text != source.text || 
+						result.anounce != source.anounce ){
+							var change = result.createChange();
+							change.setTitle( source.getTitle() );
+							change.setState( source.getState() );
+							change.setTypeName( source.getTypeName() );
+							change.text = source.text;
+							change.anounce = source.anounce;
+							change.commit();
+					}
+				}else{
+					if( result.getTitle() != source.getTitle() || 
+						result.getState() != source.getState() || 
+						result.getTypeName() != source.getTypeName() || 
+						(result.anounce && result.text) ){
+							var change = result.createChange();
+							change.setTitle( source.getTitle() );
+							change.setState( source.getState() );
+							change.setTypeName( source.getTypeName() );
+							change.anounce = null;
+							change.text = null;
+							change.commit();
+					}
+				}
+			}
+			return result;
+		]]></script>
+	</command>
+
+	<command>
+		<type>hidden</type>
+		<key>doUnlink</key>
+		<static>true</static>
+		<result>Void</result>
+		<arguments class="fieldset">
+			<field id="entry" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			for each( var current in entry.getChildren( 0, null ) ){
+				HierarchyHelper.doUnlink( entry = current );
+			}
+			entry.createChange().unlink();
+		]]></script>
+	</command>
+
+	<command>
+		<type>hidden</type>
+		<key>doLinkCreate</key>
+		<static>true</static>
+		<result>Void</result>
+		<arguments class="fieldset">
+			<field id="target" class="object"/>
+			<field id="source" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			target.setCreateLocal( true );
+			target.setCreateLinkedWith( source );
+			target.setKey( source.getKey() );
+			target.setTitle( source.getTitle() );
+			target.setState( source.getState() );
+			target.setFolder( source.isFolder() );
+
+			var sync = target.getSynchronization();
+			sync.synchronizeExport( source.getGuid() );
+			sync.synchronizeImport( source.getGuid() );
+			sync.commit();
+
+			for each( var current in source.getChildren( 0, null ) ){
+				HierarchyHelper.doLinkCreate( target = target.createChild(), source = current );
+			}
+
+			target.commit();
+		]]></script>
+	</command>
+
+	<command>
+		<type>hidden</type>
+		<key>doCopyCreate</key>
+		<static>true</static>
+		<result>Void</result>
+		<arguments class="fieldset">
+			<field id="target" class="object"/>
+			<field id="source" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var key = target.getKey();
+			var title = target.getTitle();
+			target.setCreateLocal( true );
+			target.setState( source.getState() );
+			target.setFolder( source.isFolder() );
+			target.getData().putAll( source.getData() );
+			key && target.setKey( key );
+			title && target.setTitle( title );
+
+			for each( var current in source.getChildren( 0, null ) ){
+				HierarchyHelper.doCopyCreate( target = target.createChild(), source = current );
+			}
+
+			target.commit();
+		]]></script>
+	</command>
+
+	<command>
+		<type>hidden</type>
+		<key>doLinkUpdate</key>
+		<static>true</static>
+		<result>Void</result>
+		<arguments class="fieldset">
+			<field id="target" class="object"/>
+			<field id="source" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( target.getTitle() != source.getTitle() ){
+				var change = target.createChange();
+				change.setTitle( source.getTitle() );
+				change.commit();
+			}
+
+			for each( var current in source.getChildren( 0, null ) ){
+				var child = target.getChildByName( current.getKey() );
+				if( child ){
+					HierarchyHelper.doLinkUpdate( target = child, source = current );
+				}else{
+					HierarchyHelper.doLinkCreate( target = target.createChild(), source = current );
+				}
+			}
+
+			for each( var current in target.getChildren( 0, null ) ){
+				var child = source.getChildByName( current.getKey() );
+				if( !child && current.getCreated() + 60L * 60000L < Date.now() ){
+					HierarchyHelper.doUnlink( entry = current );
+				}
+			}
+		]]></script>
+	</command>
+
+	<command>
+		<type>hidden</type>
+		<key>doCopyUpdate</key>
+		<static>true</static>
+		<result>Void</result>
+		<arguments class="fieldset">
+			<field id="target" class="object"/>
+			<field id="source" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( target.getTitle() != source.getTitle() ){
+				var change = target.createChange();
+				change.setTitle( source.getTitle() );
+				change.commit();
+			}
+
+			for each( var current in source.getChildren( 0, null ) ){
+				var child = target.getChildByName( current.getKey() );
+				if( child ){
+					HierarchyHelper.doCopyUpdate( target = child, source = current );
+				}else{
+					HierarchyHelper.doCopyCreate( target = target.createChild(), source = current );
+				}
+			}
+
+			for each( var current in target.getChildren( 0, null ) ){
+				var child = source.getChildByName( current.getKey() );
+				if( !child && current.getCreated() + 60L * 60000L < Date.now() ){
+					HierarchyHelper.doUnlink( entry = current );
+				}
+			}
+		]]></script>
+	</command>
+</type>

@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML><%
+%><HEAD><%
+	%><%INCLUDE: 'include-head' %><%
+	%><script><%
+		%>var resizeTimer = false;<%
+		%>function keepEditorSize(){<%
+			%>resizeTimer && clearTimeout(resizeTimer);<%
+			%>resizeTimer = setTimeout(function(){<%
+				%>Standard.createCookie('editorSize', document.body.offsetWidth + "," + document.body.offsetHeight, 3650);<%
+			%>},1000);<%
+		%>}<%
+	%></script><%
+	%><style><%
+		%>.border TD{<%
+			%>height:1px;<%
+		%>}<%
+		%>.border .TabOn{<%
+			%>background-color: buttonshadow;<%
+		%>}<%
+		%>.border .TabOffl{<%
+			%>border-left: solid 1px buttonhighlight;<%
+		%>}<%
+		%>.border .offr{<%
+			%>border-right: solid 1px buttonhighlight;<%
+		%>}<%
+		%>.zakladka .TabOff DIV{<%
+			%>font-family: Tahoma, Arial;<%
+			%>font-size: 8pt;<%
+			%>border-bottom: solid 1px buttonshadow;<%
+			%>height:16px;<%
+			%>padding:0 8px;<%
+			%>white-space: nowrap;<%
+		%>}<%
+		%>.zakladka .TabOn DIV{<%
+			%>font-family: Tahoma, Arial;<%
+			%>font-size: 8pt;<%
+			%>border-bottom: solid 1px buttonshadow;<%
+			%>height:20px;<%
+			%>padding:4px 8px 0 8px;<%
+			%>white-space: nowrap;<%
+		%>}<%
+		%><%INCLUDE: 'editor_style.css' %><%
+	%></style><%
+
+	%><script id="scriptRequire" src="client/js/require.js"></script><%
+
+	%><script><%
+		%>requireScript("app/Router.js");<%
+		%>require.style("editor_style.css");<%
+		%>require.style("wysiwyg.css");<%
+	%></script><%
+
+	%><script><%
+		%>window.returnValue="none";<%
+		
+		%>var router = new Router("wysiwyg");<%
+		
+		%><%INCLUDE: 'DHTMLEd.js' %><%
+		%><%INCLUDE: 'editor_toolbar.js' %><%
+		%><%INCLUDE: 'editor_toolbar-html.js' %><%
+		%><%INCLUDE: 'editor_toolbar.title' %><%
+		%><%INCLUDE: 'editor_actions.js' %><%
+		%><%INCLUDE: 'editor_wysiwyg_contextmenu.js' %><%
+		
+		%>var tabSplitter1 = "<table border=0 cellpadding=0 cellspacing=0><tr><td><img height=1 width=1></td><td bgcolor=buttonshadow><img height=16 width=1></td><td bgcolor=buttonhighlight><img height=16 width=1></td><td><img height=1 width=1></td></tr><tr><td bgcolor=buttonshadow><img height=1 width=1></td><td></td><td></td><td bgcolor=buttonhighlight><img height=1 width=1></td></tr><tr><td><img height=3 width=1></td><td></td><td></td><td></td></tr></table>";<%
+		%>var tabSplitter2 = "<table border=0 cellpadding=0 cellspacing=0><tr><td></td><td bgcolor=buttonhighlight><img height=16 width=1></td><td><img height=1 width=1></td></tr><tr><td></td><td></td><td bgcolor=buttonhighlight><img height=1 width=1></td></tr><tr><td><img height=3 width=2></td><td></td><td></td></tr></table>";<%
+		%>var tabSplitter3 = "<table border=0 cellpadding=0 cellspacing=0><tr><td bgcolor=buttonhighlight><img height=18 width=1></td><td><img height=1 width=1></td><td><img height=1 width=1></td></tr><tr><td></td><td bgcolor=buttonhighlight><img height=1 width=1></td><td><img height=1 width=1></td></tr><tr><td></td><td></td><td bgcolor=buttonshadow><img height=1 width=2></td></tr></table>";<%
+		%>var tabSplitter4 = "<table border=0 cellpadding=0 cellspacing=0><tr><td><img height=1 width=1></td><td><img height=1 width=1></td><td bgcolor=buttonshadow><img height=18 width=1></td></tr><tr><td><img height=1 width=1></td><td bgcolor=buttonshadow><img height=1 width=1></td><td></td></tr><tr><td bgcolor=buttonshadow><img height=1 width=2></td><td></td><td></td></tr></table>";<%
+		%>var tabSplitter5 = "<table border=0 cellpadding=0 cellspacing=0><tr><td><img height=1 width=1></td><td bgcolor=buttonshadow><img height=16 width=1></td><td></td></tr><tr><td bgcolor=buttonshadow><img height=1 width=1></td><td></td><td></td></tr><tr><td></td><td></td><td><img height=3 width=2></td></tr></table>";<%
+		
+		%>function TabIni(obj){
+			obj.switchTab = SwitchTab;
+			obj.getValue = GetValue;
+			obj.holders = [];
+			obj.frames = obj.cells[0].firstElementChild.rows;	
+			var cells = obj.cells[1].firstElementChild.rows[1].cells;
+			for (var i=0; i < cells.length; ++i){
+				if (cells[i].getAttribute('holder')){
+					cells[i].parent = obj;
+					cells[i].tabNum = obj.holders.length;
+					cells[i].frame = obj.frames[cells[i].tabNum];
+					cells[i].frame.holder = cells[i];
+					cells[i].onclick = function(){
+						this.parent.switchTab(this.tabNum);
+					}
+					obj.holders[obj.holders.length] = cells[i];
+					cells[i].className == 'TabOn' && (obj.select = cells[i]);
+				}
+			}
+		}
+		
+		function SwitchTab(n){
+			if(this.select.tabNum == n) {
+				return;
+			}
+			try{
+				this.value = this.select.frame.valueObject.returnValue();
+			}catch(Error){
+				//
+			}
+		
+			TabHolderOff(this.select);
+			this.select.frame.style.display = 'none';
+			this.select = this.holders[n];
+			TabHolderOn(this.select);
+			this.select.frame.style.display = '';
+			router.fire('SwitchTab',this.id,this.select.getAttribute('hName'),this);
+		}
+		
+		function GetValue() {
+			try{
+				this.value = this.select.frame.valueObject.returnValue();
+			}catch(Error){
+				//
+			}
+			return this.value;
+		}
+		
+		function TabHolderOff(obj){
+			var oTable = obj.offsetParent;
+			obj.className = 'TabOff';
+			oTable.rows[1].cells[obj.tabNum * 2].innerHTML = (obj.tabNum > 0) ? tabSplitter1 : tabSplitter2;
+			oTable.rows[1].cells[obj.tabNum * 2 + 2].innerHTML = (obj.tabNum < obj.parent.holders.length - 1) ? tabSplitter1 : tabSplitter5;
+			oTable.rows[0].cells[obj.tabNum * 2].className = 'TabOn';
+			oTable.rows[0].cells[obj.tabNum * 2 + 1].className = 'TabOn';
+			oTable.rows[0].cells[obj.tabNum * 2 + 2].className = 'TabOn';
+		}
+		
+		function TabHolderOn(obj){
+			var oTable = obj.offsetParent;
+			obj.className = 'TabOn';
+			oTable.rows[1].cells[obj.tabNum * 2].innerHTML = tabSplitter3;
+			oTable.rows[1].cells[obj.tabNum * 2 + 2].innerHTML = tabSplitter4;
+			oTable.rows[0].cells[obj.tabNum * 2].className = 'TabOffl'
+			oTable.rows[0].cells[obj.tabNum * 2 + 1].className = ''
+			oTable.rows[0].cells[obj.tabNum * 2 + 2].className = 'TabOffr';
+		}
+		
+		
+		function Return(){
+			window.returnValue = TabsForm.getValue();
+			window.close();
+		}
+	</script><%
+%></HEAD><%
+
+%><body BGCOLOR="buttonface" scroll="no" style="cursor:default;margin:2px;border:0;overflow:hidden" onresize="keepEditorSize()"><%
+	%><div id="divTemp" style="visibility:hidden;overflow:hidden;position:absolute;width:1px;height:1px"><%
+	%></div><%
+	
+	
+	
+	%><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><%
+		%><tr><%
+			%><td></td><%
+		%></tr><%
+		%><tr><%
+			%><td height="100%"><%
+	
+				%><table border=0 cellpadding=0 cellspacing=0 width=100% height=100% id=TabsForm><%
+				%><tr><%
+					%><td height=100%><%
+						%><table border=0 cellpadding=0 cellspacing=0 width=100% style="border-left: 1 solid buttonhighlight; border-right: 1 solid buttonshadow; border-top: 1 solid buttonhighlight; padding:5; height:100%"><%
+							%><tr><%
+								%><td valign=top><%INCLUDE: 'editor_wysiwyg.obj' %></td><%
+							%></tr><%
+							%><tr style="display:none"><%
+								%><td valign=top><%INCLUDE: 'editor_html.obj' %></td><%
+							%></tr><%
+							%><tr style="display:none"><%
+								%><td valign=top><%INCLUDE: 'editor_browse.obj' %></td><%
+							%></tr><%
+						%></table><%
+					%></td><%
+				%></tr><%
+	
+				%><tr><%
+					%><td><%
+						%><table border=0 cellpadding=0 cellspacing=0 class=zakladka width=100%><%
+							%><tr class=border><%
+								%><td class=TabOffl><img width=0 height=0></td><%
+								%><td><img width=0 height=0></td><%
+								%><td class=TabOffr><img width=0 height=0></td><%
+								%><td class=TabOn><img width=0 height=0></td><%
+								%><td class=TabOn><img width=0 height=0></td><%
+								%><td class=TabOn><img width=0 height=0></td><%
+								%><td class=TabOn><img width=0 height=0></td><%
+								%><td class=TabOn><img width=0 height=0></td><%
+							%></tr><%
+							%><tr><%
+								%><td><script>document.write(tabSplitter3)</script></td><%
+								%><td class=TabOn holder=1 hName=WYSIWYG nowrap><div>WYSIWYG</div></td><%
+								%><td><script>document.write(tabSplitter4)</script></td><%
+								%><td class=TabOff holder=1 hName=HTML nowrap><div>HTML</div></td><%
+								%><td><script>document.write(tabSplitter1)</script></td><%
+								%><td class=TabOff holder=1 hName=Browse nowrap><div>Browse</div></td><%
+								%><td><script>document.write(tabSplitter5)</script></td><%
+								%><td style="width:100%"></td><%
+							%></tr><%
+						%></table><%
+					%></td><%
+				%></tr><%
+				%></table><%
+	
+				%><script>
+					TabIni(TabsForm);
+					TabsForm.value = (window.dialogArguments && window.dialogArguments.value) 
+											? window.dialogArguments.value 
+											: '';
+				</script>
+			</td>
+		</tr>
+		<tr>
+			<td align=right style="padding:10px 0 4px 0"><%
+				%><button onclick="Return()"><%
+					%><%= intl( en = "Save", ru = "Сохранить" ) %><%
+				%></button><%
+				%>&nbsp;<%
+				%><button onclick='window.close()'><%
+					%><%= intl( en = "Close", ru = "Закрыть" ) %><%
+				%></button><%
+			%></td>
+		</tr>
+	</table>
+</body>
+</HTML>

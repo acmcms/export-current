@@ -1,0 +1,39 @@
+$output( body ){
+	%>
+	body {
+		padding:0 10px 0 10px;
+		text-align:left;
+	}
+	h1 {
+		font-weight: bold;
+		margin: 1em 0 0 0;
+		padding: .25em .5em;
+		background-color: #ccc;
+	}
+	h2 {
+		font-weight: bold;
+		margin: .5em 0 .1em 0;
+		padding: .15em .5em;
+		background-color: #eee;
+	}
+	ul {
+		display: block;
+		line-height: 2em;
+		background-color: #fdfdfd;
+		padding: 5px;
+	}
+	.list li {
+		list-style: inside disc;
+	}
+	p {
+		padding:0 5px 0 5px;
+	}
+	textarea {
+		background-color: #fdfdfd;
+	}
+	.horizontal li {
+		display:inline;
+	}
+	<%
+}
+return $base.final( "text/css", body );

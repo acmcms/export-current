@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>Gravatar</title>
+	<visibility>hidden</visibility>
+	<command>
+		<key>getUrl</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="email" class="string"/>
+			<field id="size" class="integer" default="60"/>
+			<field id="dimg" class="string" default="mm"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var digest = binaryDigest(email.toLowerCase().trim());
+			var url = 'http://gravatar.com/avatar/' + digest + '.jpg';
+			url = Request.modifyQueryStringParameter( url, 'd', UrlToString( dimg ) );
+			url = Request.modifyQueryStringParameter( url, 's', size );
+			return url;
+		]]></script>
+	</command>
+</type>

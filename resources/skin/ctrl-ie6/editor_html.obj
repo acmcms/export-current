@@ -1,0 +1,40 @@
+<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+<TR>
+	<TD style="padding:0 0 4px 0"><div class=toolbar id=HTMLEditorToolbar><%INCLUDE: 'editor_html.toolbar' %></div></TD>
+</TR>
+<TR>
+	<TD style="height:100%;"><TEXTAREA id=HtmlEditorElement style="width:100%; height:100%"></TEXTAREA></TD>
+</TR>
+</TABLE>
+
+<script>
+	eventMethods.register(HtmlEditorElement,'TabsForm');
+
+	HtmlEditorElement.ini = function(){
+		this.parentFrame = this.offsetParent.offsetParent.offsetParent.parentNode;
+		this.parentFrame.valueObject = this;
+		this.returnValue = function(){
+			return this.value;
+		}
+
+		this.onFire = function(eType,eValue,eObj){
+			switch (eType){
+				case 'SwitchTab':
+					if(eValue == 'HTML') this.setHtml( eObj.value );
+					break;
+			}
+		}
+
+		this.setHtml = function(html){
+			this.value = html
+		}
+
+		this.SetFocus = function(){
+			this.focus();
+		}
+	}
+
+	HtmlEditorElement.ini();
+
+	ToolbarIni(HTMLEditorToolbar,HtmlEditorElement);
+</script>

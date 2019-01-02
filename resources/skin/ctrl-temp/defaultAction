@@ -1,0 +1,22 @@
+<%
+%><%IF: !Request.path %><%
+	%><%REDIRECT: 'default.htm' %><%
+%><%/IF%><%
+
+%><%EXEC: path = Request.path %><%
+%><%EXEC: node = ControlAPI.childForPath(ControlAPI.nodeForObject(Request.getSharedObject()), path) %><%
+
+%><%IF: Request.mode == "link" %><%
+	%><%EXEC: Session.getParameters().pathLink = path %><%
+	%><%REDIRECT: 'listing-link.htm?path=' + path %><%
+%><%/IF%><%
+
+%><%WHILE: !node %><%
+	%><%EXEC: path = path.substring(0, path.lastIndexOf('/')) %><%
+	%><%EXEC: node = ControlAPI.childForPath(ControlAPI.nodeForObject(Request.getSharedObject()), path) %><%
+%><%/WHILE%><%
+
+%><%EXEC: forms = node.getForms() %><%
+%><%EXEC: Session.getParameters().path = path %><%
+%><%REDIRECT: 'listing.htm?path=' + path %><%
+%>

@@ -1,0 +1,5 @@
+{
+	type : "ae3/Executable",
+	name : "vm",
+	reference : "ru.myx.ae3.sys/vm/VmShellCommand"
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>SyntaxHighlighter</title>
+	<visibility>hidden</visibility>
+
+	<command>
+		<key>init</key>
+		<static>true</static>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><!-- Include required JS files --><%
+			%><script type="text/javascript" src="http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js"></script><%
+			%><!-- At least one brush, here we choose JS. You need to include a brush for every language you want to highlight --><%
+			%><script type="text/javascript" src="http://alexgorbatchev.com/pub/sh/current/scripts/shBrushJScript.js"></script><%
+			%><script type="text/javascript" src="http://alexgorbatchev.com/pub/sh/current/scripts/shBrushXml.js"></script><%
+			%><!-- Include *at least* the core style and default theme --><%
+			%><link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" /><%
+			%><link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css" rel="stylesheet" type="text/css" /><%
+			%><script type="text/javascript">SyntaxHighlighter.all()</script><%
+		%>]]></script>
+	</command>
+	<command>
+		<key>insert</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="code" class="string"/>
+			<field id="html" class="boolean" default="false"/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><pre class="brush: js;<%= html ? ' html-script: true' : '' %>"><%
+				%><%= code %><%
+			%></pre><%
+		%>]]></script>
+	</command>
+</type>

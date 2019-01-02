@@ -1,0 +1,765 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+<title>AccessManager (AE3 ACM SAPI)</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="AccessManager (AE3 ACM SAPI)";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar_top">
+<!--   -->
+</a><a href="#skip-navbar_top" title="Skip navigation links"></a><a name="navbar_top_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../ru/myx/ae1/access/AccessPermission.html" title="interface in ru.myx.ae1.access"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../index.html?ru/myx/ae1/access/AccessManager.html" target="_top">Frames</a></li>
+<li><a href="AccessManager.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#field_summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li><a href="#field_detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">ru.myx.ae1.access</div>
+<h2 title="Interface AccessManager" class="title">Interface AccessManager</h2>
+</div>
+<div class="contentContainer">
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Known Implementing Classes:</dt>
+<dd><a href="../../../../ru/myx/ae1/access/AbstractAccessManager.html" title="class in ru.myx.ae1.access">AbstractAccessManager</a></dd>
+</dl>
+<hr>
+<br>
+<pre>public interface <span class="strong">AccessManager</span></pre>
+<dl><dt><span class="strong">Author:</span></dt>
+  <dd>myx</dd></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field_summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Field and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#AUTH_TYPE_LOGIN_HIGH">AUTH_TYPE_LOGIN_HIGH</a></strong></code>
+<div class="block">login high</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#AUTH_TYPE_LOGIN_NORMAL">AUTH_TYPE_LOGIN_NORMAL</a></strong></code>
+<div class="block">normal login</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#commitGroup(ru.myx.ae1.access.AccessGroup)">commitGroup</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#commitUser(ru.myx.ae1.access.AccessUser)">commitUser</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#createFormGroupCreation(java.lang.String)">createFormGroupCreation</a></strong>(java.lang.String&nbsp;path)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#createFormGroupProperties(java.lang.String, java.lang.String)">createFormGroupProperties</a></strong>(java.lang.String&nbsp;path,
+                         java.lang.String&nbsp;key)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#createFormSecuritySetup(java.lang.String)">createFormSecuritySetup</a></strong>(java.lang.String&nbsp;path)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#createFormUserSearch(ru.myx.ae1.access.AccessGroup, ru.myx.ae1.control.ControlContainer)">createFormUserSearch</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group,
+                    <a href="../../../../ru/myx/ae1/control/ControlContainer.html" title="interface in ru.myx.ae1.control">ControlContainer</a>&lt;?&gt;&nbsp;container)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#createFormUserSelection(ru.myx.ae1.access.AccessGroup, ru.myx.ae1.access.AccessUser)">createFormUserSelection</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group,
+                       <a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#createFormUsersSelection(ru.myx.ae1.access.AccessGroup, ru.myx.ae1.access.AccessUser[], )">createFormUsersSelection</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group,
+                        <a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]&nbsp;users,
+                        <any>&nbsp;resultFilter)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#createGroup()">createGroup</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#createUser()">createUser</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#deleteGroup(java.lang.String)">deleteGroup</a></strong>(java.lang.String&nbsp;key)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#deleteUser(java.lang.String)">deleteUser</a></strong>(java.lang.String&nbsp;key)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#getAllGroups()">getAllGroups</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#getAllUsers()">getAllUsers</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#getGroup(java.lang.String, boolean)">getGroup</a></strong>(java.lang.String&nbsp;key,
+        boolean&nbsp;create)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#getGroups(ru.myx.ae1.access.AccessUser)">getGroups</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#getUser(java.lang.String, boolean)">getUser</a></strong>(java.lang.String&nbsp;key,
+       boolean&nbsp;create)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#getUserByAuth(java.lang.String, java.lang.String)">getUserByAuth</a></strong>(java.lang.String&nbsp;authType,
+             java.lang.String&nbsp;uniqueId)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#getUserByLogin(java.lang.String, boolean)">getUserByLogin</a></strong>(java.lang.String&nbsp;login,
+              boolean&nbsp;create)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#getUsers(ru.myx.ae1.access.AccessGroup)">getUsers</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#isInGroup(ru.myx.ae1.access.AccessUser, ru.myx.ae1.access.AccessGroup)">isInGroup</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user,
+         <a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#isInGroup(java.lang.String, java.lang.String)">isInGroup</a></strong>(java.lang.String&nbsp;userId,
+         java.lang.String&nbsp;groupId)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#search(java.lang.String, java.lang.String, long, long, ru.myx.ae1.access.SortMode)">search</a></strong>(java.lang.String&nbsp;login,
+      java.lang.String&nbsp;email,
+      long&nbsp;logonStart,
+      long&nbsp;logonEnd,
+      <a href="../../../../ru/myx/ae1/access/SortMode.html" title="enum in ru.myx.ae1.access">SortMode</a>&nbsp;sortMode)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#searchByMembership(java.util.Collection, ru.myx.ae1.access.SortMode)">searchByMembership</a></strong>(java.util.Collection&lt;java.lang.String&gt;&nbsp;groups,
+                  <a href="../../../../ru/myx/ae1/access/SortMode.html" title="enum in ru.myx.ae1.access">SortMode</a>&nbsp;sortMode)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#searchByType(int, int, ru.myx.ae1.access.SortMode)">searchByType</a></strong>(int&nbsp;minType,
+            int&nbsp;maxType,
+            <a href="../../../../ru/myx/ae1/access/SortMode.html" title="enum in ru.myx.ae1.access">SortMode</a>&nbsp;sortMode)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessPrincipal.html" title="interface in ru.myx.ae1.access">AccessPrincipal</a>&lt;?&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#securityCheck(int, java.lang.String, java.lang.String)">securityCheck</a></strong>(int&nbsp;forceLevel,
+             java.lang.String&nbsp;path,
+             java.lang.String&nbsp;command)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessPrincipal.html" title="interface in ru.myx.ae1.access">AccessPrincipal</a>&lt;?&gt;[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#securityGetAccessEffective(java.lang.String, java.lang.String)">securityGetAccessEffective</a></strong>(java.lang.String&nbsp;path,
+                          java.lang.String&nbsp;permission)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.util.Set&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#securityGetPermissionsEffective(ru.myx.ae1.access.AccessPrincipal, java.lang.String)">securityGetPermissionsEffective</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessPrincipal.html" title="interface in ru.myx.ae1.access">AccessPrincipal</a>&lt;?&gt;&nbsp;principal,
+                               java.lang.String&nbsp;path)</code>
+<div class="block">Set of permissions, Permissions.PERMISSIONS_ALL or
+ Permissions.PERMISSIONS_NONE.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#setGroups(ru.myx.ae1.access.AccessUser, ru.myx.ae1.access.AccessGroup[])">setGroups</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user,
+         <a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;[]&nbsp;groups)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#setPassword(ru.myx.ae1.access.AccessUser, java.lang.String, ru.myx.ae1.access.PasswordType)">setPassword</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user,
+           java.lang.String&nbsp;password,
+           <a href="../../../../ru/myx/ae1/access/PasswordType.html" title="enum in ru.myx.ae1.access">PasswordType</a>&nbsp;passwordType)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../ru/myx/ae1/access/AccessManager.html#updateGroups(ru.myx.ae1.access.AccessUser, java.util.Set, java.util.Set)">updateGroups</a></strong>(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user,
+            java.util.Set&lt;<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&gt;&nbsp;removed,
+            java.util.Set&lt;<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&gt;&nbsp;added)</code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field_detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a name="AUTH_TYPE_LOGIN_HIGH">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>AUTH_TYPE_LOGIN_HIGH</h4>
+<pre>static final&nbsp;java.lang.String AUTH_TYPE_LOGIN_HIGH</pre>
+<div class="block">login high</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../constant-values.html#ru.myx.ae1.access.AccessManager.AUTH_TYPE_LOGIN_HIGH">Constant Field Values</a></dd></dl>
+</li>
+</ul>
+<a name="AUTH_TYPE_LOGIN_NORMAL">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>AUTH_TYPE_LOGIN_NORMAL</h4>
+<pre>static final&nbsp;java.lang.String AUTH_TYPE_LOGIN_NORMAL</pre>
+<div class="block">normal login</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../constant-values.html#ru.myx.ae1.access.AccessManager.AUTH_TYPE_LOGIN_NORMAL">Constant Field Values</a></dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="commitGroup(ru.myx.ae1.access.AccessGroup)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>commitGroup</h4>
+<pre>void&nbsp;commitGroup(<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>group</code> - </dd></dl>
+</li>
+</ul>
+<a name="commitUser(ru.myx.ae1.access.AccessUser)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>commitUser</h4>
+<pre>void&nbsp;commitUser(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>user</code> - </dd></dl>
+</li>
+</ul>
+<a name="createFormGroupCreation(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createFormGroupCreation</h4>
+<pre><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;&nbsp;createFormGroupCreation(java.lang.String&nbsp;path)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>path</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>form</dd></dl>
+</li>
+</ul>
+<a name="createFormGroupProperties(java.lang.String, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createFormGroupProperties</h4>
+<pre><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;&nbsp;createFormGroupProperties(java.lang.String&nbsp;path,
+                                       java.lang.String&nbsp;key)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>path</code> - </dd><dd><code>key</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>form</dd></dl>
+</li>
+</ul>
+<a name="createFormSecuritySetup(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createFormSecuritySetup</h4>
+<pre><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;&nbsp;createFormSecuritySetup(java.lang.String&nbsp;path)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>path</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>form</dd></dl>
+</li>
+</ul>
+<a name="createFormUserSearch(ru.myx.ae1.access.AccessGroup, ru.myx.ae1.control.ControlContainer)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createFormUserSearch</h4>
+<pre><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;&nbsp;createFormUserSearch(<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group,
+                                  <a href="../../../../ru/myx/ae1/control/ControlContainer.html" title="interface in ru.myx.ae1.control">ControlContainer</a>&lt;?&gt;&nbsp;container)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>group</code> - </dd><dd><code>container</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>form</dd></dl>
+</li>
+</ul>
+<a name="createFormUserSelection(ru.myx.ae1.access.AccessGroup, ru.myx.ae1.access.AccessUser)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createFormUserSelection</h4>
+<pre><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;&nbsp;createFormUserSelection(<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group,
+                                     <a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>group</code> - </dd><dd><code>user</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>form</dd></dl>
+</li>
+</ul>
+<a name="createFormUsersSelection(ru.myx.ae1.access.AccessGroup, ru.myx.ae1.access.AccessUser[], )">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createFormUsersSelection</h4>
+<pre><a href="../../../../ru/myx/ae1/control/ControlForm.html" title="interface in ru.myx.ae1.control">ControlForm</a>&lt;?&gt;&nbsp;createFormUsersSelection(<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group,
+                                      <a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]&nbsp;users,
+                                      <any>&nbsp;resultFilter)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>group</code> - </dd><dd><code>users</code> - </dd><dd><code>resultFilter</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>form</dd></dl>
+</li>
+</ul>
+<a name="createGroup()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createGroup</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;createGroup()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>group</dd></dl>
+</li>
+</ul>
+<a name="createUser()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createUser</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;createUser()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>user</dd></dl>
+</li>
+</ul>
+<a name="deleteGroup(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>deleteGroup</h4>
+<pre>void&nbsp;deleteGroup(java.lang.String&nbsp;key)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>key</code> - </dd></dl>
+</li>
+</ul>
+<a name="deleteUser(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>deleteUser</h4>
+<pre>boolean&nbsp;deleteUser(java.lang.String&nbsp;key)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>key</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd></dd></dl>
+</li>
+</ul>
+<a name="getAllGroups()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAllGroups</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;[]&nbsp;getAllGroups()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>groups</dd></dl>
+</li>
+</ul>
+<a name="getAllUsers()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAllUsers</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]&nbsp;getAllUsers()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>users</dd></dl>
+</li>
+</ul>
+<a name="getGroup(java.lang.String, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getGroup</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;getGroup(java.lang.String&nbsp;key,
+                      boolean&nbsp;create)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>key</code> - </dd><dd><code>create</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>group</dd></dl>
+</li>
+</ul>
+<a name="getGroups(ru.myx.ae1.access.AccessUser)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getGroups</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;[]&nbsp;getGroups(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>user</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>groups</dd></dl>
+</li>
+</ul>
+<a name="getUser(java.lang.String, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getUser</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;getUser(java.lang.String&nbsp;key,
+                    boolean&nbsp;create)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>key</code> - </dd><dd><code>create</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>user</dd></dl>
+</li>
+</ul>
+<a name="getUserByAuth(java.lang.String, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getUserByAuth</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;getUserByAuth(java.lang.String&nbsp;authType,
+                          java.lang.String&nbsp;uniqueId)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>authType</code> - </dd><dd><code>uniqueId</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>user
+ 
+         FIXME mmsource</dd></dl>
+</li>
+</ul>
+<a name="getUserByLogin(java.lang.String, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getUserByLogin</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;getUserByLogin(java.lang.String&nbsp;login,
+                           boolean&nbsp;create)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>login</code> - </dd><dd><code>create</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>user</dd></dl>
+</li>
+</ul>
+<a name="getUsers(ru.myx.ae1.access.AccessGroup)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getUsers</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]&nbsp;getUsers(<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>group</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>users</dd></dl>
+</li>
+</ul>
+<a name="isInGroup(ru.myx.ae1.access.AccessUser, ru.myx.ae1.access.AccessGroup)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isInGroup</h4>
+<pre>boolean&nbsp;isInGroup(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user,
+                <a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&nbsp;group)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>user</code> - </dd><dd><code>group</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="isInGroup(java.lang.String, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isInGroup</h4>
+<pre>boolean&nbsp;isInGroup(java.lang.String&nbsp;userId,
+                java.lang.String&nbsp;groupId)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>userId</code> - </dd><dd><code>groupId</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="search(java.lang.String, java.lang.String, long, long, ru.myx.ae1.access.SortMode)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>search</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]&nbsp;search(java.lang.String&nbsp;login,
+                     java.lang.String&nbsp;email,
+                     long&nbsp;logonStart,
+                     long&nbsp;logonEnd,
+                     <a href="../../../../ru/myx/ae1/access/SortMode.html" title="enum in ru.myx.ae1.access">SortMode</a>&nbsp;sortMode)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>login</code> - </dd><dd><code>email</code> - </dd><dd><code>logonStart</code> - </dd><dd><code>logonEnd</code> - </dd><dd><code>sortMode</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>users</dd></dl>
+</li>
+</ul>
+<a name="searchByMembership(java.util.Collection, ru.myx.ae1.access.SortMode)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchByMembership</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]&nbsp;searchByMembership(java.util.Collection&lt;java.lang.String&gt;&nbsp;groups,
+                                 <a href="../../../../ru/myx/ae1/access/SortMode.html" title="enum in ru.myx.ae1.access">SortMode</a>&nbsp;sortMode)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>groups</code> - </dd><dd><code>sortMode</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>users</dd></dl>
+</li>
+</ul>
+<a name="searchByType(int, int, ru.myx.ae1.access.SortMode)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchByType</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;[]&nbsp;searchByType(int&nbsp;minType,
+                           int&nbsp;maxType,
+                           <a href="../../../../ru/myx/ae1/access/SortMode.html" title="enum in ru.myx.ae1.access">SortMode</a>&nbsp;sortMode)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>minType</code> - </dd><dd><code>maxType</code> - </dd><dd><code>sortMode</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>users</dd></dl>
+</li>
+</ul>
+<a name="securityCheck(int, java.lang.String, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>securityCheck</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessPrincipal.html" title="interface in ru.myx.ae1.access">AccessPrincipal</a>&lt;?&gt;&nbsp;securityCheck(int&nbsp;forceLevel,
+                               java.lang.String&nbsp;path,
+                               java.lang.String&nbsp;command)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>forceLevel</code> - </dd><dd><code>path</code> - </dd><dd><code>command</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>principal</dd></dl>
+</li>
+</ul>
+<a name="securityGetAccessEffective(java.lang.String, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>securityGetAccessEffective</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessPrincipal.html" title="interface in ru.myx.ae1.access">AccessPrincipal</a>&lt;?&gt;[]&nbsp;securityGetAccessEffective(java.lang.String&nbsp;path,
+                                              java.lang.String&nbsp;permission)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>path</code> - </dd><dd><code>permission</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>principals</dd></dl>
+</li>
+</ul>
+<a name="securityGetPermissionsEffective(ru.myx.ae1.access.AccessPrincipal, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>securityGetPermissionsEffective</h4>
+<pre>java.util.Set&lt;java.lang.String&gt;&nbsp;securityGetPermissionsEffective(<a href="../../../../ru/myx/ae1/access/AccessPrincipal.html" title="interface in ru.myx.ae1.access">AccessPrincipal</a>&lt;?&gt;&nbsp;principal,
+                                                              java.lang.String&nbsp;path)</pre>
+<div class="block">Set of permissions, Permissions.PERMISSIONS_ALL or
+ Permissions.PERMISSIONS_NONE.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>principal</code> - </dd><dd><code>path</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>permissions</dd></dl>
+</li>
+</ul>
+<a name="setGroups(ru.myx.ae1.access.AccessUser, ru.myx.ae1.access.AccessGroup[])">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setGroups</h4>
+<pre><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;[]&nbsp;setGroups(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user,
+                         <a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;[]&nbsp;groups)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>user</code> - </dd><dd><code>groups</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>groups</dd></dl>
+</li>
+</ul>
+<a name="setPassword(ru.myx.ae1.access.AccessUser, java.lang.String, ru.myx.ae1.access.PasswordType)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setPassword</h4>
+<pre>void&nbsp;setPassword(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user,
+               java.lang.String&nbsp;password,
+               <a href="../../../../ru/myx/ae1/access/PasswordType.html" title="enum in ru.myx.ae1.access">PasswordType</a>&nbsp;passwordType)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>user</code> - </dd><dd><code>password</code> - </dd><dd><code>passwordType</code> - - should change both passwords when this parameter is null</dd></dl>
+</li>
+</ul>
+<a name="updateGroups(ru.myx.ae1.access.AccessUser, java.util.Set, java.util.Set)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>updateGroups</h4>
+<pre>void&nbsp;updateGroups(<a href="../../../../ru/myx/ae1/access/AccessUser.html" title="interface in ru.myx.ae1.access">AccessUser</a>&lt;?&gt;&nbsp;user,
+                java.util.Set&lt;<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&gt;&nbsp;removed,
+                java.util.Set&lt;<a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access">AccessGroup</a>&lt;?&gt;&gt;&nbsp;added)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>user</code> - </dd><dd><code>removed</code> - </dd><dd><code>added</code> - </dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar_bottom">
+<!--   -->
+</a><a href="#skip-navbar_bottom" title="Skip navigation links"></a><a name="navbar_bottom_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../ru/myx/ae1/access/AccessGroup.html" title="interface in ru.myx.ae1.access"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../../../ru/myx/ae1/access/AccessPermission.html" title="interface in ru.myx.ae1.access"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../index.html?ru/myx/ae1/access/AccessManager.html" target="_top">Frames</a></li>
+<li><a href="AccessManager.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#field_summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li><a href="#field_detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+<p class="legalCopy"><small><i>Copyright &#169; 2000-2011 -= MyX =- (http://myx.ru). All Rights Reserved.</i></small></p>
+</body>
+</html>

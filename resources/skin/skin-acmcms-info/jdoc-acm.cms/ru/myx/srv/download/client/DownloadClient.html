@@ -1,0 +1,755 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+<title>DownloadClient (AE3 ACM SAPI)</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="DownloadClient (AE3 ACM SAPI)";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar_top">
+<!--   -->
+</a><a href="#skip-navbar_top" title="Skip navigation links"></a><a name="navbar_top_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li>Prev Class</li>
+<li><a href="../../../../../ru/myx/srv/download/client/RecAlias.html" title="class in ru.myx.srv.download.client"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../../index.html?ru/myx/srv/download/client/DownloadClient.html" target="_top">Frames</a></li>
+<li><a href="DownloadClient.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">ru.myx.srv.download.client</div>
+<h2 title="Class DownloadClient" class="title">Class DownloadClient</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li><a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html" title="class in ru.myx.ae1">ru.myx.ae1.AbstractPluginInstance</a></li>
+<li>
+<ul class="inheritance">
+<li>ru.myx.srv.download.client.DownloadClient</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><a href="../../../../../ru/myx/ae1/PluginInstance.html" title="interface in ru.myx.ae1">PluginInstance</a></dd>
+</dl>
+<hr>
+<br>
+<pre>public class <span class="strong">DownloadClient</span>
+extends <a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html" title="class in ru.myx.ae1">AbstractPluginInstance</a></pre>
+<dl><dt><span class="strong">Author:</span></dt>
+  <dd>myx</dd></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#DownloadClient()">DownloadClient</a></strong>()</code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#addSource(java.lang.String, java.lang.String, int, java.lang.String, int, boolean, boolean)">addSource</a></strong>(java.lang.String&nbsp;guid,
+         java.lang.String&nbsp;srcHost,
+         int&nbsp;srcPort,
+         java.lang.String&nbsp;idxHost,
+         int&nbsp;idxPort,
+         boolean&nbsp;index,
+         boolean&nbsp;active)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#checkSource(ru.myx.srv.download.client.RecSource, boolean)">checkSource</a></strong>(<a href="../../../../../ru/myx/srv/download/client/RecSource.html" title="class in ru.myx.srv.download.client">RecSource</a>&nbsp;source,
+           boolean&nbsp;fix)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#destroy()">destroy</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#getIdentity()">getIdentity</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecKnown.html" title="class in ru.myx.srv.download.client">RecKnown</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#getKnownByAlias(java.lang.String)">getKnownByAlias</a></strong>(java.lang.String&nbsp;alias)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecKnown.html" title="class in ru.myx.srv.download.client">RecKnown</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#getKnownByFollowLink(java.lang.String)">getKnownByFollowLink</a></strong>(java.lang.String&nbsp;followLink)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecSource.html" title="class in ru.myx.srv.download.client">RecSource</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#getSource(java.lang.String)">getSource</a></strong>(java.lang.String&nbsp;key)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#getSourceFileCount(java.lang.String)">getSourceFileCount</a></strong>(java.lang.String&nbsp;guid)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecSource.html" title="class in ru.myx.srv.download.client">RecSource</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#getSources(boolean)">getSources</a></strong>(boolean&nbsp;all)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#interestCancel(ru.myx.srv.download.client.RecSource)">interestCancel</a></strong>(<a href="../../../../../ru/myx/srv/download/client/RecSource.html" title="class in ru.myx.srv.download.client">RecSource</a>&nbsp;source)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#interestRegister(ru.myx.srv.download.client.RecSource)">interestRegister</a></strong>(<a href="../../../../../ru/myx/srv/download/client/RecSource.html" title="class in ru.myx.srv.download.client">RecSource</a>&nbsp;source)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.sql.Connection</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#nextConnection()">nextConnection</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#register()">register</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.util.List&lt;<a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#search(int, boolean, long, java.lang.String, long, long, java.lang.String)">search</a></strong>(int&nbsp;limit,
+      boolean&nbsp;all,
+      long&nbsp;timeout,
+      java.lang.String&nbsp;sort,
+      long&nbsp;dateStart,
+      long&nbsp;dateEnd,
+      java.lang.String&nbsp;filter)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecAlias.html" title="class in ru.myx.srv.download.client">RecAlias</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchAliasesByFollowLink(java.lang.String)">searchAliasesByFollowLink</a></strong>(java.lang.String&nbsp;followLink)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchByGuid(java.lang.String)">searchByGuid</a></strong>(java.lang.String&nbsp;guid)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchByMd5(java.lang.String, java.lang.String, boolean)">searchByMd5</a></strong>(java.lang.String&nbsp;string,
+           java.lang.String&nbsp;typeFilter,
+           boolean&nbsp;all)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchByName(java.lang.String, java.lang.String, boolean)">searchByName</a></strong>(java.lang.String&nbsp;string,
+            java.lang.String&nbsp;typeFilter,
+            boolean&nbsp;all)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecFileGroup.html" title="class in ru.myx.srv.download.client">RecFileGroup</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchFileGroupsByAlias(java.lang.String, java.lang.String, boolean)">searchFileGroupsByAlias</a></strong>(java.lang.String&nbsp;alias,
+                       java.lang.String&nbsp;typeFilter,
+                       boolean&nbsp;all)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecFileGroup.html" title="class in ru.myx.srv.download.client">RecFileGroup</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchFileGroupsByFollowLink(java.lang.String, java.lang.String, boolean, boolean)">searchFileGroupsByFollowLink</a></strong>(java.lang.String&nbsp;guid,
+                            java.lang.String&nbsp;typeFilter,
+                            boolean&nbsp;all,
+                            boolean&nbsp;described)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchFilesByAlias(java.lang.String, java.lang.String, boolean)">searchFilesByAlias</a></strong>(java.lang.String&nbsp;alias,
+                  java.lang.String&nbsp;typeFilter,
+                  boolean&nbsp;all)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchFilesByFollowLink(java.lang.String, java.lang.String, boolean)">searchFilesByFollowLink</a></strong>(java.lang.String&nbsp;guid,
+                       java.lang.String&nbsp;typeFilter,
+                       boolean&nbsp;all)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecFileGroup.html" title="class in ru.myx.srv.download.client">RecFileGroup</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchFileVariantsByAlias(java.lang.String, java.lang.String, boolean)">searchFileVariantsByAlias</a></strong>(java.lang.String&nbsp;alias,
+                         java.lang.String&nbsp;typeFilter,
+                         boolean&nbsp;all)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecFileGroup.html" title="class in ru.myx.srv.download.client">RecFileGroup</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchFileVariantsByFollowLink(java.lang.String, java.lang.String, boolean)">searchFileVariantsByFollowLink</a></strong>(java.lang.String&nbsp;guid,
+                              java.lang.String&nbsp;typeFilter,
+                              boolean&nbsp;all)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../ru/myx/srv/download/client/RecKnown.html" title="class in ru.myx.srv.download.client">RecKnown</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#searchKnown(java.lang.String)">searchKnown</a></strong>(java.lang.String&nbsp;names)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#serializeChange(java.sql.Connection, int, java.lang.String, java.lang.String, int)">serializeChange</a></strong>(java.sql.Connection&nbsp;conn,
+               int&nbsp;sequence,
+               java.lang.String&nbsp;type,
+               java.lang.String&nbsp;guid,
+               int&nbsp;luid)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#setup()">setup</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../ru/myx/srv/download/client/DownloadClient.html#start()">start</a></strong>()</code>&nbsp;</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_ru.myx.ae1.AbstractPluginInstance">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;ru.myx.ae1.<a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html" title="class in ru.myx.ae1">AbstractPluginInstance</a></h3>
+<code><a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#commitPrivateSettings()">commitPrivateSettings</a>, <a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#commitProtectedSettings()">commitProtectedSettings</a>, <a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#getServer()">getServer</a>, <a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#getSettingsPrivate()">getSettingsPrivate</a>, <a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#getSettingsProtected()">getSettingsProtected</a>, <a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#setup(ru.myx.ae1.know.Server, java.util.Properties)">setup</a>, <a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#toString()">toString</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>equals, getClass, hashCode, notify, notifyAll, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="DownloadClient()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>DownloadClient</h4>
+<pre>public&nbsp;DownloadClient()</pre>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="addSource(java.lang.String, java.lang.String, int, java.lang.String, int, boolean, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addSource</h4>
+<pre>public&nbsp;void&nbsp;addSource(java.lang.String&nbsp;guid,
+             java.lang.String&nbsp;srcHost,
+             int&nbsp;srcPort,
+             java.lang.String&nbsp;idxHost,
+             int&nbsp;idxPort,
+             boolean&nbsp;index,
+             boolean&nbsp;active)
+               throws java.sql.SQLException</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>guid</code> - </dd><dd><code>srcHost</code> - </dd><dd><code>srcPort</code> - </dd><dd><code>idxHost</code> - </dd><dd><code>idxPort</code> - </dd><dd><code>index</code> - </dd><dd><code>active</code> - </dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code>java.sql.SQLException</code></dd></dl>
+</li>
+</ul>
+<a name="checkSource(ru.myx.srv.download.client.RecSource, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>checkSource</h4>
+<pre>public&nbsp;boolean&nbsp;checkSource(<a href="../../../../../ru/myx/srv/download/client/RecSource.html" title="class in ru.myx.srv.download.client">RecSource</a>&nbsp;source,
+                  boolean&nbsp;fix)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>source</code> - </dd><dd><code>fix</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="destroy()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>destroy</h4>
+<pre>public&nbsp;void&nbsp;destroy()</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../ru/myx/ae1/PluginInstance.html#destroy()">destroy</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../ru/myx/ae1/PluginInstance.html" title="interface in ru.myx.ae1">PluginInstance</a></code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code><a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#destroy()">destroy</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html" title="class in ru.myx.ae1">AbstractPluginInstance</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getIdentity()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getIdentity</h4>
+<pre>public&nbsp;java.lang.String&nbsp;getIdentity()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>string</dd></dl>
+</li>
+</ul>
+<a name="getKnownByAlias(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getKnownByAlias</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecKnown.html" title="class in ru.myx.srv.download.client">RecKnown</a>[]&nbsp;getKnownByAlias(java.lang.String&nbsp;alias)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>alias</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>known array</dd></dl>
+</li>
+</ul>
+<a name="getKnownByFollowLink(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getKnownByFollowLink</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecKnown.html" title="class in ru.myx.srv.download.client">RecKnown</a>&nbsp;getKnownByFollowLink(java.lang.String&nbsp;followLink)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>followLink</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>known</dd></dl>
+</li>
+</ul>
+<a name="getSource(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSource</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecSource.html" title="class in ru.myx.srv.download.client">RecSource</a>&nbsp;getSource(java.lang.String&nbsp;key)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>key</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>source</dd></dl>
+</li>
+</ul>
+<a name="getSourceFileCount(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSourceFileCount</h4>
+<pre>public final&nbsp;int&nbsp;getSourceFileCount(java.lang.String&nbsp;guid)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>guid</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>int</dd></dl>
+</li>
+</ul>
+<a name="getSources(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSources</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecSource.html" title="class in ru.myx.srv.download.client">RecSource</a>[]&nbsp;getSources(boolean&nbsp;all)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>all</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>source array</dd></dl>
+</li>
+</ul>
+<a name="interestCancel(ru.myx.srv.download.client.RecSource)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>interestCancel</h4>
+<pre>public&nbsp;void&nbsp;interestCancel(<a href="../../../../../ru/myx/srv/download/client/RecSource.html" title="class in ru.myx.srv.download.client">RecSource</a>&nbsp;source)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>source</code> - </dd></dl>
+</li>
+</ul>
+<a name="interestRegister(ru.myx.srv.download.client.RecSource)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>interestRegister</h4>
+<pre>public&nbsp;void&nbsp;interestRegister(<a href="../../../../../ru/myx/srv/download/client/RecSource.html" title="class in ru.myx.srv.download.client">RecSource</a>&nbsp;source)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>source</code> - </dd></dl>
+</li>
+</ul>
+<a name="nextConnection()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nextConnection</h4>
+<pre>public&nbsp;java.sql.Connection&nbsp;nextConnection()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>connection</dd></dl>
+</li>
+</ul>
+<a name="register()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>register</h4>
+<pre>public&nbsp;void&nbsp;register()</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../ru/myx/ae1/PluginInstance.html#register()">register</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../ru/myx/ae1/PluginInstance.html" title="interface in ru.myx.ae1">PluginInstance</a></code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code><a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#register()">register</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html" title="class in ru.myx.ae1">AbstractPluginInstance</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="search(int, boolean, long, java.lang.String, long, long, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>search</h4>
+<pre>public&nbsp;java.util.List&lt;<a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>&gt;&nbsp;search(int&nbsp;limit,
+                             boolean&nbsp;all,
+                             long&nbsp;timeout,
+                             java.lang.String&nbsp;sort,
+                             long&nbsp;dateStart,
+                             long&nbsp;dateEnd,
+                             java.lang.String&nbsp;filter)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>limit</code> - </dd><dd><code>all</code> - </dd><dd><code>timeout</code> - </dd><dd><code>sort</code> - </dd><dd><code>dateStart</code> - </dd><dd><code>dateEnd</code> - </dd><dd><code>filter</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>file array</dd></dl>
+</li>
+</ul>
+<a name="searchAliasesByFollowLink(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchAliasesByFollowLink</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecAlias.html" title="class in ru.myx.srv.download.client">RecAlias</a>[]&nbsp;searchAliasesByFollowLink(java.lang.String&nbsp;followLink)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>followLink</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>alias array</dd></dl>
+</li>
+</ul>
+<a name="searchByGuid(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchByGuid</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>&nbsp;searchByGuid(java.lang.String&nbsp;guid)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>guid</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>file</dd></dl>
+</li>
+</ul>
+<a name="searchByMd5(java.lang.String, java.lang.String, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchByMd5</h4>
+<pre>public final&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>[]&nbsp;searchByMd5(java.lang.String&nbsp;string,
+                    java.lang.String&nbsp;typeFilter,
+                    boolean&nbsp;all)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>string</code> - </dd><dd><code>typeFilter</code> - </dd><dd><code>all</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>file array</dd></dl>
+</li>
+</ul>
+<a name="searchByName(java.lang.String, java.lang.String, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchByName</h4>
+<pre>public final&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>[]&nbsp;searchByName(java.lang.String&nbsp;string,
+                     java.lang.String&nbsp;typeFilter,
+                     boolean&nbsp;all)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>string</code> - </dd><dd><code>typeFilter</code> - </dd><dd><code>all</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>file array</dd></dl>
+</li>
+</ul>
+<a name="searchFileGroupsByAlias(java.lang.String, java.lang.String, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchFileGroupsByAlias</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecFileGroup.html" title="class in ru.myx.srv.download.client">RecFileGroup</a>[]&nbsp;searchFileGroupsByAlias(java.lang.String&nbsp;alias,
+                                     java.lang.String&nbsp;typeFilter,
+                                     boolean&nbsp;all)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>alias</code> - </dd><dd><code>typeFilter</code> - </dd><dd><code>all</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>group array</dd></dl>
+</li>
+</ul>
+<a name="searchFileGroupsByFollowLink(java.lang.String, java.lang.String, boolean, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchFileGroupsByFollowLink</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecFileGroup.html" title="class in ru.myx.srv.download.client">RecFileGroup</a>[]&nbsp;searchFileGroupsByFollowLink(java.lang.String&nbsp;guid,
+                                          java.lang.String&nbsp;typeFilter,
+                                          boolean&nbsp;all,
+                                          boolean&nbsp;described)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>guid</code> - </dd><dd><code>typeFilter</code> - </dd><dd><code>all</code> - </dd><dd><code>described</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>group array</dd></dl>
+</li>
+</ul>
+<a name="searchFilesByAlias(java.lang.String, java.lang.String, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchFilesByAlias</h4>
+<pre>public final&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>[]&nbsp;searchFilesByAlias(java.lang.String&nbsp;alias,
+                           java.lang.String&nbsp;typeFilter,
+                           boolean&nbsp;all)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>alias</code> - </dd><dd><code>typeFilter</code> - </dd><dd><code>all</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>file array</dd></dl>
+</li>
+</ul>
+<a name="searchFilesByFollowLink(java.lang.String, java.lang.String, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchFilesByFollowLink</h4>
+<pre>public final&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecFile.html" title="class in ru.myx.srv.download.client">RecFile</a>[]&nbsp;searchFilesByFollowLink(java.lang.String&nbsp;guid,
+                                java.lang.String&nbsp;typeFilter,
+                                boolean&nbsp;all)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>guid</code> - </dd><dd><code>typeFilter</code> - </dd><dd><code>all</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>file array</dd></dl>
+</li>
+</ul>
+<a name="searchFileVariantsByAlias(java.lang.String, java.lang.String, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchFileVariantsByAlias</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecFileGroup.html" title="class in ru.myx.srv.download.client">RecFileGroup</a>[]&nbsp;searchFileVariantsByAlias(java.lang.String&nbsp;alias,
+                                       java.lang.String&nbsp;typeFilter,
+                                       boolean&nbsp;all)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>alias</code> - </dd><dd><code>typeFilter</code> - </dd><dd><code>all</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>group array</dd></dl>
+</li>
+</ul>
+<a name="searchFileVariantsByFollowLink(java.lang.String, java.lang.String, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchFileVariantsByFollowLink</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecFileGroup.html" title="class in ru.myx.srv.download.client">RecFileGroup</a>[]&nbsp;searchFileVariantsByFollowLink(java.lang.String&nbsp;guid,
+                                            java.lang.String&nbsp;typeFilter,
+                                            boolean&nbsp;all)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>guid</code> - </dd><dd><code>typeFilter</code> - </dd><dd><code>all</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>group array</dd></dl>
+</li>
+</ul>
+<a name="searchKnown(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchKnown</h4>
+<pre>public&nbsp;<a href="../../../../../ru/myx/srv/download/client/RecKnown.html" title="class in ru.myx.srv.download.client">RecKnown</a>[]&nbsp;searchKnown(java.lang.String&nbsp;names)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>names</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>known array</dd></dl>
+</li>
+</ul>
+<a name="serializeChange(java.sql.Connection, int, java.lang.String, java.lang.String, int)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>serializeChange</h4>
+<pre>public final&nbsp;void&nbsp;serializeChange(java.sql.Connection&nbsp;conn,
+                   int&nbsp;sequence,
+                   java.lang.String&nbsp;type,
+                   java.lang.String&nbsp;guid,
+                   int&nbsp;luid)
+                           throws java.sql.SQLException</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>conn</code> - </dd><dd><code>sequence</code> - </dd><dd><code>type</code> - </dd><dd><code>guid</code> - </dd><dd><code>luid</code> - </dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code>java.sql.SQLException</code></dd></dl>
+</li>
+</ul>
+<a name="setup()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setup</h4>
+<pre>public&nbsp;void&nbsp;setup()</pre>
+<dl>
+<dt><strong>Overrides:</strong></dt>
+<dd><code><a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#setup()">setup</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html" title="class in ru.myx.ae1">AbstractPluginInstance</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="start()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>start</h4>
+<pre>public&nbsp;void&nbsp;start()</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../ru/myx/ae1/PluginInstance.html#start()">start</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../ru/myx/ae1/PluginInstance.html" title="interface in ru.myx.ae1">PluginInstance</a></code></dd>
+<dt><strong>Overrides:</strong></dt>
+<dd><code><a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html#start()">start</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../ru/myx/ae1/AbstractPluginInstance.html" title="class in ru.myx.ae1">AbstractPluginInstance</a></code></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar_bottom">
+<!--   -->
+</a><a href="#skip-navbar_bottom" title="Skip navigation links"></a><a name="navbar_bottom_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li>Prev Class</li>
+<li><a href="../../../../../ru/myx/srv/download/client/RecAlias.html" title="class in ru.myx.srv.download.client"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../../index.html?ru/myx/srv/download/client/DownloadClient.html" target="_top">Frames</a></li>
+<li><a href="DownloadClient.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+<p class="legalCopy"><small><i>Copyright &#169; 2000-2011 -= MyX =- (http://myx.ru). All Rights Reserved.</i></small></p>
+</body>
+</html>

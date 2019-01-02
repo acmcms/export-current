@@ -1,0 +1,72 @@
+<% // 	
+		Дерево админки в виде XML для основного лэйаута.
+
+
+%><%FINAL: 'text/xml' %><%
+%><body><%
+	%><XML ID="oMetaData" base="" entryname="entry" type="tree"><%
+		
+		%><%EXEC: maxLevel = Integer(Request.maxlevel,1) %><%
+		
+		%><%EXEC: cNode = ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+		%><%EXEC: cPath = '' %><%
+		%><%IF: Request.cNode %><%
+			%><%EXEC: cNode = ControlAPI.childForPath(cNode, Request.cNode) %><%
+			%><%EXEC: cPath = cPath + Request.cNode %><%
+		%><%/IF%><%
+		
+		%><%IF: Request.path %><%
+			%><%EXEC: path = cNode.getKey() + '/' + Request.path %><%
+			%><%EXEC: path = replace(path,'//','/') %><%
+			%><%EXEC: pathNodes = split(path,'/') %><%
+			%><%EXEC: rPath = Request.path %><%
+			%><%EXEC: EndsWith(rPath,'/') || (rPath += '/') %><%
+		%><%/IF%><%
+		
+		%><%EXEC: StartsWith(cPath,'/') || (cPath = '/' + cPath) %><%
+		%><%EXEC: pathsLength = ArrayLength(pathNodes) %><%
+		
+		%><%RECURSION: node = cNode, path = cPath, children = '', level = 0, type = 'root' %><%
+			%><%IF: node && ControlAPI.isAccessible(path, node) %><%
+				%><%EXEC: searchFlag = level < pathsLength - 1 && pathNodes[level] == node.getKey() %><%
+				%><%EXEC: isTarget = rPath == path %><%
+		
+				%><%EXEC: hasChildren = Array.isFilled( node.getChildren && node.getChildren() ) %><%
+				%><entry<%
+						%> path="<%= path %>"<%
+						%> children="<%= hasChildren %>"<%
+						%> icon="<%= ControlAPI.getIcon(node) %>"<%
+						%> level="<%= level %>"<%
+						%> type="<%= type %>"<%
+						%> name="<%= StringToUrlHard(node.getKey()) %>"<%
+						%> title="<%= Format.xmlAttributeFragment( node.getTitle() ) %>"<%
+						%><%IF: isTarget %><%
+							%> selected="true"<%
+						%><%/IF%><%
+				%><%IF: level < maxLevel || searchFlag %><%
+					%>><%
+					%><%EXEC: foundFlag = false %><%
+					%><%IF: hasChildren %><%
+						%><%ITERATE: child : ControlAPI.filterAccessibleHierarchy(path, node.getChildren()) %><%
+							%><%DEEPER: node = child, path = path + child.getKey() + '/', children = '', level = level + 1, type = 'child' %><%
+							%><%EXEC: searchFlag && (foundFlag || (foundFlag = (child.getKey() == pathNodes[level]))) %><%
+						%><%/ITERATE%><%
+					%><%/IF%><%
+					%><%IF: searchFlag && !foundFlag %><%
+						%><%EXEC: cNode = node.getChildByName(pathNodes[level+1]) %><%
+						%><%IF: cNode %><%
+							%><%DEEPER: node = cNode, path = path + cNode.getKey() + '/', children = '', level = level + 1, type = 'child' %><%
+						%><%/IF%><%
+					%><%/IF%><%
+					%></entry><%
+				%><%ELSE%><%
+					%>/><%
+				%><%/ELSE%><%
+				%><%/IF%><%
+			%><%/IF%><%
+		%><%/RECURSION%><%	
+	
+	%></XML><%
+%></body><%
+%><%/FINAL%><%
+%>

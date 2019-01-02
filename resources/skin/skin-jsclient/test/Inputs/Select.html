@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Select</title>
+	<script type="text/javascript" src="../../js/debug.js"></script>
+	<script type="text/javascript" src="../../js/require.js"></script>
+	<script type="text/javascript" src="../../js/lib/standard.js"></script>
+	
+	<script type="text/javascript" src="../../js/Utils/Event.js"></script>
+	<script type="text/javascript" src="../../js/Inputs/Select.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../css/web/default.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/lib/select.css"/>
+	
+	<script>
+		var multiple = false;
+		var selects = [];
+		var targets = [];
+		
+		var contents = {};
+		
+		var prepare = function(){
+			var sourceElements = ['td','div'];
+			for( var j in sourceElements ){
+				var list = document.getElementsByTagName(sourceElements[j]);
+				for( var i = 0; i < list.length; ++i ) {
+					list[i].getAttribute("skip") || targets.push( list[i] );
+				}
+			}
+		};
+		var clean = function(){
+			targets.forEach(function(target){
+				target.innerHTML = "";
+			});
+			selects = [];
+		};
+		var makeInputs = function(contents){
+			selects.length && clean();
+			document.getElementById("multiple-span").innerHTML = String(multiple);
+			for( var i = 0; i < targets.length; ++i ) {
+				selects.push(new Inputs.Select(targets[i], "sel" + i, contents, multiple));
+			}
+		};
+	</script>
+</head>
+<body>
+	<table height="250px" style="margin: 3px">
+		<tr>
+			<td></td>
+			<td></td>
+			<th valign="bottom"><h1><a href="" onclick="multiple=!multiple;makeInputs(contents);return false;">&lt;select multiple="<span id="multiple-span">false</span>"/&gt;</a></h1><a href="../../tests.html">&gt; click for tests.html &lt;</a></th>
+		</tr>
+	</table>
+	<table width="100%" style="border: 3px solid cyan">
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<table width="33%" style="width:33%;height:40px;border: 3px solid blue">
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<div style="width:120px;height:120px;border: 3px solid red">
+	</div>
+	<div style="position:fixed;top:30px;right:10px;width:120px;height:120px;border: 3px solid black">
+	</div>
+	<div style="position:absolute;top:30px;right:150px;width:120px;height:120px;border: 3px solid black">
+	</div>
+	<select style="position:fixed;top:30px;right:300px;width:120px;height:120px;border: 3px solid black">
+		<option>System </option>
+		<option>default</option>
+		<option>control</option>
+		<option>implementation</option>
+		<option>to</option>
+		<option>compare</option>
+		<option>with</option>
+		<option>........</option>
+		<option>Option 09</option>
+		<option>Option 10</option>
+		<option>Option 11</option>
+		<option>Option 12</option>
+		<option>Option 13</option>
+		<option>Option 14</option>
+		<option>Option 15</option>
+	</select>
+	<select style="position:absolute;top:30px;right:450px;width:120px;height:120px;border: 3px solid black">
+		<option><b>System</b></option>
+		<option><i>default</i></option>
+		<option><u>control</u></option>
+		<option><font color="red">implemen</font>tation</option>
+		<option>to</option>
+		<option>compare</option>
+		<option>with</option>
+		<option>........</option>
+		<option>Option 09</option>
+		<option>Option 10</option>
+		<option>Option 11</option>
+		<option>Option 12</option>
+		<option>Option 13</option>
+		<option>Option 14</option>
+		<option>Option 15</option>
+	</select>
+	<select style="position:fixed;top:160px;right:300px;width:120px;height:2em;border: 3px solid black">
+		<option>System </option>
+		<option>default</option>
+		<option>control</option>
+		<option>implementation</option>
+		<option>to</option>
+		<option>compare</option>
+		<option>with</option>
+		<option>........</option>
+		<option>Option 09</option>
+		<option>Option 10</option>
+		<option>Option 11</option>
+		<option>Option 12</option>
+		<option>Option 13</option>
+		<option>Option 14</option>
+		<option>Option 15</option>
+	</select>
+	<select style="position:absolute;top:160px;right:450px;width:120px;height:2em;border: 3px solid black">
+		<option><b>System</b></option>
+		<option><i>default</i></option>
+		<option><u>control</u></option>
+		<option><font color="red">implemen</font>tation</option>
+		<option>to</option>
+		<option>compare</option>
+		<option>with</option>
+		<option>........</option>
+		<option>Option 09</option>
+		<option>Option 10</option>
+		<option>Option 11</option>
+		<option>Option 12</option>
+		<option>Option 13</option>
+		<option>Option 14</option>
+		<option>Option 15</option>
+	</select>
+	<script>
+		contents = {
+			icon	: "/!/public/resources/data/images/famfamfam.com/silk/anchor.png",
+			title	: "Select Input Field", 
+			list : requireScript('../test/Inputs/options.jso')
+		};
+		prepare();
+		makeInputs(contents);
+		
+		function invert(){
+			for(var select in selects){
+				select = selects[select];
+				for(var i = 0; i < select.options.length; ++i){
+					var option = select.options[i];
+					option.setAttribute("selected", !option.selected);
+				}
+			}
+			return false;
+		}
+	</script>
+</body>
+</html>

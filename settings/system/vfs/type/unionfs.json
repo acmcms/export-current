@@ -1,0 +1,6 @@
+{
+	type : "ae3/Factory",
+	name : "unionfs",
+	description : "Union FS, args: [<vfsPath>...]",
+	reference : "ru.myx.ae3.sys/vfs/FactoryUNIONFS"
+}

@@ -1,0 +1,89 @@
+<html><body><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' %><%
+	%>-->
+		<%CODE: 'ACM.ECMA' %>
+			var request = context && context.query || Request.getCurrentRequest();
+			var methods = [
+				'title', 
+				'owner', 
+				'subject', 
+				'protocolName', 
+				'protocolVariant', 
+				'verb', 
+				'verbOriginal', 
+				'target', 
+				'targetExact', 
+				'resourcePrefix', 
+				'resourceIdentifier', 
+				'url', 
+				'urlBase', 
+				'language', 
+				'sourceAddress', 
+				'sourceAddressExact', 
+				'sessionID', 
+				'userID', 
+				'parameterString', 
+				'attachment', 
+				'arguments', 
+				'attributes', 
+				'parameters',
+				'date',
+				'binary',
+				'file',
+				'object',
+				'objectClass',
+				'sequence',
+				'text'
+			];
+			
+			var links = {
+				arguments : ['?argument1&--argument2&argument3=333'],
+				parameters : ['?param1=55&param2=true&param3=elem1&param3=elem2&param3=elem3']
+			};
+			
+			= '<h2>Request object</h2>';
+			
+			= '<ul>';
+			methods.forEach( function(method) {
+				= '<li>';
+					= '<a href="#' + method + '">';
+						= method;
+					= '</a>';
+				= '</li>';
+			} );
+			= '</ul>';
+			
+			
+			methods.forEach( function(method) {
+				= '<h3>';
+					= '<a name="' + method + '"></a>';
+					= 'request.' + method;
+				= '</h3>';
+				= '<p><samp>';
+					= Format.xmlNodeValue( Format.jsObjectReadable(request[method]) );
+				= '</samp></p>';
+				var links = links[method];
+				if(links){
+					= '<ul>see also:';
+					links.forEach( function(link){
+						= '<li>';
+							= '<a href="'+Format.xmlAttributeFragment(link)+'#'+method+'">';
+								= Format.xmlNodeValue(link);
+							= '</a>';
+						= '</li>';
+					});
+					= '</ul>';
+				}
+			} );
+		<%/CODE%>
+	<!-- <%= '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: "Developer Tools: Show Request Info",
+		template	: "html-document",
+		keywords	: "show request, show query",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

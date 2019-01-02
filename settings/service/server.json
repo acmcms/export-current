@@ -1,0 +1,4 @@
+{
+	type : "ae3.Service",
+	reference : "ru.myx.ae3.internal/service/ServiceServer"
+}

@@ -1,0 +1,236 @@
+<html><body><h1>ACMBSD Information Center</h1>
+<!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<ul>
+			<li>
+				<h2>Contents</h2>
+				<ul>
+					<li><a href="#general">General</a></li>
+					<li><a href="#install-dedicated">Installation on dedicated machine</a></li>
+					<li><a href="#install-default">Installation on existing BSD system</a></li>
+					<li><a href="#administration">Administration</a></li>
+					<li><a href="#other">Other</a></li>
+				</ul>
+			</li>
+			<li><a name="general"></a>
+				<h2>General</h2>
+				<p>It's an embedded-like software solution for running <a
+					href="acmcms.htm">ACMCMS</a> environment on <a
+					href="http://en.wikipedia.org/wiki/IA-32">i386</a> or <a
+					href="http://en.wikipedia.org/wiki/X86-64">x86-64</a> architectures
+				using free and open-source <a href="http://freebsd.org">FreeBSD</a>
+				operating system.</p>
+				<p>While configuring operating system and choosing default parameters 
+				'acmbsd' assumes that the host is dedicated for the task.</p>
+				<p>As a embedded database it is using is <a href="http://postgresql.org/">PostgreSQL</a>, 
+				it is a very robust, modern, free and open-source relational database 
+				management system.</p>
+				<p>Particular projects could still use external database connections 
+				as additional or primary connections.</p>
+				Some features of 'acmbsd' solution:
+				<ul>
+					<li>automatic firewall setup</li>
+					<li>automatic embedded db configuration</li>
+					<li>soft-restart for group instances</li>
+					<li>automatic maintenance</li>
+					<li>simple consolidated configuration and management</li>
+				</ul>
+			</li>
+			<li><a name="install-dedicated"></a>
+				<h2>Installation</h2>
+				<p>Provided that you already have installed FreeBSD system and
+				logged in as a 'root' user before you proceed.</p>
+				<ol>
+					<li>get script: <code>cvs -d :pserver:guest:guest@cvs.myx.ru:/var/ae3 -fq -z 6 checkout -d acmbsd acm-install-freebsd/scripts</code>
+					</li>
+					<li>prepare system: <code>
+						<!-- <%FORMAT:'no_ident'%> -->
+						cd acmbsd
+						chmod +x acmbsd.sh
+						./acmbsd.sh preparebsd   # install ports and configure system
+						Answer "Yes" when you will see "Would you like to activate Postfix in /etc/mail/mailer.conf [n]?"
+						<!-- <%/FORMAT%> -->
+					</code>
+					</li>
+					<li>reboot: <code>reboot</code>
+						Wait until system restarts and re-connect to you console/terminal.
+					</li>
+					<li>install script: <code>
+						<!-- <%FORMAT:'no_ident'%> -->
+						cd acmbsd
+						./acmbsd.sh install
+						<!-- <%/FORMAT%> -->
+					</code>
+					</li>
+					<li>now the script is installed and the last thing we could consider to be a part of 'installation' is to set an email address for system messages: 
+						<code>acmbsd config system -email=user@example.net</code>
+						you can specify several addressed at once, use syntax like this:
+						<code>acmbsd config system -email=user@example.net,user@example.net</code>
+					</li>
+<!-- 
+1.4 Add new group of instances
+acmbsd add live
+ 
+1.5 Configure system and group
+To see command syntax and available group list execute this command:
+acmbsd config
+ 
+Check other system settings:
+acmbsd config system
+ 
+Change available memory:
+acmbsd config live -memory=640m
+ 
+Check other group settings:
+acmbsd config live
+ 
+1.6 Start group of instances
+acmbsd start live 
+
+ -->
+ 
+				</ol>
+			</li>
+			<li><a name="install"></a>
+				<h2>Installation on existing BSD system</h2>
+				<p><b>Provided that you already have installed FreeBSD system and
+				logged in as a 'root' user before you proceed.</b></p>
+				<ol>
+					<li>get script: <code>cvs -d :pserver:guest:guest@cvs.myx.ru:/var/ae3 -fq -z 6 checkout -d acmbsd acm-install-freebsd/scripts</code>
+					</li>
+					<li>prepare system: <code>
+						<!-- <%FORMAT:'no_ident'%> -->
+						cd acmbsd
+						chmod +x acmbsd.sh
+						./acmbsd.sh preparebsd   # install ports and configure system
+						Answer "Yes" when you will see "Would you like to activate Postfix in /etc/mail/mailer.conf [n]?"
+						<!-- <%/FORMAT%> -->
+					</code>
+					</li>
+					<li>reboot: <code>reboot</code>
+						Wait until system restarts and re-connect to you console/terminal.
+					</li>
+					<li>install script: <code>
+						<!-- <%FORMAT:'no_ident'%> -->
+						cd acmbsd
+						./acmbsd.sh install
+						<!-- <%/FORMAT%> -->
+					</code>
+					</li>
+					<li>now the script is installed and the last thing we could consider to be a part of 'installation' is to set an email address for system messages: 
+						<code>acmbsd config system -email=user@example.net</code>
+						you can specify several addressed at once, use syntax like this:
+						<code>acmbsd config system -email=user@example.net,user@example.net</code>
+					</li>
+<!-- 
+1.4 Add new group of instances
+acmbsd add live
+ 
+1.5 Configure system and group
+To see command syntax and available group list execute this command:
+acmbsd config
+ 
+Check other system settings:
+acmbsd config system
+ 
+Change available memory:
+acmbsd config live -memory=640m
+ 
+Check other group settings:
+acmbsd config live
+ 
+1.6 Start group of instances
+acmbsd start live 
+
+ -->
+ 
+				</ol>
+			</li>
+			<li>
+				<h2>Administration</h2>
+				<p>It is supposed that 'acmbsd' script should be able to solve all
+				types of tasks associated with server maintenance.</p>
+				<p>Configuration modification is available through a robust set of
+				simple commands provided by 'acmbsd' script for 'root' user.</p>
+				<ul>
+					<li>
+						<h3>configuration</h3> instances, groups, parameters and so on.
+						<ul>
+							<li>
+								<code>acmbsd config system</code>
+								general acmbsd systems settings are viewed and changed using this command.
+							</li>
+							<li>
+								<code>acmbsd add live</code>
+								adds group 'live', there are three possible groups 'devel', 'test' and 'live'.
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3>life-cycle</h3> starting, stopping, restarting and such.
+						<ul>
+							<li>
+								start instance(s) of group 'live'
+								<code>acmbsd start live</code> 
+								... and it also 
+								works as a service activation command, which
+								means that after reboot or power-cycle instance(s) 
+								of group 'live' will be started automatically on 
+								system startup.
+							</li>
+							<li>
+								re-start instance(s) of group 'test' without 
+								'soft-restart' feature.
+								<code>acmbsd restart test -fast</code>
+								This command fails if service is not started.
+							</li>
+							<li>
+								re-start instance(s) of group 'live'
+								<code>acmbsd restart live</code>
+								This command fails if service is not started.
+							</li>
+							<li>
+								stop instance(s) of group 'live'
+								<code>acmbsd stop live</code>
+								... and it also 
+								works as a service de-activation command, which
+								means that after reboot or power-cycle instance(s) 
+								of group 'live' will NOT be started automatically 
+								on system startup.
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3>debugging</h3> some freaky stuff.
+						<ul>
+							<li>
+								dump runtime state
+								<code>acmbsd dump live</code>
+								This going to collect java runtime information and send 
+								it to your email address. After that, same information
+								will be opened for viewing (press key 'q' on your keyboard
+								to exit from viewer).
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<h2>Regards</h2>
+				<ul>
+					<li><a href="http://meganet.ru">meganet</a></li>
+					<li><a href="http://vlapan.com">vlapan</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'ACMBSD Information Centre',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

@@ -1,0 +1,7 @@
+{
+	type : "ae3.Manual",
+	title : "AE3 Quick Reference",
+	name : "ae3-QuickReference",
+	group : "developer",
+	url : "/!/public/resources/lib/ru.myx.ae3.manual/QuickReference.xml"
+}

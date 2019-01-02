@@ -1,0 +1,33 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+//
+//
+
+var elements = layout.elements;
+if( !elements || !elements.length ) {
+	return null;
+}
+
+var array = [];
+for(var i = 0; i < elements.length; ++i) {
+	var element = elements[i];
+	if( element === undefined ) {
+		continue;
+	}
+	array.push( {
+		layout		: "replacement",
+		attachment	: (array.length + 1) + ". ",
+		content		: element
+	} );
+}
+if( !array.length ) {
+	return null;
+}
+var result = { 
+	layout		: "sequence-attachment-west", 
+	elements	: array 
+};
+return layout.title ? [layout.title, result, ""] : result;

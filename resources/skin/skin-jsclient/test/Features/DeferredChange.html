@@ -1,0 +1,89 @@
+<html><!-- <%FORMAT:'html'%><%
+	%><%IGNORE%> --><head><script type="text/javascript" src="../../js/require.js"></script></head><body><!-- <%/IGNORE%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+	<script> 
+		// <%FORMAT:'js'%>
+		require("lib/standard");
+		require("Utils.Event");
+		require("Features.DeferredChange");
+		
+		var rnd = function(){
+			return '0123456789ABCDEF'[Math.floor(Math.random() * 16)];
+		};
+
+		var feedback = function(){
+			var feedback = document.getElementById("feedbackDiv");
+			feedback.style.backgroundColor = '#' + rnd() + rnd() + rnd();
+		};
+
+		var prepare = function(){
+			// targets
+			['input','textarea'].forEach(function(name){
+				var list = document.getElementsByTagName(name);
+				for( var i = 0; i < list.length; ++i ) {
+					var element = list[i];
+					element.getAttribute("skip") || new Features.DeferredChange( element, {
+						onChange : function(){
+							feedback();
+							top.debug && top.debug("changed, id=" + this.getAttribute("id") + ", value=" + this.value);
+						}
+					} );
+					element.getAttribute("skip") || (element.style.backgroundColor = "yellow");
+				}
+			});
+			/**
+			 * once - to hightlight the div
+			 */
+			feedback();
+		};
+		
+		function dummy(e){
+			e || (e = window.event);
+			e.cancelBubble = true; /* Microsoft */
+			e.stopPropagation && e.stopPropagation(); /* W3C */
+			return false;
+		}
+		
+		// <%/FORMAT%>
+	</script>
+
+	<a href="../../tests.html">
+		&gt; click for tests.html &lt;
+	</a>
+	
+	<div id="feedbackDiv" style="margin: auto; width: 30%; height: 80px">background color will change here in order to display deffered change feedback.</div>
+	
+	<form>
+		<div>
+			<input id="text1" name="text1" type="text">
+		</div>
+		<div>
+			<input id="pass1" name="pass1" type="password">
+		</div>
+		<div>
+			<input id="check1" name="check1" type="checkbox" value="check">
+		</div>
+		<div>
+			<input id="radio1" name="radio1" type="radio" value="radio1">
+			<input id="radio2" name="radio1" type="radio" value="radio2">
+			<input id="radio3" name="radio1" type="radio" value="radio3">
+		</div>
+	</form>
+	<script>
+		// <%FORMAT:'js'%>
+		prepare();
+		// <%/FORMAT%>
+	</script>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Abstract: Features.DeferredChange',
+		template	: "html-document",
+		useRequire	: true,
+		useDebug	: true,
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

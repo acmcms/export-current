@@ -1,0 +1,230 @@
+<%
+%><%CODE: 'ACM.ECMA' %>
+	request = Request.currentRequest;
+	parameters = request.parameters;
+	
+	mode = parameters.mode || "none";
+	
+	cookie = parameters.cookie || "tree-width-" + mode;
+	
+	path = parameters.path || Session.getParameters().path || '/';
+	cols = parameters.cols || "280px,*";
+	
+	inline = String(request.attributes["User-Agent"]).indexOf("MSIE 7.0") == -1;
+	
+	requireCss = [];
+	
+	requireJs = [];
+	requireJs.add("require");
+	requireJs.add("app/Router");
+	requireJs.add("Utils/Cookies");
+	requireJs.add("Utils/Event");
+	requireJs.add("Utils/Comms");
+	
+<%/CODE%><%
+
+%><%OUTPUT: head %><%
+	%><!-- version: 4 --><%
+	%><style><%
+		%><%FORMAT: 'css' %>
+			BODY,HTML,FRAMESET{
+				font-family: Tahoma, Arial;
+				width: 100%;
+				height: 100%;
+				padding: 0;
+				margin: 0;
+				border: 0;
+				overflow: hidden;
+				background-color: buttonface;
+			}
+		<%/FORMAT%><%
+	%></style><%
+	
+	%><script><%
+		%><%CODE: 'ACM.ECMA' %>
+			var response = Request.querySkin({
+				timeout		: 0,
+				verb		: "GET",
+				/**
+				 * TODO: Request.getSkinnerName() or something like this.
+				 */
+				skinner		: "ctrl-temp-ie6",
+				resource	: "/treeContainer.htm",
+				parameters	: {
+					path : path,
+					mode : mode
+				},
+				attributes	: {
+					Secure : true
+				}
+			});
+			preload = response ? response.toCharacter().text : "Not found";
+			(!response || response.getCode() != 200) && 
+				(preload = "<script>alert(\"FATAL: preload error: " + Format.jsStringFragment( preload ) + "\")</"+"script>");
+			preload || (preload = "Nothing in preload, however response is here, its class is: " + reponse.getClass() + ", character response class is: " + response.toCharacter().getClass());
+		<%/CODE%><%
+		%><%FORMAT: 'js' %>
+			var router = (parent.router || parent.parent.router || new app.Router("browse"));
+
+			var cols = (
+				W = parseInt(Utils.Cookies.read(<%= Format.jsString( cookie ) %>, "")) || 280,
+				(W > 10 ? W : 280) + "px,*"
+			);
+		
+			var allDone = false;
+			
+			function switchLeftFrame(){
+				var o = document.getElementById("tree");
+				o.status == "hidden" 
+					? showLeftFrame()
+					: hideLeftFrame();
+			};
+			
+			function hideLeftFrame(){
+				var o = document.getElementById("tree");
+				if (o.status == "hidden"){
+					return;
+				}
+				o.status = "hidden";
+				o.parentNode.prevCols = o.parentNode.cols;
+				o.parentNode.cols = "0,*";
+				keepWinSize();
+			};
+			
+			function showLeftFrame(){
+				var o = document.getElementById("tree");
+				if (o.status != "hidden"){
+					return;
+				}
+				o.status = "shown";
+				o.parentNode.cols = parseInt(o.parentNode.prevCols) > 10 
+					? o.parentNode.prevCols 
+					: "280px,*";
+				keepWinSize();
+			};
+			
+			window.resizeTimer = false;
+			function keepWinSize(){
+				var o = document.getElementById("tree");
+				if(o.prevWidth && o.offsetWidth == o.prevWidth){
+					return;
+				}
+				clearTimeout(window.resizeTimer);
+				window.resizeTimer = setTimeout(putWinSizeInCookies, 1000);
+			};
+			
+			function putWinSizeInCookies(){
+				var o = document.getElementById("tree");
+				o.prevWidth = o.offsetWidth;
+				o.status = parseInt(o.parentNode.prevCols) > 10 
+					? "shown" 
+					: "hidden"; 
+				Utils.Cookies.create(<%= Format.jsString( cookie ) %>, o.offsetWidth, 3650);
+			};
+		
+			function initAll(){
+				if(allDone){
+					top.debug && top.debug("root: initAll skipped");
+					return;
+				}
+				allDone = true;
+				var tree = document.getElementById("tree");
+				tree.parentNode.setAttribute("cols", tree.parentNode.prevCols = tree.parentNode.cols = cols);
+				tree.status = parseInt(tree.parentNode.prevCols) > 10 
+					? "shown" 
+					: "hidden";
+				Utils.Event.listen(tree.parentNode,"resize", keepWinSize);
+				Utils.Event.listen(tree,"resize", keepWinSize);
+				/* opera cannot stand this 8-( tree.contentWindow && Utils.Event.listen(tree.contentWindow,"resize", keepWinSize); */
+		
+				var list = document.getElementById("list");
+				list.entryType = "form";
+				list.router = router;
+				list.onFire = function(eType,eValue){
+					switch(eType){
+						case "treeChange":
+							top.debug && top.debug("root-form: treeChange, path=" + eValue.path);
+							/* this.contentWindow.location.replace("defaultAction?path=" + eValue.path); */
+							this.src = "defaultAction?path=" + eValue.path;
+							break;
+						case "setLocation":
+							top.debug && top.debug("root-form: setLocation, src=" + eValue);
+							/* this.contentWindow.location.replace(eValue); */
+							this.src = eValue;
+							break;
+					}
+				};
+				router.register(list, list, "tree");
+				router.register(list, list, "sysmenu");
+
+				with(tree.contentWindow){
+					document.open("text/html", true);
+					document.write(getTreeContainer());
+					document.close();
+				}
+			};
+			
+			<%IF: inline %>function getTreeContainer(){
+				return <%= Format.jsString( preload ) %>;
+			}<%/IF%>
+			
+
+			Utils.Event.listen(document, "DOMContentLoaded", initAll);
+			Utils.Event.listen(window, "load", initAll);
+
+			
+		<%/FORMAT%><%
+	%></script><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+		// no BODY for FRAMESET pages!
+	%><frameset<%
+		%> cols="<%= cols %>"<%
+		%> framespacing="5"<%
+		%> border="5"<%
+		%> topmargin="0"<%
+		%> leftmargin="0"<%
+		%> marginheight="0"<%
+		%> marginwidth="0"<%
+		%> onresize="setTimeout(function(){keepWinSize();},0)"<%
+	%>><%
+		%><frame<%
+			%> src="<%=	inline
+				? "javascript:parent.getTreeContainer()"
+				: Format.xmlAttributeFragment( "treeContainer.htm?mode=" + mode + "&path=" + path )
+			%>"<%
+			%> id="tree"<%
+			%> name="tree"<%
+			%> frameborder="0"<%
+			%> topmargin="0"<%
+			%> leftmargin="0"<%
+			%> marginheight="0"<%
+			%> marginwidth="0"<%
+			%> onresize="setTimeout(function(){keepWinSize();},0)"<%
+		%>><%
+		%><frame<%
+			%> SRC="<%=  
+				Format.xmlAttributeFragment( 
+					"defaultAction?mode=" + mode + "&path=" + path
+				) 
+			%>"<%
+			%> id="list"<%
+			%> name="list"<%
+			%> frameborder="0"<%
+			%> topmargin="0"<%
+			%> leftmargin="0"<%
+			%> marginheight="0"<%
+			%> marginwidth="0"<%
+		%>><%
+	%></FRAMESET><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: "Browse" + " / " + Runtime.getSystemName() + " @ " + Request.getTarget(),
+		template	: "html-frameset",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

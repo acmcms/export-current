@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>System - FCKConnector</title>
+	<visibility>hidden</visibility>
+
+	<command>
+		<key>getFolders</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="type" class="string"/>
+			<field id="path" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><?xml version="1.0" encoding="utf-8"?><%
+			%><Connector command="GetFolders" resourceType="<%= type %>"><%
+				%><CurrentFolder path="<%= path %>" url="<%= path %>"/><%
+			%></Connector><%
+		]]></script>
+	</command>
+
+	<command>
+		<key>getFoldersAndFiles</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="type" class="string"/>
+			<field id="path" class="string"/>
+			<field id="obj" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%><?xml version="1.0" encoding="utf-8"?><%
+			%><Connector command="GetFoldersAndFiles" resourceType="<%= type %>"><%
+				%><CurrentFolder path="<%= path %>" url="<%= obj.getLocation() %>"/><%
+				var files = obj.getChildrenListable( 0, "$title" );
+				if( ArrayFilled( files ) ){
+					%><Files><%
+						for( var file in files ){
+							%><File name="<%= file.getKey() %>" size="<%= Default.binarySize( file.image ) / 1024 %>"/><%
+						}
+					%></Files><%
+				}
+			%></Connector><%
+		]]></script>
+	</command>
+	<command>
+		<key>addFile</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="obj" class="object"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var file = Request.NewFile;
+			if( !file ) return;
+			Runtime.log("->>>","=->", file.getAttributes() );
+
+			var contentType = file.getAttributes().get("Content-Type");
+			var fileData = file.getAttributes().get("Content-Disposition");
+			var fileName = split( split( fileData, "; " )[2], '"' )[1];
+
+			var fileName = split( fileName, "." );
+			var fileNamePrefix = fileName[0];
+			var fileNameSuffix = fileName[1];
+			if( fileNamePrefix.startsWith('C:\\') ){
+				fileNamePrefix = split( fileNamePrefix, '\\' );
+				fileNamePrefix = fileNamePrefix[ fileNamePrefix.size() - 1 ];
+			}
+			fileName = fileNamePrefix + "." + fileNameSuffix;
+			if( obj.getChildByName( LowerCase( fileName ) ) ){
+				%><script type="text/javascript"><%
+					%>window.parent.OnUploadCompleted(202);<%
+				%></script><%
+			}else{
+				contentType = split( contentType, "/" );
+				var type = ArrayFilled( contentType ) ? contentType[0] : "";
+				switch( type ){
+					case "image":{
+						var data = {};
+						data.titleName = fileName;
+						data.image = file;
+						var object = Image.create( data, obj );
+						%><script type="text/javascript"><%
+							if( object ){
+								%>window.parent.OnUploadCompleted(0);<%
+							}else{
+								%>window.parent.OnUploadCompleted(1, , ,'Server error! Please, try again!');<%
+							}
+						%></script><%
+					}
+				}
+			}
+		]]></script>
+	</command>
+</type>

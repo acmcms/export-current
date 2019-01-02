@@ -1,0 +1,234 @@
+<html><body><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<ul>
+			<li>
+				<h2>Contents</h2>
+				<ul>
+					<li><a href="#general">General</a></li>
+					<!--  <li><a href="#install-dedicated">Installation on dedicated machine</a></li>  -->
+					<li><a href="#install">Installation on existing BSD system</a></li>
+					<li><a href="#configuration">Configuration and Operation</a></li>
+					<li><a href="#administration">Administration and Maintenance</a></li>
+					<li><a href="#other">Other</a></li>
+				</ul>
+			</li>
+			<li><a name="general"></a>
+				<h2>General</h2>
+				<p>It's an embedded-like software solution for running <a
+					href="ae3.htm">AE3</a> environment on <a
+					href="http://en.wikipedia.org/wiki/IA-32">i386</a> or <a
+					href="http://en.wikipedia.org/wiki/X86-64">x86-64</a> architectures
+				using free and open-source <a href="http://freebsd.org">FreeBSD</a>
+				operating system.</p>
+				<p>While configuring operating system and choosing default parameters 
+				'ae3bsd' assumes that the host is dedicated for the task.</p>
+				<p>As a embedded database it is using is <a href="http://postgresql.org/">PostgreSQL</a>, 
+				it is a very robust, modern, free and open-source relational database 
+				management system.</p>
+				<p>Particular projects could still use external database connections 
+				as additional or primary connections.</p>
+				Some features of 'ae3bsd' solution:
+				<ul>
+					<li>automatic firewall setup</li>
+					<li>automatic embedded db configuration</li>
+					<li>soft-restart for group instances</li>
+					<li>automatic maintenance</li>
+					<li>simple consolidated configuration and management</li>
+				</ul>
+			</li>
+			<li><a name="install"></a>
+				<h2>Installation</h2>
+				<p>Provided that you already have installed FreeBSD system and
+				logged in as a 'root' user before you proceed.</p>
+				<ol>
+					<li>Make sure you are running as 'root'. Use <code>use 'man su' 
+						or 'man sudo'</code> if you have any questions on this.
+					</li>
+					<li>Run the following command to install AE3: 
+						<code>pkg_add http://myx.ru/distro/ae3/ae3.tbz</code>
+					</li>
+					<li>reboot: <code>reboot</code>
+						Wait until system restarts and re-connect to you console/terminal.
+					</li>
+					<li>now the script is installed and the last thing we could consider to be a 
+						part of 'installation' is to set an email address for system messages: 
+						<code>ae3 config/email user@example.net</code>
+						you can specify several addressed at once, use syntax like this:
+						<code>ae3 config/email user@example.net,user@example.net</code>
+					</li>
+				</ol>
+				<p>At this point your system will have <b>ae3</b> daemon installed and 
+				configured to be started automatically when operation system starts. This 
+				daemon would be running under newly-created 'ae3' user. In your 'bin' 
+				directory an 'ae3' command will be created with means to provide
+				command line interface for various configuration and administration tasks.</p>
+			</li>
+			<li><a name="configuration"></a>
+				<h2>Configuration and Operation</h2>
+				<p>'ae3' script acts like single command=line interface for most
+				of tasks you will ever need to perform on you ae3 server. There is 
+				a robust set of simple commands provided by 'ae3':</p>
+				<ul>
+					<li>
+						<h3>Configuration</h3> defining and changing runnning system parameters.
+						<ul>
+							<li>
+								<code>ae3 config/email</code>
+								or
+								<code>ae3 config/email &lt;email@addre.ss,more@somepla.ce></code>
+								Internal administrative email recipient address
+								could be examined or redefined by this command. 
+								You need to be 'root' to execute this command.
+								<code>ae3 config/email clear</code>
+								Keyword 'clear' could be used remove all email addresses.
+							</li>
+							<li>
+								<code>ae3 config/logging</code>
+								or
+								<code>ae3 config/logging &lt;LEVEL></code>
+								Logging level (verbosity) could be examined or 
+								redefined by this command. 
+								Logging level must be one of: <b>DEBUG</b>, 
+								<b>NORMAL</b> or <b>MININAL</b>. 
+								You need to be 'root' to execute this command.
+							</li>
+							<li>
+								<code>ae3 config/optimize</code>
+								or
+								<code>ae3 config/optimize &lt;GOAL></code>
+								Optimization mode (or goal) could be examined or 
+								redefined by this command. 
+								Optimization goal must be one of: <b>DEFAULT</b>, 
+								<b>SIZE</b> or <b>SPEED</b>. 
+								You need to be 'root' to execute this command.
+							</li>
+							<li>
+								<code>ae3 config/ram</code>
+								or
+								<code>ae3 config/ram &lt;RAM></code>
+								ae3 deamon's JVM memory allocation could be examined or 
+								redefined by this command. 
+								Memory amount specification can be one of: <b>512m</b>, 
+								<b>2g</b> or any other specification in the same format. 
+								You need to be 'root' to execute this command.
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3>Setting-Up</h3> pre-configuring some one-time aspects of the system.
+						<ul>
+							<li>
+								<code>ae3 setup/console</code>
+								configure current console to some pre-defined default 
+								settings. Any user can execute this command.
+							</li>
+							<li>
+								<code>ae3 setup/host</code>
+								configure operating system as it was configured 
+								during 'ae3' installation. You need 
+								to be 'root' to execute this command.
+							</li>
+							<li>
+								<code>ae3 setup/operator &lt;user_name></code>
+								grant 'operator' priveleges to a specified user. 
+								You need to be 'root' to execute this command.
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3>Usage</h3> just normal everyday commands.
+						<ul>
+							<li>
+								Connect to console:
+								<code>ae3 cli</code> 
+								This will connect you to ae3 console session.
+								You need to be 'operator' to execute this command.
+							</li>
+							<li>
+								Connect to console:
+								<code>ae3 console</code> 
+								This will connect you to ae3 console session.
+								You need to be 'operator' to execute this command.
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li><a name="administration"></a>
+				<h2>Administration and Maintenance</h2>
+				<p>It is supposed that 'ae3' script should be able to solve all
+				types of tasks associated with server maintenance.</p>
+				<p>Configuration modification is available through a robust set of
+				simple commands provided by 'acmbsd' script for 'root' user.</p>
+				<ul>
+					<li>
+						<h3>life-cycle</h3> some tasks related to long running 
+						maintenance.
+						<ul>
+							<li>
+								Upgrade 'ae3' system
+								<code>ae3 upgrade</code> 
+								It will upgrade code 'ae3' data and packages. 
+								You need to be 'root' to execute this command.
+							</li>
+							<li>
+								Re-run installation procedure.
+								<code>ae3 reinstall</code>
+								Execute all 'ae3' package installation scripts. 
+								Could be useful to restore environment if something
+								went messy. You need to be 'root' to execute this 
+								command.
+							</li>
+							<li>
+								Restart daemon.
+								<code>ae3 restart</code>
+								This will re-start running daemon service as in 'stop and start'. 
+								You need to be 'root' to execute this command.
+							</li>
+							<li>
+								Start daemon.
+								<code>ae3 start</code>
+								This will start running daemon service if not running. 
+								You need to be 'root' to execute this command.
+							</li>
+							<li>
+								Stop daemon.
+								<code>ae3 stop</code>
+								This will stop running daemon service if running. 
+								You need to be 'root' to execute this command.
+							</li>
+							<li>
+								Watch logs.
+								<code>ae3 watch/log</code>
+								Connect and watch log messages on 'ae3' daemon logs. 
+								Those messages will appear in real time. Could
+								be useful for debugging. You need to be 'root' or 
+								'operator' to execute this command.
+							</li>
+							<li>
+								O/S Care.
+								<code>freebsd-update fetch install</code>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<h2>Regards</h2>
+				<ul>
+					<li><a href="http://meganet.ru">meganet</a></li>
+					<li><a href="http://vlapan.com">vlapan</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'AE3BSD Information Centre',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

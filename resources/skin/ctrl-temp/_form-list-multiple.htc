@@ -1,0 +1,99 @@
+<%FINAL: 'text/x-component' %>
+
+<PUBLIC:ATTACH EVENT="onload"  ONEVENT="formListIni()" FOR="window"/>
+<PUBLIC:ATTACH EVENT="onclick"  ONEVENT="formListClick()" />
+
+<SCRIPT LANGUAGE="JScript">
+function formListIni() {
+	this.parent = window.document.getElementById('fld' + this.getAttribute('fieldName') + '_obj');
+	this.parent.list = this;
+
+	this.ini = function() {
+		this.returnValue = [];
+		var spans = this.getElementsByTagName('SPAN');
+		for(var i=0; i<spans.length; ++i) {
+			var span = spans[i];
+			this.returnValue[i] = {key : span.getAttribute('key'), title : span.innerText};
+		}
+	}
+
+	this.ini();
+
+	this.set = function (array){
+		var inputs = this.parent.getElementsByTagName('INPUT');
+		for(var i = inputs.length - 1; i>=0; --i){
+			inputs[i].removeNode(true);
+		}
+
+		var txt = "";
+		var html = "";
+		this.returnValue = [];
+		for(var i=0; i < array.length; ++i){
+			var Current = array[i];
+			var cKey = Current.key;
+			var cTitle = Current.title;
+			this.returnValue[i] = Current;
+			txt += '<span canBeSelected=1 index="'+i+'" key="'+cKey+'">'+cTitle+'</span>; ';
+			html += '<input type=hidden index="'+i+'" name="'+this.getAttribute('fieldName')+'" value="'+cKey+'">';
+		}
+		this.innerHTML = txt;
+		this.parent.cells[0].insertAdjacentHTML('afterBegin',html);
+	}
+
+	this.remove = function(){
+		if(!this.selectedObject) {
+			return;
+		}
+		var index = this.selectedObject.getAttribute('index');
+		var inputs = this.parent.getElementsByTagName('INPUT');
+		if(inputs.length < 2){
+			this.clear();
+			return;
+		}
+		for(var i = 0; i<inputs.length; ++i){
+			var input = inputs[i];
+			(input.index == index) && input.parentNode.removeChild(input);
+		}
+		this.returnValue[index] = false;
+		this.selectedObject.nextSibling.removeNode(true);
+		this.selectedObject.removeNode(true);
+	}
+
+	this.clear = function(){
+		var inputs = this.parent.getElementsByTagName('INPUT');
+		for(var i = inputs.length - 1; i>=0; --i){
+			inputs[i].removeNode(true);
+		}
+		this.selectedObject = false;
+		this.returnValue = {};
+		this.innerHTML = '';
+		html = '<input type=hidden name="fieldcmd_fieldRemove_'+this.getAttribute('mapPath')+'" value="1">';
+		this.parent.cells[0].insertAdjacentHTML('afterBegin',html);
+	}
+}
+
+function formListClick(e){
+	e || (e = window.event);
+	var obj = (e.srcElement || e.target);
+	if(obj.canBeSelected){
+		if(this.selectedObject != obj){
+			if(this.selectedObject){
+				this.selectedObject.style.backgroundColor = '';
+				this.selectedObject.style.color = '';
+			}
+
+			this.selectedObject = obj;
+			obj.style.backgroundColor = 'highlight';
+			obj.style.color = 'highlighttext';
+		}
+	}else{
+		if(this.selectedObject){
+			this.selectedObject.style.backgroundColor = '';
+			this.selectedObject.style.color = '';
+		}
+		this.selectedObject = null;
+	}
+}
+
+</SCRIPT>
+<%/FINAL%>

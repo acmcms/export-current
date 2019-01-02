@@ -1,0 +1,352 @@
+<%
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add('frames') %><%
+%><%EXEC: requireCss.add('forms') %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add("require") %><%
+%><%EXEC: requireJs.add("app/Router") %><%
+%><%EXEC: requireJs.add("app/form") %><%
+
+%><%EXEC: requireJs.add("app/Containers") %><%
+%><%EXEC: requireJs.add("app/Dom") %><%
+%><%EXEC: requireJs.add("Utils/Cookies") %><%
+%><%EXEC: requireJs.add("app/Windows") %><%
+%><%EXEC: requireJs.add("app/Listing") %><%
+
+%><%OUTPUT: head %><%
+	%><!-- version: 1 --><%
+	%><script><%
+		%><%EXEC: path = Request.path || '/' %><%
+		%><%EXEC: path.endsWith('/') || (path += '/') %><%
+		
+		%>mForm.type = "Navigation";<%
+		%>mForm.path = <%= Format.jsString(path) %>;<%
+		%>mForm.mode = "view";<%
+
+		%><%EXEC: cNode = ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+		%><%EXEC: cNode = ControlAPI.childForPath(cNode, path) %><%
+
+		%>router = parent.router || perent.parent.router || new Router("listing");<%
+
+		%>Objects = [];<%
+		%>iBuffers = [];<%
+	%></script><%
+	
+	%><style><%
+		%>body,html{<%
+			%>font-family:Tahoma,Arial;<%
+			%>width:100%;<%
+			%>height:100%;<%
+			%>padding:0;<%
+			%>margin:0;<%
+			%>cursor:default;<%
+			%>overflow:hidden;<%
+			%>background-color:buttonface;<%
+		%>}<%
+		%>.borderOut{<%
+			%>border:solid 1px buttonshadow;<%
+			%>border-top-color:buttonhighlight;<%
+			%>border-left-color:buttonhighlight;<%
+		%>}<%
+		%>.borderIn{<%
+			%>border:solid 1px buttonshadow;<%
+			%>border-bottom-color:buttonhighlight;<%
+			%>border-right-color:buttonhighlight;<%
+		%>}<%
+		%>.panel{<%
+			%>background-color:buttonface;<%
+		%>}<%
+		%>.header{<%
+			%>font-family:Tahoma, Arial;<%
+			%>font-size:8pt;<%
+			%>background-color:activecaption;<%
+			%>color:captiontext;<%
+			%>font-weight:bold;<%
+			%>background-color:buttonface;<%
+		%>}<%
+	%></style><%
+	
+	%><%EXEC: commands = ControlAPI.filterAccessibleCommands(path,cNode.getCommands()) %><%
+	%><%IF: Array.isFilled(commands) %><%
+		%><%OUTPUT: contextMenuNodeCommands %><%
+			%><div class=FrameBorder style="width:100%; margin-bottom:2px" id="NodeCommands" status="true" CommandType="node" sender="listing"><%
+				%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+					%><tr><%
+						%><td class=SubMenuHeader><%
+							%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+								%><tr><%
+									%><td><%
+										%><%= intl( en = "Folder", ru = "Папка" ) %><%
+									%></td><%
+									%><td align=right style="font-family:Webdings;line-height:0"><%
+										%>5<%
+									%></td><%
+								%></tr><%
+							%></table><%
+						%></td><%
+					%></tr><%
+					%><tr><%
+						%><td class=SubmenuButton style="background-color:threedhighlight"><%
+							%><table border=0 cellpadding=2 cellspacing=0 width=100%><%
+								%><%ITERATE: command : commands %><%
+									%><%IF: command.getKey() != '' %><%
+										%><tr path="<%= Format.xmlAttributeFragment( path ) %>" cmd="<%= Format.xmlAttributeFragment( command.getKey() ) %>" title="<%= Format.xmlAttributeFragment( command.commandDescription() || '' ) %>"><%
+											%><td valign=top><%
+												%><img src="icons/<%= ControlAPI.getIcon(command) %>.32.gif" width=32 height=32><%
+											%></td><%
+											%><td width=100%><%
+												%><%= command.getTitle() %><%
+											%></td><%
+										%></tr><%
+									%><%/IF%><%
+								%><%/ITERATE%><%
+							%></table><%
+						%></td><%
+					%></tr><%
+				%></table><%
+			%></div><%
+		%><%/OUTPUT%><%
+	%><%/IF%><%
+	
+	%><%EXEC: forms = ControlAPI.filterAccessibleCommands(path, cNode.getForms()) %><%
+	%><%IF: Array.isFilled(forms) %><%
+	%><%OUTPUT: contextMenuNodeForms %><%
+		%><div class=FrameBorder style="width:100%; margin-bottom:2px" id="NodeForms" status="true" CommandType="node_form_open" sender="listing"><%
+			%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+				%><tr><%
+					%><td class=SubMenuHeader><%
+						%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+							%><tr><%
+								%><td><%
+									%><%= intl( en = "Folder Forms", ru = "Формы папки" ) %><%
+								%></td><%
+								%><td align=right style="font-family:Webdings;line-height:0"><%
+									%>5<%
+								%></td><%
+							%></tr><%
+						%></table><%
+					%></td><%
+				%></tr><%
+				%><tr><%
+					%><td class=SubmenuButton style="background-color:threedhighlight"><%
+						%><table border=0 cellpadding=2 cellspacing=0 width=100%><%
+							%><%ITERATE: command : forms %><%
+								%><%IF: command.getKey() != '' %><%
+									%><tr path="<%= Format.xmlAttributeFragment( path ) %>" cmd="<%= Format.xmlAttributeFragment( command.getKey() ) %>" title="<%= Format.xmlAttributeFragment( command.commandDescription() || '' ) %>"><%
+										%><td valign=top><%
+											%><img src="icons/<%= ControlAPI.getIcon(command) %>.32.gif" width=32 height=32><%
+										%></td><%
+										%><td width=100%><%
+											%><%= command.getTitle() %><%
+										%></td><%
+									%></tr><%
+								%><%/IF%><%
+							%><%/ITERATE%><%
+						%></table><%
+					%></td><%
+				%></tr><%
+			%></table><%
+		%></div><%
+	%><%/OUTPUT%><%
+	%><%/IF%><%
+	
+	%><%EXEC: QuickLinksCnt = Int(User.getUser().getProfile('mwmAdmin',true).QuickLinksCnt,5) %><%
+	%><%IF: QuickLinksCnt > 0 %><%
+		%><%TRY%><%
+			%><%EXEC: quick = ControlAPI.getQuickActor() %><%
+			%><%EXEC: options = quick.getCommands() %><%
+		%><%CATCH%><%
+		%><%/TRY%><%
+		%><%IF: Array.isFilled(options) %><%
+			%><%OUTPUT: contextMenuQuickLinks %><%
+				%><div class=FrameBorder style="width:100%; margin-bottom:2px" id="QuickLinks" status="true" CommandType="quick"><%
+					%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+						%><tr><%
+							%><td class=SubMenuHeader><%
+								%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+									%><tr><%
+										%><td><%
+											%><%= intl( en = "Quick Links", ru = "Быстрые ссылки" ) %><%
+										%></td><%
+										%><td align=right style="font-family:Webdings;line-height:0"><%
+											%>5<%
+										%></td><%
+									%></tr><%
+								%></table><%
+							%></td><%
+						%></tr><%
+						%><tr><%
+							%><td class=SubmenuButton style="background-color:threedhighlight"><%
+								%><table border=0 cellpadding=2 cellspacing=0 width=100%><%
+									%><%CALL: ForArray(options, 0, QuickLinksCnt) %><%
+										%><%EXEC: command = Current %><%
+										%><%IF: command.getKey() != '' %><%
+											%><tr cmd="<%= Format.xmlAttributeFragment( command.getKey() ) %>" title="<%= Format.xmlAttributeFragment( command.commandDescription() || '' ) %>"><%
+												%><td valign=top><%
+													%><img src="icons/<%= ControlAPI.getIcon(command) %>.32.gif" width=32 height=32><%
+												%></td><%
+												%><td width=100%><%
+													%><%= command.getTitle() %><%
+												%></td><%
+											%></tr><%
+										%><%/IF%><%
+									%><%/CALL%><%
+								%></table><%
+							%></td><%
+						%></tr><%
+					%></table><%
+				%></div><%
+			%><%/OUTPUT%><%
+		%><%/IF%><%
+	%><%/IF%><%
+	
+	%><%EXEC: common = ControlAPI.getCommonActor(path) %><%
+	%><%EXEC: common && (common = ControlAPI.filterAccessibleCommands(path, common.getCommands())) %><%
+	
+	%><%IF: Array.isFilled(common) %><%
+		%><%OUTPUT:contextMenuTreeCommon%><%
+			%><div class=FrameBorder style="width:100%; margin-bottom:2px" id="TreeCommon" status="true" CommandType="tree_common" sender="listing"><%
+				%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+					%><tr><%
+						%><td class=SubMenuHeader><%
+							%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+								%><tr><%
+									%><td><%
+										%><%=intl(en="System", ru="Системные") %><%
+									%></td><%
+									%><td align=right style="font-family:Webdings;line-height:0"><%
+										%>5<%
+									%></td><%
+								%></tr><%
+							%></table><%
+						%></td><%
+					%></tr><%
+					%><tr><%
+						%><td class=SubmenuButton style="background-color:threedhighlight"><%
+							%><table border=0 cellpadding=2 cellspacing=0 width=100%><%
+								%><%ITERATE: command : common %><%
+									%><%IF: command.getKey() != '' %><%
+										%><tr path="<%= Format.xmlAttributeFragment( path ) %>" cmd="<%= Format.xmlAttributeFragment( command.getKey() ) %>" title="<%= Format.xmlAttributeFragment( command.commandDescription() || '' ) %>"><%
+											%><td valign=top><%
+												%><img src="icons/<%= ControlAPI.getIcon(command) %>.32.gif" width=32 height=32><%
+											%></td><%
+											%><td width=100%><%
+												%><%= command.getTitle() %><%
+											%></td><%
+										%></tr><%
+									%><%/IF%><%
+								%><%/ITERATE%><%
+							%></table><%
+						%></td><%
+					%></tr><%
+				%></table><%
+			%></div><%
+		%><%/OUTPUT%><%
+	%><%/IF%><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body path="<%= Format.xmlAttributeFragment( path ) %>"><%
+		%><script><%
+			%>var spacing = 2;<%
+			%>require("Layouts.Layout");<%
+			%>var listing = new Layouts.Layout(document.body,{<%
+								%>layout	: "screen",<%
+								%>comment	: "listing"<%
+							%>});<%
+			%>listing.menu = listing.attachEast({<%
+								%>size		: 166<%
+							%>});<%
+			%>listing.pushLayout(["outset","padding"]);<%
+		%></script><%
+		
+		%><script><%
+			%>listing.toolbar = listing.attachNorth({<%
+				%>spacing	: true<%
+			%>});<%
+			%>listing.toolbar.buttons = listing.toolbar.attachEast({<%
+				%>spacing	: false<%
+			%>});<%
+			%>listing.toolbar.pushLayout(["outset","padding"]);<%
+		%></script><%
+	
+		%><table id=listheadercaption border=0 cellpadding=0 cellspacing=0 style="display:none;width:100%"><%
+			%><tr><%
+				%><td width=100% class=SubmenuFrame nowrap id=TDPaging><%
+					%>&nbsp;<%
+				%></td><%
+				%><%IF: !mode%><%
+					%><td class=SubmenuFrame nowrap id=TDPath style="padding-top:0;padding-bottom:0;white-space:nowrap;"><%
+						%><table border=0 cellpadding=0 cellspacing=0><%
+							%><tr><%
+								%><td><%
+									%><b><%= intl( en = "Path", ru = "Путь" ) %>:</b>&nbsp;<%
+								%></td><%
+								%><td><%
+									%><input style="width:150px" value="<%= path %>"><%
+								%></td><%
+							%></tr><%
+						%></table><%
+					%></td><%
+				%><%/IF%><%
+			%></tr><%
+		%></table><%
+		%><script><%
+			%>listing.toolbar.pushElement(document.getElementById("listheadercaption"), true);<%
+		%></script><%
+	
+		%><script><%
+			%>setTimeout(function(){<%
+				%>Listing.path = "<%= path %>";<%
+				%>Listing.strObjects = "<%= intl( en = "Objects", ru = "Объектов" ) %>";<%
+				%>Listing.init(listing, "listing", "listing-list.htm?path=<%= StringToUrl(path) %><%= mode == "link" ? "&mode=link" : "" %>");<%
+				
+				%>require("Layouts.Toolbar");<%
+				%>new Layouts.Toolbar(listing.toolbar.buttons, { elements : [<%
+						%><%IF: path != '/' %><%
+							%><%EXEC: goToPath = substr(path, 0, lastIndexOf(path,'/')) %><%
+							%><%EXEC: goToPath = substr(goToPath, 0, lastIndexOf(goToPath,'/') + 1) %><%
+							%>{<%
+								%>layout	: "button",<%
+								%>title		: "<%= intl( en = "Up", ru = "Вверх" ) %>",<%
+								%>icon		: "icons/command-escape.16.gif",<% 
+								%>onClick	: "Listing.changeLocationSetList('<%=goToPath%>')"<%
+							%>},<%
+						%><%/IF%><%
+						%>{<%
+							%>layout	: "button",<%
+							%>title		: "<%= intl( en = "Refresh", ru = "Обновить" ) %>",<%
+							%>icon		: "icons/command-reload.16.gif",<% 
+							%>onClick	: "listing.refresh()"<%
+						%>}<%
+					%>]});<%
+			%>},0);<%
+		%></script><%
+	
+	
+		%><script><%
+			%>listing.menu.pushLayout(["padding","outset"]);<%
+			%>listing.menu.pushLayout({<%
+				%>layout	: "container",<%
+				%>cssStyle	: "overflow-y:auto;padding-right:" + spacing + "px"<%
+			%>});<%
+		%></script><%
+	
+		%><div id=menu style="display:none;"><%
+			%><%INCLUDE: 'include-menu' %><%
+		%></div><%
+		%><script><%
+			%>listing.menu.pushElement(document.getElementById("menu"), true);<%
+		%></script><%
+	%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: Runtime.getSystemName() + "-listing @ " + Request.getTarget(),
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		head		: head,
+		body		: body
+	} %><%
+%>

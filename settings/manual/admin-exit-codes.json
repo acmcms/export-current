@@ -1,0 +1,6 @@
+{
+	type : "ae3.Manual",
+	title : "AE3 Exit Codes",
+	name : "admin-exit-codes",
+	group : "ae3-daemon-process",
+}

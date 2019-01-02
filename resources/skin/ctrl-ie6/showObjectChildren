@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+
+	%><LINK HREF="frames.css" REL=stylesheet /><%
+	%><LINK HREF="forms.css" REL=stylesheet /><%
+
+%><script>
+<%INCLUDE: 'WindowsMethods.js' %>
+<%INCLUDE: 'Containers.js' %>
+<%INCLUDE: 'EventsMethods.js' %>
+<%INCLUDE: 'Cookies.js' %>
+<%INCLUDE: 'SystemWindows.js' %>
+<%INCLUDE: 'Form.js' %>
+</script>
+
+
+<script>
+	mForm.type = 'Navigation';
+	mForm.path = "<%=StringToUrl(Request.path)%>";
+</script>
+
+
+<%EXEC:cNode = ControlAPI.nodeForObject(Request.getSharedObject())%>
+<%IF:Request.path%>
+	<%EXEC:cNode = ControlAPI.childForPath(cNode, Request.path)%>
+<%/IF%>
+
+<%EXEC:commands = ControlAPI.filterAccessibleCommands(Request.path,cNode.getCommands())%>
+<%IF:Array.isFilled(commands)%>
+<%OUTPUT:contextMenuNodeCommands%>
+	<div class=FrameBorder style="width:100%; margin-bottom:2px" id="NodeCommands" status="true" CommandType="node" sender="childrenList">
+		<TABLE border=0 cellpadding=0 cellspacing=0 width=100%>
+		<TR><TD class=SubMenuHeader><TABLE border=0 cellpadding=0 cellspacing=0 width=100%><TR><TD><%=intl(en="Folder", ru="Папка")%></TD><TD align=right style="font-family:Webdings; line-height:0">5</TD></TR></TABLE></TD></TR>
+		<TR>
+			<TD class=SubmenuButton style="background-color:threedhighlight">
+				<TABLE border=0 cellpadding=2 cellspacing=0 width=100%>
+				<%CALL:ForArray(commands)%>
+					<%CHOOSE: Current.getKey() %>
+					<%MATCH: ''%>
+					<%MATCH%>
+						<%EXEC: command = Current%>
+						<%EXEC: icon = ControlAPI.getIcon(command)%>
+						<%EXEC: title = command.getTitle()%>
+						<TR path="<%=StringToUrl(Request.path)%>" cmd="<%=command.getKey()%>" title="<%= Current.commandDescription() || '' %>">
+						<TD valign=top><img src="icons/<%=icon%>.32.gif" width=32 height=32></TD>
+						<td width=100%><%=title%></td>
+						</TR>
+					<%/CHOOSE%>
+				<%/CALL%>
+				</TABLE>
+			</TD>
+		</TR>
+		</TABLE>
+	</div>
+<%/OUTPUT%>
+<%/IF%>
+
+<%EXEC: forms = ControlAPI.filterAccessibleCommands(Request.path, cNode.getForms()) %>
+<%IF:Array.isFilled(forms)%>
+<%OUTPUT:contextMenuNodeForms%>
+	<div class=FrameBorder style="width:100%; margin-bottom:2px" id="NodeForms" status="true" CommandType="node_form_open" sender="childrenList">
+		<TABLE border=0 cellpadding=0 cellspacing=0 width=100%>
+		<TR><TD class=SubMenuHeader><TABLE border=0 cellpadding=0 cellspacing=0 width=100%><TR><TD><%=intl(en="Folder forms", ru="Формы папки")%></TD><TD align=right style="font-family:Webdings; line-height:0">5</TD></TR></TABLE></TD></TR>
+		<TR>
+			<TD class=SubmenuButton style="background-color:threedhighlight">
+				<TABLE border=0 cellpadding=2 cellspacing=0 width=100%>
+				<%CALL:ForArray(forms)%>
+					<%CHOOSE: Current.getKey() %>
+					<%MATCH: ''%>
+					<%MATCH%>
+						<%EXEC: command = Current%>
+						<%EXEC: icon = ControlAPI.getIcon(command)%>
+						<%EXEC: title = command.getTitle()%>
+						<TR path="<%=StringToUrl(Request.path)%>" cmd="<%=command.getKey()%>" title="<%= Current.commandDescription() || '' %>">
+						<TD valign=top><img src="icons/<%=icon%>.32.gif" width=32 height=32></TD>
+						<td width=100%><%=title%></td>
+						</TR>
+					<%/CHOOSE%>
+				<%/CALL%>
+				</TABLE>
+			</TD>
+		</TR>
+		</TABLE>
+	</div>
+<%/OUTPUT%>
+<%/IF%>
+
+
+<%EXEC:QuickLinksCnt = Int(User.getUser().getProfile('mwmAdmin',true).QuickLinksCnt,5)%>
+<%IF:QuickLinksCnt > 0%>
+	<%TRY%>
+		<%EXEC: quick = ControlAPI.getQuickActor() %>
+		<%EXEC: options = quick.getCommands() %>
+	<%CATCH%>
+	<%/TRY%>
+	<%IF: Array.isFilled(options) %>
+		<%OUTPUT:contextMenuQuickLinks%>
+			<div class=FrameBorder style="width:100%; margin-bottom:2px" id="QuickLinks" status="true" CommandType="quick">
+				<TABLE border=0 cellpadding=0 cellspacing=0 width=100%>
+				<TR><TD class=SubMenuHeader><TABLE border=0 cellpadding=0 cellspacing=0 width=100%><TR><TD><%=intl(en="Quick links", ru="Быстрые ссылки")%></TD><TD align=right style="font-family:Webdings; line-height:0">5</TD></TR></TABLE></TD></TR>
+				<TR>
+					<TD class=SubmenuButton style="background-color:threedhighlight">
+						<TABLE border=0 cellpadding=2 cellspacing=0 width=100%>
+						<%CALL: ForArray(options,0,QuickLinksCnt) %>
+							<%CHOOSE: Current.getKey() %>
+							<%MATCH: ''%>
+							<%MATCH%>
+								<%EXEC: command = Current%>
+								<%EXEC: icon = ControlAPI.getIcon(command)%>
+								<%EXEC: title = command.getTitle()%>
+
+								<TR cmd="<%=command.getKey()%>" title="<%= Current.commandDescription() || '' %>">
+								<TD valign=top><img src="icons/<%=icon%>.32.gif" width=32 height=32></TD>
+								<td width=100%><%=title%></td>
+								</TR>
+							<%/CHOOSE%>
+						<%/CALL%>
+						</TABLE>
+					</TD>
+				</TR>
+				</TABLE>
+			</div>
+		<%/OUTPUT%>
+	<%/IF%>
+<%/IF%>
+
+<%EXEC: common = ControlAPI.getCommonActor(Request.path) %>
+<%IF: common %>
+	<%EXEC: common = ControlAPI.filterAccessibleCommands(Request.path,common.getCommands()) %>
+<%/IF%>
+<%IF: Array.isFilled(common) %>
+	<%OUTPUT:contextMenuTreeCommon%>
+	<div class=FrameBorder style="width:100%; margin-bottom:2px" id="TreeCommon" status="true" CommandType="tree_common" sender="childrenList">
+		<TABLE border=0 cellpadding=0 cellspacing=0 width=100%>
+		<TR><TD class=SubMenuHeader><TABLE border=0 cellpadding=0 cellspacing=0 width=100%><TR><TD><%=intl(en="System", ru="Системные")%></TD><TD align=right style="font-family:Webdings; line-height:0">5</TD></TR></TABLE></TD></TR>
+		<TR>
+			<TD class=SubmenuButton style="background-color:threedhighlight">
+				<TABLE border=0 cellpadding=2 cellspacing=0 width=100%>
+				<%CALL:ForArray(common)%>
+					<%CHOOSE: Current.getKey() %>
+					<%MATCH: ''%>
+					<%MATCH%>
+						<%EXEC: command = Current%>
+						<%EXEC: icon = ControlAPI.getIcon(command)%>
+						<%EXEC: title = command.getTitle()%>
+						<TR path="<%=StringToUrl(Request.path)%>" cmd="<%=command.getKey()%>" title="<%= Current.commandDescription() || '' %>">
+						<TD valign=top><img src="icons/<%=icon%>.32.gif" width=32 height=32></TD>
+						<td width=100%><%=title%></td>
+						</TR>
+					<%/CHOOSE%>
+					
+				<%/CALL%>
+				</TABLE>
+			</TD>
+		</TR>
+		</TABLE>
+	</div>
+	<%/OUTPUT%>
+<%/IF%>
+
+
+
+</head>
+
+<BODY BGCOLOR="buttonface" scroll="no" style="cursor:default; margin:0" class=FrameBorder>
+
+<TABLE border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%">
+<TR>
+	<TD width=100%>
+		<%INCLUDE: 'ObjectChildrenView.inc' %>
+	</TD>
+	<TD class=FrameBorder2>
+		<%INCLUDE: 'Menu.htm' %>
+	</TD>
+</TR>
+</TABLE>
+
+
+<script>
+//oMenu.onFire('FormPathChanged',srcz,mForm);
+</script>
+
+</BODY>
+</html>

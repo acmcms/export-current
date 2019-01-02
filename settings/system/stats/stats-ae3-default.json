@@ -1,0 +1,8 @@
+{
+	type  : "ae3.stats/Group",
+	name  : 'ae3.proc',
+	group : 'ae3.base',
+	title : 'ae3',
+	keywords : 'monitoring',
+	reference : "ru.myx.ae3.internal/stats/DefaultAe3Counters"
+}

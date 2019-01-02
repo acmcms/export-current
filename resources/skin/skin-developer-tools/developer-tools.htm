@@ -1,0 +1,67 @@
+<html><body><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+		<ul>
+			<li>
+				Manuals
+				<ul>
+					<li><a href="/!/skin/skin-acmcms-info/developer.htm">ACMCMS Developer Information department</a></li>
+					<li><a href="/!/public/resources/doc/acm.cms-ru.pdf">Manual (PDF format), Russian</a></li>
+				</ul>
+			</li>
+			<li>
+				Tools
+				<ul>
+					<li><a href="show-request.htm">Show-Request</a> displays 'request' object properties</li>
+					<li><a href="try-html.htm">Try-It-Yourself HTML</a> html code preview with editor</li>
+				</ul>
+			</li>
+			<li>
+				AE3/ACM Lab
+				<ul>
+					<li><a href="try-formatPlainTextAsHtml.htm">Try-It-Yourself 
+					Format.plainTextAsHtml</a> preview with editor</li>
+					<li><a href="try-formatUniqueWords.htm">Try-It-Yourself 
+					Format.uniqueWords</a> preview with editor</li>
+					<li><a href="try-formatXmlTextAsHtml.htm">Try-It-Yourself 
+					Format.xmlTextAsHtml</a> preview with editor</li>
+					<li><a href="try-formatJsString.htm">Try-It-Yourself 
+					Format.jsString</a> preview with editor</li>
+					<li><a href="try-formatStringAsUtf8Base64.htm">Try-It-Yourself 
+					Format.stringAsUtf8Base64</a> preview with editor</li>
+					<li><a href="show-error-handler.htm">Show-Error (in query handler)</a> produces an exception 
+					allowing to see how an error going to look like.</li>
+					<li><a href="show-error-skinner.htm">Show-Error (in reply skinner)</a> produces an exception 
+					allowing to see how an error going to look like.</li>
+					<li><a href="try-ae3.bytecode.htm">AE3 ByteCode ECMA</a> preview real 
+					ae3 byte-code for your ECMA script.</li>
+					<li><a href="try-ae3.bytecode-tpl.htm">AE3 ByteCode TPL</a> preview real 
+					ae3 byte-code for your TPL script.</li>
+				</ul>
+			</li>
+			<li>
+				Client-side (browser) Lab
+				<ul>
+					<li><a href="client-js/try-key-events.htm">Try-It-Yourself 
+					Browser's keyboard event properties</a> live</li>
+				</ul>
+			</li>
+			<li>
+				Other
+				<ul>
+					<li><a href="/!/skin/skin-jsclient/">SKIN: JS Client</a></li>
+					<li><a href="/!/skin/skin-standard-html/">SKIN: Standard HTML</a></li>
+					<li><a href="/!/skin/skin-acmcms-info/">SKIN: ACM.CMS Info</a></li>
+				</ul>
+			</li>
+		</ul>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Developer Tools',
+		template	: "html-document",
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

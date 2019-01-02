@@ -1,0 +1,32 @@
+<%	//
+	// Some kind of alert %)
+	//
+%><%FINAL: 'text/html' %><%
+	%><HTML><%
+		%><HEAD><%
+			%><TITLE>=)</TITLE><%
+			%><style><%
+				%>BODY, TD, DIV, BUTTON {<%
+					%>font-family : Tahoma, Arial;<%
+					%>font-size: 8pt;<%
+					%>color: buttontext;<%
+				%>}<%
+			%></style><%
+			%><script><%
+				%>window.returnValue = false;<%
+			%></script><%
+		%></HEAD><%
+		%><body style="margin:5px 10px 0 10px; background-color:buttonface;"><%
+			%><table border=0 cellpadding=0 cellspacing=10 width=100% height=100%><%
+				%><tr><%
+					%><td valign=top><img src="icons/command-dispose.32.gif" width=32 height=32 border=0></td><%
+					%><td width=100% al2ign=center><script>document.write(dialogArguments['txt'])</script></td><%
+				%></tr><%
+				%><tr><%
+					%><td colspan=2 align=center valign=bottom height=100%><button onclick="window.returnValue=true; window.close()" style="width:100; padding-left:10; padding-right:10"><script>document.write(dialogArguments['ok'])</script></button> &nbsp; <button onclick="window.close()" style="width:100; padding-left:10; padding-right:10"><script>document.write(dialogArguments['cancel'])</script></button></td><%
+				%></tr><%
+			%></table><%
+		%></body><%
+	%></HTML><%
+%><%/FINAL%><%
+%>

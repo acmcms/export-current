@@ -1,0 +1,49 @@
+var cssClass = Request.cssClass || "siteMenu";
+var bgcolor = Request.bgcolor || "000";
+$output( body ){
+	%>.<%= cssClass %>{<%
+		%>font:14px Helvetica, Verdana, sans-serif;<%
+		%>clear:both;<%
+		%>overflow:auto;<%
+		%>background:#<%= bgcolor %>;<%
+		%>padding:5px;<%
+	%>}<%
+	%>.<%= cssClass %> .control{<%
+		%>display:none;<%
+	%>}<%
+	%>.<%= cssClass %> ul{<%
+		%>margin:0;<%
+		%>padding:0;<%
+	%>}<%
+	%>.<%= cssClass %> li{<%
+		%>list-style:none;<%
+		%>cursor:pointer;<%
+		%>float:left;<%
+		%>margin-right:10px;<%
+		%>padding:3px 10px 3px 10px;<%
+		= VlapanCSSBorderRadius.insert("7px");
+	%>}<%
+	%>.<%= cssClass %> li:hover{<%
+		%>background:#777;<%
+		%>box-shadow:0 0 5px #777;<%
+		%>-moz-box-shadow:0 0 5px #777;<%
+		%>-webkit-box-shadow:0 0 5px #777;<%
+	%>}<%
+	%>.<%= cssClass %> li:hover a{<%
+		%>color:#fff;<%
+	%>}<%
+	%>.<%= cssClass %> li a{<%
+		%>color:#eee;<%
+		%>text-decoration:none;<%
+	%>}<%
+	%>.<%= cssClass %> #selected{<%
+		%>background:#555;<%
+		%>box-shadow:0 0 5px #555;<%
+		%>-moz-box-shadow:0 0 5px #555;<%
+		%>-webkit-box-shadow:0 0 5px #555;<%
+	%>}<%
+	%>.<%= cssClass %> #selected a{<%
+		%>color:#fff;<%
+	%>}<%
+}
+return $base.final( "text/css", body );

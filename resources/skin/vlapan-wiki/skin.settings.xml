@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<title>vlapan wiki</title>
+	<type>HIERARCHY</type>
+	<charset>UTF-8</charset>
+	<personalized>true</personalized>
+	<responsible class="string">vlapan@vlapan.com</responsible>
+
+	<prototype>vlapan-site</prototype>
+
+	<renderer>
+		<type>ACM.ECMA</type>
+		<suffix>.ecma</suffix>
+	</renderer>
+</settings>

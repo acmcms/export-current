@@ -1,0 +1,19 @@
+//
+// Abstract. JS Class
+//
+//
+// While file must evaluate to a single constructor in form of one expression. 
+// 
+//
+// Example:
+//
+
+class Example.Abstract extends Object {
+	title			: "Abstract something w/o any particular meaning",
+	onLayoutExecute	: function(layout){
+		return	layout.elements || 	// sequence rule
+				layout.content || 	// container rule
+				layout.value || 	// third rule
+				null;				// 'false' otherwise will be a result.
+	}
+}

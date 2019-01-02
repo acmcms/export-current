@@ -1,0 +1,470 @@
+<% // 	
+		Выполнение команды. RPC с клиента (браузера) на сервер.
+
+
+%><%FORMAT: 'xml' %><%
+%><%CHOOSE: Request.type %><%
+	%><%MATCH: 'quick' %><%
+		%><%EXEC: quick = ControlAPI.getQuickActor() %><%
+		%><%IF: !quick %><%
+			%><%RETURN: {
+				template	: '500',
+				title		: 'Error',
+				body		: 'No quick commands available!'
+			} %><%
+		%><%/IF%><%
+		%><%EXEC: actor = quick %><%
+		%><%EXEC: commands = actor.getCommands() %><%
+		%><%EXEC: form = null %><%
+
+
+	%><%MATCH: 'node' %><%
+		%><%EXEC: node = ControlAPI.nodeForObject(Request.getSharedObject()) %><%
+		%><%EXEC: (Request.path || Request.key) && 
+					(node = ControlAPI.childForPath(node, (Request.path || '') + (Request.key || ''))) %><%
+		%><%IF: !node %><%
+			%><%RETURN: {
+				template	: '500commandResult',
+				title		: 'Error',
+				body		: 'Node (path=' + Request.path + ') was not found while trying to execute a command'
+			} %><%
+		%><%/IF%><%
+		%><%EXEC: actor = node %><%
+		%><%EXEC: commands = actor.getCommands() %><%
+		%><%EXEC: form = null %><%
+
+
+	%><%MATCH: 'node_form_open' %>
+		<%EXEC: node = ControlAPI.nodeForObject(Request.getSharedObject()) %>
+		<%EXEC: Request.path && (node = ControlAPI.childForPath(node, Request.path)) %>
+		<%IF: !node %>
+			<%RETURN: {
+				template	: '500commandResult',
+				title		: 'Error',
+				body		: 'Node (path=' + Request.path + ') was not found while trying to execute a command'
+			} %>
+		<%/IF%>
+		<%EXEC: forms = node.getForms() %>
+		<%IF: !forms %>
+			<%RETURN: {
+				template	: '500commandResult',
+				title		: 'Error',
+				body		: 'Node (path=' + Request.path + ') hasn\'t any forms'
+			} %>
+		<%/IF%>
+
+		<%EXEC: command = forms.getByKey( Request.cmd ) %>
+		<%IF: !command %>
+			<%RETURN: {
+				template	: '500commandResult',
+				title		: 'Error',
+				body		: 'Command ' + Request.cmd + ' was not found while trying to execute a command'
+			} %>
+		<%/IF%>
+
+		<%EXEC: result = node.getCommandResult(command,null) %>
+		<%IF: !result %>
+			<%RETURN: {
+				template	: '500commandResult',
+				title		: 'Error',
+				body		: 'Command \'' + command.getTitle() + '\' hasn\'t any results'
+			} %>
+		<%/IF%>
+
+		<%EXEC: guid = Create.guid() %>
+		<%EXEC: form = {} %>
+		<%EXEC: form.guid = guid %>
+		<%EXEC: form.data = result %>
+		<%EXEC: form.back = Flags.back %>
+		<%EXEC: Session[guid] = form %>
+		
+		<%FINAL: 'text/html' %><%
+			%><body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}"><%
+				%><XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML"><%
+					%><entry type="form" id="<%= guid %>" /><%
+				%></XML><%
+			%></body><%
+		%><%/FINAL%>
+
+	<%MATCH: 'tree_common' %>
+		<%EXEC: Flags.back = Request.back %>
+		<%EXEC: common = ControlAPI.getCommonActor( Request.path ) %>
+		<%IF: !common %>
+			<%RETURN: {
+				template	: '500commandResult',
+				title		: 'Error',
+				body		: 'Common tree container (path=' + Request.path + ') was not found while trying to execute a command.'
+			} %>
+		<%/IF%>
+		<%EXEC: actor = common %>
+		<%EXEC: commands = actor.getCommands() %>
+		<%EXEC: form = null %>
+
+	<%MATCH: 'content' %>
+		<%EXEC: node = ControlAPI.nodeForObject(Request.getSharedObject()) %>
+		<%EXEC: Request.path && (node = ControlAPI.childForPath(node, Request.path)) %>
+		<%IF: !node %>
+			<%RETURN: {
+				template	: '500commandResult',
+				title		: 'Error',
+				body		: 'Node (path=' + Request.path + ') was not found while trying to execute a command'
+			} %>
+		<%/IF%>
+
+		<%EXEC: actor = node %>
+		<%EXEC: commands = node.getContentCommands( Request.key ) || node.getCommands() %>
+		<%EXEC: form = null %>
+
+	<%MATCH: 'content_multi' %>
+		<%EXEC: node = ControlAPI.nodeForObject(Request.getSharedObject()) %>
+		<%EXEC: Request.path && (node = ControlAPI.childForPath(node, Request.path)) %>
+		<%IF: !node %>
+			<%RETURN: {
+				template	: '500commandResult',
+				title		: 'Error',
+				body		: 'Node (path=' + Request.path + ') was not found while trying to execute a command.'
+			} %>
+		<%/IF%>
+		<%EXEC: commands = node.getContentMultipleCommands( split(Request.key,',') ) %>
+		<%EXEC: actor = node %>
+		<%EXEC: form = null %>
+
+	<%MATCH: 'form' %>
+		<%EXEC: session_form = Session[Request.key] %>
+		<%IF: !session_form %>
+			<%LOG:'command.execution','No form available, please retry' %>
+			<%RETURN: {
+				template	: '500commandResult',
+				title		: 'Error',
+				body		: 'No form available, please retry'
+			} %>
+		<%/IF%>
+
+		<%EXEC: actor = session_form.data %>
+		<%EXEC: commands = actor.getCommands() %>
+		<%EXEC: form = actor %>
+
+		<%IF: Request.close %>
+			<%IF: actor.attributes.on_close %>
+				<%EXEC: result = actor.getCommandResult(actor.attributes.on_close, null) %>
+				<%IF: ControlAPI.isForm(result) %>
+					<%EXEC: session_form.data = result %>
+					<%FINAL: 'text/html' %><%
+						%><body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}"><%
+							%><XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML"><%
+								%><entry <%
+									%>type="form" <%
+									%>id="<%= guid %>" <%
+									%>formID="<%= result.attributes.id %>" <%
+									%>title="<%= Format.xmlAttributeFragment( result.getTitle() ) %>" <%
+								%>/><%
+							%></XML><%
+						%></body><%
+					%><%/FINAL%>
+				<%/IF%>
+
+				<%IF: result %>
+					<%EXEC: Session.getParameters().remove( Request.id ) %>
+					<%IF: ControlAPI.isUrl( result ) %>
+						<%FINAL: 'text/html' %>
+							<body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}">
+								<XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML">
+									<entry type="url"><%= StringToUrl(result) %></entry>
+								</XML>
+							</body>
+						<%/FINAL%>
+					<%ELSE%>
+						<%FINAL: 'text/html' %>
+							<body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}">
+								<XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML">
+									<entry type="string"><%= StringToHtml(result) %></entry>
+								</XML>
+							</body>
+						<%/FINAL%>
+					<%/ELSE%>
+					<%/IF%>
+				<%/IF%>
+			<%/IF%>
+
+			<%EXEC: Session.getParameters().remove( Request.key ) %>
+			<%FINAL: 'text/html' %>
+				<body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}">
+					<XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML">
+						<entry type="done"/>
+					</XML>
+				</body>
+			<%/FINAL%>
+		<%/IF%>
+
+	<%MATCH%>
+		<%LOG:'command.execution','Unknown command type: '+Request.type %>
+		<%RETURN: {
+			template	: '500commandResult',
+			title		: 'Error',
+			body		: 'Unknown command type: ' + Request.type
+		} %>
+<%/CHOOSE%>
+
+
+
+<%EXEC: commandName = null %>
+<%EXEC: parameters = {} %>
+<%IF: form %>
+	<%EXEC: fieldset = form.getFieldset && form.getFieldset() %>
+	<%IF: fieldset %>
+		<%EXEC: fieldset.dataRetrieve( form.getData(), parameters ) %>
+		<%EXEC: joinFieldset = Join(fieldset,',') %>
+	<%/IF%>
+<%/IF%>
+		
+<%RECURSION: parameters = parameters, request = Request.getParameters() %>
+	
+	<%EXEC: catchesDone = {} %>
+	<%CALL: ForHash(request) %>
+		<%IF: CurrentKey.startsWith("set_") %>
+			<%EXEC: parameters[ CurrentKey.substring(4) ] = [] %>
+		<%/IF%>
+		<%IF: CurrentKey.startsWith("boolean_") %>
+			<%EXEC: parameters[ CurrentKey.substring(8) ] = false %>
+		<%/IF%>
+		<%IF: CurrentKey.startsWith("tomap_") %>
+			<%EXEC: CurrentKey = CurrentKey.substring(6) %>
+			<%EXEC: mapName = CurrentKey.substring(0, CurrentKey.indexOf('___')) %>
+			<%IF: !parameters[ mapName ] %>
+				<%EXEC: parameters[ mapName ] = {} %>
+			<%/IF%>
+	
+			<%EXEC: catchPrefix = "tomap_"+mapName+"___" %>
+			<%IF: !catchesDone.containsKey(catchPrefix) %>
+				<%EXEC: newRequest = {} %>
+				<%CALL: ForHash( request ) %>
+					<%IF: CurrentKey.startsWith(catchPrefix) %>
+						<%EXEC: newRequest[ CurrentKey.substring(catchPrefix.length()) ] = Current %>
+					<%/IF%>
+				<%/CALL%>
+				<%EXEC: catchesDone[ catchPrefix ] = true %>
+				<%DEEPER: parameters = parameters[mapName], request = newRequest, catchesDone = catchesDone %>
+			<%/IF%>
+		<%/IF%>
+		<%IF: CurrentKey.startsWith("tomapfield_") %>
+			<%EXEC: CurrentKey = CurrentKey.substring(11) %>
+			<%EXEC: mapName = CurrentKey.substring(0, CurrentKey.indexOf('___')) %>
+			<%IF: !parameters[ mapName ] %>
+				<%EXEC: parameters[ mapName ] = {} %>
+			<%/IF%>
+			<%EXEC: CurrentKey = CurrentKey.substring(CurrentKey.indexOf('___')+3) %>
+			<%EXEC: mapKey = CurrentKey.substring(0, CurrentKey.indexOf('___')) %>
+			<%IF: !parameters[ mapName ][ mapKey ] %>
+				<%EXEC: parameters[ mapName ][ mapKey ] = {} %>
+			<%/IF%>
+	
+			<%EXEC: catchPrefix = "tomapfield_"+mapName+"___"+mapKey+"___" %>
+			<%IF: !catchesDone.containsKey(catchPrefix) %>
+				<%EXEC: newRequest = {} %>
+				<%CALL: ForHash( request ) %>
+					<%IF: CurrentKey.startsWith(catchPrefix) %>
+						<%EXEC: newRequest[ CurrentKey.substring(catchPrefix.length()) ] = Current %>
+					<%/IF%>
+				<%/CALL%>
+				<%EXEC: catchesDone[ catchPrefix ] = true %>
+				<%DEEPER: parameters = parameters[mapName][mapKey], request = newRequest, catchesDone = catchesDone %>
+			<%/IF%>
+		<%/IF%>
+	<%/CALL%>
+	
+	
+	<%CALL: ForHash(request) %>
+		<%IF: CurrentKey.startsWith("fieldcmd_") %>
+			<%INCLUDE: 'fieldsCommands.inc' %>
+		<%/IF%>
+		<%IF: CurrentKey.startsWith("formcmd_") %>
+			<%EXEC: formCommandName = CurrentKey.substring(8) %>
+		<%/IF%>
+		<%IF: CurrentKey.startsWith("cmd") %>
+			<%EXEC: commandName = Current %>
+		<%/IF%>
+		<%IF: CurrentKey.startsWith("__") %>
+			<%EXEC: parameters[ CurrentKey.substring(2) ] = Current %>
+		<%/IF%>
+	<%/CALL%>
+<%/RECURSION%>
+
+
+<%IF: formCommandName %>
+	<%EXEC: form.setData(parameters) %>
+	<%IF: Request.type == 'form' %>
+		<%EXEC: guid = Request.key %>
+	<%ELSE%>
+		<%EXEC: guid = Create.guid() %>
+		<%EXEC: form = {} %>
+		<%EXEC: form.guid = guid %>
+		<%EXEC: form.data = actor %>
+		<%EXEC: form.back = Flags.back %>
+		<%EXEC: Session[guid] = form %>
+	<%/ELSE%>
+	<%/IF%>
+	<%EXEC: formCommandData = '' %>
+	<%IF: (pos = formCommandName.indexOf('_')) != -1 %>
+		<%EXEC: formCommandData = formCommandName.substring(pos+1) %>
+		<%EXEC: formCommandName = formCommandName.substring(0,pos) %>
+	<%/IF%>
+	<%LOG:'command.execution', 'form.command?type=form&id='+guid+'&command='+formCommandName+'&data='+formCommandData%>
+	<%REDIRECT: 'form.command?type=form&id='+guid+'&command='+formCommandName+'&data='+formCommandData %>
+<%/IF%>
+
+
+
+<%IF: !commands %>
+	<%RETURN: {
+		template	: '500commandResult',
+		title		: 'Error',
+		body		: 'No commands available'
+	} %>
+<%/IF%>
+<%EXEC: command = commands.getByKey( commandName ) %>
+<%IF: !command %>
+	<%RETURN: {
+		template	: '500commandResult',
+		title		: 'Error',
+		body		: 'Unknown command: \'' + commandName + '\' for \'' + actor + '\'' + ', url: ' + Request.getUrl()
+	} %>
+<%/IF%>
+
+<%TRY%>
+	<%IF: form %>
+		<%EXEC: fieldset = actor.getFieldset && actor.getFieldset() %>
+		<%IF: fieldset %>
+			<%EXEC: errors = fieldset.dataValidate(parameters) %>
+			<%IF: Object.isFilled(errors) %>
+				<%EXEC: form.setData(parameters) %>
+				<%EXEC: session_form.errors = errors %>
+				<%FINAL: 'text/html' %><%
+					%><body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}"><%
+						%><XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML"><%
+							%><entry type="form" id="<%= Request.key %>" /><%
+						%></XML><%
+					%></body><%
+				%><%/FINAL%>
+			<%/IF%>
+			<%EXEC: target = {} %>
+			<%EXEC: fieldset.dataStore(parameters, target) %>
+			<%EXEC: parameters = target %>
+		<%/IF%>
+		<%EXEC: form.setData(parameters) %>
+	<%/IF%>
+
+	<%EXEC: result = actor.getCommandResult(command, parameters) %>
+
+	<%IF: Request.type == 'form' && form == result %>
+		<%EXEC: resultFieldset = result.getFieldset && result.getFieldset() %>
+		<%IF: Join(resultFieldset,',') == joinFieldset %>
+			<%FINAL: 'text/html' %>
+				<body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}">
+					<XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML">
+						<entry type="apply" id="<%= Request.key%>">
+							<%EXEC: resultTarget = {} %>
+							<%EXEC: resultFieldset.dataRetrieve(result.getData(), resultTarget) %>
+							<%CALL:ForArray(fieldset) %>
+								<%EXEC: fieldAttributes = Current.attributes %>
+								<%EXEC: value = resultTarget[Current.getKey()] %>
+								<%IF: value != target[Current.getKey()] %>
+									<%CHOOSE: fieldAttributes.type %>
+									<%MATCH: 'date' %>
+										<entry type="field" CMDid="<%= Current.getKey() %>" CMDvalue="<%= Format.xmlAttributeFragment(value) %>" CMDmillis="<%= value.getTime() %>" CMDformat="<%= fieldAttributes.format %>" />
+									<%MATCH%>
+										<entry type="field" CMDid="<%= Current.getKey() %>" CMDvalue="<%= Format.xmlAttributeFragment(value) %>" />
+									<%/CHOOSE%>
+								<%/IF%>
+				
+								<%CHOOSE: fieldAttributes.type %>
+								<%MATCH: 'list','map' %>
+									<entry type="field" CMDid="<%= Current.getKey() %>" />
+								<%/CHOOSE%>
+							<%/CALL%>
+						</entry>
+					</XML>
+				</body>
+			<%/FINAL%>
+		<%ELSE%>
+	`		<%FINAL: 'text/html' %>
+				<body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}">
+					<XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML">
+						<entry type="form" id="<%= Request.key%>" />
+					</XML>
+				</body>
+			<%/FINAL%>
+		<%/ELSE%>
+		<%/IF%>
+	<%/IF%>
+
+	<%IF: Request.type == 'form' && !ControlAPI.isUrl(result) %>
+		<%EXEC: Session.getParameters().remove(Request.key) %>
+	<%/IF%>
+
+	<%IF: ControlAPI.isForm(result) %>
+		<%IF: !result.attributes.path %>
+			<%CHOOSE: Request.type %>
+				<%MATCH: 'form' %>
+					<%EXEC: result.attributes.path = form.attributes.path %>
+				<%MATCH: 'node', 'tree_common', 'content', 'content_multi', 'node_form_open' %>
+					<%EXEC: result.attributes.path = Request.path %>
+			<%/CHOOSE%>
+		<%/IF%>
+
+		<%EXEC: guid = Create.guid() %>
+		<%EXEC: form = {} %>
+		<%EXEC: form.guid = guid %>
+		<%EXEC: form.data = result %>
+		<%EXEC: Session[guid] = form %>
+
+		<%IF: result.attributes.id == 'confirmation' %>
+			<%EXEC: commands = ControlAPI.filterAccessibleCommands( result.attributes.path || '', result.getCommands() ) %>
+			<%IF: ArrayLength(commands) == 1%>
+				<%FINAL: 'text/html' %>
+					<body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}">
+						<XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML">
+							<entry type="confirmation" id="<%= guid %>" formID="<%= result.attributes.id %>" title="<%= Format.xmlAttributeFragment( result.getTitle() ) %>" cmd="<%= commands[0].getKey() %>"/>
+						</XML>
+					</body>
+				<%/FINAL%>
+			<%/IF%>
+		<%/IF%>
+
+		<%FINAL: 'text/html' %>
+			<body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){}">
+				<XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML">
+					<entry type="form" id="<%= guid %>" formID="<%= result.attributes.id %>" title="<%= Format.xmlAttributeFragment( result.getTitle() ) %>"/>
+				</XML>
+			</body>
+		<%/FINAL%>
+	<%/IF%>
+
+<%CATCH%>
+	<%LOG:'command.execution', Format.throwableAsPlainText(Exception) %>
+	<%RETURN: {
+		template	: '500commandResult',
+		title		: 'Error',
+		body		: 'Unexpected error while executing a command'
+	} %>
+<%/TRY%>
+			
+<%FINAL: 'text/html' %><%
+	%><body onload="try{parent.document.getElementById(window.name).onDone()}catch(Error){parent.onDone()}"><%
+		%><XML ID="oMetaData" base="" entryname="entry" type="commandResult" format="XML"><%
+		
+			%><%IF: result %><%
+				%><%IF: ControlAPI.isUrl(result) %><%
+					%><entry type="url"><%= StringToUrl( result ) %></entry><%
+				%><%ELSE%><%
+					%><entry type="string"><![CDATA[<%= String( result ) %>]]></entry><%
+				%><%/ELSE%><%
+				%><%/IF%><%
+			%><%ELSE%><%
+				%><entry type="done"></entry><%
+			%><%/ELSE%><%
+			%><%/IF%><%
+	
+		%></XML><%
+	%></body><%
+%><%/FINAL%><%
+%><%/FORMAT%>

@@ -1,0 +1,460 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+<title>Header (AE3 ACM SAPI)</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="Header (AE3 ACM SAPI)";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar_top">
+<!--   -->
+</a><a href="#skip-navbar_top" title="Skip navigation links"></a><a name="navbar_top_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../mwm/email/FieldSimple.html" title="class in mwm.email"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../mwm/email/InvalidFormatException.html" title="class in mwm.email"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../index.html?mwm/email/Header.html" target="_top">Frames</a></li>
+<li><a href="Header.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">mwm.email</div>
+<h2 title="Class Header" class="title">Class Header</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li>mwm.email.Header</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd>java.io.Serializable</dd>
+</dl>
+<dl>
+<dt>Direct Known Subclasses:</dt>
+<dd><a href="../../mwm/email/EmailHeader.html" title="class in mwm.email">EmailHeader</a></dd>
+</dl>
+<hr>
+<br>
+<pre>public abstract class <span class="strong">Header</span>
+extends java.lang.Object
+implements java.io.Serializable</pre>
+<div class="block">This abstract class is a container for header fields and makes up the header
+ object for messages and body parts. The class organizes the fields by their
+ name and provides the ordinary number of methods to remove, get and add
+ fields. There are a two things to consider when extending this class:
+ <p>
+ 
+ 1) The order of the fields stored in a header object is not significant. That
+ means that agents that requires a significant order of the fields must parse
+ that order themselves in the <code>getAll</code> method.<br>
+ <br>
+ 
+ 2) The header object can contain multiple fields with the same name. This is
+ not permitted by most message protocolls but is frequently used for transport
+ information. Most implementations should only use the <code>set</code> method
+ to set a header field since this method checkes for duplicated field names.
+ <p></div>
+<dl><dt><span class="strong">Author:</span></dt>
+  <dd>Lars J. Nilsson</dd>
+<dt><span class="strong">See Also:</span></dt><dd><a href="../../serialized-form.html#mwm.email.Header">Serialized Form</a></dd></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../mwm/email/Header.html#Header(mwm.email.FieldAbstract[])">Header</a></strong>(<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>[]&nbsp;fields)</code>
+<div class="block">Construct a new header object using the header fields passed in a
+ parameter array.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Header.html#add(mwm.email.FieldAbstract)">add</a></strong>(<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>&nbsp;field)</code>
+<div class="block">Add header field.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Header.html#exists(java.lang.String)">exists</a></strong>(java.lang.String&nbsp;fieldName)</code>
+<div class="block">Check if this field name is exists mapped to a header field object.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a></code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Header.html#get(java.lang.String)">get</a></strong>(java.lang.String&nbsp;fieldName)</code>
+<div class="block">Get a header field by name.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>abstract <a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Header.html#getAll()">getAll</a></strong>()</code>
+<div class="block">Get all header fields in a significant order, if one exists.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Header.html#getAll(java.lang.String)">getAll</a></strong>(java.lang.String&nbsp;fieldName)</code>
+<div class="block">Get all header fields mapped to a field name.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Header.html#length()">length</a></strong>()</code>
+<div class="block">Get the number of header fields contained in this header.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Header.html#remove(java.lang.String)">remove</a></strong>(java.lang.String&nbsp;fieldName)</code>
+<div class="block">Remove header field.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Header.html#removeAll(java.lang.String)">removeAll</a></strong>(java.lang.String&nbsp;fieldName)</code>
+<div class="block">Remove all fields mapped to this field name.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Header.html#set(mwm.email.FieldAbstract)">set</a></strong>(<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>&nbsp;field)</code>
+<div class="block">Set unique header field.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>abstract void</code></td>
+<td class="colLast"><code><strong><a href="../../mwm/email/Header.html#write(java.io.OutputStream)">write</a></strong>(java.io.OutputStream&nbsp;out)</code>
+<div class="block">Write the fields of this header to an output stream.</div>
+</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="Header(mwm.email.FieldAbstract[])">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>Header</h4>
+<pre>public&nbsp;Header(<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>[]&nbsp;fields)</pre>
+<div class="block">Construct a new header object using the header fields passed in a
+ parameter array.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fields</code> - </dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="add(mwm.email.FieldAbstract)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>add</h4>
+<pre>public&nbsp;void&nbsp;add(<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>&nbsp;field)</pre>
+<div class="block">Add header field. This method adds the given field to the header even if
+ other fields by that name already exists.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>field</code> - </dd></dl>
+</li>
+</ul>
+<a name="exists(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>exists</h4>
+<pre>public&nbsp;boolean&nbsp;exists(java.lang.String&nbsp;fieldName)</pre>
+<div class="block">Check if this field name is exists mapped to a header field object. Field
+ search is case insensitive.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldName</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>boolean</dd></dl>
+</li>
+</ul>
+<a name="get(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>get</h4>
+<pre>public&nbsp;<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>&nbsp;get(java.lang.String&nbsp;fieldName)</pre>
+<div class="block">Get a header field by name. If the field name is mapped to multiple field
+ objects this method will return the first occurence of the field. The
+ field search is case insensitive. This method will return null if no
+ field name match is found.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldName</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>header field</dd></dl>
+</li>
+</ul>
+<a name="getAll()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAll</h4>
+<pre>public abstract&nbsp;<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>[]&nbsp;getAll()</pre>
+<div class="block">Get all header fields in a significant order, if one exists.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>header field array</dd></dl>
+</li>
+</ul>
+<a name="getAll(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAll</h4>
+<pre>public&nbsp;<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>[]&nbsp;getAll(java.lang.String&nbsp;fieldName)</pre>
+<div class="block">Get all header fields mapped to a field name. If there is no fields
+ mapped to the parameter name an empty array will be returned. Field
+ search is case insensitive. This method returns an empty array if there
+ is no fields mapped to this name.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldName</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>header field array</dd></dl>
+</li>
+</ul>
+<a name="length()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>length</h4>
+<pre>public&nbsp;int&nbsp;length()</pre>
+<div class="block">Get the number of header fields contained in this header.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>int</dd></dl>
+</li>
+</ul>
+<a name="remove(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>remove</h4>
+<pre>public&nbsp;void&nbsp;remove(java.lang.String&nbsp;fieldName)</pre>
+<div class="block">Remove header field. If multiple occurences exists of this field name,
+ only the first will be removed. Field search is case insensitive.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldName</code> - </dd></dl>
+</li>
+</ul>
+<a name="removeAll(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>removeAll</h4>
+<pre>public&nbsp;void&nbsp;removeAll(java.lang.String&nbsp;fieldName)</pre>
+<div class="block">Remove all fields mapped to this field name. Field search is case
+ insensitive.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldName</code> - </dd></dl>
+</li>
+</ul>
+<a name="set(mwm.email.FieldAbstract)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>set</h4>
+<pre>public&nbsp;void&nbsp;set(<a href="../../mwm/email/FieldAbstract.html" title="class in mwm.email">FieldAbstract</a>&nbsp;field)</pre>
+<div class="block">Set unique header field. This method will make sure that no multiple
+ fields exist with the same name. Existing fields currently mapped to the
+ field name will be deleted. Field search is case insensitive.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>field</code> - </dd></dl>
+</li>
+</ul>
+<a name="write(java.io.OutputStream)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>write</h4>
+<pre>public abstract&nbsp;void&nbsp;write(java.io.OutputStream&nbsp;out)
+                    throws java.io.IOException</pre>
+<div class="block">Write the fields of this header to an output stream. This should be done
+ in a context specific manner. Ie: In an public email application software
+ this method must present the header's content according to the current
+ protocol.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>out</code> - </dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code>java.io.IOException</code></dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar_bottom">
+<!--   -->
+</a><a href="#skip-navbar_bottom" title="Skip navigation links"></a><a name="navbar_bottom_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../mwm/email/FieldSimple.html" title="class in mwm.email"><span class="strong">Prev Class</span></a></li>
+<li><a href="../../mwm/email/InvalidFormatException.html" title="class in mwm.email"><span class="strong">Next Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../index.html?mwm/email/Header.html" target="_top">Frames</a></li>
+<li><a href="Header.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+<p class="legalCopy"><small><i>Copyright &#169; 2000-2011 -= MyX =- (http://myx.ru). All Rights Reserved.</i></small></p>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE><%= intl( en = "Open", ru = "Открыть" ) %></TITLE><%
+	
+	%><style><%
+		%><%INCLUDE: 'editor_style.css' %><%
+		%><%INCLUDE: 'editor_popup-style.css' %><%
+	%></style><%
+	
+	%><%EXEC: finderFlag = true %><%
+	%><%IF: Request.path %><%
+		%><%EXEC: path = Runtime.getLinkagePrivatePath(Request.path) %><%
+		%><%EXEC: pathLink = path.endsWith('/') ? path.substring(0, path.length() - 1) : path %><%
+		%><%EXEC: pathLink = substr(pathLink,0,lastIndexOf(pathLink,'/')) %><%
+		%><%EXEC: finderFlag = indexOf(Request.path,'/_finder/') >= 0 %><%
+	%><%/IF%><%
+
+	%><SCRIPT FOR=window EVENT=onload>
+		SetDefaults();
+	
+		var oForm = {
+			onFire : function(eType,eValue){
+				switch(eType){
+				case 'ObjectSelect':
+						document.forms.FORMFORM.ID.value = eValue.id;
+						URL.value = eValue.path + eValue.id;
+						break;
+				case 'treeChange':
+						document.forms.FORMFORM.ID.value = '';
+						document.forms.FORMFORM.Path.value = eValue.path;
+						URL.value = eValue.path;
+						break;
+				}
+			}
+		};
+	
+		eventMethods.register(oForm,'form');
+		eventMethods.register(oForm,'tree');
+
+		<%IF: Request.mode == 'open' %><%
+			%>SwitchView();<%
+		%><%/IF%><%
+	%></SCRIPT><%
+
+%><SCRIPT>
+<%INCLUDE: 'EventsMethods.js' %>
+var eventMethods = CreateEventMethods();
+
+var params = window.dialogArguments;
+
+function SetDefaults(){
+	if(params){
+		if (params.path){
+			URL.value = params.path;
+			params.path.indexOf('/_finder/') < 0 && (finderFlag.checked = false);
+		}
+				params.title && (Title.value = params.title);
+				params.target && (Target.value = params.target);
+	}
+	<%IF:path%>
+		URL.value = <%= Format.jsString(path) %>;
+	<%/IF%>
+	buffer = document.getElementById('targetBuffer');
+}
+</SCRIPT>
+
+
+
+<SCRIPT>
+
+<%EXEC:UAver = indexOf( Request.UserAgent() || '', 'MSIE 5.0') > 0 ? '5' : '0' %>
+
+function SubMit(){
+	if(URL.value.indexOf('mailto:') < 0 && URL.value.indexOf('tp:/') < 0){
+		buffer.src = "getLinkagePublicUrl?" + (finderFlag.checked ? "mode=finder&" : "") + "path="+URL.value;
+	}else{
+		ReturnUrl(URL.value);
+	}
+}
+
+// standard routine v2.0
+function parseUrlEncoded( url ){
+	var result = {};
+	var array = url.split('&');
+	for( var i in array ){
+		var current = array[i];
+		var index = current.indexOf('=');
+		if( index > 0 ){
+			var key = current.substring(0, index);
+			var value = decodeURIComponent(current.substring(index+1));
+			var ready = result[ key ];
+			if( ready == undefined ){
+				result[ key ] = value;
+			}else{
+				if( isArray( ready ) ){
+					ready.push( value );
+				}else{
+					result[ key ] = [ ready, value ];
+				}
+			}
+		}
+	}
+	return result;
+}
+var map = parseUrlEncoded(window.location.href);
+
+function ReturnUrl(arg){
+	var result = [];
+	result.path = arg;
+	result.title = Title.value;
+	result.target = Target.value;
+	if(window.opener && window.opener.CKEDITOR){
+		window.opener.CKEDITOR.tools.callFunction(map.CKEditorFuncNum, arg);
+	}else{
+		window.returnValue = result;
+	}
+	window.close();
+}
+
+
+function SwitchView(){
+	if (!myTable.viewFlag){
+		document.all['pathControl'].src = 'MiniFrameSet.htm<%=pathLink ? '?path='+ encodeURI(pathLink) : ''%>';
+		myTable.viewFlag = true;
+		myTable.cells[0].style.display = '';
+		myTable.height = '100%';
+		var h = Number(window.dialogHeight.split('px')[0]) + 250;
+		window.dialogHeight = h+'px';
+	}
+}
+
+	</SCRIPT><%
+%></HEAD><%
+
+%><body><%
+	%><table id=myTable border=0 cellpadding=0 cellspacing=2 width=100% h2eight=100%><%
+		%><tr><%
+			%><td style="display:none" height=100%><%
+				%><iframe name=pathControl id=pathControl style="width:100%; height:100%;" frameborder=0 src="__blank"></iframe><%
+			%></td><%
+		%><tr><%
+		%><tr><%
+			%><td height=10><%
+				%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+					%><tr><%
+						%><td class=t3 nowrap><%=intl(en="Document path",ru="Путь объекта") %>:&nbsp</td><%
+						%><td width=100%><input name=URL type=text class=input2 style="width:100%"></td><%
+						%><td><button class=button1 onclick="SwitchView()" style="margin-left:3px">...</button></td><%
+					%></tr><%
+				%></table><%
+			%></td><%
+		%></tr><%
+		%><tr><%
+			%><td height=10><%
+		 		%><fieldset class=block2 width=100% st2yle="margin-bottom:5px;"><%
+		 			%><LEGEND class=legend1><%=intl(en="Attributes",ru="Атрибуты") %></LEGEND><%
+					%><table border=0 cellpadding=0 cellspacing=8 width=100% s2tyle="margin:8px;"><%
+						%><tr><%
+							%><td class=t3 nowrap><%= intl( en = "Title", ru = "Заголовок" ) %>:&nbsp;</td><%
+							%><td style="width:100%"><input type=text name="Title" style="width:100%"></td><%
+							%><td class=t3 nowrap>&nbsp;&nbsp;<%= intl( en = "Target", ru = "Открывать" ) %>:&nbsp;</td><%
+							%><td><%
+								%><select name="Target" class=input2 style="width:80px"><%
+									%><option value=""><%
+									%><option value="_self"><%= intl( en = "self", ru = "в том же" ) %><%
+									%><option value="_parent"><%= intl( en = "parent", ru = "в родительском" ) %><%
+									%><option value="_top"><%= intl( en = "top", ru = "в верхнем" ) %><%
+									%><option value="_blank"><%= intl( en = "blank", ru = "в новом" ) %><%
+								%></select><%
+							%></td><%
+						%></tr><%
+					%></table><%
+				%></fieldset><%
+			%></td><%
+		%></tr><%
+		%><tr><%
+			%><td align=right height=30><%
+				%><table border=0 cellpading=0 cellspacing=0 width=100%><%
+					%><tr><%
+						%><td width=100%><%
+				%><table border=0 cellpading=0 cellspacing=0><%
+								%><tr><%
+									%><td><%
+										%><input type="checkbox" id="finderFlag" name="finderFlag"<%IF: finderFlag%> checked<%/IF%>><%
+									%></td><%
+									%><td nowrap><%
+										%><label for="finderFlag"><%= intl( en = "As finder index", ru = "Подставлять FINDER" ) %></label><%
+									%></td><%
+								%></tr><%
+							%></table><%
+						%></td><%
+						%><td style="padding-left:20px"><%
+							%><button class=button3 onclick="SubMit()"><%
+								%>&nbsp;&nbsp;<%= intl( en = "OK", ru = "ОК" ) %>&nbsp;&nbsp;<%
+							%></button><%
+							%>&nbsp;<%
+							%><button class=button3 onclick="window.returnValue='';window.close()"><%
+								%><%= intl( en = "Cancel", ru = "Отменить" ) %><%
+							%></button><%
+						%></td><%
+					%></tr><%
+				%></table><%
+			%></td><%
+		%></tr><%
+		
+		%><form target=targetBuffer2 action="GetDocumentURLResult.htm" id=FORMFORM name=FORMFORM method=POST enctype=multipart/form-data class=form1><%
+			%><input type=hidden name=Path><%
+			%><input type=hidden name=ID><%
+		%></form><%
+	%></table><%
+	
+	%><iframe name=targetBuffer id=targetBuffer border=0 frameborder=no width=1 height=1 scrolling=no src="__blank" style="position:absolute;left:0;top:-20px;visibility:hidden;"></iframe><%
+
+%></body><%
+%></html>

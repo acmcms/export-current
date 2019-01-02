@@ -1,0 +1,61 @@
+<%FORMAT: 'default' %><%
+
+%><%OUTPUT: defaultSource %><%
+%><html>
+	<head>
+		<title>Test</title>
+		<style>
+			body { background-color: #eee; color: #000; }
+		</style>
+	</head>
+	<body>
+	
+	Серия "Дина и Ко" - это многосерийная история о жизни и приключениях 
+	главных героев, о развитии их отношений и характеров. Часть времени 
+	они живут среди будничных забот, как большинство потенциальных 
+	читателей, а часть - проводят в путешествиях по миру, разгадывают 
+	тайны и сражаются со злом.
+	
+	Автор "Волна открытий" (первая книга из серии "Дина и Ко") ищет 
+	издателя. Если первые главы романа показались вам интересными, а 
+	тема актуальной, запрос на синопсис и полный текст книги, 
+	пожалуйста, отправляйте по адресу author@salber.ru. Ждем ваших 
+	предложений.
+	
+	http://myx.ru нормальныя ссылка
+	
+	<a href="http://myx.ru">ссылка</a> уже HTML ссылка
+	
+	<a href="http://myx.ru">http://myx.ru</a> дважды HTML ссылка
+	
+	myx@myx.ru чистая почта
+	
+	<b>myx@myx.ru</b> не очень чистая почта
+	
+	<b>myx@myx.ru.</b> не очень чистая почта 2
+	
+	mailto:myx@myx.ru с префиксом
+	
+	<b>mailto:myx@myx.ru</b> с префиксом и болдом
+	
+	<b>Не пишите: mailto:myx@myx.ru.</b> с префиксом и болдом и точкой
+
+	<a href="mailto:myx@myx.ru">почта</a>
+	
+	</body>
+</html><%
+%><%/OUTPUT%><%
+
+%><%RETURN: {
+	title			: "Format.xmlTextAsHtml( code )",
+	template		: "try.tpl",
+	useRequire		: true,
+	defaultSource	: defaultSource,
+	keywords		: "xml text (node value) to html enrich enhance",
+	showSource		: true,
+	previewFunction	: function(x){
+		return Format.xmlTextAsHtml( x );
+	}
+} %><%
+
+%><%/FORMAT%>

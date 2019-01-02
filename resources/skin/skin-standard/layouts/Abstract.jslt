@@ -1,0 +1,19 @@
+//
+// Abstract. JS Layout
+//
+//
+// Just an executable piece of code. 
+// 'layout' argument is defined initially in context.
+// 
+// Must return an object: same layout if nothing changed, new layout as a macro 
+// replacement or null when all done to stop recursion.
+//
+//
+// Example:
+//
+
+
+return	layout.elements || 	// sequence rule
+		layout.content || 	// container rule
+		layout.value || 	// third rule
+		null;				// 'false' otherwise will become a result.

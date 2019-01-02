@@ -1,0 +1,5 @@
+<%
+
+	%><%THROW: 'test: skinner error' %><%
+
+%>

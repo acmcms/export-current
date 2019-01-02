@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>TOOLBAR+CONTENT</title>
+	<script src="../../js/require.js"></script>
+	<script src="../../js/debug.js"></script>
+	<script src="../../js/Layouts/Layout.js"></script>
+	<style>
+		.test{
+			opacity:0.6;
+			filter: alpha(opacity=60);
+		}
+	</style>
+</head>
+<body>
+	<div id=layout1 style="width:500px;height:300px;overflow:hidden"></div>
+	<div id=layout2 style="position:absolute;left:550px;top:16px;width:150px;height:150px;overflow:auto"></div>
+	<div id=layout3 style="position:absolute;left:550px;top:186px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=layout4 style="position:absolute;left:750px;top:16px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=layout5 style="position:absolute;left:750px;top:186px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=layout6 style="position:absolute;left:950px;top:16px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=layout7 style="position:absolute;left:950px;top:186px;width:150px;height:150px;overflow:hidden"></div>
+	<div id=content class=test style="display:none;position:relative;height:100%">
+		<div style="height:10px;overflow:hidden;border:solid 20px black"></div>
+		<div style="position:absolute;width:100%;height:100%">
+			<div style="border:solid 15px yellow;position:absolute;left:0;top:0;width:100%;height:100%">
+				<div style="border:solid 15px magenta;height:100%">
+				</div>
+			</div>
+		</div>
+		<span style="white-space: nowrap">
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+		</span>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN*<br>
+	</div>
+
+	<script>
+		var alert = function(message){
+			top.debug && top.debug("ALERT: " + message);
+		};
+	
+//		Layouts.setTheme("operax");
+		Layouts.setTheme("crazy1");
+
+		var layout1 = new Layouts.Layout(document.getElementById("layout1") || document.body, {
+			layout : "screen",
+			cssStyle	: "background-color:#f5f",
+			content: {
+				layout		: "attachment",
+				side		: "north",
+				//size		: 100,
+				attachment	: {
+					layout		: "outset",
+					cssStyle	: "background-color:#55f",
+					comment		: "Blue Border panel",
+					content		: {
+						layout		: "inset",
+						cssStyle	: "background-color:red;overflow:auto",
+						comment		: "border/scroller panel",
+						content		: {
+							layout		: "string",
+							cssStyle	: "background-color:cyan",
+							value		: "TEST - all borders should be 100% size"
+						}
+					}
+				},
+				content		: {
+					layout		: "padding",
+					cssStyle	: "background-color:#5f5",
+					comment		: "Content Green padding panel",
+					content		: {
+						layout		: "outset",
+						cssStyle	: "background-color:#55f",
+						comment		: "Blue Border panel",
+						content		: {
+							layout		: "inset",
+							cssStyle	: "background-color:red;overflow:auto",
+							comment		: "border/scroller panel",
+							content		: {
+								layout		: "string",
+								cssStyle	: "background-color:cyan",
+								zoom		: "compact",
+								value		: "Element text: " + document.getElementById("content").innerHTML
+							}
+						}
+					}
+				}
+			}
+		});
+
+		var layout2 = new Layouts.Layout(document.getElementById("layout2") || document.body, {
+			layout		: "normal",
+			zoom		: "compact",
+			cssStyle	: "background-color:#f5f",
+			content: {
+				layout		: "attachment",
+				side		: "north",
+				attachment	: {
+					layout		: "outset",
+					cssStyle	: "background-color:#55f",
+					comment		: "Blue Border panel",
+					content		: {
+						layout		: "inset",
+						cssStyle	: "background-color:red;overflow:auto",
+						comment		: "border/scroller panel",
+						content		: {
+							layout		: "string",
+							cssStyle	: "background-color:cyan",
+							value		: "north - compact"
+						}
+					}
+				},
+				content		: {
+					layout		: "outset",
+					cssStyle	: "background-color:#55f",
+					comment		: "Blue Border panel",
+					content		: {
+						layout		: "inset",
+						cssStyle	: "background-color:red;overflow:auto",
+						comment		: "border/scroller panel",
+						content		: {
+							layout		: "string",
+							cssStyle	: "background-color:cyan",
+							value		: "content - compact"
+						}
+					}
+				}
+			}
+		});
+
+		var layout3 = new Layouts.Layout(document.getElementById("layout3") || document.body, {
+			layout		: "normal",
+			zoom		: "compact",
+			cssStyle	: "background-color:#f5f",
+			content: {
+				layout		: "attachment",
+				side		: "north",
+				size		: 60,
+				attachment	: {
+					layout		: "outset",
+					cssStyle	: "background-color:#55f",
+					comment		: "Blue Border panel",
+					content		: {
+						layout		: "inset",
+						cssStyle	: "background-color:red;overflow:auto",
+						comment		: "border/scroller panel",
+						content		: {
+							layout		: "string",
+							cssStyle	: "background-color:cyan",
+							value		: "north - compact"
+						}
+					}
+				},
+				content		: {
+					layout		: "outset",
+					cssStyle	: "background-color:#55f",
+					comment		: "Blue Border panel",
+					content		: {
+						layout		: "inset",
+						cssStyle	: "background-color:red;overflow:auto",
+						comment		: "border/scroller panel",
+						content		: {
+							layout		: "string",
+							cssStyle	: "background-color:cyan",
+							value		: "content - compact"
+						}
+					}
+				}
+			}
+		});
+
+		document.onclick = function(){
+			var temp = form.innerHTML;
+			form.innerHTML = form.toolbar.innerHTML;
+			form.toolbar.innerHTML = temp;
+			return false;
+		};
+		
+		document.ondblclick = function(){
+			form.toolbar.panel.display();
+			return false;
+		};
+	</script>
+
+</body>
+</html>

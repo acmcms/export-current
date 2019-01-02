@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+	%><TITLE>Table</TITLE><%
+
+	%><style><%
+		%><%INCLUDE: 'editor_style.css' %><%
+		%><%INCLUDE: 'editor_popup-style.css' %><%
+	%></style><%
+	
+	%><SCRIPT>
+var params = window.dialogArguments;
+var cell = params['object'];
+
+function SetDefaults(){
+	if(cell){
+		Colspan.value		= cell.colSpan;
+		Rowspan.value		= cell.rowSpan;
+		Width.value		= cell.width;
+		Height.value		= cell.height;
+		Wrap.value		= cell.noWrap ;
+		Align.value		= cell.align ;
+		Valign.value		= cell.vAlign ;
+		Background.value	= cell.bgColor ; 
+		Border.value		= cell.borderColor ;
+		Classname.value		= cell.className ;
+	}
+}
+
+function Return(){
+	var result = [];
+	result['colSpan']	= Colspan.value;
+	result['rowSpan']	= Rowspan.value;
+	result['width']		= Width.value;
+	result['height']	= Height.value;
+	result['wrap']		= Wrap.value;
+	result['align']		= Align.value;
+	result['vAlign']	= Valign.value;
+	result['background']	= Background.value; 
+	result['border']	= Border.value;
+	result['className']	= Classname.value;
+
+	window.returnValue = result;
+	window.close();
+}
+
+
+
+function IsDigit(){
+  return ((event.keyCode >= 48) && (event.keyCode <= 57))
+}
+</SCRIPT>
+
+<SCRIPT FOR=window EVENT=onload>
+	SetDefaults();
+</SCRIPT>
+
+<SCRIPT FOR=Ok EVENT=onclick>
+	Return();
+</SCRIPT>
+
+</HEAD>
+
+<BODY>
+<TABLE border=0 cellpadding=0 cellspacing=0 width=100%>
+<TR>
+	<TD width=120 valign=top style="height:100%">
+		<FIELDSET style="padding:10 3 10 3; margin-right:1px; height:100%">
+			<TABLE border=0 cellpadding=0 cellspacing=1 width=100%>
+			<TR>
+				<TD class=th>Colspan</TD>
+				<TD width=100%><INPUT TYPE=TEXT NAME=Colspan ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%" value=1></TD>
+			</TR>
+			<TR>
+				<TD class=th>Rowsspan</TD>
+				<TD><INPUT TYPE=TEXT NAME=Rowspan ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%" value=1></TD>
+			</TR>
+			<TR>
+				<TD class=th>Width</TD>
+				<TD><INPUT TYPE=TEXT NAME=Width style="width:100%"></TD>
+			</TR>
+			<TR>
+				<TD class=th>Height</TD>
+				<TD><INPUT TYPE=TEXT NAME=Height style="width:100%"></TD>
+			</TR>
+			<TR>
+				<TD class=th>Wrap</TD>
+				<TD>
+					<SELECT Name=Wrap style="width:100%">
+						<option>
+						<option value=true>On
+						<option value=false>Off
+					</SELECT>
+				</TD>
+			</TR>
+			</TABLE>
+		</FIELDSET>
+	</TD>
+	<TD valign=top style="height:100%">
+		<FIELDSET style="padding:10 3 10 3; height:100%">
+			<TABLE border=0 cellpadding=0 cellspacing=1 width=100%>
+			<TR>
+				<TD class=th>Align</TD>
+				<TD>
+					<SELECT Name=Align style="width:100%">
+						<option>
+						<option value=left>left
+						<option value=right>right
+						<option value=center>center
+					</SELECT>
+				</TD>
+			</TR>
+			<TR>
+				<TD class=th nowrap>Vertical align</TD>
+				<TD>
+					<SELECT Name=Valign style="width:100%">
+						<option>
+						<option value=middle>middle
+						<option value=baseline>baseline
+						<option value=bottom>bottom
+						<option value=top>top
+					</SELECT>
+				</TD>
+			</TR>
+			<TR>
+				<TD class=th nowrap>Border color</TD>
+				<TD width=100%><INPUT TYPE=TEXT NAME=Border style="width:100%"></TD>
+			</TR>
+			<TR>
+				<TD class=th nowrap>Background color</TD>
+				<TD><INPUT TYPE=TEXT NAME=Background style="width:100%"></TD>
+			</TR>
+			<TR>
+				<TD class=th>ClassName</TD>
+				<TD><INPUT TYPE=TEXT NAME=Classname style="width:100%"></TD>
+			</TR>
+			</TABLE>
+		</FIELDSET>
+	</TD>
+</TR>
+</TABLE>
+
+<div align=right style="margin-top:5px"><BUTTON ID=Ok TYPE=SUBMIT>&nbsp;<B>OK</B>&nbsp;</BUTTON><BUTTON ONCLICK="window.close();">&nbsp;Cancel&nbsp;</BUTTON></div>
+
+</BODY>
+</HTML>

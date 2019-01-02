@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML><%
+%><head><%
+	%><TITLE>Edit list</TITLE><%
+	%><%INCLUDE: 'include-head' %><%
+	
+	%><LINK HREF="$files/css/frames.css" REL=stylesheet><%
+	%><style><%
+		%><%INCLUDE: 'editor_style.css' %><%
+		%><%INCLUDE: 'editor_popup-style.css' %><%
+		%>.blockParent TD{<%
+			%>height:15px;<%
+			%>font-family:Tahoma, Arial;<%
+			%>font-size:8pt;<%
+			%>border-style:solid;<%
+			%>border-width:1px;<%
+		%>}<%
+		%>.blockParent .icon{<%
+			%>padding:0;<%
+			%>border:0;<%
+		%>}<%
+		%>.blockParent .title{<%
+			%>padding:0 0 0 4px;<%
+			%>border:0;<%
+		%>}<%
+		%>.droppedItem{<%
+			%>filter:gray() alpha(opacity=30);<%
+			%>opacity:0.3;<%
+		%>}<%
+	%></style><%
+	%><%INCLUDE: 'formFields.listmultiple.css' %><%
+	
+	%><%EXEC: fieldname = Request.fieldname %><%
+	%><%EXEC: session_form = Session[Request.id] %><%
+	%><%EXEC: data = session_form.data.getData() %><%
+	%><%EXEC: mapPaths = split(fieldname,'/') %><%
+	%><%EXEC: fieldset = session_form.data.fieldset %><%
+	
+	%><%IF: mapPaths.size() > 1 %><%
+		%><%ITERATE: path : mapPaths %><%
+			%><%EXEC: field = fieldset.getField(path) %><%
+			%><%EXEC: fieldset = field.attributes.fieldset %><%
+			%><%EXEC: data = (value || data) %><%
+			%><%EXEC: value = data[path] %><%
+			%><%EXEC: fieldname = path %><%
+		%><%/ITERATE%><%
+	%><%/IF%><%
+
+	%><script id="scriptRequire" src="client/js/require.js"></script><%
+
+	%><script><%
+		%>requireScript("app/Router.js");<%
+	%></script><%
+
+	%><script>
+		var router = new Router("edit-list-multiple");
+		window.returnValue = false;
+		
+		function listFrameIni(){
+			router.register(this,'itemsList');
+			this.onFire = function(eType,eValue,eObj){
+				this.returnValue = (eObj && eObj.returnValue);
+			};
+		}
+		
+		function Start(){
+			var array = window.dialogArguments;
+			array && (valuesList.returnValue = array);
+			listFrameObj = document.getElementById('listFrame');
+			listFrameObj.ini = listFrameIni;
+			listFrameObj.ini();
+		}
+		
+		function Add(){
+			var obj = document.getElementById('listFrame');
+			var value = obj.returnValue;
+			if(!value){
+				return;
+			}
+			for(var i=0; i<value.length; ++i){
+				valuesList.add(value[i]);
+			}
+		}
+		
+		function Remove(){
+			valuesList.remove();
+		}
+		
+		
+		function Submit(){
+			window.returnValue = valuesList.getValue();
+			window.close();
+		}
+	</script><%
+	
+%></head><%
+
+%><%EXEC: ARRAY_ALPHABET = {} %><%
+%><%EXEC: ARRAY_ALPHABET.en = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %><%
+%><%EXEC: ARRAY_ALPHABET.ru = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ' %><%
+
+%><%ITERATE: key : ARRAY_ALPHABET %><%
+	%><%EXEC: txt = Current %><%
+	%><%EXEC: arr = [] %><%
+	%><%FOR: index = 0; index < txt.length(); index ++ %><%
+		%><%EXEC: arr.add( substr( txt, index, 1 ) ) %><%
+	%><%/FOR%><%
+	%><%EXEC: ARRAY_ALPHABET[key] = arr %><%
+%><%/ITERATE%><%
+
+%><body><%
+	%><table border=0 cellpadding=0 cellspacing=0 width=100% height=100%><%
+		%><tr><%
+			%><td width=50% height=100%><%
+				%><table border=0 cellpadding=0 cellspacing=0 style="width:100%;height:100%"><%
+					%><tr><%
+						%><td style="height:100%; padding: 2px 0 0 0"><%
+							%><div style="height:100%" class=FrameBorder><%
+								%><table border=0 cellpadding=0 cellspacing=0 style="width:100%;height:100%"><%
+									%><tr><%
+										%><td style="height:100%; background-color:window"><%
+											%><iframe<%
+												%> id="listFrame"<%
+												%> name="listFrame"<%
+												%> src="formListMultiple.container?<%=Request.getParameterString() %>"<%
+												%> style="width:100%;height:100%"<%
+												%> frameborder=0><%
+											%></iframe><%
+										%></td><%
+									%></tr><%
+								%></table><%
+							%></div><%
+						%></td><%
+					%></tr><%
+				%></table><%
+			%></td><%
+			%><td style="padding:2px"><%
+				%><button onclick="Add()" class="iconSymbol" style="font-size:10pt;" title="Add">4</button><br><%
+				%><button onclick="Remove()" class="iconSymbol" style="font-size:10pt;" title="Remove">3</button><br><%
+			%></td><%
+			%><td width=50%><%
+				%><div id="valuesList" style="width:100%; height:100%; overflow:auto; padding:0" class="FrameBorder formListTable"><%
+					%><table border=0 cellpadding=0 cellspacing=0 class=blockParent style="BORDER-COLLAPSE: collapse" width=100%><%
+					%></table><%
+				%></div><%
+			%></td><%
+		%></tr><%
+		%><tr><%
+			%><td align=right style="padding:10px 0 4px 0" colspan=3><%
+				%><BUTTON onclick="Submit()" style="width:80px">Set</BUTTON><%
+				%>&nbsp;<%
+				%><BUTTON onclick="window.close();" style="width:80px">Cancel</BUTTON><%
+			%></td><%
+		%></tr><%
+	%></table><%
+	
+	%><script><%
+		%>Start();<%
+	%></script><%
+
+%></body><%
+%></HTML>

@@ -1,0 +1,127 @@
+<%OUTPUT: head %>
+	<link rel="stylesheet" type="text/css"
+		href="http://yui.yahooapis.com/combo?2.8.0r4/build/reset-fonts-grids/reset-fonts-grids.css">
+	<link rel="stylesheet" type="text/css" href="example/style.css">
+	<script type="text/javascript" language="javascript">
+	<!--
+		var treeWidget = <%= VlapanTreeData.get( example = true ) %>;
+		var settings = {requestUrl:"/!/skin/vlapan-hierarchy-gwt-finder/data.json?cNode=",fullscreen:false,
+				callback:function mycallback(url){
+					alert("You selected: "+url);
+				}
+		};
+	//-->
+	</script>
+	<script type="text/javascript" language="javascript">
+	<!--
+		function showModal(uri, inputId){
+			var returnVal = window.showModalDialog(uri,inputId,"dialogWidth:800px; dialogHeight:700px; help:no; scroll:no; status:no; resizable:yes;");
+			document.getElementById(inputId).value = returnVal;
+		}
+	//-->
+	</script>
+	<link type="text/css" rel="stylesheet" href="Finder.css">
+	<script type="text/javascript" language="javascript"
+		src="/!/skin/vlapan-hierarchy-gwt-finder/$files/finder/finder.nocache.js"></script>
+	<%= VlapanSyntaxHighlighter.init() %>
+	<link rel="shortcut icon" type="image/x-icon" href="/$files/favicon.ico" />
+<%/OUTPUT%><%
+
+%><%OUTPUT: body %>
+<body>
+<h1>GWT Finder Example Page</h1>
+
+<h2>TOC</h2>
+<ul>
+	<li><a href="#about">About</a></li>
+	<li><a href="#integrate">Integrate</a></li>
+	<li><a href="#rpkgs">Related packages</a></li>
+	<li><a href="#pkgs">Other packages</a></li>
+</ul>
+
+<div>
+	<h2 id="about">About</h2>
+	<p>Hello, I'm com.vlapan.gwt.Finder widget. You can use me in forms or in your favorite rich editor. I help you choose any object in deepest hierarchy. I perfect link chooser.</p>
+	<p>Look at me, I am nice, isn't it? Please play with me!</p>
+	<div id="viewPort" style="width:600px;height:300px;margin-bottom:20px;"></div>
+	<p>I can get data from HTML page where I have placed, and by remote request.</p>
+	<p>So if you have a little amount of data you can put it in page, I will show it as fast as I can.</p>
+	<p>But also you can feed me a first part of data in page, and then if I need more I request it.</p>
+</div>
+<p>You can feed me like that</p>
+<%OUTPUT: example1 %>
+&lt;script type=&quot;text/javascript&quot; language=&quot;javascript&quot;&gt;
+		var treeWidget = {}; // This is what I will show at start, more detail in next example
+		var settings = { // You can change my general behavior here 
+				requestUrl:&quot;/data.json?cNode=&quot;, // this URL will be used when I need more data, I also add path to object that I request, thats why this URL ends with empty parameter
+				devmode:true, // This is how my developer tells me that I work with him
+				fullscreen:false, // if true, I will resize main window to fullscreen at start
+				hideFullscreenButton:false, // if true, I will hide fullscreen button
+				callback:function mycallback(url){ // I fire this callback when item selected
+					alert(&quot;You selected: &quot;+url);
+				} 
+		};
+&lt;/script&gt;
+<%/OUTPUT%>
+<%= VlapanSyntaxHighlighter.insert( example1 ) %>
+
+<p>Check my main ration, mmm delicious</p>
+<%OUTPUT: example1 %>
+	var treeWidget = {
+		title:&quot;vlapan&quot;, // everybody wants to know how object is called 
+		path:&quot;&quot;, // I use this path to request data for object, and when someone select this object
+		children:true, // if true then I know that there is some inner object
+		icon:&quot;container-home&quot;, // I can get your icons and show them with objects
+		level:0, // I don't know why, but my developer keeps this for some reasons
+		type:&quot;root&quot;, // and this too
+		name:&quot;root&quot;, // I only show this, if you set, really I don't need this stuff
+		items:[ // I read this if you have tell me that this object have children, same parameters goes next...
+			{
+				path:&quot;srvstate/&quot;,
+				children:true,
+				icon:&quot;container-information&quot;,
+				level:1,
+				type:&quot;child&quot;,
+				name:&quot;srvstate&quot;,
+				title:&quot;Status&quot;
+			},
+			...
+		]
+	}
+<%/OUTPUT%>
+<%= VlapanSyntaxHighlighter.insert( example1 ) %>
+<p>Oh yeah, you need to know, if object has <i>children:true</i> but doesn't have any in data that I have, I will request them!</p>
+<p>I was designed to have many views of data that you have, I believe in nearest future my developer add more views.</p>
+<h2 id="integrate">Integrate</h2>
+<p>You can integrate me as <a href="/!/skin/vlapan-gwt-finder-field/index.htm">field</a> or in rich editor.</p>
+<ul class="list">
+	<li>import "vlapan-hierarchy-gwt-finder" package to your
+	skin.settings.xml</li>
+</ul>
+<p>I have already integrated in next rich editors:</p>
+<ul class="horizontal">
+	<li><a href="/!/skin/vlapan-richedit/form.htm?editor=ckeditor&finder=gwt-finder">CKEditor</a></li>
+	<li><a href="/!/skin/vlapan-richedit/form.htm?editor=tinymce&finder=gwt-finder">TinyMCE</a></li>
+</ul>
+
+<h2 id="rpkgs">Related packages</h2>
+<ul class="horizontal">
+	<li><a href="/!/skin/vlapan-gwt-finder-field/index.htm">GWT Finder field</a></li>
+</ul>
+<h2 id="pkgs">Other packages</h2>
+<ul class="horizontal">
+	<li><a href="http://richedit.test.vlapan.com">RichEdit</a></li>
+	<li><a href="http://syntaxhighlighter.test.vlapan.com">SyntaxHighlighter</a></li>
+</ul>
+</body>
+<%/OUTPUT%><%
+
+%><%RETURN: {
+		title			: "vlapan GWT Finder",
+		template		: "html-page",
+		requireCss		: requireCss,
+		requireJs		: requireJs,
+		head			: head,
+		body			: body,
+		doctype			: "GWT"
+	} %>

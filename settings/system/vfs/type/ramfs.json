@@ -1,0 +1,6 @@
+{
+	type : "ae3/Factory",
+	name : "ramfs",
+	description : "RAM FS, (speed or size based on system configuration), args: <fsName>",
+	reference : "ru.myx.ae3.sys/vfs/FactoryRAMFS"
+}

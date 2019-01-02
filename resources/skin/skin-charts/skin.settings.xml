@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>Default Charting Support</title>
+	<abstract>true</abstract>
+	<charset>UTF-8</charset>
+	
+	<default>charts.html</default>
+	
+	<prototype>skin-standard-html</prototype>
+	
+	<extension query="*.html" file="*.jsld" accept="text/html" threat="HTML-JSLD" />
+	<extension query="*.html" file="*.html" threat="HTML-TPL" />
+	<extension query="*.png" file="*.png" threat="BINARY" />
+	
+	<keywords>charts</keywords>
+	
+	<renderer>ACM.TPL</renderer>
+	<generate>build</generate>
+</settings>

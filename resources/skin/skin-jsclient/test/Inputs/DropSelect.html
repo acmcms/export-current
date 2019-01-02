@@ -1,0 +1,256 @@
+<html><head><title>Inputs.DropSelect</title><!-- <%FORMAT:'html'%><%
+%><%OUTPUT: head %><%
+	%><%= '<!' + '-- ' + 'begin' %>-->
+	<script type="text/javascript" src="../../js/debug.js"></script>
+	<script type="text/javascript" src="../../js/require.js"></script>
+	<script type="text/javascript" src="../../js/lib/standard.js"></script>
+	
+	<script type="text/javascript" src="../../js/Inputs/DropSelect.js"></script>
+	<script type="text/javascript" src="../../js/Elements/ModalDiv.js"></script>
+	<script type="text/javascript" src="../../js/Utils/Coordinates.js"></script>
+	<script type="text/javascript" src="../../js/Utils/Event.js"></script>
+	<script type="text/javascript" src="../../js/Features/MouseCapture.js"></script>
+	<script type="text/javascript" src="../../js/Inputs/BoxSelect.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../css/web/default.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/lib/dropselect.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/lib/boxselect.css"/>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><% // -->
+</head>
+<body><h1>Inputs.DropSelect</h1><!-- 
+%><%OUTPUT: body %><%
+	%><%= '<!' + '-- ' + 'begin' %><%
+	%>-->
+	<!-- sorry, should be <p> and <span> in it - by IE fails... -->
+	<div skip="true" style="width:300px;background-color:#AAFFFF;padding:15px">
+		A paragraph of text <div style="display:block"></div> is here.
+		<a href="#" onclick="document.body.style.position='relative'; return false;">body:relative</a>
+		<a href="#" onclick="document.body.style.position='static';return false;">body:static</a>
+	</div>
+	<!-- end of sorry 8-) -->
+	<table border="1" cellspacing="4" width="100%" height="140px" style="margin: 3px;background-color:#DDDDFF;">
+		<tr>
+			<td valign="top"></td>
+			<td valign="bottom"></td>
+			<th valign="bottom"><h1>DROP-SELECT</h1><a href="../../tests.html">&gt; click for tests.html &lt;</a></th>
+		</tr>
+	</table>
+	<table border="1" cellspacing="4" height="140px" style="margin: 3px;background-color:#DDDDFF;">
+		<tr>
+			<td valign="top"></td>
+			<td valign="bottom"></td>
+			<th valign="bottom"><h1>DROP-SELECT</h1><a href="../../tests.html">&gt; click for tests.html &lt;</a></th>
+		</tr>
+	</table>
+	<table width="15%" cellpadding="0" cellspacing="4" style="border: 3px solid cyan;background-color:#FFDDDD;">
+		<tr>
+			<td></td>
+		</tr>
+	</table>
+	<table width="25%" cellpadding="0" cellspacing="4" style="border: 3px solid cyan;background-color:#DDFFDD;">
+		<tr>
+			<td></td>
+		</tr>
+	</table>
+	<table width="35%" cellpadding="0" cellspacing="4" style="border: 3px solid cyan;background-color:#FFDDDD;">
+		<tr>
+			<td></td>
+		</tr>
+	</table>
+	<table border="1" cellspacing="6" width="100%" style="border: 3px solid cyan;background-color:#DDFFDD;">
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<table border="1" cellspacing="6" width="33%" style="width:33%;border:3px solid blue;background-color:#FFDDDD;">
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<table align="right" border="1" cellspacing="6" width="33%" style="width:33%;border:3px solid blue;background-color:#FFDDDD;">
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<div skip="true" style="position: relative; clear: both;">
+		<table border="1" cellspacing="6" width="33%" style="width:33%;border:3px solid purple;background-color:#FFDDDD;">
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:120px;height:120px;border: 3px solid red">
+	</div>
+	<div style="position:fixed;top:20px;right:10px;width:120px;height:32px;border: 3px solid black">
+	</div>
+	<div style="position:absolute;top:20px;right:150px;width:120px;height:32px;border: 3px solid black">
+	</div>
+	<select style="position:fixed;top:20px;right:300px;width:120px;height:32px;border: 3px solid black">
+		<option>System </option>
+		<option>default</option>
+		<option>control</option>
+		<option>implementation</option>
+		<option>to</option>
+		<option>compare</option>
+		<option>with</option>
+		<option>........</option>
+		<option>Option 09</option>
+		<option>Option 10</option>
+		<option>Option 11</option>
+		<option>Option 12</option>
+		<option>Option 13</option>
+		<option>Option 14</option>
+		<option>Option 15</option>
+	</select>
+	<select style="position:absolute;top:20px;right:450px;width:120px;height:32px;border: 3px solid black">
+		<option><b>System</b></option>
+		<option><i>default</i></option>
+		<option><u>control</u></option>
+		<option><font color="red">implemen</font>tation</option>
+		<option>to</option>
+		<option>compare</option>
+		<option>with</option>
+		<option>........</option>
+		<option>Option 09</option>
+		<option>Option 10</option>
+		<option>Option 11</option>
+		<option>Option 12</option>
+		<option>Option 13</option>
+		<option>Option 14</option>
+		<option>Option 15</option>
+	</select>
+	<select style="position:fixed;top:60px;right:300px;width:120px;height:2em;border: 3px solid black">
+		<option>System </option>
+		<option>default</option>
+		<option>control</option>
+		<option>implementation</option>
+		<option>to</option>
+		<option>compare</option>
+		<option>with</option>
+		<option>........</option>
+		<option>Option 09</option>
+		<option>Option 10</option>
+		<option>Option 11</option>
+		<option>Option 12</option>
+		<option>Option 13</option>
+		<option>Option 14</option>
+		<option>Option 15</option>
+	</select>
+	<select style="position:absolute;top:60px;right:450px;width:120px;height:2em;border: 3px solid black">
+		<option><b>System</b></option>
+		<option><i>default</i></option>
+		<option><u>control</u></option>
+		<option><font color="red">implemen</font>tation</option>
+		<option>to</option>
+		<option>compare</option>
+		<option>with</option>
+		<option>........</option>
+		<option>Option 09</option>
+		<option>Option 10</option>
+		<option>Option 11</option>
+		<option>Option 12</option>
+		<option>Option 13</option>
+		<option>Option 14</option>
+		<option>Option 15</option>
+	</select>
+	<select style="position:fixed;top:90px;right:300px;width:120px;border: 3px solid black">
+		<option>System </option>
+		<option>default</option>
+		<option>control</option>
+		<option>implementation</option>
+		<option>to</option>
+		<option>compare</option>
+		<option>with</option>
+		<option>........</option>
+		<option>Option 09</option>
+		<option>Option 10</option>
+		<option>Option 11</option>
+		<option>Option 12</option>
+		<option>Option 13</option>
+		<option>Option 14</option>
+		<option>Option 15</option>
+	</select>
+	<select style="position:absolute;top:90px;right:450px;width:120px;border: 3px solid black">
+		<option><b>System</b></option>
+		<option><i>default</i></option>
+		<option><u>control</u></option>
+		<option><font color="red">implemen</font>tation</option>
+		<option>to</option>
+		<option>compare</option>
+		<option>with</option>
+		<option>........</option>
+		<option>Option 09</option>
+		<option>Option 10</option>
+		<option>Option 11</option>
+		<option>Option 12</option>
+		<option>Option 13</option>
+		<option>Option 14</option>
+		<option>Option 15</option>
+	</select>
+	<script>
+		// <%FORMAT: 'js' %>
+	
+		var contents = {
+			icon	: "/!/public/resources/data/images/famfamfam.com/silk/anchor.png",
+			title	: "DropSelect Input Field", 
+			list : requireScript('../test/Inputs/options.jso')
+		};
+		// attach event handlers (for logging) to normal selects
+		{
+			var list = document.getElementsByTagName("select");
+			for( var i = 0; i < list.length; ++i ) {
+				if(list[i].getAttribute("skip")){
+					continue;
+				}
+				list[i].onblur = function(){
+					top.debug && top.debug("real_select: blur event");
+				};
+				list[i].onfocus = function(){
+					top.debug && top.debug("real_select: focus event");
+				};
+			}
+		}
+		// attach select
+		var selects = [];
+		{
+			var targets = [], sourceElements = ['td','div','span'];
+			for( var j in sourceElements ){
+				var list = document.getElementsByTagName(sourceElements[j]);
+				for( var i = 0; i < list.length; ++i ) {
+					list[i].getAttribute("skip") || targets.push( list[i] );
+				}
+			}
+			for( var i = 0; i < targets.length; ++i ) {
+				selects.push(new Inputs.DropSelect(targets[i], "sel" + i, contents));
+			}
+		}
+		function invert(){
+			for(var select in selects){
+				select = selects[select];
+				for(var i = 0; i < select.options.length; ++i){
+					var option = select.options[i];
+					option.setAttribute("selected", !option.selected);
+				}
+			}
+			return false;
+		}
+		// <%/FORMAT%>
+	</script>
+	<!-- <%= 'end. ' + '--' + '>' %><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: 'Inputs.DropSelect',
+		template	: "html-document",
+		head		: head,
+		body		: body
+	} %><%
+%><%
+%><%/FORMAT%> --></body></html>

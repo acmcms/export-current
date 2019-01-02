@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>YUI CSS</title>
+	<visibility>hidden</visibility>
+	<command>
+		<key>get</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="resources" class="list" />
+			<field id="version" class="string" default="3.2.0" />
+			<field id="local" class="boolean" default="false" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			var packages = {js:[], css:[], head:[]};
+			if(resources.length < 1) resources = ['reset', 'base', 'fonts', 'grids'];
+			if(local){
+				var url = "/$files/yui/" + version;
+				for(var item in resources){
+					packages.css.push(url + '/css' + item + '/' + item + '-min');
+				}
+			}else{
+				var url = 'http://yui.yahooapis.com/combo?';
+				var first = true;
+				for( var item in resources ){
+					if(first){
+						first = false;
+					}else{
+						url += '&';
+					}
+					url += version + '/build/css' + item + '/' + item + '-min.css';
+				}
+				packages.css.push(url);
+			}
+			return packages;
+		]]></script>
+	</command>
+</type>

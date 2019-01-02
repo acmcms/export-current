@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<group>
+	<number id="TitleLimit" integer="true" title="Limit lengths in listing" min="10" max="256" default="70"/>
+	<number id="ListingLimit" integer="true" title="Rows per page" min="10" max="1000" default="50"/>
+	<select id="TreeReloadPeriod" title="Период обновления дерева" static="30000,30 секунд|60000,1 минута|300000,5 минут||600000,10 минут|0,не обновлять" staticFD="," staticED="|" default="0"/>
+	<select id="QuickLinksCnt" title="Быстрые ссылки" static="0,не показывать|5,5|10,10|15,15" staticFD="," staticED="|" default="5"/>
+	<select id="ShowFieldMenu" title="Команды полей" static="0,скрывать|1,выводить" staticFD="," staticED="|" default="1" hint="вывод команды полей в общее меню"/>
+	<select id="WaitIcon" title="Wait icon" static="clock,часы|fly,мухи|koffe,KoFFe" staticFD="," staticED="|" default="koffe"/>
+</group>

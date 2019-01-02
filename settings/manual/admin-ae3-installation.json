@@ -1,0 +1,7 @@
+{
+	type : "ae3.Manual",
+	title : "AE3 Installation",
+	name : "admin-ae3-installation",
+	group : "administrator",
+	vfs : "/resources/lib/ru.myx.ae3.internal/install/manual/admin-ae3-installation.xml"
+}

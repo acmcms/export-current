@@ -1,0 +1,104 @@
+<% // 	
+		Дерево админки в виде XML для основного лэйаута.
+
+
+%><%FINAL: 'text/xml' %><%
+	%><%CODE: 'ACM.ECMA' %>
+
+		maxLevel = Integer(Request.maxlevel, 1);
+
+		root = Request.mode == 'link' 
+			? Runtime.getLinkageRootNode()
+			: ControlAPI.nodeForObject(Request.getSharedObject()); 
+
+		cPath = '';
+		if( Request.root ){
+			cPath = cPath + Request.root;
+			for(var key in Request.root.spit('/')) {
+				key && (root = root.getChildByName(key));
+			}
+		}
+		if( Request.path ){
+			path = root.getKey() + '/' + Request.path;
+			path = replace(path,'//','/');
+			pathNodes = split(path,'/');
+			rPath = substr(Request.path, 1);
+			rPath.endsWith('/') || (rPath += '/');
+		}
+		
+		pathsLength = ArrayLength( pathNodes );
+		
+	<%/CODE%><%
+	%><%FORMAT: 'xml' %>
+		<?xml version="1.0" encoding="UTF-8"?>
+		<body>
+			<XML ID="oMetaData" base="" entryname="entry" type="tree">
+			
+				<%RECURSION: 
+					node = root, 
+					path = cPath, 
+					level = 0, 			// current depth... local var
+					children = null, 	// local var
+					searchFlag = null,	// local var 
+					foundFlag = false	// local var 
+				%>
+					<%IF: node && ControlAPI.isAccessible(path, node) %>
+						<%EXEC: searchFlag = level < pathsLength - 1 && pathNodes[level] == node.getKey() %>
+						<%EXEC: children = node.getChildren && ControlAPI.filterAccessibleHierarchy( path, node.getChildren() ) %>
+						<entry
+							 path="<%= Format.xmlAttributeFragment( path ) %>"
+							 children="<%= Array.isFilled( children ) %>"
+							 icon="<%= ControlAPI.getIcon( node ) %>"
+							 level="<%= level %>"
+							 type="<%= level ? 'child' : 'root' %>"
+							 name="<%= Format.xmlAttributeFragment( node.getKey() ) %>"
+							 title="<%= Format.xmlAttributeFragment( node.getTitle() ) %>"
+							<%IF: rPath == path %><%
+								// is target
+								%> selected="true"
+							<%/IF%>
+						<%IF: level < maxLevel || searchFlag %>
+							>
+							<%ITERATE: child : children %>
+								<%DEEPER: 
+									node = child, 
+									path = path + child.getKey() + '/', 
+									level = level + 1, 
+									children = '', 
+									searchFlag = '',
+									foundFlag = false
+								%>
+								<%EXEC: 
+									searchFlag && (
+										foundFlag || (
+											foundFlag = (child.getKey() == pathNodes[level])
+										)
+									) 
+								%>
+							<%/ITERATE%>
+							<%IF: searchFlag && !foundFlag %>
+								<%EXEC: deep = node.getChildByName( pathNodes[level+1] ) %>
+								<%IF: deep %>
+									<%DEEPER: 
+										node = deep, 
+										path = path + deep.getKey() + '/', 
+										level = level + 1, 
+										children = '', 
+										searchFlag = '',
+										foundFlag = false
+									%>
+								<%/IF%>
+							<%/IF%>
+							</entry>
+						<%ELSE%>
+							/>
+						<%/ELSE%>
+						<%/IF%>
+					<%/IF%>
+				<%/RECURSION%>
+			
+			</XML>
+		</body>
+	<%/FORMAT%><%
+%><%/FINAL%><%
+%>

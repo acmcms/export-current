@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>VlapanDebug</title>
+	<visibility>hidden</visibility>
+
+	<command>
+		<key>userInfo</key>
+		<static>true</static>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			%>siteName: <%= siteName %><%
+			%><br/><%
+			%>login: <%= User.getUser().getLogin() %><%
+			%><br/><%
+			%>isInGroup(<%= siteName %>): <%= User.getUser().isInGroup( siteName ) %><%
+			%><br/><%
+			%>isInGroup("def.registered"): <%= User.getUser().isInGroup("def.registered") %><%
+			%><br/><%
+			%>User.groups: <%
+			var first = true;
+			var delim = ""
+			for each( var item in User.getUser().getGroups() ){
+				first ? (first = false) : (delim = ", ");
+				= delim;
+				= item.getTitle();
+			}
+			%><br/><%
+			%>User object: <%= User.getUser() %><%
+		]]></script>
+	</command>
+</type>

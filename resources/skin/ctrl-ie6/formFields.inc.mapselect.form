@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+%><% //
+		^^^ IE6 classic engine which is not fucked so much
+		http://www.netmechanic.com/news/vol4/html_no22.htm 
+%><html><%
+%><head><%
+	%><%INCLUDE: 'include-head' %><%
+
+%>
+<%EXEC: form = Session[Request.id] %>
+<%EXEC: data = form.data %>
+<%EXEC: mainFieldset = data.getFieldset() %>
+<%EXEC: field = mainFieldset.getField(Request.mapName) %>
+<%EXEC: value = data[Request.mapName] %>
+<%IF:!value%>
+	<%EXEC:value = {}%>
+	<%EXEC:form[Request.mapName] = value%>
+<%/IF%>
+
+<%EXEC: fieldset = field.getAttributes().fieldset%>
+
+<%EXEC: source = value[Request.mapKey]%>
+<%EXEC: target = {} %>
+<%EXEC: fieldset.dataRetrieve(source, target) %>
+
+<%EXEC: prefix = "tomap_"+Request.mapName+"___"+Request.mapName+"___"%>
+
+<%EXEC: errors || (errors = {}) %>
+
+
+
+	<TITLE><%=data.getTitle()%></TITLE><%
+	
+	%><style>
+<%INCLUDE: 'frames.css' %>
+<%INCLUDE: 'forms.css' %>
+</style>
+</HEAD>
+
+<script id="Containers" src="Containers.js"></script>
+<SCRIPT id="EventsMethods" src="EventsMethods.js"></script>
+<script id="Cookies" src="Cookies.js"></script>
+<script id="WindowsMethods.js" src="WindowsMethods.js"></script>
+<script id="Form" src="Form.js"></script>
+<script id="DomMethods" src="DomMethods.js"></script>
+
+<script>
+var oMenu = {};
+oMenu.id = 'ContextMenu';
+
+function Submit(){
+	var container = CreateHTMLBuffer(this);
+	var src = 'command.execution?type=form&key=<%=Request.id%>&cmd=save';
+	eventMethods.fire("Submit",oMenu.id,{'src':src, 'target':container.name, 'cmd':'save'});
+}
+
+</script>
+
+
+<BODY BGCOLOR=buttonface scroll="no" style="cursor:default; margin:3px">
+
+<%IF:fieldset%>
+	<FORM id=FBODY target=formBuffer method=POST enctype=multipart/form-data class=form1 action="">
+	<table border=0 cellpadding=0 cellspacing=1 width=100% object=formTable>
+		<%INCLUDE: 'formFields.inc' %>
+	</table>
+	</FORM>
+<%/IF%>
+
+</body>
+
+</HTML>

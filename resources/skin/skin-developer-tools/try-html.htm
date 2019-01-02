@@ -1,0 +1,37 @@
+<%FORMAT: 'default' %><%
+
+%><%OUTPUT: defaultSource %><%
+%><html>
+	<head>
+		<title>Test</title>
+		<style>
+			body { background-color: #eee; color: #000; }
+		</style>
+		<script>
+			// 
+		</script>
+	</head>
+	<body>
+	
+	<script>
+		// 
+	</script>
+	
+	... your html here ...
+	
+	</body>
+</html><%
+%><%/OUTPUT%><%
+
+%><%RETURN: {
+	title			: 'HTML',
+	template		: "try.tpl",
+	useRequire		: true,
+	defaultSource	: defaultSource,
+	keywords		: "html try it yourself, html code preview",
+	previewFunction	: function(x){
+		return x;
+	}
+} %><%
+
+%><%/FORMAT%>

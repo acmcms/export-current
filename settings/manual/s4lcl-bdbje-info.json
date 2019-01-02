@@ -1,0 +1,8 @@
+{
+	type : "ae3.Manual",
+	title : "S4-LCL-BDBJE (BerkleyDB Java Edition Driver for S4 Local) Info",
+	name : "s4lcl-bdbje-info",
+	group : "internals",
+	vfs : "/resources/lib/ru.myx.ae3.vfs.s4.lcl.bdbj/documentation.xml",
+	url222 : "/developer/vm-vliw/",
+}

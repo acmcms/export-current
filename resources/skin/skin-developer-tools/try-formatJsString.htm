@@ -1,0 +1,40 @@
+<%FORMAT: 'default' %><%
+
+%><%OUTPUT: defaultSource %><%
+%><html>
+	<head>
+		<title>Test</title>
+		<style>
+			body { background-color: #eee; color: #000; }
+		</style>
+	</head>
+	<body>
+	
+	Серия "Дина и Ко" - это многосерийная история о жизни и приключениях 
+	главных героев, о развитии их отношений и характеров. Часть времени 
+	они живут среди будничных забот, как большинство потенциальных 
+	читателей, а часть - проводят в путешествиях по миру, разгадывают 
+	тайны и сражаются со злом.
+	
+	Автор "Волна открытий" (первая книга из серии "Дина и Ко") ищет 
+	издателя. Если первые главы романа показались вам интересными, а 
+	тема актуальной, запрос на синопсис и полный текст книги, 
+	пожалуйста, отправляйте по адресу author@salber.ru. Ждем ваших 
+	предложений.
+	
+	</body>
+</html><%
+%><%/OUTPUT%><%
+
+%><%RETURN: {
+	title			: "Format.jsString( code )",
+	template		: "try.tpl",
+	useRequire		: true,
+	defaultSource	: defaultSource,
+	keywords		: "js string, format, escape",
+	previewFunction	: function(x){
+		return Format.jsString( x );
+	}
+} %><%
+
+%><%/FORMAT%>

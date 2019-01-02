@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<type>
+	<title>VlapanRequire</title>
+	<visibility>hidden</visibility>
+	<command>
+		<key>VlapanRequire</key>
+		<arguments class="fieldset">
+			<field id="preferLocal" class="boolean" default="false" />
+			<field id="prefix" class="string" default="" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			this.added = [];
+			this.js = [];
+			this.css = [];
+			this.head = [];
+			this.preferLocal = Request.getProtocolName() == "HTTP" ? preferLocal : true;
+			this.prefix = prefix;
+			return this;
+		]]></script>
+	</command>
+	<command>
+		<key>add</key>
+		<arguments class="fieldset">
+			<field id="plugin" class="string" />
+			<field id="options" class="map" />
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			if( this.added.indexOf(plugin) > -1 ) return;
+			if( !HashFilled( options ) ) options = {};
+			switch( plugin ){
+				case "jquery":{
+					var package = VlapanRequireJQuery.get(
+						prefix = options.prefix || this.prefix,
+						version = options.version,
+						local = options.local || this.preferLocal,
+						cdn = options.cdn
+					);
+					this.css.addAll(package.css);
+					this.js.addAll(package.js);
+					this.head.addAll(package.head);
+					this.added.push(plugin);
+					break;
+				}
+				case "yuicss":{
+					var package = VlapanRequireYUICSS.get(
+						resources = options.resources,
+						version = options.version,
+						local = options.local || this.preferLocal
+					);
+					this.css.addAll(package.css);
+					this.js.addAll(package.js);
+					this.head.addAll(package.head);
+					this.added.push(plugin);
+					break;
+				}
+				case "cluetip":{
+					var package = VlapanRequireClueTip.get(
+						version = options.version,
+						local = options.local || this.preferLocal
+					);
+					this.css.addAll(package.css);
+					this.js.addAll(package.js);
+					this.head.addAll(package.head);
+					this.added.push(plugin);
+					break;
+				}
+				case "jqmodal":{
+					var package = VlapanRequireJQModal.get(
+						version = options.version,
+						local = options.local || this.preferLocal
+					);
+					this.css.addAll(package.css);
+					this.js.addAll(package.js);
+					this.head.addAll(package.head);
+					this.added.push(plugin);
+					break;
+				}
+				case "colorbox":{
+					var package = VlapanRequireColorBox.get(
+						version = options.version,
+						local = options.local || this.preferLocal
+					);
+					this.css.addAll(package.css);
+					this.js.addAll(package.js);
+					this.head.addAll(package.head);
+					this.added.push(plugin);
+					break;
+				}
+			}
+		]]></script>
+	</command>
+</type>

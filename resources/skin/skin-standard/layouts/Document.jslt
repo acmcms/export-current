@@ -1,0 +1,62 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+// Returns layout structure including same 'document' layout. To prevent 
+// infinite recursions a special flag-property is used.
+//
+// NOTE: for this implementation it is important to put 'stddoc' property
+// in resulting 'document' layout to check is it already converted or not.
+// Otherwise we'll have infinite loop here.
+//
+//
+
+if(layout.stddoc){
+	return layout;
+}
+
+/**<code>
+	layout	: "document",
+	meta	: layout.meta || {
+		title : title
+	},
+	stddoc	: 1,
+	title : null,
+	cssClass : "ui-window",
+</code>*/
+
+var content = layout.content;
+if(content === undefined){
+	content = layout.text;
+	if(content === undefined){
+		content = "Document has no content!";
+		// throw new Error("'content' is required for 'document' layout!");
+	}
+}
+
+var title = layout.title || undefined;
+
+return Layouts.extend( layout, {
+	layout	: "window",
+	meta	: layout.meta || {
+		title : title
+	},
+	title : null,
+	// stddoc	: 1,
+	// cssClass : "ui-window",
+	content	: {
+		layout	: "padding",
+		cssClass : "ui-padding ui-document",
+		content	: title 
+			? [
+				{
+					layout : "title", 
+					content : title 
+				}, 
+				"", 
+				content
+			] 
+			: content
+	}
+});

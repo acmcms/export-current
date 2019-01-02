@@ -1,0 +1,190 @@
+<%
+%><%FINAL: 'text/html' %><%
+	%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
+	%><% //
+			^^^ IE6 classic engine which is not fucked so much
+			http://www.netmechanic.com/news/vol4/html_no22.htm 
+	%><HTML><%
+		%><HEAD><%
+			%><TITLE><%= intl( en = "Image", ru = "Изображение" ) %></TITLE><%
+			%><%INCLUDE: 'include-head' %><%
+			
+			%><LINK HREF="$files/css/shared-editor_style.css" REL=stylesheet><%
+			%><LINK HREF="$files/css/shared-editor_popup-style.css" REL=stylesheet><%
+		%><SCRIPT>
+		var params = window.dialogArguments;
+		var image = params['object'];
+		
+		function SetDefaults(){
+			if(!image){
+				PreviewImage.style.display = 'none';
+				return;
+			}
+			if (image.getAttribute("src")){
+				var src	= image.getAttribute("src");
+				if(src.indexOf("<%= Runtime.ENTRANCE%>") == 0){
+					src = src.substr("<%= Runtime.ENTRANCE%>".length)
+				}
+				Src.value = src;
+			}
+			if (image.getAttribute("alt"))		Alt.value	= image.getAttribute("alt");
+			if (image.getAttribute("width"))	Width.value	= image.getAttribute("width");
+			if (image.getAttribute("height"))	Height.value	= image.getAttribute("height");
+			if (image.getAttribute("vspace"))	Vspace.value	= image.getAttribute("vspace") || "";
+			if (image.getAttribute("hspace"))	Hspace.value	= image.getAttribute("hspace") || "";
+			if (image.getAttribute("border"))	Border.value	= image.getAttribute("border");
+		
+			if (image.getAttribute("align") != null){
+				for (var i = 0 ; i < Align.options.length ; ++i){
+					if (Align.options[i].value == image.getAttribute("align")){
+						Align.options[i].selected = true ;
+						break ;
+					}
+				}
+			}
+		
+			SetImageSrc(image.getAttribute("src"));
+		}
+		
+		
+		function Return(){
+			var result = {"html":getImageHtml()};
+			window.returnValue = result;
+			window.close();
+		}
+		
+		
+		function getImageHtml(){
+			return '<IMG' 
+				+ attr("src", Src.value)
+				+ attr("alt", Alt.value) 
+				+ attr("align", Align[Align.selectedIndex].value)
+				+ ((Vspace.value) ? attr("vspace", Vspace.value) : "")
+				+ ((Hspace.value) ? attr("hspace", Hspace.value) : "")
+				+ ((Width.value) ? attr("width", Width.value) : "")
+				+ ((Height.value) ? attr("height", Height.value) : "")
+				+ ((Border.value) ? attr("border", Border.value) : attr("border",0))
+				+ '/>';
+		}
+		
+		function attr(name, value){
+			if (!value || value == "") return "" ;
+			return ' ' + name + '="' + value + '"' ;
+		}
+		
+		
+		function SetImageSrc(src){
+			if(!src || src == '') PreviewImage.style.display = 'none';
+			else PreviewImage.style.display = '';
+			PreviewImage.src = src;
+		}
+		
+		function IsDigit(){
+			return ((event.keyCode >= 48) && (event.keyCode <= 57))
+		}
+		
+		</SCRIPT><%
+		
+		
+		%><SCRIPT><%
+			%>function selectURL(){<%
+				%>var arr = window.showModalDialog("linkchooser-modal/?mode=open","open","dialogWidth:600px; dialogHeight:160px; scroll:no; status:no; resizable:yes; help:no");<%
+				%>if (!arr || !arr.path) return;<%
+				%>Src.value = arr['path'];<%
+			%>}<%
+		%></SCRIPT><%
+		
+		%></HEAD><%
+		
+		%><body><%
+			%><table border=0 cellpadding=0 cellspacing=1 width=100%><%
+				%><tr><%
+					%><td class=th><%
+						%><%= intl(en="Path",ru="Путь") %>:<%
+					%></td><%
+					%><td><%
+						%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+						%><tr><%
+							%><td width=100%><INPUT TYPE=TEXT NAME=Src style="width:100%" onchange="SetImageSrc(this.value)"></td><%
+							%><td><BUTTON onclick="selectURL()">&nbsp;...&nbsp;</BUTTON></td><%
+						%></tr><%
+						%></table><%
+					%></td><%
+				%></tr><%
+				
+				%></tr><%
+					%><td class=th nowrap><%
+						%><%= intl(en="Alternate text",ru="Пояснительный текст") %>:<%
+					%></td><%
+					%><td width=100%><%
+						%><INPUT TYPE=TEXT NAME=Alt style="width:100%"><%
+					%></td><%
+				%></tr><%
+			%></table><%
+			
+			%><table border=0 cellpadding=0 cellspacing=0 width=100%><%
+			%><tr><%
+				%><td width=150 valign=top><%
+					%><fieldset class="BorderBox" style="padding:10px 3px"><%
+						%><table border=0 cellpadding=0 cellspacing=1 width=100%><%
+						%><tr><%
+							%><td class=th><%= intl(en="Alignment",ru="Выравн.") %>:</td><%
+							%><td><%
+								%><SELECT Name=Align style="width:100%"><%
+									%><option></option><%
+									%><option value=absbottom>absbottom</option><%
+									%><option value=absmiddle>absmiddle</option><%
+									%><option value=baseline>baseline</option><%
+									%><option value=bottom>bottom</option><%
+									%><option value=left>left</option><%
+									%><option value=middle>middle</option><%
+									%><option value=right>right</option><%
+									%><option value=texttop>texttop</option><%
+									%><option value=top>top</option><%
+								%></SELECT><%
+							%></td><%
+						%></tr><%
+						%><tr><%
+							%><td class=th><%= intl(en="Width",ru="Ширина") %>:</td><%
+							%><td><INPUT TYPE=TEXT NAME=Width ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%"></td><%
+						%></tr><%
+						%><tr><%
+							%><td class=th><%= intl(en="Height",ru="Высота") %>:</td><%
+							%><td width=100%><INPUT TYPE=TEXT NAME=Height ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%"></td><%
+						%></tr><%
+						%><tr><%
+							%><td class=th><%= intl(en="Vspace",ru="Доп.выс.") %>:</td><%
+							%><td><INPUT TYPE=TEXT NAME=Vspace ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%"></td><%
+						%></tr><%
+						%><tr><%
+							%><td class=th><%= intl(en="Hspace",ru="Доп.шир.") %>:</td><%
+							%><td width=100%><INPUT TYPE=TEXT NAME=Hspace ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%"></td><%
+						%></tr><%
+						%><tr><%
+							%><td class=th><%= intl(en="Border",ru="Рамка") %>:</td><%
+							%><td width=100%><INPUT TYPE=TEXT NAME=Border ONKEYPRESS="event.returnValue=IsDigit();" style="width:100%"></td><%
+						%></tr><%
+						%></table><%
+					%></fieldset><%
+				%></td><%
+				%><td valign=top style="height:100%"><%
+					%><div style="padding:0; width:100%; height:100%"><%
+						%><div style="width:100%; height:100%; overflow:auto;"><table border=0 cellpadding=0 cellspacing=1 width=100% height=100%><tr><td align=center><img name=PreviewImage></td></tr></table></div><%
+					%></div><%
+				%></td><%
+			%></tr><%
+			%></table><%
+			
+			%><script><%
+				%>SetDefaults();<%
+			%></script><%
+
+			%><div align=right style="margin-top:5px"><%
+				%><BUTTON onclick="Return();" ID=Ok TYPE=SUBMIT>&nbsp;<B><%= intl(en="OK",ru="ОК") %></B>&nbsp;</BUTTON><%
+				%><BUTTON ONCLICK="window.close();">&nbsp;<%= intl(en="Cancel",ru="Отменить") %>&nbsp;</BUTTON><%
+			%></div><%
+			
+		%></body><%
+	%></HTML><%
+%><%/FINAL%><%
+%>

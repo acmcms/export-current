@@ -1,0 +1,75 @@
+<%
+%><%FINAL: 'text/html' %><%
+%><html><%
+%><head><%
+%><LINK HREF="$files/css/frames.css" REL=stylesheet><%
+
+
+%><script>
+router = parent.router;
+
+<%INCLUDE: 'ListFieldFrame.js' %>
+
+function callSearch(name){
+	var isAuthor = false
+	try{
+		if(parent.document.forms.usersForm.elements.authors.value)
+			isAuthor = true;
+	}catch(Error){}
+
+	var obj = eval(name);
+	var value = {};
+	if(isAuthor){
+		value.authors = obj.returnValue[0].id.substr(3);
+	}else{
+		value.users = obj.returnValue[0].id.substr(3);
+	}
+	parent.callSearch(value);
+}
+</script><%
+%></head><%
+
+
+%><body BGCOLOR="buttonface" scroll="no" style="cursor:default; margin:0"><%
+	%><table border=0 cellpadding=0 cellspacing=0 style="width:100%; height:100%"><%
+		%><tr><%
+			%><td width=100%><%
+				%><table border=0 cellpadding=0 cellspacing=0 width=100% height=100% id="itemsList" path="<%= path %>"><%
+					%><tr><%
+						%><td class=FrameBorder2><%
+							%><table border=0 cellpadding=0 cellspacing=0 style="width:100%"><%
+								%><tr><%
+									%><td style="padding:2px" cla2ss=FrameBorder2 width=100%><%
+										%><table border=0 cellpadding=0 cellspacing=0 style="width:100%"><%
+											%><tr><%
+												%><td width=100% class=SubmenuFrame nowrap id=TDPaging>&nbsp;</td><%
+											%></tr><%
+										%></table><%
+									%></td><%
+									%><td style="padding:1px"><%
+										%><button class=iconText onclick="refreshSetList('itemsList');">Refresh</button><%
+									%></td><%
+								%></tr><%
+							%></table><%
+						%></td><%
+					%></tr><%
+					%><tr><%
+						%><td height=100%><%
+							%><iframe <%
+									%>name="itemsListFrm" <%
+									%>id="itemsListFrm" <%
+									%>src="formListMultiple.list?<%= Request.getParameterString() %>" <%
+									%>style="width:100%; height:100%" <%
+									%>frameborder=0<%
+								%>><%
+							%></iframe><%
+						%></td><%
+					%></tr><%
+				%></table><%
+			%></td><%
+		%></tr><%
+	%></table><%
+%></body><%
+%></html><%
+%><%/FINAL%><%
+%>

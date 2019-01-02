@@ -1,0 +1,30 @@
+<script>
+<%INCLUDE: 'WindowsMethods.js' %>
+var eventMethods = parent.eventMethods;
+
+<%IF:Request.path%>
+	<%IF:ControlAPI.childForPath(ControlAPI.nodeForObject(Request.getSharedObject()), Request.path)%>
+		<%EXEC:lastPath = Request.path%>
+	<%/IF%>
+<%/IF%>
+
+<%EXEC:lastPath = (lastPath || Session.getParameters().pathLink)%>
+
+function Start(){
+	var obj = document.all('list');
+	obj.entryType = 'form';
+	obj.eventMethods = eventMethods;
+	obj.eventMethods.register(obj,'tree');
+	obj.onFire = function(eType,eValue){
+		switch(eType){
+			case "treeChange":
+					this.src = "defaultAction?path=" + eValue['path'] + '&mode=link';
+				break;
+		}
+	}
+	obj.onFire("treeChange",{'path':'<%= lastPath || '' %>'});
+}
+</script>
+
+<FRAMESET COLS="250,*" border="1" frameborder="1" FRAMESPACING="5" TOPMARGIN="0" LEFTMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" onload="Start()"><FRAME SRC="treeLink.htm<%=lastPath ? '?path=' + lastPath : ''%>" id=tree NAME="tree" TOPMARGIN="0" LEFTMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" FRAMEBORDER="no" BORDER="1"><FRAME SRC="__blank" id=list 
+NAME="list" FRAMEBORDER="no" BORDER="0" BORDERCOLOR="buttonface"></FRAMESET>

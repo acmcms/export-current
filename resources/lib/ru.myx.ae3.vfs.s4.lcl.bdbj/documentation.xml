@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?>
+<section namespacePrefix="s4.lcl.bdbje::" layout="documentation">
+	<anchor>s4.lcl.bdbje</anchor>
+	<title>S4.LCL: Berkeley DB Java Edition (BDBJE) storage driver</title>
+
+
+
+
+	<article>
+		<anchor>s4.lcl.bdbje-args</anchor>
+		<title>Mount arguments (options)</title>
+		<text>
+			<paragraph>
+				The generic mount string for the BDBJE local storage driver is:
+				<command layout="documentation">s4fs:lcl:bdbje<i>[:extra-options...]</i></command>
+				The <i>extra-options</i> are optional, when specified the 'url 
+				query string' format is used, like:
+				<command layout="documentation">s4fs:lcl:bdbje:delay-expunge=true&amp;optimize=size</command>
+			</paragraph>
+			<paragraph>Following arguments are supported and may be specified in
+			the mount parameters:<args layout="list">
+				<columns>
+					<column id="n" title="Name"/>
+					<column id="v" title="Values"/>
+					<column id="d" title="Description"/>
+				</columns>
+				<item n="delay-expunge" v="true/false"><d>
+					The cleaned '*.jdb' files are not deleted immediately but moved 
+					to the 'deleted' folder and deleted when they are more than 
+					24 hours old.<br/>
+					Default value is <b>false</b>.
+				</d></item>
+			</args></paragraph>
+		</text>
+	</article>
+
+	<article>
+		<anchor>s4.lcl.bdbje-tables</anchor>
+		<title>Internal Database Structure</title>
+		<text>
+			<paragraph>
+				The internal database is having three major groups of records
+				stored in the seven tables (including indices):
+				<ul>
+					<li>
+						Items.
+						<ul>
+							'item' table.
+							<list layout="list">
+								<columns>
+									<column id="f" title="Field"/>
+									<column id="k" title="Key?" variant="boolean"/>
+									<column id="d" title="Description"/>
+								</columns>
+								<item f="luid6" k="true"><d>
+								</d></item>
+								<item f="schedule2" k="false"><d>
+								</d></item>
+								<item f="guidX" k="false"><d>
+								</d></item>
+							</list>
+						</ul>
+						<ul>
+							'guid' table.
+							<list layout="list">
+								<columns>
+									<column id="f" title="Field"/>
+									<column id="k" title="Key?" variant="boolean"/>
+									<column id="d" title="Description"/>
+								</columns>
+								<item f="azimuth4" k="true"><d>
+								</d></item>
+								<item f="luid6" k="true"><d>
+								</d></item>
+								<item f="schedule2" k="false"><d>
+								</d></item>
+								<item f="guidX" k="false"><d>
+								</d></item>
+							</list>
+						</ul>
+						<ul>
+							'queue' table.
+							<list layout="list">
+								<columns>
+									<column id="f" title="Field"/>
+									<column id="k" title="Key?" variant="boolean"/>
+									<column id="d" title="Description"/>
+								</columns>
+								<item f="schedule2" k="true"><d>
+								</d></item>
+								<item f="luid6" k="true"><d>
+								</d></item>
+							</list>
+						</ul>
+					</li>
+					<li>
+						Tree.
+						<ul>
+							'tree' table.
+							<list layout="list">
+								<columns>
+									<column id="f" title="Field"/>
+									<column id="k" title="Key?" variant="boolean"/>
+									<column id="d" title="Description"/>
+								</columns>
+								<item f="luid6" k="true"><d>
+								</d></item>
+								<item f="keyX" k="true"><d>
+								</d></item>
+								<item f="mode1" k="false"><d>
+								</d></item>
+								<item f="modified6" k="false"><d>
+								</d></item>
+								<item f="targetX" k="false"><d>
+								</d></item>
+							</list>
+						</ul>
+						<ul>
+							'index' table.
+							<list layout="list">
+								<columns>
+									<column id="f" title="Field"/>
+									<column id="k" title="Key?" variant="boolean"/>
+									<column id="d" title="Description"/>
+								</columns>
+								<item f="luid6" k="true"><d>
+								</d></item>
+								<item f="targetX" k="true"><d>
+								</d></item>
+								<item f="keyX" k="true"><d>
+								</d></item>
+							</list>
+						</ul>
+						<ul>
+							'usage' table.
+							<list layout="list">
+								<columns>
+									<column id="f" title="Field"/>
+									<column id="k" title="Key?" variant="boolean"/>
+									<column id="d" title="Description"/>
+								</columns>
+								<item f="targetX" k="true"><d>
+								</d></item>
+								<item f="luid6" k="true"><d>
+								</d></item>
+								<item f="keyX" k="true"><d>
+								</d></item>
+							</list>
+						</ul>
+					</li>
+					<li>
+						Tail.
+						<ul>
+							'tail' table.
+							<list layout="list">
+								<columns>
+									<column id="f" title="Field"/>
+									<column id="k" title="Key?" variant="boolean"/>
+									<column id="d" title="Description"/>
+								</columns>
+								<item f="luid6" k="true"><d>
+								</d></item>
+								<item f="dataX" k="false"><d>
+									Up to 2048 bytes.
+								</d></item>
+							</list>
+						</ul>
+					</li>
+				</ul>
+			</paragraph>
+		</text>
+	</article>
+
+</section>

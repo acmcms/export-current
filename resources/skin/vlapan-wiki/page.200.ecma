@@ -1,0 +1,5 @@
+var content = Create.map( content );
+content.logo = "/$files/logo.png";
+//content.body = ":"+Request.getSettings().vlapansite+"::";
+content.template = "vlapan-site";
+return content;

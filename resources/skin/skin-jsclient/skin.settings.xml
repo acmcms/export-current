@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<type>PLAIN</type>
+	<title>JSClient dhtml javascript library</title>
+	<abstract>true</abstract>
+	<charset>UTF-8</charset>
+	
+	<default>jsclient.html</default>
+	
+	<prototype>skin-standard-html</prototype>
+	
+	<extension query="*.js" file="*.js" accept="text/javascript" threat="TPL" />
+	<extension query="*.html" file="*.jsld" accept="text/html" threat="HTML-JSLD" />
+	<extension query="*.html" file="*.html" threat="HTML-TPL" />
+	<extension query="*.png" file="*.png" threat="BINARY" />
+	<extension query="*" file="*" treat="BINARY" />
+	
+	<keywords>jsclient, js client</keywords>
+	
+	<renderer>ACM.TPL</renderer>
+	<generate>build</generate>
+</settings>

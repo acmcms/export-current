@@ -1,0 +1,339 @@
+<%
+%><%EXEC: requireCss = [] %><%
+%><%EXEC: requireCss.add('frames') %><%
+
+%><%EXEC: requireJs = [] %><%
+%><%EXEC: requireJs.add("require") %><%
+%><%EXEC: requireJs.add("lib/standard") %><%
+%><%EXEC: requireJs.add("ae3") %><%
+%><%EXEC: requireJs.add("app/Router") %><%
+%><%EXEC: requireJs.add("app/Windows") %><%
+
+%><%OUTPUT: head %><%
+	%><script><%
+		%>Objects = [];<%
+		%>iBuffers = [];<%
+
+		%>router = new Router("root");<%
+
+		%>var resizeTimer = false;<%
+		%>function keepWinSize(){<%
+			%>var o = document.getElementById('tree');<%
+			%>if(o.prevWidth && o.offsetWidth == o.prevWidth){<%
+				%>return;<%
+			%>}<%
+			%>clearTimeout(resizeTimer);<%
+			%>resizeTimer = setTimeout("putWinSizeInCookies()",1000);<%
+		%>}<%
+
+		%>function putWinSizeInCookies(){<%
+			%>var o = document.getElementById('tree');<%
+			%>o.prevWidth = o.offsetWidth;<%
+			%>o.offsetWidth > 0 && (o.status = "visibility");<%
+			%>requireScript("lib/standard.js");<%
+			%>Standard.createCookie('treeWidth',o.offsetWidth, 3650);<%
+		%>}<%
+	%></script><%
+	%><style><%
+		%>body,html{<%
+			%>font-family:Tahoma,Arial;<%
+			%>width:100%;<%
+			%>height:100%;<%
+			%>padding:0;<%
+			%>margin:0;<%
+			%>cursor:default;<%
+			%>overflow:hidden;<%
+			%>background-color:buttonface;<%
+		%>}<%
+		%>.borderOut{<%
+			%>border:solid 1px buttonshadow;<%
+			%>border-top-color:buttonhighlight;<%
+			%>border-left-color:buttonhighlight;<%
+		%>}<%
+		%>.borderIn{<%
+			%>border:solid 1px buttonshadow;<%
+			%>border-bottom-color:buttonhighlight;<%
+			%>border-right-color:buttonhighlight;<%
+		%>}<%
+		%>.panel{<%
+			%>background-color:buttonface;<%
+		%>}<%
+		%>.header{<%
+			%>font-family:Tahoma, Arial;<%
+			%>font-size:12px;<%
+			%>line-height:14px;<%
+			%>background-color:activecaption;<%
+			%>color:captiontext;<%
+			%>font-weight:bold;<%
+			%>height:14px;<%
+			%>padding:1px 4px;<%
+		%>}<%
+		%>.window{<%
+			%>background-color:window;<%
+			%>overflow:auto;<%
+		%>}<%
+		%>INPUT, SELECT{<%
+			%>font-family:Tahoma, Arial;<%
+			%>font-size:7pt;<%
+			%>line-height:7pt;<%
+			%>padding:0;<%
+			%>background-color:activecaption;<%
+			%>color:captiontext;<%
+			%>height:20px;<%
+		%>}<%
+		%>.fldImg{<%
+			%>height:16px;<%
+			%>width:16px;<%
+			%>border-width:0;<%
+			%>border:0;<%
+		%>}<%
+		%>.thread1{<%
+			%>height:16px;<%
+			%>width:16px;<%
+			%>background-image:URL($files/thread1.gif);<%
+		%>}<%
+		%>.thread2{<%
+			%>height:16px;<%
+			%>width:16px;<%
+			%>background-image:URL($files/thread2.gif);<%
+		%>}<%
+		%>.thread3{<%
+			%>height:16px;<%
+			%>width:16px;<%
+			%>background-image:URL($files/thread3.gif);<%
+		%>}<%
+		%>.thread4{<%
+			%>height:16px;<%
+			%>width:16px;<%
+			%>background-image:URL($files/thread4.gif);<%
+		%>}<%
+		%>.thread5{<%
+			%>height:16px;<%
+			%>width:16px;<%
+			%>background-image:URL($files/thread5.gif);<%
+		%>}<%
+		%>.table{<%
+			%>border:0;<%
+			%>border-width:0;<%
+		%>}<%
+		%>.fldTxt{<%
+			%>font-family:Tahoma,Arial;<%
+			%>font-size:11px;<%
+			%>padding-left:3pt;<%
+			%>padding-right:3pt;<%
+			%>color:windowtext;<%
+		%>}<%
+		%>.fldTxtOn{<%
+			%>font-family:Tahoma,Arial;<%
+			%>font-size:11px;<%
+			%>padding-left:3pt;<%
+			%>padding-right:3pt;<%
+			%>background-color:highlight;<%
+			%>color: highlighttext;<%
+		%>}<%
+	%></style><%
+%><%/OUTPUT%><%
+
+%><%OUTPUT: body %><%
+	%><body TOPMARGIN="0" LEFTMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0"><%
+	
+		%><table id="njT" style="position:absolute;left:0;top:0;width:100%;height:100%;z-index:2" width=100% height=100% cellpadding=0 cellspacing=0 border=0><tr><td valign=middle align=center><%
+					%><h1 id="njH">Sorry, your browser doesn't support javascript or have javascript support turned off.</h1><%
+		%></td></tr></table><%
+		%><script><%
+			%>var root = document.createElement("div");<%
+			%>root.style.cssText = "position:absolute;left:0;top:0;width:100%;height:100%;background-color:#aaa;overflow:hidden;z-index:1";<%
+			%>document.body.appendChild(root);<%
+			%>document.getElementById("njH").innerHTML = "<i>Loading...</i>";<%
+		%></script><%
+		%><script><%
+			%>ae3.someParameter = "someValue";<%
+			%>ae3.prototype.defaultIconBase = "/__i/famfamfam.com/silk/";<%
+			%>ae3.intl = {<%
+				%>language : "ru",<%
+				%>languages : ["en", "ru"]<%
+			%>};<%
+			
+			%>ae3 = new ae3(root);<%
+			%>document.getElementById("njT").style.zIndex = 0;<%
+			%>ae3.display();<%
+			%>page = ae3.target;<%
+	
+			%>page.tree = page.attachWest({<%
+				%>decoration: false,<%
+				%>spacing	: true,<%
+				%>size		: 260<%
+			%>});<%
+	
+			%>page.tree.pushLayout(["outset", "padding"]);<%
+	
+	
+			%>var settingsMenuBusyConfigDefinition = {<%
+				%>text : "<%= intl( en = "Busy/Progress indication", ru = "Отображение ожидания" ) %>"<%
+			%>};<%
+	
+			%>var treeToggleButtonDefinition = {<%
+				%>layout	: "button",<%
+				%>text		: function(){<%
+					%>return page.tree.display()<%
+						%>? "<%= intl( en = "Hide Tree", ru = "Скрыть дерево" ) %>"<%
+						%>: "<%= intl( en = "Show Tree", ru = "Показать дерево" ) %>";<%
+				%>},<%
+				%>icon		: "$files/ico-tree.gif",<% 
+				%>onClick	: function(){<%
+					%>var btn = this;<%
+					%>var fn = function(){<%
+						%>page.tree.display(undefined);<%
+						%>(btn.defintition && btn.definition.invalidate && (btn.definition.invalidate(), true))<%
+													%>|| (btn.invalidate && btn.invalidate());<%
+					%>};<%
+					%>page.tree.display()<%
+						%>? (require("Effects.Transition")("disappear", page.tree, fn))<%
+						%>: (require("Effects.Transition")("appear", page.tree, fn));<%
+				%>}<%
+			%>};<%
+			
+			
+			%>ae3.topmenu.addElement(<%
+					%>treeToggleButtonDefinition<%
+			%>);<%
+			%>ae3.topmenu.addElement(<%
+				%>{<%
+					%>layout	: "button",<%
+					%>text		: "<%= intl( en = "System Properties", ru = "Системные свойства" ) %>",<%
+					%>icon		: "icons/object-system.16.gif",<% 
+					%>onClick	: "router.fire('setLocation', 'sysmenu', 'default.htm')"<%
+				%>}<%
+			%>);<%
+				
+			%>ae3.tray.addElement(<%
+				%>{<%
+					%>layout	: "button",<%
+					%>text		: "<%= intl( en = "Relogin", ru = "Перезайти" ) %>",<%
+					%>icon		: "$files/ico-relogin.gif",<% 
+					%>onClick	: "document.location.assign('re-login?uid=<%=User.UserID%>')"<%
+				%>}<%
+			%>);<%
+	
+			%>ae3.tray.addElement({<%
+				%>layout	: "button",<%
+				%>text		: "<%= intl( en = "Logout", ru = "Выйти" ) %>",<%
+				%>icon		: "$files/ico-logout.gif",<% 
+				%>onClick	: function(){<%
+					%>(require("Effects.Transition")("disappear", document.body, function(){<%
+						%>document.location.assign('/_sys/logout?back=<%=Runtime.ENTRANCE%>');<%
+					%>}));<%
+				%>}<%
+			%>});<%
+	
+			%>var languages = [];<%
+			%><%EXEC: languageName = Runtime.getLanguage() %><%
+			%><%EXEC: languages = Runtime.getLanguages() %><%
+			%><%ITERATE: language : languages %><%
+				%><%IF: languageName == language.name %><%
+					%>var languageName = "<%= languageName %>";<%
+					%>var languageNativeName = "<%= language.nativeName %>";<%
+					%>var languageCommonName = "<%= language.commonName %>";<%
+					%>var languageCountryCode = "<%= language.countryCode %>";<%
+				%><%/IF%><%
+				%>languages.push({<%
+					%>layout	: "button",<%
+					%>icon		: "/__f/16x16/<%= (language.countryCode || "--").toLowerCase() %>",<%
+					%>text		: "<%= language.nativeName %> (<%= language.commonName %>)",<%
+					%>checked	: <%= languageName == language.name %>,<%
+					%>href		: "<%= Runtime.getLanguageSelectionUrl( language.name, Session.mwmAdminUrlPath ) %>"<%
+				%>});<%
+			%><%/ITERATE%><%
+			
+			%>ae3.tray.addElement({<%
+				%>layout	: "button",<%
+				%>title		: languageCommonName,<%
+				%>icon		: "/__f/16x16/" + (languageCountryCode || "--").toLowerCase(),<%
+				%>text		: languageNativeName,<%
+				%>submenu	: languages<%
+			%>});<%
+	
+			%>page.tree.toolbar = page.tree.attachNorth({<%
+				%>spacing	: true<%
+			%>});<%
+			%>page.tree.toolbar.buttons = page.tree.toolbar.attachEast({<%
+				%>spacing	: false,<%
+				%>content	: {<%
+					%>layout	: "inset",<%
+					%>cssClass	: "header",<%
+					%>content	: {<%
+						%>layout	: "string",<%
+						%>value		: "<%= intl( en = "Site Tree", ru = "Дерево сайта" ) %>"<%
+					%>}<%
+				%>}<%
+			%>});<%
+	
+			%>var treeWindow = page.tree.pushLayout({<%
+				%>layout	: "screen",<%
+				%>cssClass	: "window"<%
+			%>});<%
+		
+			%><%EXEC: lastPath = Request.path || Session.getParameters().path %><%
+	
+			%>requireScript("app/Tree.js");<%
+			%>Tree.prototype.reloadPeriod = <%= User.getUser().getProfile('mwmAdmin',true).TreeReloadPeriod || '60000' %>;<%
+			%>tree = new Tree(treeWindow, "TreeData.xml", "<%= lastPath || '/' %>");<%
+	
+			%>requireScript("app/Containers.js");<%
+			%>var list = Containers.createFrame(page, "<%=lastPath ? 'defaultAction?path=' + lastPath : 'defaultAction' %>");<%
+			%>list.entryType = 'form';<%
+			%>list.onFire = function(eType, eValue){<%
+				%>switch(eType){<%
+					%>case "treeChange":{<%
+						%>window.top.debug && window.top.debug("main listing, treeChange: " + eValue.path);<%
+						%>this.setLocation("defaultAction?path=" + eValue.path);<%
+						%>break;<%
+					%>}<%
+					%>case "setLocation":{<%
+						%>window.top.debug && window.top.debug("main listing, setLocation: " + eValue);<%
+						%>this.setLocation(eValue);<%
+						%>break;<%
+					%>}<%
+				%>}<%
+			%>};<%
+	
+			%>router.register(list, 'tree');<%
+			%>router.register(list, 'sysmenu');<%
+	
+			%>require("Layouts.Toolbar");<%
+			%>new Layouts.Toolbar(page.tree.toolbar.buttons, { elements : [<%
+					%>{<%
+						%>layout	: "button",<%
+						%>title : "<%= intl( en = "Collapse all", ru = "Свернуть всё" ) %>",<%
+						%>icon : "icons/command-collapse.16.gif",<% 
+						%>onClick : "tree.executeCollapseAll(true)"<%
+					%>},<%
+					%>{<%
+						%>layout	: "button",<%
+						%>title : "<%= intl( en = "Refresh", ru = "Обновить" ) %>",<%
+						%>icon : "icons/command-reload.16.gif",<% 
+						%>onClick : "tree.executeRefreshTree()"<%
+					%>},<%
+					%>{<%
+						%>layout	: "button",<%
+						%>title : "<%= intl( en = "Close", ru = "Закрыть" ) %>",<%
+						%>icon : "$files/window-close.gif",<% 
+						%>onClick : function(){<%
+							%>treeToggleButtonDefinition.onClick();<%
+						%>}<%
+					%>}<%
+				%>]});<%
+		%></script><%
+	
+	%></body><%
+%><%/OUTPUT%><%
+%><%RETURN: {
+		title		: Runtime.getSystemName() + " @ " + Request.getTarget(),
+		template	: "html-page",
+		requireCss	: requireCss,
+		requireJs	: requireJs,
+		useRequire	: false,
+		head		: head,
+		body		: body
+	} %><%
+%>

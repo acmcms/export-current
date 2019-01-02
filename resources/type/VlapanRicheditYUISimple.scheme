@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<type>
+	<title>YUISimple</title>
+	<visibility>hidden</visibility>
+	<command>
+		<key>VlapanRicheditYUISimple</key>
+		<arguments class="fieldset">
+			<field id="finder" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.ECMA"><![CDATA[
+			this.finder = finder;
+			return this;
+		]]></script>
+	</command>
+	<command>
+		<key>init</key>
+		<static>true</static>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><!-- Skin CSS file --><% 
+			%><link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.1/build/assets/skins/sam/skin.css"><% 
+			%><!-- Utility Dependencies --><%
+			%><script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/yahoo-dom-event/yahoo-dom-event.js"></script><%  
+			%><script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/element/element-min.js"></script><%
+			%><!-- Needed for Menus, Buttons and Overlays used in the Toolbar --><%
+			%><script src="http://yui.yahooapis.com/2.8.1/build/container/container_core-min.js"></script><% 
+			%><!-- Source file for Rich Text Editor--><%
+			%><script src="http://yui.yahooapis.com/2.8.1/build/editor/simpleeditor-min.js"></script><%
+		%>]]></script>
+	</command>
+	<command>
+		<key>replace</key>
+		<static>true</static>
+		<arguments class="fieldset">
+			<field id="id" class="string"/>
+		</arguments>
+		<script class="script" type="ACM.TPL"><![CDATA[<%
+			%><script type="text/javascript"><%
+				%>var yuiEditor = new YAHOO.widget.SimpleEditor('<%= id %>', {<% 
+					%>dompath: true<% //Turns on the bar at the bottom 
+				%>});<%
+				%>yuiEditor.render();<% 
+			%></script><%
+		%>]]></script>
+	</command>
+</type>

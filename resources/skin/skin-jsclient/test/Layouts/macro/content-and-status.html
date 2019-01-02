@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>CONTENT+STATUS</title>
+	<script src="../../../js/require.js"></script>
+	<script src="../../../js/debug.js"></script>
+	<script src="../../../js/Layouts/Layout.js"></script>
+	<style>
+		body,html{
+			width:100%;
+			height:100%;
+			margin:0;
+			padding:0;
+			overflow:hidden;
+		}
+		.test{
+			opacity:0.6;
+			filter: alpha(opacity=60);
+		}
+	</style>
+</head>
+<body>
+	<div id=layout style="width:100%;height:100%;overflow:hidden"></div>
+
+	<div id=statusbar class=test style="display:none;height:100%;background-color:green">
+		XYN1
+		XYN2
+	</div>
+
+	<div id=content class=test style="display:none;height:100%;background-color:red;overflow:auto">
+		<div style="height:10px;border:solid 20px black"></div>
+		<span style="white-space: nowrap">
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+			XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 XYN1 XYN2 XYN3 XYN4 
+		</span>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>
+		XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN4<br>XYN1<br>XYN2<br>XYN3<br>XYN*<br>
+	</div>
+
+	<script>
+		var form = new Layouts.Layout(document.getElementById("layout") || document.body, {
+				cssStyle	: "padding:8px;background-color:#5f5",
+				comment		: "Green padding panel"
+			});
+		form.statusbar = form.attachSouth({
+							height		: 42,
+							spacing		: 15,
+							attachment	: {
+								padding		: 10,
+								cssStyle	: "border:inset 8px",
+								title		: "Statusbar panel"
+							},
+							content : {
+								cssStyle	: "border:inset 8px;background-color:red;overflow:auto",
+								comment		: "Content Panel"
+							}
+						});
+
+		form.pushElement(document.getElementById("content"), true);
+		form.statusbar.pushElement(document.getElementById("statusbar"), true);
+
+		document.onclick = function(){
+			var temp = form.innerHTML;
+			form.innerHTML = form.statusbar.innerHTML;
+			form.statusbar.innerHTML = temp;
+			return false;
+		};
+		
+		document.ondblclick = function(){
+			form.statusbar.panel.display();
+			return false;
+		};
+	</script>
+
+</body>
+</html>

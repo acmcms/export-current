@@ -1,0 +1,7 @@
+{
+	type : "ae3.Manual",
+	title : "AE3-VM-VLIW Info",
+	name : "ae3-vm-vliw-info",
+	group : "internals",
+	url : "/developer/vm-vliw/",
+}
