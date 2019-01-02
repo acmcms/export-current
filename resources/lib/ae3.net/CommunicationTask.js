@@ -8,8 +8,7 @@ const CommunicationTask = module.exports = ae3.Class.create(
 	ae3.Concurrent.AbstractTask,
 	/* constructor */
 	function CommunicationTask(parent){
-		this.AbstractTask(parent);
-		return this;
+		return this.AbstractTask(parent);
 	},
 	/* instance */
 	{
