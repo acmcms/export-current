@@ -33,7 +33,11 @@
 	defaultSource	: defaultSource,
 	keywords		: "js string, format, escape",
 	previewFunction	: function(x){
-		return Format.jsString( x );
+		return {
+			layout	: "final",
+			type	: "text/plain",
+			content	: Format.jsString( x )
+		};
 	}
 } %><%
 
