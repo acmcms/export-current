@@ -189,6 +189,22 @@ function internAppendRegister(clientRequest, reason){
 					if(id === 'ut1'){
 						this.ndnsAlias = Format.hexAsBinary(n.alias);
 						this.ndnsSecret = Format.hexAsBinary(n.secret);
+						this.ndnsSettings = n.settings;
+						id = this.ndmpHost;
+						if(n.alias && n.settings && n.settings.domain){
+							this.ndmpZone = n.settings.domain;
+							this.ndmpHost = n.alias.substring(0, 24) + '.' + this.ndmpZone;
+							console.log('ndm.client: "ut1" notification handler, system name: ' + this.ndmpHost);
+						}
+						if(id !== this.ndmpHost){
+							if(this.ndmpHost){
+								this.vfs.setContentPublicTreePrimitive("ndmpHost", this.ndmpHost);
+								ae3.web.WebInterface.localNameUpsert(this.ndmpHost, "ndmc-ndmp-" + this.clientId);
+							}else{
+								this.vfs.setContentUndefined("ndmpHost");
+								ae3.web.WebInterface.localNameRemove(id, "ndmc-ddns-" + this.clientId);
+							}
+						}
 						const uClient = this.udpCloudClient;
 						if(uClient){
 							if(uClient.secret != this.ndnsSecret){
@@ -309,6 +325,84 @@ Object.defineProperties(Client.prototype, {
 			return true;
 		}
 	},
+	ndmpKeyPair :{
+		value : function(force){
+			//  try use existing, if any
+			if(!force){
+				const ndmpKeyPublic = this.vfs.getContentAsBinary("ndmpKeyPublic");
+				// const ndmpKeyPublic = this.vfs.relativeBinary("ndmpKeyPublic");
+				const ndmpKeyPrivate = this.vfs.getContentAsBinary("ndmpKeyPrivate");
+				// const ndmpKeyPrivate = this.vfs.relativeBinary("ndmpKeyPrivate");
+				if(ndmpKeyPublic && ndmpKeyPrivate){
+					console.log("ndm.client: ndmp: using existing EC pair");
+
+					const KeyFactory = require("java.class/java.security.KeyFactory");
+					const keyFactory = KeyFactory.getInstance("EC");
+					
+					const X509EncodedKeySpec = require("java.class/java.security.spec.X509EncodedKeySpec");
+					const publicKeySpec = new X509EncodedKeySpec(ndmpKeyPublic.nextDirectArray());
+					const publicKey = keyFactory.generatePublic(publicKeySpec);
+					
+					console.log("ndm.client: ndmp: existing EC pair's public: " + publicKey);
+					
+					const PKCS8EncodedKeySpec = require("java.class/java.security.spec.PKCS8EncodedKeySpec");
+					const privateKeySpec = new PKCS8EncodedKeySpec(ndmpKeyPrivate.nextDirectArray());
+					const privateKey = keyFactory.generatePrivate(privateKeySpec);
+					
+					const KeyPair = require("java.class/java.security.KeyPair");
+					return new KeyPair(publicKey, privateKey);
+					
+				}
+			}
+			
+			// generate & store
+			{
+				
+				/**
+				 * generate
+				 */
+				console.log("ndm.client: ndmp: generating new EC pair");
+				
+				const ECGenParameterSpec = require("java.class/java.security.spec.ECGenParameterSpec");
+				const kpgparams = new ECGenParameterSpec("secp256r1");
+				
+				const KeyPairGenerator = require("java.class/java.security.KeyPairGenerator");
+				const g = KeyPairGenerator.getInstance("EC");
+				g.initialize(kpgparams);
+				
+				const pair = g.generateKeyPair();
+				console.log("ndm.client: ndmp: new EC pair's public: " + pair.getPublic());
+				
+				/**
+				 * store
+				 */
+				
+				const X509EncodedKeySpec = require("java.class/java.security.spec.X509EncodedKeySpec");
+				const x509EncodedKeySpec = new X509EncodedKeySpec(pair.getPublic().getEncoded());
+
+				const PKCS8EncodedKeySpec = require("java.class/java.security.spec.PKCS8EncodedKeySpec");
+				const pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(pair.getPrivate().getEncoded());
+	
+				this.vfs.setContentPublicTreeBinary("ndmpKeyPublic", ae3.Transfer.createCopier(x509EncodedKeySpec.getEncoded()));
+				this.vfs.setContentPublicTreeBinary("ndmpKeyPrivate", ae3.Transfer.createCopier(pkcs8EncodedKeySpec.getEncoded()));
+				
+				return pair;
+			}
+		}
+	},
+	ndmpPrepareValidationLink : {
+		value : function(webShareName, forceNew){
+			const pair = this.ndmpKeyPair(forceNew);
+			if(!pair){
+				throw "NDMP EC KeyPair is not available!";
+			}
+			const collector = ae3.Transfer.createCollector();
+			collector.printByte(7);
+			collector.printBinary(this.ndnsAlias);
+			collector.printBytes(pair.getPublic().encoded);
+			return "https://" + this.ndmpZone + "/#link:" + Format.binaryAsBase58(collector.toBinary());
+		}
+	},
 	toString : {
 		value : function(){
 			return "[NdmcClient " + Format.jsString(this.licenseNumber) + "/" + Format.jsString(this.clientId)+"]";
@@ -365,7 +459,7 @@ Object.defineProperties(Client, {
 	},
 	storeRaw : {
 		value : function(vfsClient, clientId, ndssHost, ndssPort, licenseNumber, serviceKey){
-			var txn = vfs.createTransaction();
+			const txn = vfs.createTransaction();
 			try{
 				if(ndssHost !== undefined){
 					vfsClient.setContentPublicTreePrimitive("ndssHost", String(ndssHost));
@@ -480,6 +574,7 @@ function createEpoch2ClientRequest(ndssHost, ndssPort, licenseNumber){
 	return new ClientRequest(new Epoch2Client(ndssHost, ndssPort, licenseNumber));
 }
 Client.createEpoch2ClientRequest = createEpoch2ClientRequest;
+
 
 /**
  * ******************************************************************************

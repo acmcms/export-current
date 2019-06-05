@@ -127,6 +127,37 @@ var commands = {
 			return true;
 		}
 	},
+	"ndmp/link" : {
+		/* ndm.client ndmp/link default ndss.local */
+		args : "[--force-new] <clientAlias> <webShareName>",
+		help : "Creates a link with NDMP service",
+		run : function ndmpLink(args) {
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("Not enough arguments!");
+			}
+			const webShareName = args.shift();
+			if(!webShareName){
+				return console.fail("Not enough arguments!");
+			}
+			const forceNew = args.shift();
+			if(forceNew && forceNew !== "--force-new"){
+				return console.fail("'--force-new' it the only allowed value!");
+			}
+			const NdmCloudService = require('./NdmCloudService');
+			const client = NdmCloudService.getClient(clientId);
+			if(!client){
+				return console.fail("Client is unknown: " + clientId);
+			}
+
+			const link = client.ndmpPrepareValidationLink(webShareName, forceNew);
+			if(link){
+				console.log("ndmp link url is: " + link);
+				return true;
+			}
+			return console.fail("ndmp link is not available!");
+		}
+	},
 	"ndns/update" : {
 		args : "<clientAlias> [<wanAddress> [<accessMode>]]",
 		help : "Updates and displays name booking information",

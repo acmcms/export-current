@@ -60,6 +60,9 @@ define    application/vnd.ms-pkipko                 try    .pko
 define    application/json                          yes    .json
 super     application/json                          text/javascript
 
+define    application/manifest+json                 yes    .webmanifest
+super     application/manifest+json                 application/json
+
 define    application/oda                           yes    .oda
 define    application/olescript                     may    .axs
 define    application/pics-rules                    may    .prf

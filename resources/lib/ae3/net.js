@@ -53,7 +53,13 @@ module.exports = Object.create(Object.prototype, {
 	},
 	mac : {
 		get : function(){
-			return this.udp = require('ae3.net/mac');
+			return this.mac = require('ae3.net/mac');
+		},
+		enumerable : true
+	},
+	imei : {
+		get : function(){
+			return this.imei = require('ae3.net/imei');
 		},
 		enumerable : true
 	},

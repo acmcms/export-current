@@ -17,9 +17,11 @@ const TaskUdpMultipleMapReplies = module.exports = ae3.Class.create(
 	{
 		onSingleTaskFinished : {
 			value : function(single, result){
-				this.result.put(single.peer.key, result);
-				this.logDetail("peer-reply", single.peerName, this.pending.size() + " left.");
-				return true;
+				if(single && result){
+					this.result.put(single.peerName || single.peer.key, result);
+					this.logDetail("peer-reply", single.peerName, this.pending.size() + " left.");
+				}
+				return null;
 			}
 		},
 		toString : {

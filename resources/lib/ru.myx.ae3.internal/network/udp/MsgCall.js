@@ -1,5 +1,6 @@
 const ae3 = require('ae3');
 const Transfer = ae3.Transfer;
+const UdpServiceHelper = require("java.class/ru.myx.ae3.internal.net.UdpServiceHelper");
 
 
 const MsgCall = module.exports = ae3.Class.create(
@@ -30,21 +31,19 @@ const MsgCall = module.exports = ae3.Class.create(
 			value : true
 		},
 		build : {
-			value : function(b, o){
+			value : UdpServiceHelper.buildMsgCall || (function(b, o){
 				var l = 0;
 				// component X bytes
-				var component = Transfer.createCopierUtf8(this.component);
-				l += component.copy(0, b, o, 128);
-				o += l;
+				l += Transfer.createCopierUtf8(this.component).copy(0, b, o, 128);
 				// ZERO byte
-				b[o++] = 0;
+				b[o + l] = 0;
 				++ l;
 				// argument X bytes
 				if(this.argument){
-					l += this.argument.copy(0, b, o, 1024);
+					l += this.argument.copy(0, b, o + l, 1024);
 				}
 				return l;
-			}
+			})
 		},
 		toString : {
 			value : function(){

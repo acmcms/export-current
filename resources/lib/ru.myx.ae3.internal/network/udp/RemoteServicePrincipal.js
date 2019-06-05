@@ -1,5 +1,5 @@
 const ae3 = require('ae3');
-const Concurrent = ae3.Concurrent;
+const UdpServiceHelper = require("java.class/ru.myx.ae3.internal.net.UdpServiceHelper");
 
 const f = {
 	Puncher : require('./Puncher'),
@@ -7,9 +7,11 @@ const f = {
 		this.tasksFinished.put(serial, task);
 		task.onDestroy();
 	},
-	taskFinishedTimeout : function(serial, task){
-		this.sRx < serial && (this.sRx = serial);
-	}
+	taskFinishedTimeout : UdpServiceHelper.taskFinishedTimeout || (function(serial, task){
+		if(this.sRx < serial && (serial > 16000000) === (this.sRx > 16000000)){
+			this.sRx = serial;
+		}
+	})
 };
 
 function asyncTaskOnReceive(task, message){
@@ -26,11 +28,11 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 	function(key, dst, secret, serial){
 		this.Principal(key, dst, secret, serial);
 
-		const tasksFinished = new Concurrent.CoarseDelayCache(3000, 9, f.taskFinishedTimeout.bind(this));
+		const tasksFinished = new ae3.Concurrent.CoarseDelayCache(3000, 9, f.taskFinishedTimeout.bind(this));
 		
 		Object.defineProperties(this, {
 			"tasksPending" : {
-				value : new Concurrent.CoarseDelayCache(2000, 7, f.taskPendingTimeout.bind(this))
+				value : new ae3.Concurrent.CoarseDelayCache(2000, 7, f.taskPendingTimeout.bind(this))
 			},
 			"tasksFinished" : {
 				value : tasksFinished
@@ -93,16 +95,16 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 			value : null
 		},
 		start : {
-			value : Concurrent.wrapSync(function(){
+			value : ae3.Concurrent.wrapSync(function(){
 				this.puncher || (this.puncher = new f.Puncher(this));
 			})
 		},
 		destroy : {
-			value : Concurrent.wrapSync(function(){
-				var puncher = this.puncher;
-				if(puncher){
+			value : ae3.Concurrent.wrapSync(function(/* locals: */ p){
+				p = this.puncher;
+				if(p){
 					this.puncher = null;
-					puncher.destroy();
+					p.destroy();
 				}
 			})
 		},

@@ -654,6 +654,9 @@
 					<xsl:with-param name="value" select="$value"/>
 				</xsl:call-template>
 			</xsl:when>
+			<xsl:when test="$format/@variant='layout'">
+				<xsl:apply-templates select="$value"/>
+			</xsl:when>
 			<xsl:when test="$format/@variant='document-url'">
 				<xsl:variable name="href">
 					<xsl:choose>

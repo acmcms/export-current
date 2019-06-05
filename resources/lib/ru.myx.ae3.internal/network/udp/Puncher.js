@@ -91,9 +91,9 @@ const Puncher = module.exports = ae3.Class.create(
 			value : function(seen, address, serial){
 				console.log(">>>>>> %s: puncher seen in: %s, address: %s", this, seen, address);
 				var directPacket = false;
-				if(this.state === 'active'){
-					//
-				}
+//				if(this.state === 'active'){
+//					//
+//				}
 				Object.defineProperty(this.remote, 'dst',{
 					writable : true,
 					value : address
@@ -235,13 +235,15 @@ const Puncher = module.exports = ae3.Class.create(
 					if(this.since > this.loopLimit){
 						targetList.forEach((function(meet, target){
 							this.remote.sendSingle(meet, target);
+							console.log(">>>>>> %s: puncher send meet: %s, %s", this, meet, target);
 						}).bind(this, new this.remote.iface.MsgMeet()));
 						this.puncherReset();
 						return;
 					}
 					targetList.forEach((function(helo, target){
 						this.remote.sendSingle(helo, target);
-					}).bind(this, new this.remote.iface.MsgHelo(this.remote.localSocketAddress, ++ this.remote.sTx)));
+						console.log(">>>>>> %s: puncher send helo: %s, %s", this, helo, target);
+					}).bind(this, new this.remote.iface.MsgHelo(this.remote.localSocketAddress, ++this.remote.sTx)));
 				}
 				++ this.since;
 			}

@@ -70,7 +70,7 @@ const TaskUdpMultiple = module.exports = ae3.Class.create(
 					this,
 					peer,
 					m, 
-					true, 
+					null, 
 					callbackImpl.bind(this)
 				))){
 				/** this.pending may be null-ed async-ly */

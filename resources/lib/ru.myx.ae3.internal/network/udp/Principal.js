@@ -191,7 +191,7 @@ const Principal = module.exports = ae3.Class.create(
 			 * taskCallback - optional, function(task, reply)
 			 */
 			value : function(message, taskCallback){
-				return new this.TaskUdpSingle(null, this, message, true, taskCallback);
+				return new this.TaskUdpSingle(null, this, message, false, taskCallback);
 			}
 		},
 		sendSingle : {

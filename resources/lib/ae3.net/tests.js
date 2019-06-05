@@ -306,71 +306,71 @@ module.exports = function(){
 			L('MAC range intersect done.');
 		}
 		{
-			L('MAC parsePool single...');
+			L('MAC parseRanges single...');
 
-			A(mac.parsePool('0012AA124501'), 
+			A(mac.parseRanges('0012AA124501'), 
 			'00:12:aa:12:45:01');
 	
-			A(mac.parsePool('00:12:AA:12:45:01'), 
+			A(mac.parseRanges('00:12:AA:12:45:01'), 
 			'00:12:aa:12:45:01');
 	
-			A(mac.parsePool('00:12:AA:12:45:01').macCount, 
+			A(mac.parseRanges('00:12:AA:12:45:01').macCount, 
 			'1');
 	
-			A(mac.parsePool('00:12:AA:12:45:01').longString, 
+			A(mac.parseRanges('00:12:AA:12:45:01').longString, 
 			'00:12:aa:12:45:01');
 			
-			A(mac.parsePool('00:12:AA:12:45:01-00:12:AA:12:45:01').longString, 
+			A(mac.parseRanges('00:12:AA:12:45:01-00:12:AA:12:45:01').longString, 
 			'00:12:aa:12:45:01');
 			
-			A(mac.parsePool('00:12:AA:12:45:01 - 00:12:AA:12:45:01').longString, 
+			A(mac.parseRanges('00:12:AA:12:45:01 - 00:12:AA:12:45:01').longString, 
 			'00:12:aa:12:45:01');
 			
-			A(mac.parsePool('00:12:AA:12:45:01/1').longString, 
+			A(mac.parseRanges('00:12:AA:12:45:01/1').longString, 
 			'00:12:aa:12:45:01');
 			
-			A(mac.parsePool('00:12:AA:12:45:01').compactString, 
+			A(mac.parseRanges('00:12:AA:12:45:01').compactString, 
 			'0012aa124501');
 			
-			A(mac.parsePool('00:12:AA:12:45:01').macAt(0), 
+			A(mac.parseRanges('00:12:AA:12:45:01').macAt(0), 
 			'00:12:aa:12:45:01');
 			
-			A(mac.parsePool('00:12:AA:12:45:01').macAt(0).compactString, 
+			A(mac.parseRanges('00:12:AA:12:45:01').macAt(0).compactString, 
 			'0012aa124501');
 			
-			A(mac.parsePool('00:12:AA:12:45:01').macAt(1), 
+			A(mac.parseRanges('00:12:AA:12:45:01').macAt(1), 
 			'null');
 			
-			A(mac.parsePool('11:ab:cd:00:00:00-11:ab:cd:ff:ff:ff').macCount,
+			A(mac.parseRanges('11:ab:cd:00:00:00-11:ab:cd:ff:ff:ff').macCount,
 			'16777216');
 			
-			A(mac.parsePool('11:ab:cd:00:00:00-11:ab:cd:ff:ff:ff').macCount,
+			A(mac.parseRanges('11:ab:cd:00:00:00-11:ab:cd:ff:ff:ff').macCount,
 			'16777216');
 			
-			L('MAC parsePool single done.');
+			L('MAC parseRanges single done.');
 		}
 		{
 			L('MAC pool union...');
 			
 			/** non intersecting */
-			A(mac.parsePool('11:ab:cd:00:00:00-11:ab:cd:00:ff:ff').union(mac.parsePool('11:ab:cd:02:00:00-11:ab:cd:02:ff:ff')).longString,
+			A(mac.parseRanges('11:ab:cd:00:00:00-11:ab:cd:00:ff:ff').union(mac.parseRanges('11:ab:cd:02:00:00-11:ab:cd:02:ff:ff')).longString,
 			'11:ab:cd:00:00:00-11:ab:cd:00:ff:ff + 11:ab:cd:02:00:00-11:ab:cd:02:ff:ff');
 
 			/** overlapping */
-			A(mac.parsePool('11:ab:cd:00:00:00-11:ab:cd:00:ff:ff').union(mac.parsePool('11:ab:cd:00:00:ff-11:ab:cd:02:ff:ff')).longString,
+			A(mac.parseRanges('11:ab:cd:00:00:00-11:ab:cd:00:ff:ff').union(mac.parseRanges('11:ab:cd:00:00:ff-11:ab:cd:02:ff:ff')).longString,
 			'11:ab:cd:00:00:00-11:ab:cd:02:ff:ff');
 			
 			/** connected right */
-			A(mac.parsePool('13:ab:cd:00:00:00-13:ab:cd:00:ff:ff').union(mac.parsePool('13:ab:cd:01:00:00-13:ab:cd:02:ff:ff')).longString,
+			A(mac.parseRanges('13:ab:cd:00:00:00-13:ab:cd:00:ff:ff').union(mac.parseRanges('13:ab:cd:01:00:00-13:ab:cd:02:ff:ff')).longString,
 			'13:ab:cd:00:00:00-13:ab:cd:02:ff:ff');
 			
 			/** connected left */
-			A(mac.parsePool('13:ab:cd:01:00:00-13:ab:cd:02:ff:ff').union(mac.parsePool('13:ab:cd:00:00:00-13:ab:cd:00:ff:ff')).longString,
+			A(mac.parseRanges('13:ab:cd:01:00:00-13:ab:cd:02:ff:ff').union(mac.parseRanges('13:ab:cd:00:00:00-13:ab:cd:00:ff:ff')).longString,
 			'13:ab:cd:00:00:00-13:ab:cd:02:ff:ff');
 
 			/** completed */
-			A(mac.parsePool('21:ab:cd:00:00:00-21:ab:cd:00:ff:ff + 21:ab:cd:02:00:00-21:ab:cd:02:ff:ff').union(
-			  mac.parsePool('21:ab:cd:01:00:00-21:ab:cd:01:ff:ff')).longString,
+			A(mac.parseRanges('21:ab:cd:00:00:00-21:ab:cd:00:ff:ff + 21:ab:cd:02:00:00-21:ab:cd:02:ff:ff').union(
+			  mac.parseRanges('21:ab:cd:01:00:00-21:ab:cd:01:ff:ff')).longString,
 			'21:ab:cd:00:00:00-21:ab:cd:02:ff:ff');
 
 			L('MAC pool union done.');
@@ -379,17 +379,17 @@ module.exports = function(){
 			L('MAC pool substract...');
 
 			/** prefix */
-			A(mac.parsePool('21:ab:cd:00:00:00-21:ab:cd:00:ff:ff + 21:ab:cd:02:00:00-21:ab:cd:02:ff:ff').substract(
-			  mac.parsePool('21:ab:cd:00:00:00-21:ab:cd:00:02:ff')).longString,
+			A(mac.parseRanges('21:ab:cd:00:00:00-21:ab:cd:00:ff:ff + 21:ab:cd:02:00:00-21:ab:cd:02:ff:ff').substract(
+			  mac.parseRanges('21:ab:cd:00:00:00-21:ab:cd:00:02:ff')).longString,
 			'21:ab:cd:00:03:00-21:ab:cd:00:ff:ff + 21:ab:cd:02:00:00-21:ab:cd:02:ff:ff');
 
 			/** prefix range explicit */
-			A(mac.parsePool('21:bb:cd:00:00:00-21:bb:cd:00:ff:ff + 21:bb:cd:02:00:00-21:bb:cd:02:ff:ff').substract(
+			A(mac.parseRanges('21:bb:cd:00:00:00-21:bb:cd:00:ff:ff + 21:bb:cd:02:00:00-21:bb:cd:02:ff:ff').substract(
 			  mac.parseRange('21:bb:cd:00:00:00-21:bb:cd:00:02:ff')).longString,
 			'21:bb:cd:00:03:00-21:bb:cd:00:ff:ff + 21:bb:cd:02:00:00-21:bb:cd:02:ff:ff');
 			
 			/** prefix single explicit */
-			A(mac.parsePool('21:cb:cd:00:00:00-21:cb:cd:00:ff:ff + 21:cb:cd:02:00:00-21:cb:cd:02:ff:ff').substract(
+			A(mac.parseRanges('21:cb:cd:00:00:00-21:cb:cd:00:ff:ff + 21:cb:cd:02:00:00-21:cb:cd:02:ff:ff').substract(
 			  mac.parse('21:cb:cd:00:00:00')).longString,
 			'21:cb:cd:00:00:01-21:cb:cd:00:ff:ff + 21:cb:cd:02:00:00-21:cb:cd:02:ff:ff');
 			
@@ -399,17 +399,17 @@ module.exports = function(){
 			L('MAC pool intersect...');
 
 			/** prefix */
-			A(mac.parsePool('21:ab:cd:00:00:00-21:ab:cd:00:ff:ff + 21:ab:cd:02:00:00-21:ab:cd:02:ff:ff').intersect(
-			  mac.parsePool('21:ab:cd:00:00:00-21:ab:cd:00:02:ff')).longString,
+			A(mac.parseRanges('21:ab:cd:00:00:00-21:ab:cd:00:ff:ff + 21:ab:cd:02:00:00-21:ab:cd:02:ff:ff').intersect(
+			  mac.parseRanges('21:ab:cd:00:00:00-21:ab:cd:00:02:ff')).longString,
 			'21:ab:cd:00:00:00-21:ab:cd:00:02:ff');
 
 			/** prefix range explicit */
-			A(mac.parsePool('21:bb:cd:00:00:00-21:bb:cd:00:ff:ff + 21:bb:cd:02:00:00-21:bb:cd:02:ff:ff').intersect(
+			A(mac.parseRanges('21:bb:cd:00:00:00-21:bb:cd:00:ff:ff + 21:bb:cd:02:00:00-21:bb:cd:02:ff:ff').intersect(
 			  mac.parseRange('21:bb:cd:00:00:00-21:bb:cd:00:02:ff')).longString,
 			'21:bb:cd:00:00:00-21:bb:cd:00:02:ff');
 			
 			/** prefix single explicit */
-			A(mac.parsePool('21:cb:cd:00:00:00-21:cb:cd:00:ff:ff + 21:cb:cd:02:00:00-21:cb:cd:02:ff:ff').intersect(
+			A(mac.parseRanges('21:cb:cd:00:00:00-21:cb:cd:00:ff:ff + 21:cb:cd:02:00:00-21:cb:cd:02:ff:ff').intersect(
 			  mac.parse('21:cb:cd:00:00:00')).longString,
 			'21:cb:cd:00:00:00');
 			
@@ -432,7 +432,7 @@ module.exports = function(){
 			if(false){
 				const poolManager = mac.VfsPoolManager.create(vfsTestRoot);
 				poolManager.load(true);
-				poolManager.addPool(mac.parsePool('11:ab:cd:00:00:00-11:ab:cd:ff:ff:ff'));
+				poolManager.addRanges(mac.parseRanges('11:ab:cd:00:00:00-11:ab:cd:ff:ff:ff'));
 				
 				A(poolManager.initialPool.longString, 
 				'11:ab:cd:00:00:00-11:ab:cd:ff:ff:ff');
@@ -476,6 +476,47 @@ module.exports = function(){
 		}
 		
 		L('MAC done.');
+	}
+	
+	/**
+	 * IMEI
+	 */
+	{
+		const imei = net.imei;
+		// 49-015420-323751-8
+		L('IMEI...');
+		
+		{
+			L('IMEI parse single...');
+
+			A(imei.parse('49-015420-323751-8'), 
+			'49-015420-323751-8');
+	
+			A(imei.parse('49-015420-323751-8').imeiCount, 
+			'1');
+	
+			A(imei.parse('49-015420-323751-8').longString, 
+			'49-015420-323751-8');
+			
+			A(imei.parse('49-015420-323751-8:49-015420-323751-8').longString, 
+			'49-015420-323751-8');
+			
+			A(imei.parse('49-015420-323751-8/1').longString, 
+			'49-015420-323751-8');
+			
+			A(imei.parse('49-015420-323751-8').compactString, 
+			'490154203237518');
+			
+			A(imei.parse('49-015420-323751-8').imeiAt(0), 
+			'49-015420-323751-8');
+			
+			A(imei.parse('49-015420-323751-8').imeiAt(1), 
+			'null');
+			
+			L('IMEI parse single done.');
+		}
+		
+		L('IMEI done.');
 	}
 	
 	L('done.');

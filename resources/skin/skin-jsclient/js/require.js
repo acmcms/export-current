@@ -272,7 +272,7 @@ require.impl = {
 		}
 		// @</debug>
 		with(this){
-			var r, url = name.charAt(0) == '/' ? base + name : getScriptPath() + name;
+			var r, url = name.charAt(0) === '/' ? base + name : name.lastIndexOf('://',10) !== -1 ? name : getScriptPath() + name;
 			return dynamic 
 				? load(url)
 				/**
@@ -344,7 +344,7 @@ require.impl = {
 				return cb && cb(s);
 			});
 		}
-		var u = name.charAt(0) == '/' ? t.base + name : t.getScriptPath() + name;
+		var u = name.charAt(0) === '/' ? t.base + name : name.lastIndexOf('://',10) !== -1 ? name : t.getScriptPath() + name;
 		return t.load(u, function(s){
 			c[name] = s;
 			return cb && cb(s);
@@ -398,7 +398,7 @@ require.impl = {
 				return cb && cb(s);
 			});
 		}
-		return t.load(name.charAt(0) == '/' ? t.base + name : t.getStylePath() + name, function(s){
+		return t.load(name.charAt(0) === '/' ? t.base + name : name.lastIndexOf('://',10) !== -1 ? name : t.getStylePath() + name, function(s){
 			c[name] = s;
 			return cb && cb(s);
 		})

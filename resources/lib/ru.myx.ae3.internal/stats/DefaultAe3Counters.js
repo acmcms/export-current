@@ -45,7 +45,7 @@ module.exports = {
 	},
 	getValues : function getValues(/*previous*/){
 		const dt = require('ae3.util/Shell').executeHost(
-				"((sh -c 'ae3 jpid > /dev/null' 2> /dev/null && ae3 jpid) || sh -c 'pgrep -nx java' || (ps -ax | grep java | grep -v grep | awk '{print $1}') || (ps -eo pid,command | grep java | grep -v grep | awk '{print $1}') || echo -1); " +
+				"echo $PPID; " +
 				"echo '%%'; " +
 				"(ae3 proc/tcp-server-count 2> /dev/null || (netstat -an | grep 'tcp' | grep LISTEN | wc -l)); " +
 				"echo '%%'; " +

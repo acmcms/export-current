@@ -1,9 +1,6 @@
 const ae3 = require('ae3');
 const Concurrent = ae3.Concurrent;
 
-const f = {
-};
-
 function UdpCloudService(port){
 	console.log('>>>>>> ndm.client: starting udp listening service on port ' + (port || 4043) + '.');
 	this.UdpService(port || 4043);

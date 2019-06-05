@@ -28,9 +28,9 @@ function RuntimeStatsServiceObject(vfsLogs){
 			upg.unlinkRecursive();
 		}
 	}
-	this.started = new Date();
+	this.started = Date.now();
 	this.committed = this.started;
-	this.nextPlannedCommit = this.started.getTime() + 15 * 1000;
+	this.nextPlannedCommit = this.started + 15 * 1000;
 	return this;
 }
 
@@ -52,22 +52,22 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 			if(this == RuntimeStatsServiceObject.prototype){
 				throw TypeError("Invalid reference!");
 			}
-			return Date.now() - this.committed.getTime();
+			return Date.now() - this.committed;
 		}
 	},
 	"serviceLoop" : { 
 		value : function(force){
-			var date = new Date();
-			var now = date.getTime();
+			const date = new Date();
+			const now = date.getTime();
 			if(force || now > this.nextPlannedCommit){
 				const groups = require('./Stats').getGroups();
 				
+				const txn = vfs.createTransaction();
 				var folder, group, groupKey, groupValues, cookie;
-				var txn = vfs.createTransaction();
 				try{
 					folder = StatsObject.storeCreateFolder(this.vfs, date);
-					folder.setContentPublicTreeValue('s', (this.started.getTime() / 1000)|0);
-					folder.setContentPublicTreeValue('u', ((this.committed.getTime() - this.started.getTime()) / 1000)|0);
+					folder.setContentPublicTreeValue('s', (this.started / 1000)|0);
+					folder.setContentPublicTreeValue('u', ((this.committed - this.started) / 1000)|0);
 					for(group of groups){
 						groupKey = group.key;
 						groupValues = PREV[groupKey] = group.readValues(PREV[groupKey] || (PREV[groupKey] = {}), 'log').values;
@@ -80,7 +80,7 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 					txn && txn.cancel();
 				}
 
-				this.committed = date;
+				this.committed = now;
 				/**
 				 * five minutes
 				 */
@@ -377,8 +377,8 @@ Object.defineProperties(RuntimeStatsServiceObject, {
 	},
 	"keys" : {
 		value : [ //
-			 'started', // service start date
-			 'committed', // last saved stats date
+			 'started', // service start date millis
+			 'committed', // last saved stats date millis
 			 'currentInterval', // getter, milliseconds since last commit
 		]
 	},

@@ -21,7 +21,7 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 	 * Otherwise message.onFinalReply (then: parent.onChildTaskFinished(task, result) 
 	 * function will be used the same way.
 	 */
-	function(parent, peer, message, needTransmitting, callback, mode){
+	function(parent, peer, message, dontSend, callback, mode){
 		if('function' === typeof callback){
 			if(undefined === mode || "task-finished" === mode){
 				this.onTaskFinishedCallback = callback;
@@ -45,11 +45,14 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 		this.expire = Date.now() + (message.queryTTL || this.defaultQueryTtl);
 		this.peer = peer;
 		this.message = message;
-		if(needTransmitting){
+		if(dontSend !== true){
 			if(!peer.sendSingle(message)){
 				delete this.left;
 				if(false !== this.onTaskProgress(this.offlineReply)){
 					this.onTaskFinished(this.offlineReply);
+				}
+				if(dontSend === null){
+					return null;
 				}
 				return this;
 			}

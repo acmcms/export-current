@@ -208,7 +208,12 @@ TD.fldkey{
 TD.fldval{
 	text-align: left;
 	position: relative;
-	overflow-x: auto;
+	overflow: auto;
+	-max-width: 0;
+	width: 1%;
+	width: fit-content;
+	width: -moz-fit-content;
+	width: -webkit-fit-content;
 }
 TD.submit, DIV.submit{
 	margin-top: 1pt;
@@ -1094,4 +1099,10 @@ INPUT.el-radio + LABEL.st-radio-sel:active::before {
 	}
 }
 
-/* <%/FORMAT%><%/FINAL%> */
+[data-type="numeric"] {
+    white-space: nowrap;
+}
+
+
+
+/* <%/FORMAT%><%= '*' + '/' %><%/FINAL%> */

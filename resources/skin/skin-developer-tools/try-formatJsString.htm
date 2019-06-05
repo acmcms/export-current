@@ -32,12 +32,9 @@
 	useRequire		: true,
 	defaultSource	: defaultSource,
 	keywords		: "js string, format, escape",
+	showSource		: true,
 	previewFunction	: function(x){
-		return {
-			layout	: "final",
-			type	: "text/plain",
-			content	: Format.jsString( x )
-		};
+		return Format.jsString( x );
 	}
 } %><%
 
