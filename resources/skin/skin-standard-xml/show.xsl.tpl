@@ -29,12 +29,23 @@
 	<xsl:param name="depth" select="1"/>
 
 	<xsl:variable name="sudo"><xsl:if test="*/client/@userId"><xsl:value-of select="*/client/@id"/></xsl:if></xsl:variable>
+	<xsl:variable name="base">
+		<xsl:choose>
+			<xsl:when test="*/client/@webRoot">
+				<xsl:value-of select="*/client/@webRoot"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text></xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<xsl:template match="/">
 		<html class="zoom-{$zoom}-html" id="html">
 			<xsl:comment> zoom: <xsl:value-of select='$zoom'/> </xsl:comment>
 			<xsl:comment> sudo: <xsl:value-of select='$sudo'/> </xsl:comment>
 			<xsl:comment> stdl: <xsl:value-of select='$standalone'/> </xsl:comment>
+			<xsl:comment> make: 20190617T1936Z </xsl:comment>
 			<xsl:for-each select="*">
 				<head>
 					<title>
@@ -44,9 +55,22 @@
 							<xsl:value-of select='@sub-title | title/@sub-title'/>
 						</xsl:if>
 					</title>
-					<link rel="stylesheet" type="text/css" href="/!/skin/skin-standard-html/client/css/default.css" />
-					<link rel="stylesheet" type="text/css" href="/!/skin/skin-standard-xml/style.css" />
-					<script type="text/javascript" language="javascript" src="/!/skin/skin-jsclient/js/require.js"></script>
+					<xsl:if test="@baseURI">
+						<base>
+							<xsl:attribute name="href"><xsl:value-of select='@baseURI'/></xsl:attribute>
+						</base>
+					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="client/@develRoot">
+							<link rel="stylesheet" type="text/css" href="{client/@develRoot}/skin-standard-html/client/css/default.css" />
+							<link rel="stylesheet" type="text/css" href="{client/@develRoot}/skin-standard-xml/style.css" />
+						</xsl:when>
+						<xsl:otherwise>
+							<link rel="stylesheet" type="text/css" href="{$base}/!/skin/skin-standard-html/client/css/default.css" />
+							<link rel="stylesheet" type="text/css" href="{$base}/!/skin/skin-standard-xml/style.css" />
+						</xsl:otherwise>
+					</xsl:choose>
+					<script type="text/javascript" language="javascript" src="{$base}/!/skin/skin-jsclient/js/require.js"></script>
 					<meta name="apple-mobile-web-app-capable" content="yes" />
 					<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 					<style>
@@ -78,30 +102,31 @@
 						}
 					</script>
 					<script>
+						var base = '<xsl:value-of select="$base"/>', srot = base + '/!/skin/', irot = base + '/__i/famfamfam.com/silk/';
 						var ready = [];
 						
 						var initAll = function(){
 							require.script([
-								"/!/skin/skin-jsclient/js/Layouts/Layout.js",
-								"/!/skin/skin-jsclient/js/Layouts/Date.js",
-								"/!/skin/skin-standard-xml/$files/dates.js"
+								srot + "skin-jsclient/js/Layouts/Layout.js",
+								srot + "skin-jsclient/js/Layouts/Date.js",
+								srot + "skin-standard-xml/$files/dates.js"
 							], function(){
 								initDates();
 							});
 							
 							<xsl:if test="client/time">
-								require.script("/!/skin/skin-jsclient/js/lib/timecontrol.js");
+								require.script(srot + "skin-jsclient/js/lib/timecontrol.js");
 							</xsl:if>
 	
 							<xsl:if test="client/menu and not($clean)">
-								require.style('/!/skin/skin-standard-xml/$files/menu.css');
+								require.style(srot + "skin-standard-xml/$files/menu.css");
 								
 								require.script('lib/menu.js', function(Menu){
 								
 									/* menu properties */
 									Menu.loadingItem.icon = "hourglass";
 									Menu.loadingItem.title = "Loading...";
-									Menu.iconPrefix = "/__i/famfamfam.com/silk/"; 
+									Menu.iconPrefix = irot; 
 									Menu.iconSuffix = ".png";
 									 
 									var span = document.getElementById('ui-main-menu-button');
@@ -176,7 +201,7 @@
 								overflow: hidden;
 							}
 						</style>
-						<script type="text/javascript" src="/!/skin/skin-jsclient/js/ae3.js"></script>
+						<script type="text/javascript" src="{$base}/!/skin/skin-jsclient/js/ae3.js"></script>
 						<script>
 							var root = document.createElement("div");
 							root.style.cssText = "position:absolute;left:0;top:0;width:100%;height:100%;background-color:#aaa;overflow:hidden";
@@ -192,7 +217,7 @@
 							
 							setTimeout(function(){
 								ae3 = new ae3(root);
-								ae3.defaultIconBase = "/__i/famfamfam.com/silk/";
+								ae3.defaultIconBase = irot;
 								/* document.getElementById("njT").style.zIndex = 0; */
 								ae3.display();
 							},0);
@@ -209,7 +234,7 @@
 								
 								setTimeout(function(){
 									ae3 = new ae3(root);
-									ae3.defaultIconBase = "/__i/famfamfam.com/silk/";
+									ae3.defaultIconBase = irot;
 									/* document.getElementById("njT").style.zIndex = 0; */
 									ae3.display();
 								},0);
@@ -230,13 +255,13 @@
 												<xsl:if test="@id or @icon or @command">
 													<table class="collapse">
 														<tr>
-															<td style="vertical-align: middle"><img src="/__i/famfamfam.com/silk/user.png" alt="user:" class="icon" style="padding-right: 2pt"/></td>
+															<td style="vertical-align: middle"><img src="{$base}/__i/famfamfam.com/silk/user.png" alt="user:" class="icon" style="padding-right: 2pt"/></td>
 															<td style="vertical-align: middle"><xsl:if test="@userId"><xsl:value-of select="@userId"/> as </xsl:if><xsl:value-of select="@id"/><xsl:if test="@admin='true'"> (admin)</xsl:if></td>
 															<xsl:if test="@geo">
-																<td style="vertical-align: middle"><img src="/__f/16x16/{@geo}" title="{@ip} @ {@geo}" class="geo-flag" style="padding-left: 2pt"/></td>
+																<td style="vertical-align: middle"><img src="{$base}/__f/16x16/{@geo}" title="{@ip} @ {@geo}" class="geo-flag" style="padding-left: 2pt"/></td>
 															</xsl:if>
 															<xsl:if test="@command">
-																<td style="vertical-align: middle"><a class="command" href="{@command}"><img src="/__i/famfamfam.com/silk/{@icon}.png" class="icon"/></a></td>
+																<td style="vertical-align: middle"><a class="command" href="{@command}"><img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/></a></td>
 															</xsl:if>
 														</tr>
 													</table>
@@ -269,7 +294,7 @@
 															<a href="/index" class="ui-cmd-link">
 																<div class="hl hl-bn- hl-ui- hl-hd- idx-box-cell">
 																	<div class="ui-cmd-icon">
-																		<img src="/__i/famfamfam.com/silk/house.png" class="icon"/>
+																		<img src="{$base}/__i/famfamfam.com/silk/house.png" class="icon"/>
 																	</div>
 																	<div class="ui-cmd-text">
 																		Jump: Root Index
@@ -280,7 +305,7 @@
 													</div>
 												</xsl:if>
 												<div class="menu-element">
-													<img src="/__i/famfamfam.com/silk/house.png" />
+													<img src="{$base}/__i/famfamfam.com/silk/house.png" />
 													<span>&#x25BC;</span>
 												</div>
 											</noscript></button></a></div>
@@ -397,6 +422,7 @@
 				<xsl:call-template name="formatted">
 					<xsl:with-param name="format" select="$format"/>
 					<xsl:with-param name="value" select="$format/@default | $format/default[not($format/@default)]"/>
+					<xsl:with-param name="zoom" select="$zoom"/>
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="$format/@type='input'">
@@ -438,7 +464,7 @@
 			</xsl:when>
 			<xsl:when test="$format/@variant='username'">
 				<div class="ui-cmd-icon">
-					<img src="/__i/famfamfam.com/silk/user.png" class="icon"/>
+					<img src="{$base}/__i/famfamfam.com/silk/user.png" class="icon"/>
 				</div>
 				<div class="ui-cmd-text">
 					<xsl:value-of select='$value'/>
@@ -446,7 +472,7 @@
 			</xsl:when>
 			<xsl:when test="$format/@variant='groupname'">
 				<div class="ui-cmd-icon">
-					<img src="/__i/famfamfam.com/silk/group.png" class="icon"/>
+					<img src="{$base}/__i/famfamfam.com/silk/group.png" class="icon"/>
 				</div>
 				<div class="ui-cmd-text">
 					<xsl:value-of select='$value'/>
@@ -454,7 +480,7 @@
 			</xsl:when>
 			<xsl:when test="$format/@variant='email'">
 				<div class="ui-cmd-icon">
-					<img src="/__i/famfamfam.com/silk/email.png" class="icon"/>
+					<img src="{$base}/__i/famfamfam.com/silk/email.png" class="icon"/>
 				</div>
 				<div class="ui-cmd-text">
 					<xsl:value-of select='$value'/>
@@ -490,7 +516,7 @@
 					</xsl:if>
 					<xsl:if test="@icon">
 						<div class="ui-cmd-icon">
-							<img src="/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+							<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
 						</div>
 					</xsl:if>
 					<div class="ui-cmd-text">
@@ -705,7 +731,7 @@
 							</iframe>
 							<div class="ui-secondary">
 								<div class="ui-cmd-icon">
-									<img src="/__i/famfamfam.com/silk/link_go.png" class="icon"/>
+									<img src="{$base}/__i/famfamfam.com/silk/link_go.png" class="icon"/>
 								</div>
 								<div class="ui-cmd-text">
 									<a target="_top" href="{$href}" class="ui-cmd-link">open...</a>
@@ -785,7 +811,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$format/@variant='icon'">
-				<img src="/__i/famfamfam.com/silk/{$format/@icon}.png" class="icon"/>
+				<img src="{$base}/__i/famfamfam.com/silk/{$format/@icon}.png" class="icon"/>
 			</xsl:when>
 			<xsl:when test="$format/@variant='link'">
 				<xsl:variable name="href">
@@ -808,7 +834,7 @@
 				<xsl:choose>
 					<xsl:when test="$format/@icon">
 						<div class="ui-cmd-icon">
-							<img src="/__i/famfamfam.com/silk/{$format/@icon}.png" class="icon"/>
+							<img src="{$base}/__i/famfamfam.com/silk/{$format/@icon}.png" class="icon"/>
 						</div>
 						<div class="ui-cmd-text">
 							<a href="{$format/@prefix}{$href}{$format/@suffix}">
@@ -826,6 +852,9 @@
 				</xsl:if>
 			</xsl:when>
 			<xsl:when test="$format/@variant='period' and string(number($value))!='NaN'">
+				<xsl:attribute name="data-type">
+					<xsl:text>numeric</xsl:text>
+				</xsl:attribute>
 				<xsl:variable name="scaleSetting">
 					<xsl:choose>
 						<xsl:when test="$format/@scale and $format/@scale!=''">
@@ -839,31 +868,43 @@
 				<xsl:variable name="scale" select="number($scaleSetting)"/>
 				<xsl:variable name="number" select="number($value) * $scale"/>
 				<xsl:choose>
-					<xsl:when test="$number &gt; 99900000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 86400000, '### ##0.0', 'decimal')"/> d</span></xsl:when>
-					<xsl:when test="$number &gt; 86400000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 86400000, '### ##0.00', 'decimal')"/> d</span></xsl:when>
-					<xsl:when test="$number &gt; 7200000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 3600000, '### ##0.0', 'decimal')"/> h</span></xsl:when>
-					<xsl:when test="$number &gt; 3600000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 3600000, '### ##0.00', 'decimal')"/> h</span></xsl:when>
-					<xsl:when test="$number &gt; 300000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 60000, '### ##0.0', 'decimal')"/> m</span></xsl:when>
-					<xsl:when test="$number &gt; 120000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 60000, '### ##0.0', 'decimal')"/> m</span></xsl:when>
-					<xsl:when test="$number &gt; 60000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 60000, '### ##0.00', 'decimal')"/> m</span></xsl:when>
-					<xsl:when test="$number &gt; 5500"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 1000, '### ##0.0', 'decimal')"/> s</span></xsl:when>
-					<xsl:when test="$number &gt; 2200"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 1000, '### ##0.00', 'decimal')"/> s</span></xsl:when>
-					<xsl:otherwise><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number, '### ##0', 'decimal')"/> ms</span></xsl:otherwise>
+					<xsl:when test="$number &gt; 99900000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 86400000, '### ##0.0', 'decimal')"/>&#160;d</span></xsl:when>
+					<xsl:when test="$number &gt; 86400000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 86400000, '### ##0.00', 'decimal')"/>&#160;d</span></xsl:when>
+					<xsl:when test="$number &gt; 7200000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 3600000, '### ##0.0', 'decimal')"/>&#160;h</span></xsl:when>
+					<xsl:when test="$number &gt; 3600000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 3600000, '### ##0.00', 'decimal')"/>&#160;h</span></xsl:when>
+					<xsl:when test="$number &gt; 300000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 60000, '### ##0.0', 'decimal')"/>&#160;m</span></xsl:when>
+					<xsl:when test="$number &gt; 120000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 60000, '### ##0.0', 'decimal')"/>&#160;m</span></xsl:when>
+					<xsl:when test="$number &gt; 60000"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 60000, '### ##0.00', 'decimal')"/>&#160;m</span></xsl:when>
+					<xsl:when test="$number &gt; 5500"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 1000, '### ##0.0', 'decimal')"/>&#160;s</span></xsl:when>
+					<xsl:when test="$number &gt; 2200"><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number div 1000, '### ##0.00', 'decimal')"/>&#160;s</span></xsl:when>
+					<xsl:otherwise><span title="{$value} of {$scale} ms time units"><xsl:value-of select="format-number($number, '### ##0', 'decimal')"/>&#160;ms</span></xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$format/@variant='integer' and string(number($value))!='NaN'">
+				<xsl:attribute name="data-type">
+					<xsl:text>numeric</xsl:text>
+				</xsl:attribute>
 				<xsl:variable name="number" select="number($value)"/>
-				<xsl:value-of select="format-number($number,'### ##0', 'decimal')"/>
+				<xsl:value-of select="format-number($number,'### ##0', 'decimal')" />
 			</xsl:when>
 			<xsl:when test="$format/@variant='price' and string(number($value))!='NaN'">
+				<xsl:attribute name="data-type">
+					<xsl:text>numeric</xsl:text>
+				</xsl:attribute>
 				<xsl:variable name="number" select="number($value)"/>
 				<xsl:value-of select="format-number($number,'### ##0.00', 'decimal')"/>
 			</xsl:when>
 			<xsl:when test="$format/@variant='decimal' and string(number($value))!='NaN'">
+				<xsl:attribute name="data-type">
+					<xsl:text>numeric</xsl:text>
+				</xsl:attribute>
 				<xsl:variable name="number" select="number($value)"/>
 				<xsl:value-of select="format-number($number,'### ##0.000', 'decimal')"/>
 			</xsl:when>
 			<xsl:when test="$format/@variant='bytes' and string(number($value))!='NaN'">
+				<xsl:attribute name="data-type">
+					<xsl:text>numeric</xsl:text>
+				</xsl:attribute>
 				<xsl:variable name="number" select="number($value)"/>
 				<xsl:choose>
 					<xsl:when test="$number &gt; 115343360000"><xsl:value-of select="format-number($number div 1073741824, '### ##0', 'decimal')"/>GB</xsl:when>
@@ -952,7 +993,7 @@
 					<xsl:for-each select="$columns/command">
 						<th class="{@id}" rowspan="{$rowspanCount}">
 							<a class="command" title="{@title}">
-								<img src="/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+								<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
 							</a>
 						</th>
 					</xsl:for-each>
@@ -1000,7 +1041,7 @@
 							</xsl:variable>
 							<td class="{@icon}" rowspan="{$rowspanCount}">
 								<xsl:if test="$href and $href!=''">
-									<a class="command" target="_top" href="{@prefix}{$href}{$suffix}" title="{@title}"><img src="/__i/famfamfam.com/silk/{@icon}.png" class="icon"/></a>
+									<a class="command" target="_top" href="{@prefix}{$href}{$suffix}" title="{@title}"><img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/></a>
 								</xsl:if>
 							</td>
 						</xsl:for-each>
@@ -1597,10 +1638,10 @@
 					<div class="hl hl-bn-{@admin} hl-hd-{@hidden} hl-ui-{@ui} idx-box-cell">
 						<div class="ui-cmd-icon">
 							<xsl:if test="@icon">
-								<img src="/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+								<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
 							</xsl:if>
 							<xsl:if test="not(@icon)">
-								<img src="/__i/famfamfam.com/silk/bullet_go.png" class="icon"/>
+								<img src="{$base}/__i/famfamfam.com/silk/bullet_go.png" class="icon"/>
 							</xsl:if>
 						</div>
 						<div class="ui-cmd-text">
@@ -1645,7 +1686,7 @@
 							</xsl:call-template>
 						</xsl:if>
 						<div class="menu-element">
-							<img src="/__i/famfamfam.com/silk/{@icon}.png" />
+							<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" />
 							<span>
 								<xsl:call-template name="formats-title">
 									<xsl:with-param name="format" select="."/>
@@ -1661,9 +1702,9 @@
 					<script defer="defer">
 						ready.push((function(){
 							var btn = document.getElementById(this.id);
-							require.style('/!/skin/skin-standard-xml/$files/menu.css');
+							require.style(srot + 'skin-standard-xml/$files/menu.css');
 							require.script('lib/menu.js', function(Menu){
-								Menu.iconPrefix = "/__i/famfamfam.com/silk/";
+								Menu.iconPrefix = irot;
 								Menu.iconSuffix = ".png";
 								Menu.attachMenu( btn, {
 									icon : btn.getAttribute('icon') || 'asterisk_orange', 
@@ -1690,7 +1731,7 @@
 					<button class="ui-button" target="_top" type="submit" tabindex2="1000{position()}" name="{@name}" value="{@value}">
 						<xsl:if test="@icon">
 							<div class="ui-cmd-icon">
-									<img src="/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+									<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
 							</div>
 						</xsl:if>
 						<div class="ui-cmd-text">
@@ -1721,10 +1762,10 @@
 							</xsl:if>
 							<div class="ui-cmd-icon">
 								<xsl:if test="@icon">
-									<img src="/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+									<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
 								</xsl:if>
 								<xsl:if test="not(@icon)">
-									<img src="/__i/famfamfam.com/silk/bullet_go.png" class="icon"/>
+									<img src="{$base}/__i/famfamfam.com/silk/bullet_go.png" class="icon"/>
 								</xsl:if>
 							</div>
 							<div class="ui-cmd-text">
@@ -1852,7 +1893,7 @@
 			<tr>
 				<td class="ui-message-west-{$zoom}">
 					<xsl:if test="@icon">
-						<img src="/__i/famfamfam.com/silk/{@icon}.png" class="icon ui-message-icon-{$zoom}"/>
+						<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon ui-message-icon-{$zoom}"/>
 					</xsl:if>
 				</td>
 				<td class="ui-message-east-{$zoom}">
@@ -2201,7 +2242,7 @@
 				<div style="clear:both">
 					<xsl:if test=".//command/@hidden | .//index/@hidden">
 						<button id="{$unique}-btn" class="ui-menu-btn-ini no-print" style="opacity:0.35">
-							<div class="ui-cmd-icon"><img src="/__i/famfamfam.com/silk/cog_delete.png" class="icon"/></div>
+							<div class="ui-cmd-icon"><img src="{$base}/__i/famfamfam.com/silk/cog_delete.png" class="icon"/></div>
 							<div class="ui-cmd-text">Show all commands</div>
 						</button>
 						<script>
@@ -2227,10 +2268,10 @@
 					<xsl:variable name="iconWithTitle">
 						<div class="ui-cmd-icon">
 							<xsl:if test="@icon">
-								<img src="/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+								<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
 							</xsl:if>
 							<xsl:if test="not(@icon)">
-								<img src="/__i/famfamfam.com/silk/bullet_go.png" class="icon"/>
+								<img src="{$base}/__i/famfamfam.com/silk/bullet_go.png" class="icon"/>
 							</xsl:if>
 						</div>
 						<div class="ui-cmd-text">
@@ -2288,7 +2329,7 @@
 		<a tabindex="-1" href="{@src}" target="_blank" style="padding:0;margin:1pt;border:0">
 			<button class="ui-button" type="button" onclick="return true" onclick2="window.open(&quot;{@src}&quot;);return false;" tabindex="99998">
 				<div class="ui-cmd-icon">
-					<img src="/__i/famfamfam.com/silk/help.png" alt="user:" class="icon"/>
+					<img src="{$base}/__i/famfamfam.com/silk/help.png" alt="user:" class="icon"/>
 				</div>
 				<div class="ui-cmd-text">
 					Documentation
