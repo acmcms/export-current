@@ -45,7 +45,7 @@
 			<xsl:comment> zoom: <xsl:value-of select='$zoom'/> </xsl:comment>
 			<xsl:comment> sudo: <xsl:value-of select='$sudo'/> </xsl:comment>
 			<xsl:comment> stdl: <xsl:value-of select='$standalone'/> </xsl:comment>
-			<xsl:comment> make: 20190617T1936Z </xsl:comment>
+			<xsl:comment> make: 20190617T2136Z </xsl:comment>
 			<xsl:for-each select="*">
 				<head>
 					<title>
@@ -616,25 +616,25 @@
 								<div>
 									<xsl:choose>
 										<xsl:when test="$field/@name = '' or not($field/@name)">
-											<xsl:comment> l: 420 </xsl:comment>
 											<xsl:call-template name="formatted">
 												<xsl:with-param name="format" select="$field"/>
 												<xsl:with-param name="value" select="$field/@value | $value[not($field/@value)]"/>
 											</xsl:call-template>
+											<xsl:comment> l: 420 ^ </xsl:comment>
 										</xsl:when>
 										<xsl:when test="$field/@name = '.'">
-											<xsl:comment> l: 427 </xsl:comment>
 											<xsl:call-template name="formatted">
 												<xsl:with-param name="format" select="$field"/>
 												<xsl:with-param name="value" select="$value"/>
 											</xsl:call-template>
+											<xsl:comment> l: 427 ^ </xsl:comment>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:comment> l: 434 </xsl:comment>
 											<xsl:call-template name="formatted">
 												<xsl:with-param name="format" select="$field"/>
 												<xsl:with-param name="value" select="$value/*[local-name() = $field/@name] | $value/values/*[local-name() = $field/@name] | $value/values/@*[local-name() = $field/@name]"/>
 											</xsl:call-template>
+											<xsl:comment> l: 434 ^ </xsl:comment>
 										</xsl:otherwise>
 									</xsl:choose>
 									<xsl:call-template name="hint"/>
@@ -852,9 +852,7 @@
 				</xsl:if>
 			</xsl:when>
 			<xsl:when test="$format/@variant='period' and string(number($value))!='NaN'">
-				<xsl:attribute name="data-type">
-					<xsl:text>numeric</xsl:text>
-				</xsl:attribute>
+				<xsl:attribute name="data-type">numeric</xsl:attribute>
 				<xsl:variable name="scaleSetting">
 					<xsl:choose>
 						<xsl:when test="$format/@scale and $format/@scale!=''">
@@ -881,30 +879,19 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$format/@variant='integer' and string(number($value))!='NaN'">
-				<xsl:attribute name="data-type">
-					<xsl:text>numeric</xsl:text>
-				</xsl:attribute>
-				<xsl:variable name="number" select="number($value)"/>
-				<xsl:value-of select="format-number($number,'### ##0', 'decimal')" />
+				<xsl:attribute name="data-type">numeric</xsl:attribute>
+				<xsl:value-of select="format-number(number($value),'### ##0', 'decimal')" />
 			</xsl:when>
 			<xsl:when test="$format/@variant='price' and string(number($value))!='NaN'">
-				<xsl:attribute name="data-type">
-					<xsl:text>numeric</xsl:text>
-				</xsl:attribute>
-				<xsl:variable name="number" select="number($value)"/>
-				<xsl:value-of select="format-number($number,'### ##0.00', 'decimal')"/>
+				<xsl:attribute name="data-type">numeric</xsl:attribute>
+				<xsl:value-of select="format-number(number($value),'### ##0.00', 'decimal')"/>
 			</xsl:when>
 			<xsl:when test="$format/@variant='decimal' and string(number($value))!='NaN'">
-				<xsl:attribute name="data-type">
-					<xsl:text>numeric</xsl:text>
-				</xsl:attribute>
-				<xsl:variable name="number" select="number($value)"/>
-				<xsl:value-of select="format-number($number,'### ##0.000', 'decimal')"/>
+				<xsl:attribute name="data-type">numeric</xsl:attribute>
+				<xsl:value-of select="format-number(number($value),'### ##0.000', 'decimal')"/>
 			</xsl:when>
 			<xsl:when test="$format/@variant='bytes' and string(number($value))!='NaN'">
-				<xsl:attribute name="data-type">
-					<xsl:text>numeric</xsl:text>
-				</xsl:attribute>
+				<xsl:attribute name="data-type">numeric</xsl:attribute>
 				<xsl:variable name="number" select="number($value)"/>
 				<xsl:choose>
 					<xsl:when test="$number &gt; 115343360000"><xsl:value-of select="format-number($number div 1073741824, '### ##0', 'decimal')"/>GB</xsl:when>
@@ -1095,28 +1082,28 @@
 		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="@elementName and *[local-name() = $value/@elementName]">
-				<xsl:comment> l: 901 </xsl:comment>
 				<xsl:call-template name="list">
 					<xsl:with-param name="list" select="."/>
 					<xsl:with-param name="rows" select="*[local-name() = $value/@elementName]"/>
 					<xsl:with-param name="zoom" select="$zoom"/>
 				</xsl:call-template>
+				<xsl:comment> l: 901 ^ </xsl:comment>
 			</xsl:when>
 			<xsl:when test="@elementName">
-				<xsl:comment> l: 909 </xsl:comment>
 				<xsl:call-template name="list">
 					<xsl:with-param name="list" select="."/>
 					<xsl:with-param name="rows" select="$value/*[local-name() = $value/@elementName]"/>
 					<xsl:with-param name="zoom" select="$zoom"/>
 				</xsl:call-template>
+				<xsl:comment> l: 909 ^ </xsl:comment>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:comment> l: 917 </xsl:comment>
 				<xsl:call-template name="list">
 					<xsl:with-param name="list" select="."/>
 					<xsl:with-param name="rows" select="item | $value/item[not(item)]"/>
 					<xsl:with-param name="zoom" select="$zoom"/>
 				</xsl:call-template>
+				<xsl:comment> l: 917 ^ </xsl:comment>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -1949,7 +1936,7 @@
 	</xsl:template>
 
 	<xsl:template match="summary">
-		<div><xsl:apply-templates/></div><p></p>
+		<div class="ui-summary"><xsl:apply-templates/></div><p></p>
 	</xsl:template>
 
 	<xsl:template match="article">
