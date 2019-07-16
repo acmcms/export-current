@@ -27,7 +27,7 @@ const Transfer = ae3.Transfer;
  */
 
 
-module.exports = function onReceiveBufferImpl(b, d, q, pkt, load, key, peer, crc, m, l, ms, msg){
+module.exports = function onReceiveBufferImpl(b, d, q, pkt /* locals: */, load, key, peer, crc, m, l, ms, msg){
 	++ this.stRxLoops;
 	
 	for(;;){

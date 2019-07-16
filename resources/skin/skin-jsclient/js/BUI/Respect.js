@@ -42,9 +42,9 @@ BUI.Respect = {
 			{ 
 				layout	: "button",
 				icon : "link_go", 
-				href : "http://streetlevel.ru/",
-				title : "http://streetlevel.ru/",
-				text : "<font style='font-weight:bold;font-family:courier new, courier, monospace'>KeFF</font><small><br>http://streetlevel.ru</small>" 
+				href : "http://capandcap.ru/",
+				title : "http://capandcap.ru/",
+				text : "<font style='font-weight:bold;font-family:courier new, courier, monospace'>KeFF</font><small><br>http://capandcap.ru</small>" 
 			},
 			{ 
 				layout	: "button",

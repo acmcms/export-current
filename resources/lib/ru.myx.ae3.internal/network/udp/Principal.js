@@ -1,5 +1,6 @@
 const ae3 = require('ae3');
 const Transfer = ae3.Transfer;
+const UdpServiceHelper = require("java.class/ru.myx.ae3.internal.net.UdpServiceHelper");
 
 const Principal = module.exports = ae3.Class.create(
 	/* name */
@@ -33,6 +34,7 @@ const Principal = module.exports = ae3.Class.create(
 			},
 			'secret' : {
 				writable : true, 
+				configurable : true, 
 				value : secret || null
 			},
 			'sRx' : {
@@ -100,10 +102,11 @@ const Principal = module.exports = ae3.Class.create(
 			value : function(secret, serial){
 				console.log(">>>>>> %s: Secret update: secret changed: %s, serial: %s", this, (secret != this.secret), serial);
 
-				serial = (Number(serial) | 0) || 0;
+				serial = (serial ^ 0) || 0;
 				Object.defineProperties(this, {
 					'secret' : {
 						writable : true, 
+						configurable : true, 
 						value : secret || null
 					},
 					'sRx' : {
@@ -161,30 +164,39 @@ const Principal = module.exports = ae3.Class.create(
 				if(c > 255){
 					throw new Error("'code' must be overriden with integer value in [0..255] range: " + messageClass + ", code: " + c);
 				}
-				(this.handlers[c] || (this.handlers[c] = [])).push(Function.prototype.call.bind(messageCallback, thisArg || null));
+				(this.handlers[c] || (this.handlers[c] = [])).push(
+					thisArg
+						? Function.prototype.call.bind(messageCallback, thisArg || null)
+						: messageCallback
+				);
 			}
 		},
 		
 		onReceive : {
-			value : function(message, address, serial, /* locals: */ c){
-				this.sTx = Math.max(this.sTx, serial);
+			value : UdpServiceHelper.principalOnReceive || (function(message, address, serial, /* locals: */ c, h){
+				if(this.sTx < serial && (serial > 16000000) === (this.sTx > 16000000)){
+					this.sTx = serial;
+				}
 				
 				c = message.code;
-				if( ('number' !== typeof c) || ((c^0) !== c) ){
+				if( ((c^0) !== c) ){
 					// console.log('>>> >>> %s: onReceive, invalid code: %s, address: %s, serial: %s', this, message, address, serial);
 					return;
 				}
-				const handlers = this.handlers[c];
-				if(handlers){
-					// console.log('>>>>>> %s: onReceive, type: %s, address: %s, serial: %s, type: %s', this, message, address, serial, Format.jsDescribe(handler));
-					handlers.forEach(function(handler){
-						handler(message, address, serial);
-					});
+				h = this.handlers[c];
+				if(h){
+					// console.log('>>>>>> %s: onReceive, type: %s, address: %s, serial: %s, type: %s', this, message, address, serial, Format.jsDescribe(h));
+					for(c of h){
+						c(message, address, serial);
+					}
+					/// h.forEach(function(handler){
+					/// 	handler(message, address, serial);
+					/// });
 					return;
 				}
 				// console.log('>>> >>> %s: onReceive, no handler: %s, address: %s, serial: %s', this, message, address, serial);
 				return;
-			}
+			})
 		},
 		sendQuery : {
 			/**
@@ -295,24 +307,20 @@ const Principal = module.exports = ae3.Class.create(
 		
 		
 		payloadEncrypt : {
-			value : function(b, payloadLength, digest){
+			value : UdpServiceHelper.payloadEncrypt || (function(b, payloadLength, digest){
 				digest = digest.clone();
 				Transfer.updateMessageDigest(digest, b, 16, 16);
 				this.secret.updateMessageDigest(digest);
 				Transfer.xorBytes(b, 32, digest.result, payloadLength);
-			}
+			})
 		},
 		payloadDecrypt : {
-			value : function(pkt, b, offset, payloadLength, digest){
-				// var dg = digest.clone();
+			value : UdpServiceHelper.payloadDecrypt || (function(pkt, b, offset, payloadLength, digest){
 				digest = digest.clone();
-				// Transfer.updateMessageDigest(dg, pkt, 16, 16);
 				Transfer.updateMessageDigest(digest, pkt, 16, 16);
-				// this.secret.updateMessageDigest(dg);
 				this.secret.updateMessageDigest(digest);
-				// console.log(">>>>>> DG: " + Format.binaryAsHex(dg.result));
 				Transfer.xorBytes(pkt, 32, digest.result, b, offset, payloadLength);
-			}
+			})
 		},
 		
 		
