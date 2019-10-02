@@ -70,7 +70,7 @@
 							<link rel="stylesheet" type="text/css" href="{$base}/!/skin/skin-standard-xml/style.css" />
 						</xsl:otherwise>
 					</xsl:choose>
-					<script type="text/javascript" language="javascript" src="{$base}/!/skin/skin-jsclient/js/require.js"></script>
+					<script type="text/javascript" src="{$base}/!/skin/skin-jsclient/js/require.js"></script>
 					<meta name="apple-mobile-web-app-capable" content="yes" />
 					<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 					<style>
@@ -411,12 +411,6 @@
 		<xsl:param name="format" />
 		<xsl:param name="value" />
 		<xsl:param name="zoom" />
-		<xsl:if test="($format/@name or $format/@field) and $value and $format/@type='constant'">
-			<xsl:variable name="fieldName"><xsl:value-of select="$format/@field"/><xsl:value-of select="$format/@name[not($format/@field)]"/></xsl:variable>
-			<xsl:if test="$fieldName and $fieldName != '' and $fieldName != '.'">
-				<input type="hidden" name="{$fieldName}" value="{$value}"/>
-			</xsl:if>
-		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="not($value) and $format and ($format/@default or $format/default)">
 				<xsl:call-template name="formatted">
@@ -439,7 +433,7 @@
 				</xsl:variable>
 				<xsl:choose>
 					<xsl:when test="$format/@variant = 'checkbox'">
-						<input type="checkbox" name="{$format/@name}" value="{$inputValue}"><xsl:if test="$format/@selected = '*' or $format/@selected = $inputValue"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
+						<input type="checkbox" name="{$format/@name}" value="{$inputValue}"><xsl:if test="$format/@selected = '*' or $format/@selected = $inputValue or $value/../@*[$format/@selected and local-name() = $format/@selected]"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
 					</xsl:when>
 					<xsl:when test="$format/@variant = 'radio'">
 						<input type="radio" name="{$format/@name}" value="{$inputValue}"><xsl:if test="$format/@selected = $inputValue"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
@@ -916,6 +910,12 @@
 				&#160;
 			</xsl:otherwise>
 		</xsl:choose>
+		<xsl:if test="($format/@name or $format/@field) and $value and $format/@type='constant'">
+			<xsl:variable name="fieldName"><xsl:value-of select="$format/@field"/><xsl:value-of select="$format/@name[not($format/@field)]"/></xsl:variable>
+			<xsl:if test="$fieldName and $fieldName != '' and $fieldName != '.'">
+				<input type="hidden" name="{$fieldName}" value="{$value}"/>
+			</xsl:if>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="formatted | *[@layout='formatted']">
@@ -1114,11 +1114,11 @@
 		<xsl:param name="zoom" />
 		<xsl:choose>
 			<xsl:when test="$format/@type='constant'">
-				<xsl:call-template name="formatted">
+				<span><xsl:call-template name="formatted">
 					<xsl:with-param name="format" select="$format"/>
 					<xsl:with-param name="value" select="$value"/>
 					<xsl:with-param name="zoom" select="$zoom"/>
-				</xsl:call-template>
+				</xsl:call-template></span>
 			</xsl:when>
 			<xsl:when test="$format/@type='price' or $format/@variant='price'">
 				<input type="number" step="0.01" min="0" name="{$format/@name}" value="{$value}">
@@ -1269,7 +1269,7 @@
 					<xsl:otherwise>
 						<table value="{$value}">
 							<xsl:for-each select="option | options">
-								<tr><label><td><input type="checkbox" name="{$format/@name}" value="{@value}"><xsl:if test="$format/@selected = '*' or $format/@selected = @value"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input></td><td><xsl:value-of select="@title"/></td></label></tr>
+								<tr><label><td><input type="checkbox" name="{$format/@name}" value="{@value}"><xsl:if test="$format/@selected = '*' or $format/@selected = @value or @*[$format/@selected and local-name() = $format/@selected]"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input></td><td><xsl:value-of select="@title"/></td></label></tr>
 							</xsl:for-each>
 						</table>
 					</xsl:otherwise>
@@ -1315,6 +1315,7 @@
 		<xsl:call-template name="input">
 			<xsl:with-param name="format" select="."/>
 			<xsl:with-param name="value" select="$value/../*[local-name() = $fieldName] | $value/@*[local-name() = $fieldName]"/>
+			<xsl:with-param name="zoom" select="$zoom"/>
 		</xsl:call-template>
 	</xsl:template>
 
