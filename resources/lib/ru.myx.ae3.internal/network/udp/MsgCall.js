@@ -1,6 +1,7 @@
 const ae3 = require('ae3');
 const Transfer = ae3.Transfer;
-const UdpServiceHelper = require("java.class/ru.myx.ae3.internal.net.UdpServiceHelper");
+
+const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
 
 
 const MsgCall = module.exports = ae3.Class.create(

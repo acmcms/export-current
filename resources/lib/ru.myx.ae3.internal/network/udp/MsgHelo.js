@@ -1,6 +1,8 @@
 const ae3 = require('ae3');
 const net = ae3.net;
 
+const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
+
 const MsgHelo = module.exports = ae3.Class.create(
 	/* name */
 	"MsgHelo",
@@ -28,7 +30,7 @@ const MsgHelo = module.exports = ae3.Class.create(
 			value : true
 		},
 		build : {
-			value : function(b, o){
+			value : UdpServiceHelper.buildMsgHelo || (function(b, o){
 				// 4 bytes length, IPv4
 				var addr = this.src.address.address;
 				b[o++] = addr[0];
@@ -40,7 +42,7 @@ const MsgHelo = module.exports = ae3.Class.create(
 				b[o++] = (port & 0xFF00) >> 8;
 				b[o++] = port & 0x00FF;
 				return 6;
-			}
+			})
 		},
 		toString : {
 			value : function(){

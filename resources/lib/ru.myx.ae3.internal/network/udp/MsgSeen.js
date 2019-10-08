@@ -1,3 +1,5 @@
+const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
+
 const MsgSeen = module.exports = require('ae3').Class.create(
 	/* name */
 	"MsgSeen",
@@ -31,14 +33,14 @@ const MsgSeen = module.exports = require('ae3').Class.create(
 			}
 		},
 		build : {
-			value : function(b, o){
+			value : UdpServiceHelper.buildMsgSeen || (function(b, o){
 				// 2 bytes length, port
 				b[o++] = (this.port & 0xFF00) >> 8;
 				b[o++] = this.port & 0x00FF;
 				// 1 byte more
 				b[o++] = this.mode;
 				return 3;
-			}
+			})
 		},
 		toString : {
 			value : function(){
