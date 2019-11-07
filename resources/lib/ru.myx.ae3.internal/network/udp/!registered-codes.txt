@@ -9,6 +9,10 @@
 0x37	00110111 7	BASE/CACK				reply-final
 0x38	00111000 8	BASE/SEEN				reply-final
 
+0x33	00110011 3	BASE/RRST				request
+0x34	00110100 4	BASE/RSST				reply-final
+
+
 0x3F	00111111 ?	****/RRSS				request
 
 0x44	01000100 D	NDNS/DTUN				request

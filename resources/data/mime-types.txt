@@ -244,6 +244,9 @@ super     text/x-java                               text/plain
 define    text/javascript                           yes    .js
 super     text/javascript                           text/plain
 
+define    javascript/esm                            yes    .mjs
+super     javascript/esm                            text/javascript
+
 define    text/vbscript                             yes    .vbs .vb
 super     text/vbscript                             text/plain
 
