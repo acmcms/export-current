@@ -46,9 +46,10 @@ const CallbackDialback = module.exports = ae3.Class.create(
 		"connectCallback" : {
 			value : function(socket){
 				if(!socket){
-					console.log("ndm.client:callback:dialback: connect failed: %s:%s", this.targetAddr, this.targetPort + '');
+					console.log("ndm.client:callback:dialback: tcp connect failed: %s:%s", this.targetAddr, this.targetPort);
 					return;
 				}
+				console.log(">>>>>> ndm.client:callback:cloud/dialback: tcp connected, %s:%s %s", this.targetAddr, this.targetPort, this.tunnelType);
 				if(this.tunnelType !== 443){
 					socket = ae3.net.ssl.wrapClient(socket, null, this.targetAddr, this.targetPort, null);
 				}

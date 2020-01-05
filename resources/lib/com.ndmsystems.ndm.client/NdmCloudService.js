@@ -1,13 +1,31 @@
 const ae3 = require('ae3');
-const Concurrent = ae3.Concurrent;
 const vfs = ae3.vfs;
 const Client = require('./Client');
 
+
+/**
+ * Tells whether service is started or stopped
+ */
+let stopped = true;
+
+
+/**
+ * Client descriptors location
+ */
 const SETTINGS_PATH = "settings/ndm.ndss-client";
+
+/**
+ * Client persistent state data location
+ */
+const clientsFolder = ae3.vfs.ROOT.relativeFolderEnsure("storage/data/ndm.client/clients");
+
+/**
+ * Client instances map
+ */
+const clientObjects = {};
 
 
 const f = {
-	Settings : ae3.Util.Settings,
 	reduceClientsToMap : function(result, clientKey){
 		result[clientKey] = clientObjects[clientKey];
 		return result;
@@ -22,7 +40,7 @@ const f = {
 			value : require('./UdpCloudService')
 		});
 
-		const clients = f.Settings.SettingsBuilder.builderSimple()//
+		const clients = ae3.Util.Settings.SettingsBuilder.builderSimple()//
 			.setInputFolderPath(SETTINGS_PATH)//
 			.setDescriptorReducer(function(settings, description){
 				if (description.type !== "ndm.client/Connection") {
@@ -58,12 +76,6 @@ const f = {
 		console.log(">>>>>> NdmCloudService: checkClients done");
 	}
 };
-
-var stopped = true;
-
-const clientsFolder = ae3.vfs.ROOT.relativeFolderEnsure("storage/data/ndm.client/clients");
-
-const clientObjects = {};
 
 
 Object.defineProperties(exports, {
@@ -111,7 +123,7 @@ Object.defineProperties(exports, {
 	
 	
 	start : {
-		value : Concurrent.wrapSync(function(){
+		value : ae3.Concurrent.wrapSync(function(){
 			if(!stopped){
 				throw "already started";
 			}
@@ -121,7 +133,7 @@ Object.defineProperties(exports, {
 		})
 	},
 	stop : {
-		value : Concurrent.wrapSync(function(){
+		value : ae3.Concurrent.wrapSync(function(){
 			if(stopped){
 				throw "already stopped";
 			}
