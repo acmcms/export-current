@@ -46,6 +46,10 @@ module.exports = Object.create(Object.prototype, {
 		enumerable : true,
 		value : TlsPack.wrapServer/* function(socket, store){} */
 	},
+	getDomainStore : {
+		enumerable : true,
+		value : TlsPack.getDomainStore/* function(fqdn, protocols, ciphers){} */
+	},
 	"toString" : {
 		value : function(){
 			return "[Object ae3.net.ssl API]";
