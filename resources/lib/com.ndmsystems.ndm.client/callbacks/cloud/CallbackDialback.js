@@ -71,12 +71,18 @@ const CallbackDialback = module.exports = ae3.Class.create(
 		if(!this.sessionToken){
 			return null;
 		}
+		this.clientAddress = args[9];
 		return this;
 	},
 	{
 		"requestCallback" : {
 			value : function(query){
 				console.log("ndm.client:callback:dialback: web request: %s", Format.jsDescribe(query));
+				if(query && this.clientAddress) {
+					const headers = query.attributes;
+					const xff = headers['X-Forwarded-For'];
+					headers['X-Forwarded-For'] = xff ? xff + ', ' + this.clientAddress : this.clientAddress;
+				} 
 				return ae3.web.WebInterface.dispatch(query);
 			}
 		},

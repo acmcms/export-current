@@ -329,10 +329,10 @@ Object.defineProperties(Client.prototype, {
 		value : function(force){
 			//  try use existing, if any
 			if(!force){
-				const ndmpKeyPublic = this.vfs.getContentAsBinary("ndmpKeyPublic");
-				// const ndmpKeyPublic = this.vfs.relativeBinary("ndmpKeyPublic");
-				const ndmpKeyPrivate = this.vfs.getContentAsBinary("ndmpKeyPrivate");
-				// const ndmpKeyPrivate = this.vfs.relativeBinary("ndmpKeyPrivate");
+				// const ndmpKeyPublic = this.vfs.getContentAsBinary("ndmpKeyPublic");
+				const ndmpKeyPublic = this.vfs.relativeBinary("ndmpKeyPublic");
+				// const ndmpKeyPrivate = this.vfs.getContentAsBinary("ndmpKeyPrivate");
+				const ndmpKeyPrivate = this.vfs.relativeBinary("ndmpKeyPrivate");
 				if(ndmpKeyPublic && ndmpKeyPrivate){
 					console.log("ndm.client: ndmp: using existing EC pair");
 
@@ -401,6 +401,16 @@ Object.defineProperties(Client.prototype, {
 			collector.printBinary(this.ndnsAlias);
 			collector.printBytes(pair.getPublic().encoded);
 			return "https://" + this.ndmpZone + "/#link:" + Format.binaryAsBase58(collector.toBinary());
+		}
+	},
+	ndmpInvalidateLink : {
+		value : function(force){
+			if(!force){
+				return false;
+			}
+			this.vfs.setContentUndefined("ndmpKeyPublic");
+			this.vfs.setContentUndefined("ndmpKeyPrivate");
+			return true;
 		}
 	},
 	toString : {

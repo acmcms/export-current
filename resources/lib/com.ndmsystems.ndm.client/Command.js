@@ -129,7 +129,7 @@ var commands = {
 	},
 	"ndmp/link" : {
 		/* ndm.client ndmp/link default ndss.local */
-		args : "[--force-new] <clientAlias> <webShareName>",
+		args : "<clientAlias> <webShareName> [--force-new]",
 		help : "Creates a link with NDMP service",
 		run : function ndmpLink(args) {
 			const clientId = args.shift();
@@ -156,6 +156,41 @@ var commands = {
 				return true;
 			}
 			return console.fail("ndmp link is not available!");
+		}
+	},
+	"ndmp/unlink" : {
+		/* ndm.client ndmp/link default ndss.local */
+		args : [
+			"--all",
+			"<clientAlias>",
+		],
+		run : function ndmpUnlink(args){
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("Not enough arguments!");
+			}
+
+			const NdmCloudService = require('./NdmCloudService');
+			if(clientId === '--all'){
+				for(let client of NdmCloudService.getClients()){
+					if(!client.ndmpInvalidateLink(true)){
+						return console.fail("ndmp unlink is not available!, client: %s", Format.jsObjectReadable(client));
+					}
+				}
+				console.sendMessage("client: " + client.clientId + ", ndmp link data cleared");
+				return true;
+			}
+			
+			const client = NdmCloudService.getClient(clientId);
+			if(!client){
+				return console.fail("Client is unknown: " + clientId);
+			}
+
+			const result = client.ndmpInvalidateLink(true);
+			if(result){
+				return true;
+			}
+			return console.fail("ndmp unlink is not available!");
 		}
 	},
 	"ndns/update" : {
