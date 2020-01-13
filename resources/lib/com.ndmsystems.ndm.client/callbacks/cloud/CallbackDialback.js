@@ -108,7 +108,9 @@ const CallbackDialback = module.exports = ae3.Class.create(
 							this.socket, //
 							this.requestCallback.bind(this), //
 							(this.tunnelType % 100) === 43 || (this.tunnelType % 100) === 83, //
-							{} //
+							{
+								reverseProxied : true
+							} //
 					);
 					console.log("ndm.client:callback:dialback: http server connected, %s", this.server);
 					return;
