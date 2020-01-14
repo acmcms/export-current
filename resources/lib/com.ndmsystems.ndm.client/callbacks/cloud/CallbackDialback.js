@@ -109,6 +109,8 @@ const CallbackDialback = module.exports = ae3.Class.create(
 							this.requestCallback.bind(this), //
 							(this.tunnelType % 100) === 43 || (this.tunnelType % 100) === 83, //
 							{
+								factory : 'HTTP',
+								ignoreTargetPort : true,
 								reverseProxied : true
 							} //
 					);
