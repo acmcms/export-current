@@ -1,5 +1,16 @@
 {
 	onLayoutExecute : function(context, layout) {
+		if("number" === typeof layout.code){
+			return {
+				layout	:	"final",
+				// optional
+				code	:	layout.code,
+				type	:	"text/plain",
+				content	:	'[' +  (layout.title || 'Message') + ': ' + Format.jsDescribe(layout) + ']',
+				cache	:	layout.cache,
+				delay	:	layout.delay,
+			};
+		}
 		return '[' +  (layout.title || 'Message') + ': ' + Format.jsDescribe(layout) + ']';
 	}
 }
