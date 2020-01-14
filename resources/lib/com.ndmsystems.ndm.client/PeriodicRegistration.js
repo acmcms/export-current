@@ -1,4 +1,3 @@
-
 Object.defineProperties(exports, {
 	description : {
 		enumerable : true,
@@ -9,10 +8,8 @@ Object.defineProperties(exports, {
 			console.sendMessage("NDM.Client: periodic start.");
 			const NdmCloudService = require('./NdmCloudService');
 			const clients = NdmCloudService.getClients();
-			var key, client;
-			for keys(key in clients){
-				client = clients[key];
-				console.sendMessage("NDM.Client: running: " + key);
+			for(let client of clients){
+				console.sendMessage("NDM.Client: running: " + client.clientId);
 				client.run(console);
 			}
 			console.sendMessage("NDM.Client: periodic done.");
@@ -21,7 +18,7 @@ Object.defineProperties(exports, {
 	},
 	toString : {
 		value : function(){
-			return "[PeriodicRegisterTask]";
+			return "[NDM.Client  PeriodicTask]";
 		}
 	}
 });

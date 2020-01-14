@@ -1,22 +1,35 @@
-var XmlMultipleRequest = require("ae3.web/XmlMultipleRequest");
-var FutureSimpleObject = require('java.class/ru.myx.ae3.common.FutureSimpleUnknown');
-var Xml = require("ae3.util/Xml");
+const ae3 = require("ae3");
 
-function ClientRequest(client){
-	XmlMultipleRequest.call(this);
-	this.client = client;
-	return this;
-}
+const XmlMultipleRequest = require("ae3.web/XmlMultipleRequest");
+const FutureSimpleObject = require('java.class/ru.myx.ae3.common.FutureSimpleUnknown');
+const Xml = require("ae3.util/Xml");
 
-ClientRequest.prototype = Object.create(XmlMultipleRequest.prototype, {
-	launch : {
-		value : function launch(){
-			var future = new FutureSimpleObject();
-			internClientDoRequest.call(this, future, this.items, null);
-			return future;
-		},
+const ClientRequest = module.exports = ae3.Class.create(
+	"ClientRequest",
+	XmlMultipleRequest,
+	function ClientRequest(client){
+		XmlMultipleRequest.call(this);
+		this.client = client;
+		return this;
 	},
-});
+	{
+		launch : {
+			value : function launch(){
+				const future = new FutureSimpleObject();
+				internClientDoRequest.call(this, future, this.items, null);
+				return future;
+			},
+		},
+		ndssUrl : {
+			execute : "once", get : function(){
+				return this.client.ndssUrl;
+			}
+		}
+	},
+	{
+		
+	}
+);
 
 
 /**
@@ -34,10 +47,6 @@ function internClientUpgradeSuccess(map){
 	this.vfs.setContentPublicTreePrimitive("serviceKey", this.serviceKey = String(map.serviceKey));
 }
 
-function buildNdssUrl(ndssHost, ndssPort){
-	var port = Number(ndssPort);
-	return ((port == 80 || port == 8080 || port == 17080) ? "http://" : "https://") + ndssHost + ':' + (port || 443);
-}
 
 /**
  * Use .call(client, ...)
@@ -80,7 +89,7 @@ function internClientDoRequest(future, items, then){
 		return;
 	}
 	
-	var urlNdss = buildNdssUrl(client.ndssHost, client.ndssPort);
+	var urlNdss = this.ndssUrl;
 
 	if(keys.length == 1){
 		/**
@@ -213,5 +222,3 @@ function internCallbackXmlMultiple(future, items, then, message){
 		? internClientDoRequest.call(this, future, then)
 		: future.setResult(true);
 }
-
-module.exports = ClientRequest;

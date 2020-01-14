@@ -15,13 +15,7 @@ const vfs = ae3.vfs;
 const ClientRequest = require('./ClientRequest');
 
 
-var reg = /\D/g;
-
-const f = {
-	validateTagFormat : function(licenseNumber){
-		return licenseNumber.replace(reg, "").length === 15;
-	}
-};
+const DIGITS_ONLY_REGEXP = /\D/g;
 
 /**
  * NDMC constructor
@@ -241,7 +235,9 @@ Object.defineProperties(Client.prototype, {
 		value : require('./UdpCloudClient')
 	},
 	validateTagFormat : {
-		value : f.validateTagFormat
+		value : function validateTagFormat(licenseNumber){
+			return licenseNumber.replace(DIGITS_ONLY_REGEXP, "").length === 15;
+		}
 	},
 	next : {
 		value : function(console){
@@ -323,6 +319,12 @@ Object.defineProperties(Client.prototype, {
 				return false;
 			}
 			return true;
+		}
+	},
+	ndssUrl : {
+		get : function buildNdssUrl(){
+			var port = Number(this.ndssPort);
+			return ((port == 80 || port == 8080 || port == 17080) ? "http://" : "https://") + this.ndssHost + ':' + (port || 443);
 		}
 	},
 	ndmpKeyPair :{
@@ -465,7 +467,9 @@ Object.defineProperties(Client.prototype, {
 
 Object.defineProperties(Client, {
 	validateTagFormat : {
-		value : f.validateTagFormat
+		value : function validateTagFormat(licenseNumber){
+			return licenseNumber.replace(DIGITS_ONLY_REGEXP, "").length === 15;
+		}
 	},
 	storeRaw : {
 		value : function(vfsClient, clientId, ndssHost, ndssPort, licenseNumber, serviceKey){
