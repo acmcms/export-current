@@ -109,7 +109,7 @@ function requireImpl( focusPath, moduleName ) {
 			// relative require
 			// cacheVfs bind to this
 			return this(focusPath + moduleName.substr(2)).exports;
-		}else//
+		}
 		if(moduleName[1] === '.' && moduleName[2] === '/' /* moduleName.startsWith("../") */){
 			// relative require
 			// cacheVfs bind to this
@@ -117,9 +117,7 @@ function requireImpl( focusPath, moduleName ) {
 		}
 	}else//
 	if(moduleName[0] === 'j' && moduleName[10] === '/' && moduleName.startsWith("java.class/")){
-		/**
-		 * java class import feature
-		 */
+		// java class import feature
 		return Class.forName(moduleName.substring(11));
 	}
 	

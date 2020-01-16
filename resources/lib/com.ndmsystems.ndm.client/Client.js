@@ -125,7 +125,7 @@ function internCheckStats(clientRequest){
 			this.vfs.setContentPublicTreePrimitive("lastExported", next);
 		}).bind(this),
 		onError	: (function exportSuccess(code, text){
-			console.error("ndm.client: Stats dump is not supported by server, code=" + code);
+			console.error("ndm.client '%s': Stats dump is not supported by server, code=%s", this.clientId, code);
 		}).bind(this),
 	});
 	return true;
@@ -153,10 +153,10 @@ function internAppendRegister(clientRequest, reason){
 			// const address = map.address;
 			const notify = map.notify;
 			var n, id;
-			console.log('ndm.client: registration result OK, got notifications: ' + (!!notify));
+			console.log("ndm.client '%s': registration result OK, got notifications: %s", this.clientId, (!!notify));
 			if(notify){
 				for(n of Array(notify)){
-					console.log('ndm.client: got notification: ' + Format.jsObjectReadable(n));
+					console.log("ndm.client '%s': got notification: %s", this.clientId, Format.jsObjectReadable(n));
 					id = n.id;
 					if(id === 'ub1'){
 						this.ddnsName = n.name;
@@ -188,7 +188,7 @@ function internAppendRegister(clientRequest, reason){
 						if(n.alias && n.settings && n.settings.domain){
 							this.ndmpZone = n.settings.domain;
 							this.ndmpHost = n.alias.substring(0, 24) + '.' + this.ndmpZone;
-							console.log('ndm.client: "ut1" notification handler, system name: ' + this.ndmpHost);
+							console.log("ndm.client '%s': 'ut1' notification handler, system name: %s", this.clientId, this.ndmpHost);
 						}
 						if(id !== this.ndmpHost){
 							if(this.ndmpHost){
@@ -215,7 +215,7 @@ function internAppendRegister(clientRequest, reason){
 			this.vfs.setContentPublicTreePrimitive("lastRegistered", new Date());
 		}).bind(this),
 		onError	: (function exportSuccess(code, text){
-			console.error("ndm.client: Registration failed, code=" + code);
+			console.error("ndm.client '%s':Registration failed, code=%s", this.clientId, code);
 		}).bind(this),
 	});
 }
@@ -336,7 +336,7 @@ Object.defineProperties(Client.prototype, {
 				// const ndmpKeyPrivate = this.vfs.getContentAsBinary("ndmpKeyPrivate");
 				const ndmpKeyPrivate = this.vfs.relativeBinary("ndmpKeyPrivate");
 				if(ndmpKeyPublic && ndmpKeyPrivate){
-					console.log("ndm.client: ndmp: using existing EC pair");
+					console.log("ndm.client '%s': ndmp: using existing EC pair", this.clientId);
 
 					const KeyFactory = require("java.class/java.security.KeyFactory");
 					const keyFactory = KeyFactory.getInstance("EC");
@@ -345,7 +345,7 @@ Object.defineProperties(Client.prototype, {
 					const publicKeySpec = new X509EncodedKeySpec(ndmpKeyPublic.nextDirectArray());
 					const publicKey = keyFactory.generatePublic(publicKeySpec);
 					
-					console.log("ndm.client: ndmp: existing EC pair's public: " + publicKey);
+					console.log("ndm.client '%s': ndmp: existing EC pair's public: %s", this.clientId, publicKey);
 					
 					const PKCS8EncodedKeySpec = require("java.class/java.security.spec.PKCS8EncodedKeySpec");
 					const privateKeySpec = new PKCS8EncodedKeySpec(ndmpKeyPrivate.nextDirectArray());
@@ -363,7 +363,7 @@ Object.defineProperties(Client.prototype, {
 				/**
 				 * generate
 				 */
-				console.log("ndm.client: ndmp: generating new EC pair");
+				console.log("ndm.client '%s': ndmp: generating new EC pair", this.clientId);
 				
 				const ECGenParameterSpec = require("java.class/java.security.spec.ECGenParameterSpec");
 				const kpgparams = new ECGenParameterSpec("secp256r1");
@@ -373,7 +373,7 @@ Object.defineProperties(Client.prototype, {
 				g.initialize(kpgparams);
 				
 				const pair = g.generateKeyPair();
-				console.log("ndm.client: ndmp: new EC pair's public: " + pair.getPublic());
+				console.log("ndm.client '%s': ndmp: new EC pair's public: %s", this.clientId, pair.getPublic());
 				
 				/**
 				 * store
