@@ -122,29 +122,25 @@ var commands = {
 	},
 };
 
-/**
- * console command
- * 
- * @returns {Boolean}
- */
-exports.run = function run() {
-	var args = arguments;
-	if (args.length < 2) {
-		commands.help.run(args);
-		return false;
-	}
-	
-	args = Array.prototype.slice.call(args);
-	/* var selfName = */ args.shift();
-	
-	{
-		var commandName = args.shift();
-		var command = commands[commandName];
-		if (!command) {
-			return console.fail("unsupported command: %s", commandName);
+module.exports = {
+	description : "'vfs' command",
+	run : function() {
+		var args = arguments;
+		if (args.length < 2) {
+			commands.help.run(args);
+			return false;
 		}
-		return command.run(args);
+		
+		args = Array.prototype.slice.call(args);
+		/* var selfName = */ args.shift();
+		
+		{
+			var commandName = args.shift();
+			var command = commands[commandName];
+			if (!command) {
+				return console.fail("unsupported command: %s", commandName);
+			}
+			return command.run(args);
+		}
 	}
 };
-
-exports.description = "'vfs' command";

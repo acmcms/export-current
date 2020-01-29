@@ -50,6 +50,12 @@ module.exports = Object.create(Object.prototype, {
 		enumerable : true,
 		value : TlsPack.getDomainStore/* function(fqdn, protocols, ciphers){} */
 	},
+	
+	EllipticCurveSecp256r1 :{
+		enumerable : true,
+		value : require("java.class/ru.myx.crypto.EllipticCurveSecp256r1")
+	},
+	
 	"toString" : {
 		value : function(){
 			return "[Object ae3.net.ssl API]";

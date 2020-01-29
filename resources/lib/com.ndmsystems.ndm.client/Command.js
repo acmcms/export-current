@@ -6,7 +6,7 @@ var commands = {
 	help : {
 		args : "",
 		help : "display this help",
-		run : function help(args) {
+		run : function(args) {
 			var s = "ndmc command syntax:\r\n";
 			for(var k in commands){
 				s += "\t ndm.client " + k + " " + commands[k].args + "\r\n\t\t\t " + commands[k].help + "\r\n";
@@ -18,7 +18,7 @@ var commands = {
 	list : {
 		args : "",
 		help : "list clients",
-		run : function list(args) {
+		run : function(args) {
 			const NdmCloudService = require('./NdmCloudService');
 			console.sendMessage(
 				Format.jsObjectReadable(NdmCloudService.getClients())
@@ -29,7 +29,7 @@ var commands = {
 	run : {
 		args : "<clientAlias>",
 		help : "run pending activity if any",
-		run : function run(args) {
+		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
 				return console.fail("Not enough arguments!");
@@ -43,7 +43,7 @@ var commands = {
 	register : {
 		args : "<clientAlias> [<reason>]",
 		help : "perform registration",
-		run : function register(args) {
+		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
 				return console.fail("Not enough arguments!");
@@ -58,7 +58,7 @@ var commands = {
 	next : {
 		args : "<clientAlias>",
 		help : "print the unix timestamp of next planned ndmc event",
-		run : function next(args) {
+		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
 				return console.fail("Not enough arguments!");
@@ -72,7 +72,7 @@ var commands = {
 	idle : {
 		args : "<clientAlias>",
 		help : "print amount of milliseconds till text planned ndmc event",
-		run : function idle(args) {
+		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
 				return console.fail("Not enough arguments!");
@@ -86,7 +86,7 @@ var commands = {
 	print : {
 		args : "<clientAlias>",
 		help : "print general client information and settings",
-		run : function print(args) {
+		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
 				return console.fail("Not enough arguments!");
@@ -102,7 +102,7 @@ var commands = {
 		// ndm.client setup local ndss.macmyxpro.local 8443 075771260069315 KWrNhOJV3263192
 		args : "<clientAlias> <ndssHost> <ndssHttpsPort> <licenseNumber> <serviceKey>",
 		help : "configure NDSS Client",
-		run : function setup(args) {
+		run : function(args) {
 			const clientId = args.shift();
 			const ndssHost = args.shift();
 			const ndssPort = args.shift();
@@ -119,7 +119,7 @@ var commands = {
 	drop : {
 		args : "<clientAlias> <licenseNumber> <serviceKey>",
 		help : "removes NDSS Client",
-		run : function drop(args) {
+		run : function(args) {
 			var clientId = args.shift();
 			var licenseNumber = args.shift();
 			var serviceKey = args.shift();
@@ -129,15 +129,11 @@ var commands = {
 	},
 	"ndmp/link" : {
 		/* ndm.client ndmp/link default ndss.local */
-		args : "<clientAlias> <webShareName> [--force-new]",
+		args : "<clientAlias> [--force-new]",
 		help : "Creates a link with NDMP service",
-		run : function ndmpLink(args) {
+		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("Not enough arguments!");
-			}
-			const webShareName = args.shift();
-			if(!webShareName){
 				return console.fail("Not enough arguments!");
 			}
 			const forceNew = args.shift();
@@ -150,7 +146,7 @@ var commands = {
 				return console.fail("Client is unknown: " + clientId);
 			}
 
-			const link = client.ndmpPrepareValidationLink(webShareName, forceNew);
+			const link = client.components.ndmp.prepareMatingLink(forceNew);
 			if(link){
 				console.log("ndmp link url is: " + link);
 				return true;
@@ -164,7 +160,7 @@ var commands = {
 			"--all",
 			"<clientAlias>",
 		],
-		run : function ndmpUnlink(args){
+		run : function(args){
 			const clientId = args.shift();
 			if(!clientId){
 				return console.fail("Not enough arguments!");
@@ -173,11 +169,11 @@ var commands = {
 			const NdmCloudService = require('./NdmCloudService');
 			if(clientId === '--all'){
 				for(let client of NdmCloudService.getClients()){
-					if(!client.ndmpInvalidateLink(true)){
+					if(!client.components.ndmp.invalidateMatingKeys(true)){
 						return console.fail("ndmp unlink is not available!, client: %s", Format.jsObjectReadable(client));
 					}
+					console.sendMessage("client: " + client.clientId + ", ndmp link data clean");
 				}
-				console.sendMessage("client: " + client.clientId + ", ndmp link data cleared");
 				return true;
 			}
 			
@@ -186,17 +182,42 @@ var commands = {
 				return console.fail("Client is unknown: " + clientId);
 			}
 
-			const result = client.ndmpInvalidateLink(true);
+			const result = client.components.ndmp.invalidateMatingKeys(true);
 			if(result){
 				return true;
 			}
 			return console.fail("ndmp unlink is not available!");
 		}
 	},
+	"ndmp/status" : {
+		/* ndm.client ndmp/status default */
+		args : "<clientAlias>",
+		help : "Displays NDMP mating status",
+		run : function(args) {
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("Not enough arguments!");
+			}
+			const NdmCloudService = require('./NdmCloudService');
+			const client = NdmCloudService.getClient(clientId);
+			if(!client){
+				return console.fail("Client is unknown: " + clientId);
+			}
+
+			const keys = client.components.ndmp.confirmedMatingKeys;
+			if(keys){
+				const Secp256r1 = require('ae3').net.ssl.EllipticCurveSecp256r1;
+				console.log("ndmp mating client key: %s", Secp256r1.formatPublicKeyAsHexCompressed(keys.client));
+				console.log("ndmp mating server key: %s", Secp256r1.formatPublicKeyAsHexCompressed(keys.server));
+				return true;
+			}
+			return console.fail("ndmp service is not linked!");
+		}
+	},
 	"ndns/update" : {
 		args : "<clientAlias> [<wanAddress> [<accessMode>]]",
 		help : "Updates and displays name booking information",
-		run : function ndnsUpdate(args) {
+		run : function(args) {
 			var clientId = args.shift();
 			var licenseNumber = args.shift();
 			var serviceKey = args.shift();
@@ -207,7 +228,7 @@ var commands = {
 	"ndns/book" : {
 		args : "<clientAlias> <hostName> <domainName>",
 		help : "removes NDSS Client",
-		run : function runSetup(args) {
+		run : function(args) {
 			var clientId = args.shift();
 			var licenseNumber = args.shift();
 			var serviceKey = args.shift();
@@ -218,7 +239,7 @@ var commands = {
 	"ndns/check" : {
 		args : "<clientAlias> <hostName> [<domainName>]",
 		help : "removes NDSS Client",
-		run : function runSetup(args) {
+		run : function(args) {
 			var clientId = args.shift();
 			var licenseNumber = args.shift();
 			var serviceKey = args.shift();

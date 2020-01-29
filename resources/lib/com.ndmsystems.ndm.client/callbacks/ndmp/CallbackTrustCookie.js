@@ -3,7 +3,7 @@ const ae3 = require('ae3');
 const CallbackTrustCookie = module.exports = ae3.Class.create(
 	"CallbackTrustCookie",
 	require("./../AbstractCallback"),
-	function CallbackTrustCookie(args){
+	function(args){
 		this.group = args[1];
 		this.cookie = args[2];
 		this.timestamp = args[3];
@@ -13,8 +13,21 @@ const CallbackTrustCookie = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
+		"prepareCallback" : {
+			value : function(component){
+				const keys = component.confirmedMatingKeys;
+				if(!keys){
+					console.log(">>>>>> ndm.client:callback:ndmp/trustCookie: refused: no service link established %s, %s", this.group, this.cookie);
+					return false;
+				}
+				
+				// TODO: check signature
+				
+				return true;
+			}
+		},
 		"executeCallback" : {
-			value : function(client){
+			value : function(component){
 				console.log(">>>>>> ndm.client:callback:ndmp/trustCookie: %s, %s", this.group, this.cookie);
 			}
 		},

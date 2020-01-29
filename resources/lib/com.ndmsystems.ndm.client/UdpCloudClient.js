@@ -17,34 +17,22 @@ const UdpCloudClient = module.exports = ae3.Class.create(
 		});
 		// this.registerHandler(this.iface.MsgCall, f.handlerCall.bind(this.iface, this));
 		this.registerHandler(UdpCloudService.MsgCall, (function (message, address, serial){
-			const component = message.component;
-			if(component !== 'cloud' && component !== 'ndmp'){
-				console.log(">>>>>> ndm.client:UdpCloudService::handlerCall: invalid component: %s", component);
+			const component = this.client.components[message.component];
+			if(undefined === component || !component.AbstractComponent){
+				console.log(">>>>>> ndm.client:UdpCloudService::handlerCall: invalid component: %s", message.component);
 				this.sendSingle(new UdpCloudService.MsgCerr(serial, 0x01 /* No Such Component */), address);
 				return;
 			}
 			const args = message.argument.toStringUtf8().split('\n');
-			const name = args[0];
-			const href = './callbacks/'+component+'/Callback' + (name[0].toUpperCase()) + (name.substr(1));
-			var callback;
-			try{
-				callback = require(href);
-			}catch(e){
-				console.log(">>>>>> ndm.client:UdpCloudService::handlerCall: invalid callback: %s", name);
+			const result = component.prepareCall(args);
+			if(!result){
+				console.log(">>>>>> ndm.client:UdpCloudService::handlerCall(%s, %s) => CERR: %s", this, message, component.componentName);
 				this.sendSingle(new UdpCloudService.MsgCerr(serial, 0x03 /* Invalid Arguments */), address);
 				return;
 			}
-			
-			callback = new callback(args);
-			if(!callback){
-				console.log(">>>>>> ndm.client:UdpCloudService::handlerCall: invalid arguments: %s", name);
-				this.sendSingle(new UdpCloudService.MsgCerr(serial, 0x03 /* Invalid Arguments */), address);
-				return;
-			}
-			
-			console.log(">>>>>> ndm.client:UdpCloudService::handlerCall(%s, %s) => CACK, callback: %s", this, message, callback);
+			console.log(">>>>>> ndm.client:UdpCloudService::handlerCall(%s, %s) => CACK, %s", this, message, component.componentName);
 			this.sendSingle(new UdpCloudService.MsgCack(serial), address);
-			setTimeout(callback.executeCallback.bind(callback, this.client, args), 0);
+			setTimeout(result, 0);
 		}).bind(this));
 		return this;
 	},

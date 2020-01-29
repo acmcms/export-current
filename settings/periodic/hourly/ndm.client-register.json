@@ -1,5 +1,5 @@
 {
-	type : "ae3/Executable",
-	name : "NDM.Client Periodic Task: Cloud Registration Update",
-	reference : "com.ndmsystems.ndm.client/PeriodicRegistration"
+	"type" : "ae3/Executable",
+	"name" : "NDM.Client Periodic Task: Cloud Registration Update",
+	"reference" : "com.ndmsystems.ndm.client/PeriodicRegistration"
 }

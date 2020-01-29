@@ -1,65 +1,13 @@
 const ae3 = require('ae3');
 
-const PROTOCOLS = [
-	"TLSv1.3",
-	"TLSv1.2",
-	"TLSv1.1",
-	"TLSv1",
-	// "SSLv3",
-	// "SSLv2Hello",
-];
-
-const CIPHERS = [ 
-	// 'SSL_RSA_WITH_RC4_128_MD5',
-	// 'SSL_RSA_WITH_RC4_128_SHA',
-	// 'SSL_RSA_EXPORT_WITH_RC4_40_MD5',
-	// 'SSL_RSA_EXPORT_WITH_DES40_CBC_SHA'
-	
-	// 'TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384', // RSA key only
-	'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384'
-	'TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384',
-	'TLS_RSA_WITH_AES_256_CBC_SHA256',
-	// 'TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384', // RSA key only
-	'TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384',
-	
-	// 'TLS_DHE_RSA_WITH_AES_256_CBC_SHA256', // insecure
-	// 'TLS_DHE_DSS_WITH_AES_256_CBC_SHA256', // insecure
-	
-	// 'TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA', // RSA key only
-	'TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA',
-	// 'TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA', // RSA key only
-	'TLS_ECDH_RSA_WITH_AES_256_CBC_SHA',
-	'TLS_RSA_WITH_AES_256_GCM_SHA384',
-	// 'TLS_RSA_WITH_AES_256_CBC_SHA', // blocks FS with IE, disabled until SERVER_ORDER in jdk8
-	
-	'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256',
-	// 'TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA', // RSA key only
-	'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA',
-	'TLS_RSA_WITH_AES_128_CBC_SHA256',
-	'TLS_RSA_WITH_AES_128_GCM_SHA256',
-	// 'TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA',  // RSA key only
-	'TLS_ECDH_RSA_WITH_AES_128_CBC_SHA',
-	// 'TLS_RSA_WITH_AES_128_CBC_SHA', // IE8-10 prefers it otherwise
-
-	// 'TLS_DHE_RSA_WITH_AES_256_CBC_SHA', // old OpenSSL - insecure
-	// 'TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA', // IE - DSS key - insecure and no DSS key
-	
-	// 'TLS_RSA_WITH_3DES_EDE_CBC_SHA', // 112 bit, for IE8/XP, makes others choose it, disabled until SERVER_ORDER in jdk8
-	// 'SSL_RSA_WITH_3DES_EDE_CBC_SHA', // 112 bit, for IE8/XP, makes others choose it, disabled until SERVER_ORDER in jdk8
-	
-	// 'TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA', // RSA key only
-	// 'TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA', // obsolete
-	
-	// 'TLS_DHE_RSA_WITH_AES_128_CBC_SHA', // insecure
-	
-	// 'TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA', // insecure: Android2, OpenSSL0.9, Safari5 
-	// 'SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA', // insecure: Android2, OpenSSL0.9, Safari5 
-];
+/**
+ * https://ndss.ndmsystems.com/documentation#dialback-callback
+ */
 
 const CallbackDialback = module.exports = ae3.Class.create(
 	"CallbackDialback",
 	require("./../AbstractCallback"),
-	function CallbackDialback(args){
+	function(args){
 		this.serviceName = args[1];
 		this.anchorName = args[2];
 		this.domainName = args[3];
@@ -99,7 +47,14 @@ const CallbackDialback = module.exports = ae3.Class.create(
 					case 43:
 					case 83:
 						console.log("ndm.client:callback:dialback: wrap server socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
-						this.socket = ae3.net.ssl.wrapServer(this.socket, ae3.net.ssl.getDomainStore(this.anchorName + '.' + this.domainName, PROTOCOLS, CIPHERS));
+						this.socket = ae3.net.ssl.wrapServer(//
+							this.socket, //
+							ae3.net.ssl.getDomainStore(//
+								this.anchorName + '.' + this.domainName, //
+								CallbackDialback.PROTOCOLS, //
+								CallbackDialback.CIPHERS//
+							)//
+						);
 					}
 
 					this.server = new ae3.web.HttpServerParser( //
@@ -162,7 +117,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 			}
 		},
 		"executeCallback" : {
-			value : function(client){
+			value : function(component){
 				console.log(">>>>>> ndm.client:callback:cloud/dialback: connecting, %s", Format.jsObject(this));
 				ae3.net.tcp.connect(this.targetAddr, this.targetPort, this.connectCallback.bind(this), {
 					timeout : 5000,
@@ -173,6 +128,66 @@ const CallbackDialback = module.exports = ae3.Class.create(
 				});
 			}
 		},
+	},
+	{
+		"PROTOCOLS" : {
+			value : [
+				"TLSv1.3",
+				"TLSv1.2",
+				"TLSv1.1",
+				"TLSv1",
+				// "SSLv3",
+				// "SSLv2Hello",
+			]
+		},
+		"CIPHERS" : {
+			value : [ 
+				// 'SSL_RSA_WITH_RC4_128_MD5',
+				// 'SSL_RSA_WITH_RC4_128_SHA',
+				// 'SSL_RSA_EXPORT_WITH_RC4_40_MD5',
+				// 'SSL_RSA_EXPORT_WITH_DES40_CBC_SHA'
+				
+				// 'TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384', // RSA key only
+				'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384'
+				'TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384',
+				'TLS_RSA_WITH_AES_256_CBC_SHA256',
+				// 'TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384', // RSA key only
+				'TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384',
+				
+				// 'TLS_DHE_RSA_WITH_AES_256_CBC_SHA256', // insecure
+				// 'TLS_DHE_DSS_WITH_AES_256_CBC_SHA256', // insecure
+				
+				// 'TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA', // RSA key only
+				'TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA',
+				// 'TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA', // RSA key only
+				'TLS_ECDH_RSA_WITH_AES_256_CBC_SHA',
+				'TLS_RSA_WITH_AES_256_GCM_SHA384',
+				// 'TLS_RSA_WITH_AES_256_CBC_SHA', // blocks FS with IE, disabled until SERVER_ORDER in jdk8
+				
+				'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256',
+				// 'TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA', // RSA key only
+				'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA',
+				'TLS_RSA_WITH_AES_128_CBC_SHA256',
+				'TLS_RSA_WITH_AES_128_GCM_SHA256',
+				// 'TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA',  // RSA key only
+				'TLS_ECDH_RSA_WITH_AES_128_CBC_SHA',
+				// 'TLS_RSA_WITH_AES_128_CBC_SHA', // IE8-10 prefers it otherwise
+
+				// 'TLS_DHE_RSA_WITH_AES_256_CBC_SHA', // old OpenSSL - insecure
+				// 'TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA', // IE - DSS key - insecure and no DSS key
+				
+				// 'TLS_RSA_WITH_3DES_EDE_CBC_SHA', // 112 bit, for IE8/XP, makes others choose it, disabled until SERVER_ORDER in jdk8
+				// 'SSL_RSA_WITH_3DES_EDE_CBC_SHA', // 112 bit, for IE8/XP, makes others choose it, disabled until SERVER_ORDER in jdk8
+				
+				// 'TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA', // RSA key only
+				// 'TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA', // obsolete
+				
+				// 'TLS_DHE_RSA_WITH_AES_128_CBC_SHA', // insecure
+				
+				// 'TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA', // insecure: Android2, OpenSSL0.9, Safari5 
+				// 'SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA', // insecure: Android2, OpenSSL0.9, Safari5 
+			]
+		}
 	}
 );
 

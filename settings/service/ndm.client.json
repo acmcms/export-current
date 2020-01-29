@@ -1,6 +1,6 @@
 {
-	type : "ae3.Service",
-	reference : "com.ndmsystems.ndm.client/NdmCloudService",
-	augments : ["server", "client"],
-	requires : ['network', 'periodic']
+	"type" : "ae3.Service",
+	"reference" : "com.ndmsystems.ndm.client/NdmCloudService",
+	"augments" : ["server", "client"],
+	"requires" : ["network", "periodic"]
 }

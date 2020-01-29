@@ -17,53 +17,233 @@ const ClientRequest = require('./ClientRequest');
 
 const DIGITS_ONLY_REGEXP = /\D/g;
 
-/**
- * NDMC constructor
- */
-function Client(folder, ndssHost, ndssPort, license, serviceKey, ddnsHost){
-	if(!folder.isContainer()){
-		if(!ndssHost || !ndssPort || !license || !serviceKey){
-			throw "folder is not a container: "+folder;
-		}
-		if(!folder.doSetContainer()){
-			throw "con't create container: "+folder;
-		}
-	}
-	
-	Object.defineProperties(this, {
-		vfs : {
-			value : folder
-		},
-		clientId : {
-			value : folder.key,
-			enumerable : true
-		},
-	});
 
-	this.ndssHost		= ndssHost || folder.getContentAsText("ndssHost", '');
-	this.ndssPort		= ndssPort || folder.getContentAsText("ndssPort", '');
-	this.licenseNumber	= license || folder.getContentAsText("license", '');
-	this.serviceKey		= serviceKey || folder.getContentAsText("serviceKey", '');
-	this.ddnsHost		= ddnsHost || folder.getContentAsText("ddnsHost", '');
-	
-	if(!this.validateTagFormat(this.licenseNumber)){
-		throw "Client['" + this.clientId + "'] Invalid license number: " + this.licenseNumber;
-	}
-	
-	if(this.ddnsHost){
-		ae3.web.WebInterface.localNameUpsert(this.ddnsHost, "ndmc-ddns-" + this.clientId);
-	}
-	
-	return this;
-}
+const Client = module.exports = ae3.Class.create(
+	"Client",
+	undefined,
+	function Client(folder, ndssHost, ndssPort, license, serviceKey, ddnsHost){
+		if(!folder.isContainer()){
+			if(!ndssHost || !ndssPort || !license || !serviceKey){
+				throw "folder is not a container: "+folder;
+			}
+			if(!folder.doSetContainer()){
+				throw "con't create container: "+folder;
+			}
+		}
+		
+		Object.defineProperties(this, {
+			vfs : {
+				value : folder
+			},
+			clientId : {
+				value : folder.key,
+				enumerable : true
+			},
+			components : {
+				value : {
+					"base"  : require("./components/base/ComponentBase").newInstance(this),
+					"cloud" : require("./components/cloud/ComponentCloud").newInstance(this),
+					"ndmp"  : require("./components/ndmp/ComponentNdmp").newInstance(this),
+				}
+			}
+		});
 
-/**
- * ******************************************************************************
- * ******************************************************************************
- * instance methods
- * ******************************************************************************
- * ******************************************************************************
- */
+		this.ndssHost		= ndssHost || folder.getContentAsText("ndssHost", '');
+		this.ndssPort		= ndssPort || folder.getContentAsText("ndssPort", '');
+		this.licenseNumber	= license || folder.getContentAsText("license", '');
+		this.serviceKey		= serviceKey || folder.getContentAsText("serviceKey", '');
+		this.ddnsHost		= ddnsHost || folder.getContentAsText("ddnsHost", '');
+		
+		if(!this.validateTagFormat(this.licenseNumber)){
+			throw "Client['" + this.clientId + "'] Invalid license number: " + this.licenseNumber;
+		}
+		
+		if(this.ddnsHost){
+			ae3.web.WebInterface.localNameUpsert(this.ddnsHost, "ndmc-ddns-" + this.clientId);
+		}
+		
+		return this;
+	},
+	{
+		UdpCloudClient : {
+			value : require('./UdpCloudClient')
+		},
+		validateTagFormat : {
+			value : function(licenseNumber){
+				return licenseNumber.replace(DIGITS_ONLY_REGEXP, "").length === 15;
+			}
+		},
+		next : {
+			value : function(console){
+				const now = Date.now();
+				const prev = this.vfs.getContentPrimitive("lastRegistered", null);
+				if(!prev){
+					return now;
+				}
+				return Math.max(now, prev.getTime() + 3600000);
+			}
+		},
+		run : {
+			value : function(){
+				if(this.started !== true){
+					return;
+				}
+				var request = internPrepareRequest.call(this);
+				/**
+				 * it will do nothing if nothing is pending
+				 */
+				return request.launch();
+			}
+		},
+		doRegister : {
+			value : function(reason){
+				if(this.started !== true){
+					return;
+				}
+				var request = internPrepareRequest.call(this);
+				/**
+				 * will overwrite 'register' if pending
+				 */
+				internAppendRegister.call(this, request, reason);
+				return request.launch();
+			}
+		},
+		start : {
+			value : function(){
+				if(this.started === true){
+					return;
+				}
+				this.started = true;
+				const uClient = this.udpCloudClient;
+				if(uClient){
+					this.udpCloudClient = null;
+					uClient.destroy();
+				}
+
+				setTimeout((function(){
+					this.doRegister('boot');
+				}).bind(this), 100);
+			}
+		},
+		destroy : {
+			value : function(){
+				if(this.started === false){
+					return;
+				}
+				this.started = false;
+				const uClient = this.udpCloudClient;
+				if(uClient){
+					this.udpCloudClient = null;
+					uClient.destroy();
+				}
+			}
+		},
+		equals : {
+			value : function(that){
+				if(this.ndssHost != that.ndssHost){
+					return false;
+				}
+				if(this.ndssPort != that.ndssPort){
+					return false;
+				}
+				if(this.licenseNumber != that.licenseNumber){
+					return false;
+				}
+				if(this.serviceKey != that.serviceKey){
+					return false;
+				}
+				return true;
+			}
+		},
+		ndssUrl : {
+			get : function(){
+				const port = Number(this.ndssPort);
+				return ((port == 80 || port == 8080 || port == 17080) ? "http://" : "https://") + this.ndssHost + ':' + (port || 443);
+			}
+		},
+		toString : {
+			value : function(){
+				return "[NdmcClient " + Format.jsString(this.licenseNumber) + "/" + Format.jsString(this.clientId)+"]";
+			}
+		},
+		auth : {
+			get : function(){
+				return this.serviceKey
+					?	{
+						get : {
+							__auth_type : "ndss3",
+							license : this.licenseNumber
+						},
+						post : {
+							pw : this.serviceKey
+						}
+					}
+					:	{
+						get : {
+							license : this.licenseNumber
+						}
+					}
+				;
+			}
+		}
+	},
+	{
+		validateTagFormat : {
+			value : function(licenseNumber){
+				return licenseNumber.replace(DIGITS_ONLY_REGEXP, "").length === 15;
+			}
+		},
+		storeRaw : {
+			value : function(vfsClient, clientId, ndssHost, ndssPort, licenseNumber, serviceKey){
+				const txn = vfs.createTransaction();
+				try{
+					if(ndssHost !== undefined){
+						vfsClient.setContentPublicTreePrimitive("ndssHost", String(ndssHost));
+					}
+					if(ndssPort !== undefined){
+						vfsClient.setContentPublicTreePrimitive("ndssPort", Number(ndssPort));
+					}
+					if(licenseNumber !== undefined){
+						vfsClient.setContentPublicTreePrimitive("license", String(licenseNumber));
+					}
+					if(serviceKey !== undefined){
+						vfsClient.setContentPublicTreePrimitive("serviceKey", String(serviceKey));
+					}
+					return true;
+				}catch(e){
+					txn && (txn.cancel(), txn = null);
+					throw e;
+				}finally{
+					txn && txn.commit();
+				}
+			}
+		},
+		createEpoch2ClientRequest : {
+			value : function(ndssHost, ndssPort, licenseNumber){
+				return new ClientRequest(new Epoch2Client(ndssHost, ndssPort, licenseNumber));
+			}
+		},
+		createRobotClientRequest : {
+			value : function(ndssHost, ndssPort, robotPass){
+				if(!ndssHost){
+					throw new Error("ndssHost in undefined!");
+				}
+				if(!ndssPort){
+					throw new Error("ndssPort in undefined!");
+				}
+				if(!robotPass){
+					throw new Error("robotPass in undefined!");
+				}
+				return new ClientRequest(new RobotClient(ndssHost, ndssPort, robotPass));
+			}
+		},
+		createDeviceClientRequest : {
+			value : function(ndssHost, ndssPort, licenseNumber, serviceKey){
+				return new ClientRequest(new DeviceClient(ndssHost, ndssPort, licenseNumber, serviceKey));
+			}
+		}
+	}
+);
 
 
 
@@ -225,225 +405,6 @@ function internAppendRegister(clientRequest, reason){
 
 
 
-
-
-Object.defineProperties(Client.prototype, {
-	Client : {
-		value : Client
-	},
-	UdpCloudClient : {
-		value : require('./UdpCloudClient')
-	},
-	validateTagFormat : {
-		value : function validateTagFormat(licenseNumber){
-			return licenseNumber.replace(DIGITS_ONLY_REGEXP, "").length === 15;
-		}
-	},
-	next : {
-		value : function(console){
-			var now = Date.now();
-			var prev = this.vfs.getContentPrimitive("lastRegistered", null);
-			if(!prev){
-				return now;
-			}
-			return Math.max(now, prev.getTime() + 3600000);
-		}
-	},
-	run : {
-		value : function(){
-			if(this.started !== true){
-				return;
-			}
-			var request = internPrepareRequest.call(this);
-			/**
-			 * it will do nothing if nothing is pending
-			 */
-			return request.launch();
-		}
-	},
-	doRegister : {
-		value : function(reason){
-			if(this.started !== true){
-				return;
-			}
-			var request = internPrepareRequest.call(this);
-			/**
-			 * will overwrite 'register' if pending
-			 */
-			internAppendRegister.call(this, request, reason);
-			return request.launch();
-		}
-	},
-	start : {
-		value : function(){
-			if(this.started === true){
-				return;
-			}
-			this.started = true;
-			const uClient = this.udpCloudClient;
-			if(uClient){
-				this.udpCloudClient = null;
-				uClient.destroy();
-			}
-
-			setTimeout((function(){
-				this.doRegister('boot');
-			}).bind(this), 100);
-		}
-	},
-	destroy : {
-		value : function(){
-			if(this.started === false){
-				return;
-			}
-			this.started = false;
-			const uClient = this.udpCloudClient;
-			if(uClient){
-				this.udpCloudClient = null;
-				uClient.destroy();
-			}
-		}
-	},
-	equals : {
-		value : function(that){
-			if(this.ndssHost != that.ndssHost){
-				return false;
-			}
-			if(this.ndssPort != that.ndssPort){
-				return false;
-			}
-			if(this.licenseNumber != that.licenseNumber){
-				return false;
-			}
-			if(this.serviceKey != that.serviceKey){
-				return false;
-			}
-			return true;
-		}
-	},
-	ndssUrl : {
-		get : function buildNdssUrl(){
-			var port = Number(this.ndssPort);
-			return ((port == 80 || port == 8080 || port == 17080) ? "http://" : "https://") + this.ndssHost + ':' + (port || 443);
-		}
-	},
-	ndmpKeyPair :{
-		value : function(force){
-			//  try use existing, if any
-			if(!force){
-				// const ndmpKeyPublic = this.vfs.getContentAsBinary("ndmpKeyPublic");
-				const ndmpKeyPublic = this.vfs.relativeBinary("ndmpKeyPublic");
-				// const ndmpKeyPrivate = this.vfs.getContentAsBinary("ndmpKeyPrivate");
-				const ndmpKeyPrivate = this.vfs.relativeBinary("ndmpKeyPrivate");
-				if(ndmpKeyPublic && ndmpKeyPrivate){
-					console.log("ndm.client '%s': ndmp: using existing EC pair", this.clientId);
-
-					const KeyFactory = require("java.class/java.security.KeyFactory");
-					const keyFactory = KeyFactory.getInstance("EC");
-					
-					const X509EncodedKeySpec = require("java.class/java.security.spec.X509EncodedKeySpec");
-					const publicKeySpec = new X509EncodedKeySpec(ndmpKeyPublic.nextDirectArray());
-					const publicKey = keyFactory.generatePublic(publicKeySpec);
-					
-					console.log("ndm.client '%s': ndmp: existing EC pair's public: %s", this.clientId, publicKey);
-					
-					const PKCS8EncodedKeySpec = require("java.class/java.security.spec.PKCS8EncodedKeySpec");
-					const privateKeySpec = new PKCS8EncodedKeySpec(ndmpKeyPrivate.nextDirectArray());
-					const privateKey = keyFactory.generatePrivate(privateKeySpec);
-					
-					const KeyPair = require("java.class/java.security.KeyPair");
-					return new KeyPair(publicKey, privateKey);
-					
-				}
-			}
-			
-			// generate & store
-			{
-				
-				/**
-				 * generate
-				 */
-				console.log("ndm.client '%s': ndmp: generating new EC pair", this.clientId);
-				
-				const ECGenParameterSpec = require("java.class/java.security.spec.ECGenParameterSpec");
-				const kpgparams = new ECGenParameterSpec("secp256r1");
-				
-				const KeyPairGenerator = require("java.class/java.security.KeyPairGenerator");
-				const g = KeyPairGenerator.getInstance("EC");
-				g.initialize(kpgparams);
-				
-				const pair = g.generateKeyPair();
-				console.log("ndm.client '%s': ndmp: new EC pair's public: %s", this.clientId, pair.getPublic());
-				
-				/**
-				 * store
-				 */
-				
-				const X509EncodedKeySpec = require("java.class/java.security.spec.X509EncodedKeySpec");
-				const x509EncodedKeySpec = new X509EncodedKeySpec(pair.getPublic().getEncoded());
-
-				const PKCS8EncodedKeySpec = require("java.class/java.security.spec.PKCS8EncodedKeySpec");
-				const pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(pair.getPrivate().getEncoded());
-	
-				this.vfs.setContentPublicTreeBinary("ndmpKeyPublic", ae3.Transfer.createCopier(x509EncodedKeySpec.getEncoded()));
-				this.vfs.setContentPublicTreeBinary("ndmpKeyPrivate", ae3.Transfer.createCopier(pkcs8EncodedKeySpec.getEncoded()));
-				
-				return pair;
-			}
-		}
-	},
-	ndmpPrepareValidationLink : {
-		value : function(webShareName, forceNew){
-			const pair = this.ndmpKeyPair(forceNew);
-			if(!pair){
-				throw "NDMP EC KeyPair is not available!";
-			}
-			const collector = ae3.Transfer.createCollector();
-			collector.printByte(7);
-			collector.printBinary(this.ndnsAlias);
-			collector.printBytes(pair.getPublic().encoded);
-			return "https://" + this.ndmpZone + "/#link:" + Format.binaryAsBase58(collector.toBinary());
-		}
-	},
-	ndmpInvalidateLink : {
-		value : function(force){
-			if(!force){
-				return false;
-			}
-			this.vfs.setContentUndefined("ndmpKeyPublic");
-			this.vfs.setContentUndefined("ndmpKeyPrivate");
-			return true;
-		}
-	},
-	toString : {
-		value : function(){
-			return "[NdmcClient " + Format.jsString(this.licenseNumber) + "/" + Format.jsString(this.clientId)+"]";
-		}
-	},
-	auth : {
-		get : function(){
-			return this.serviceKey
-				?	{
-					get : {
-						__auth_type : "ndss3",
-						license : this.licenseNumber
-					},
-					post : {
-						pw : this.serviceKey
-					}
-				}
-				:	{
-					get : {
-						license : this.licenseNumber
-					}
-				}
-			;
-		}
-	}
-});
-
-
-
 /**
  * ******************************************************************************
  * ******************************************************************************
@@ -465,136 +426,67 @@ Object.defineProperties(Client.prototype, {
  */
 
 
-Object.defineProperties(Client, {
-	validateTagFormat : {
-		value : function validateTagFormat(licenseNumber){
-			return licenseNumber.replace(DIGITS_ONLY_REGEXP, "").length === 15;
-		}
-	},
-	storeRaw : {
-		value : function(vfsClient, clientId, ndssHost, ndssPort, licenseNumber, serviceKey){
-			const txn = vfs.createTransaction();
-			try{
-				if(ndssHost !== undefined){
-					vfsClient.setContentPublicTreePrimitive("ndssHost", String(ndssHost));
-				}
-				if(ndssPort !== undefined){
-					vfsClient.setContentPublicTreePrimitive("ndssPort", Number(ndssPort));
-				}
-				if(licenseNumber !== undefined){
-					vfsClient.setContentPublicTreePrimitive("license", String(licenseNumber));
-				}
-				if(serviceKey !== undefined){
-					vfsClient.setContentPublicTreePrimitive("serviceKey", String(serviceKey));
-				}
-				return true;
-			}catch(e){
-				txn && (txn.cancel(), txn = null);
-				throw e;
-			}finally{
-				txn && txn.commit();
+const RobotClient = ae3.Class.create(
+	"RobotClient",
+	undefined,
+	function(ndssHost, ndssPort, robotPass){
+		this.ndssHost = ndssHost;
+		this.ndssPort = ndssPort;
+		this.auth = {
+			get : {
+				__auth_type : "ndss-client"
+			},
+			post : {
+				pass : robotPass
 			}
+		};
+		return this;
+	}
+);
+
+
+const DeviceClient = ae3.Class.create(
+	"DeviceClient",
+	undefined,
+	function(ndssHost, ndssPort, licenseNumber, serviceKey){
+		if(!ndssHost){
+			throw new Error("ndssHost in undefined!");
 		}
-	}
-});
-
-
-function RobotClient(ndssHost, ndssPort, robotPass){
-	this.ndssHost = ndssHost;
-	this.ndssPort = ndssPort;
-	this.auth = {
-		get : {
-			__auth_type : "ndss-client"
-		},
-		post : {
-			pass : robotPass
+		if(!ndssPort){
+			throw new Error("ndssPort in undefined!");
 		}
-	};
-	return this;
-}
-/**
- * no need yet
- */
-// RobotClient.prototype = Client.prototype;
-
-function createRobotClientRequest(ndssHost, ndssPort, robotPass){
-	if(!ndssHost){
-		throw new Error("ndssHost in undefined!");
-	}
-	if(!ndssPort){
-		throw new Error("ndssPort in undefined!");
-	}
-	if(!robotPass){
-		throw new Error("robotPass in undefined!");
-	}
-	return new ClientRequest(new RobotClient(ndssHost, ndssPort, robotPass));
-}
-Client.createRobotClientRequest = createRobotClientRequest;
-
-
-function DeviceClient(ndssHost, ndssPort, licenseNumber, serviceKey){
-	if(!ndssHost){
-		throw new Error("ndssHost in undefined!");
-	}
-	if(!ndssPort){
-		throw new Error("ndssPort in undefined!");
-	}
-	if(!licenseNumber){
-		throw new Error("licenseNumber in undefined!");
-	}
-	this.ndssHost = ndssHost;
-	this.ndssPort = ndssPort;
-	this.auth = {
-		get : {
-			__auth_type : "ndss3",
-			license : licenseNumber
-		},
-		post : {
-			pw : serviceKey
+		if(!licenseNumber){
+			throw new Error("licenseNumber in undefined!");
 		}
-	};
-	return this;
-}
-/**
- * no need yet
- */
-// DeviceClient.prototype = Client.prototype;
+		this.ndssHost = ndssHost;
+		this.ndssPort = ndssPort;
+		this.auth = {
+			get : {
+				__auth_type : "ndss3",
+				license : licenseNumber
+			},
+			post : {
+				pw : serviceKey
+			}
+		};
+		return this;
+	}
+);
 
 
-
-function createDeviceClientRequest(ndssHost, ndssPort, licenseNumber, serviceKey){
-	return new ClientRequest(new DeviceClient(ndssHost, ndssPort, licenseNumber, serviceKey));
-}
-Client.createDeviceClientRequest = createDeviceClientRequest;
-
-function Epoch2Client(ndssHost, ndssPort, licenseNumber){
-	this.ndssHost = ndssHost;
-	this.ndssPort = ndssPort;
-	this.auth = {
-		get : {
-			license : licenseNumber
-		}
-	};
-	return this;
-}
-/**
- * no need yet
- */
-// Epoch2Client.prototype = Client.prototype;
+const Epoch2Client = ae3.Class.create(
+	"Epoch2Client",
+	undefined,
+	function(ndssHost, ndssPort, licenseNumber){
+		this.ndssHost = ndssHost;
+		this.ndssPort = ndssPort;
+		this.auth = {
+			get : {
+				license : licenseNumber
+			}
+		};
+		return this;
+	}
+);
 
 
-
-function createEpoch2ClientRequest(ndssHost, ndssPort, licenseNumber){
-	return new ClientRequest(new Epoch2Client(ndssHost, ndssPort, licenseNumber));
-}
-Client.createEpoch2ClientRequest = createEpoch2ClientRequest;
-
-
-/**
- * ******************************************************************************
- * ******************************************************************************
- * module interface is our constructor
- * ******************************************************************************
- * ******************************************************************************
- */
-module.exports = Client;
