@@ -187,7 +187,24 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 					writable : true
 				});
 			}
-		}
+		},
+		
+		/**
+		 * TODO: finish me
+		 */
+		"checkPrepareNdmpRequest" : {
+			/**
+			 * return false to halt
+			 */
+			value : function(query){
+				const path = query.resourceIdentifier;
+				switch(path){
+				case '/auth':
+				}
+				return true;
+			}
+		},
+		
 	},
 	{
 		newInstance : {

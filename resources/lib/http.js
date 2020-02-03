@@ -495,7 +495,7 @@ httpRequest.asString = function(parameters, callback){
  */
 httpRequest.asBinary = function(parameters, callback){
 	if(!callback){
-		var future = new FutureSimpleBinary();
+		const future = new FutureSimpleBinary();
 		/*future.cancellable = */httpRequest.asBinary(parameters, internCallbackSetFuture.bind(future, parameters));
 		return future;
 	}

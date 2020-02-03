@@ -27,7 +27,8 @@ const CallbackDialback = module.exports = ae3.Class.create(
 			value : function(query){
 				if(query && this.clientAddress) {
 					query = query.addAttribute('X-Forwarded-For', this.clientAddress);
-				} 
+					query = query.addAttribute('X-Debug', "through ndm.client::uhp::dialback");
+				}
 				console.log("ndm.client:callback:dialback: web request: %s", Format.jsDescribe(query));
 				return ae3.web.WebInterface.dispatch(query);
 			}
