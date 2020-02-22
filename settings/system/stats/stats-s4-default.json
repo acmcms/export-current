@@ -1,6 +1,6 @@
 {
-	type : "ae3.stats/Group disabled",
-	name : 'ae3.s4',
-	title : 'VFS/S4 Counters',
-	reference : "ru.myx.ae3.sys/vfs/s4/DefaultS4Counters"
+	"type" : "ae3.stats/Group disabled",
+	"name" : "ae3.s4",
+	"title" : "VFS/S4 Counters",
+	"reference" : "ru.myx.ae3.sys/vfs/s4/DefaultS4Counters"
 }

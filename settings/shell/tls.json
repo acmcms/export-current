@@ -1,5 +1,5 @@
 {
-	type : "ae3/Executable",
-	name : "tls",
-	reference : "ru.myx.ae3.sys/tls/TlsShellCommand"
+	"type" : "ae3/Executable",
+	"name" : "tls",
+	"reference" : "ru.myx.ae3.sys/tls/TlsShellCommand"
 }

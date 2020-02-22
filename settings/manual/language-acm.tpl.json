@@ -1,7 +1,7 @@
 {
-	type : "ae3.Manual",
-	title : "Language: ACM.TPL",
-	name : "language-acm.tpl",
-	group : "developer",
-	url : "/!/skin/skin-ae3.impl.language.tpl/language-acm.tpl.html",
+	"type" : "ae3.Manual",
+	"title" : "Language: ACM.TPL",
+	"name" : "language-acm.tpl",
+	"group" : "developer",
+	"url" : "/!/skin/skin-ae3.impl.language.tpl/language-acm.tpl.html"
 }

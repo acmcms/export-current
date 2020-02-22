@@ -1,6 +1,6 @@
 {
-	type : "ae3/Factory",
-	name : "hostfs",
-	description : "Host FS, args: <osPath>",
-	reference : "ru.myx.ae3.sys/vfs/FactoryHOSTFS"
+	"type" : "ae3/Factory",
+	"name" : "hostfs",
+	"description" : "Host FS, args: <osPath>",
+	"reference" : "ru.myx.ae3.sys/vfs/FactoryHOSTFS"
 }

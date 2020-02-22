@@ -262,7 +262,7 @@ function internPrepareRequest(){
  * Use .call(client, ...)
  */
 function internCheckRegister(clientRequest){
-	var prev = this.vfs.getContentPrimitive("lastRegistered", null);
+	const prev = this.vfs.getContentPrimitive("lastRegistered", null);
 	if(!prev || prev.getTime() + 3550000 < Date.now()){
 		internAppendRegister.call(this, clientRequest);
 	}
@@ -301,10 +301,10 @@ function internCheckStats(clientRequest){
 			license		: this.licenseNumber,
 		},
 		body : body,
-		onSuccess	: (function exportSuccess(map){
+		onSuccess	: (function(map){
 			this.vfs.setContentPublicTreePrimitive("lastExported", next);
 		}).bind(this),
-		onError	: (function exportSuccess(code, text){
+		onError	: (function(code, text){
 			console.error("ndm.client '%s': Stats dump is not supported by server, code=%s", this.clientId, code);
 		}).bind(this),
 	});
@@ -394,7 +394,7 @@ function internAppendRegister(clientRequest, reason){
 			
 			this.vfs.setContentPublicTreePrimitive("lastRegistered", new Date());
 		}).bind(this),
-		onError	: (function exportSuccess(code, text){
+		onError	: (function(code, text){
 			console.error("ndm.client '%s':Registration failed, code=%s", this.clientId, code);
 		}).bind(this),
 	});

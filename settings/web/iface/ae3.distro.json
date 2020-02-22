@@ -1,5 +1,5 @@
 {
-	type		: "ae3.WebIndex",
-	name		: "ae3.distro",
-	reference	: "ru.myx.ae3.distro/Ae3DistroWebIndex"
+	"type"		: "ae3.WebIndex",
+	"name"		: "ae3.distro",
+	"reference"	: "ru.myx.ae3.distro/Ae3DistroWebIndex"
 }

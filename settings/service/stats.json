@@ -1,6 +1,6 @@
 {
-	type : "ae3.Service",
-	reference : "ru.myx.ae3.internal/stats/StatsService",
-	augments : "server",
-	requires : "periodic"
+	"type" : "ae3.Service",
+	"reference" : "ru.myx.ae3.internal/stats/StatsService",
+	"augments" : "server",
+	"requires" : "periodic"
 }

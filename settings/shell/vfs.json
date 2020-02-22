@@ -1,5 +1,5 @@
 {
-	type : "ae3/Executable",
-	name : "vfs",
-	reference : "ru.myx.ae3.sys/vfs/VfsShellCommand"
+	"type" : "ae3/Executable",
+	"name" : "vfs",
+	"reference" : "ru.myx.ae3.sys/vfs/VfsShellCommand"
 }

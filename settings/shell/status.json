@@ -1,5 +1,5 @@
 {
-	type : "ae3/Executable",
-	name : "status",
-	reference : "ru.myx.ae3.sys/status/StatusShellCommand"
+	"type" : "ae3/Executable",
+	"name" : "status",
+	"reference" : "ru.myx.ae3.sys/status/StatusShellCommand"
 }

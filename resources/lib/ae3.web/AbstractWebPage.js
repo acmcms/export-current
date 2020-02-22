@@ -1,8 +1,9 @@
+const ae3 = require("ae3");
 /**
  * TODO: ready-support for '/resources/'
  */
 
-const AbstractWebPage = module.exports = require('ae3').Class.create(
+const AbstractWebPage = module.exports = ae3.Class.create(
 	/* name */
 	"AbstractWebPage",
 	/* inherit */

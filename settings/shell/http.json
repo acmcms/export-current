@@ -1,5 +1,5 @@
 {
-	type : "ae3/Executable",
-	name : "http",
-	reference : "ru.myx.ae3.sys/i3.web.http/HttpShellCommand"
+	"type" : "ae3/Executable",
+	"name" : "http",
+	"reference" : "ru.myx.ae3.sys/i3.web.http/HttpShellCommand"
 }

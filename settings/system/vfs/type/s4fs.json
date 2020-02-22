@@ -1,6 +1,6 @@
 {
-	type : "ae3/Factory",
-	name : "s4fs",
-	description : "S4 FS, args: <s4FsType> <s4FsDriverName> [<driverArguments>...]",
-	reference : "ru.myx.ae3.sys/vfs/s4/FactoryS4FS"
+	"type" : "ae3/Factory",
+	"name" : "s4fs",
+	"description" : "S4 FS, args: <s4FsType> <s4FsDriverName> [<driverArguments>...]",
+	"reference" : "ru.myx.ae3.sys/vfs/s4/FactoryS4FS"
 }

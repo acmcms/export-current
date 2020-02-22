@@ -1,5 +1,5 @@
 {
-	type : "ae3/Executable",
-	name : "cache",
-	reference : "ru.myx.ae3.internal/network/HostShellCommand"
+	"type" : "ae3/Executable",
+	"name" : "cache",
+	"reference" : "ru.myx.ae3.internal/network/HostShellCommand"
 }

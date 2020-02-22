@@ -1,4 +1,4 @@
 {
-	type		: "ae3.web/Share",
-	reference	: "ru.myx.ae3.web.iface/Ae3WebService"
+	"type"		: "ae3.web/Share",
+	"reference"	: "ru.myx.ae3.web.iface/Ae3WebService"
 }

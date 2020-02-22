@@ -1,6 +1,6 @@
 {
-	type : "ae3/Factory",
-	name : "ramfsc",
-	description : "RAM FS, size (more compact), args: <fsName>",
-	reference : "ru.myx.ae3.sys/vfs/FactoryRAMFSC"
+	"type" : "ae3/Factory",
+	"name" : "ramfsc",
+	"description" : "RAM FS, size (more compact), args: <fsName>",
+	"reference" : "ru.myx.ae3.sys/vfs/FactoryRAMFSC"
 }
