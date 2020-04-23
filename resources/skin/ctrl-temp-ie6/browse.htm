@@ -10,7 +10,7 @@
 	path = parameters.path || Session.getParameters().path || '/';
 	cols = parameters.cols || "280px,*";
 	
-	inline = String(request.attributes["User-Agent"]).indexOf("MSIE 7.0") == -1;
+	inline = String((request.attributes||{})["User-Agent"]).indexOf("MSIE 7.0") == -1;
 	
 	requireCss = [];
 	

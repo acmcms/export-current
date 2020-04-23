@@ -107,7 +107,7 @@
 		
 		var docType = docTypes[ parameters.__override_doctype || content.doctype ];
 		if(!docType){
-			var ua = (request.attributes["User-Agent"] || ''),
+			var ua = ((request.attributes||{})["User-Agent"] || ''),
 				ii = ua.indexOf("MSIE "),
 				idx,
 				msie;
