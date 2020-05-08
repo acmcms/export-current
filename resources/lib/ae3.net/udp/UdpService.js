@@ -214,4 +214,6 @@ const UdpService = module.exports = ae3.Class.create(
 	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgCall'));
 	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgCack'));
 	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgCerr'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgRrst'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgRsst'));
 }

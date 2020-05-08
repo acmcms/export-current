@@ -20,8 +20,14 @@ const TaskUdpMultipleCountReplies = module.exports = ae3.Class.create(
 		successCount : {
 			value : 0
 		},
+		continueCount : {
+			value : 0
+		},
 		unknownCount : {
 			value : 0
+		},
+		isStopOnContinue : {
+			value : false
 		},
 		onSingleTaskFinished : {
 			value : function(single, result){
@@ -45,9 +51,19 @@ const TaskUdpMultipleCountReplies = module.exports = ae3.Class.create(
 					// this.logError("failure", single.peerName, result);
 					return null;
 				}
-				{
+				if(result.isReplyContinue && !this.isStopOnContinue){
+					++ this.continueCount;
+					// this.logEvent("continue", single.peerName, result);
+					return true;
+				}
+				if(result.isSUCCESS){
 					++ this.successCount;
 					// this.logEvent("success", single.peerName, result);
+					return null;
+				}
+				{
+					++ this.unknownCount;
+					this.logEvent("unknown", single.peerName, "Unknown reply: " + result);
 					return null;
 				}
 			}

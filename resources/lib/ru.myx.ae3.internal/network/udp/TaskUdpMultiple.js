@@ -152,11 +152,13 @@ const TaskUdpMultiple = module.exports = ae3.Class.create(
 				if('function' === typeof (callback = this.message.onFinalReplies)){
 					return callback.call(this.message, this, this.result);
 				}
-				if(this.parent && 'function' === typeof (callback = this.parent.onChildTaskFinished)){
-					return callback.call(this.parent, this, this.result);
-				}
-				if(this.parent && 'function' === typeof (callback = this.parent.onChildTaskFinished)){
-					return callback.call(this.parent, this, null, this.result);
+				if(this.parent){
+					if('function' === typeof (callback = this.parent.onChildTaskFinished)){
+						return callback.call(this.parent, this, this.result);
+					}
+					if('function' === typeof (callback = this.parent.onChildTaskFinished)){
+						return callback.call(this.parent, this, null, this.result);
+					}
 				}
 				// this.logDebug("multiple-done", "all done");
 				return false;

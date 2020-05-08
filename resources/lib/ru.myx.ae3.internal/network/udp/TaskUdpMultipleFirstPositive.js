@@ -24,22 +24,28 @@ const TaskUdpMultipleFirstPositive = module.exports = ae3.Class.create(
 		resultPeer : {
 			value : undefined
 		},
+		isStopOnContinue : {
+			value : false
+		},
 		onSingleTaskFinished : {
 			value : function(single, result){
 				if(null !== this.result){
 					return false;
 				}
-				if(!result){
+				if(!result || !single){
 					return null;
 				}
-				if(result.isFAILURE || !result.MessageReplyFinal){
+				if(result.isFAILURE){
+					this.logDetail("failure", single.peerName, "got failure reply");
 					return null;
+				}
+				if(result.isReplyContinue && !this.isStopOnContinue){
+					this.logDetail("continue", single.peerName, "got continue reply");
+					return true;
 				}
 				this.result = result;
-				if(single){
-					this.resultPeer || (this.resultPeer = single.peer);
-					this.logDetail("complete", single.peerName, "got positive reply");
-				}
+				this.resultPeer || (this.resultPeer = single.peer);
+				this.logDetail("complete", single.peerName, "got positive reply");
 				return false;
 			}
 		},
