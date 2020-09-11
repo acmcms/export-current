@@ -549,6 +549,7 @@ TD.hint, TH.hint, DIV.hint{
 }
 
 SPAN.ui-fldbox-compact {
+	display: inline-block;
 	-webkit-flex: 1 1 auto;
 	flex: 1 1 auto;
 	opacity: 0.75;
@@ -560,8 +561,6 @@ SPAN.ui-fldbox-compact {
 	margin: 0 0.2pt;
 	border-left: 1pt solid rgba(0,0,0,0);
 	border-top: 1pt solid rgba(0,0,0,0);
-	-moz-background-clip: padding;
-	-webkit-background-clip: padding;
 	background-clip: padding-box; 
 }
 

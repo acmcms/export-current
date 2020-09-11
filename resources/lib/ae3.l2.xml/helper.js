@@ -374,7 +374,10 @@ function makeMessageReply(context, layout){
 	
 	const title = layout.title || context.title || (context.share || '').systemName || 'Message';
 	const detail = layout.detail;
-	var xml;
+	
+	const filters = layout.filters || (message||'').filters;
+	
+	var xml = '';
 	$output(xml){
 		%><<%= element; = 'string' === typeof title 
 			? Format.xmlAttributes({
@@ -402,6 +405,9 @@ function makeMessageReply(context, layout){
 		%>><%
 			if(context.share){
 				= Format.xmlElement('client', context.share.clientElementProperties(context));
+			}
+			if(filters && filters.fields){
+				= Format.xmlElement('prefix', new FiltersFormLayout(filters));
 			}
 			%><reason><%= Format.xmlNodeValue(reason || 'Unclassified message.') %></reason><%
 			if(message && message !== reason){
@@ -437,42 +443,64 @@ web.makeMessageReply = makeMessageReply;
 
 
 
-function internReplaceField(field, edit){
-	if(edit && (field.type === 'set' || field.type === 'select') && field.list && field.list.columns){
-		const list = field.list
-		const input = field.type === 'set' ? 'checkbox' : 'radio';
-		return Object.create(field, {
-			list : { 
-				value : {
-					attributes : list.attributes,
-					columns : { 
-						column : [{
-							id : 'value',
-							name : 'value',
-							title : input === 'radio' ? ' ๏ ' : ' ☑ ', // ☒
-							type : 'input',
-							extraClass : 'ui-align-center',
-							variant : input,
-							selected : field.selected,
-							name : field.id || field.name
-						}].concat(list.columns)
-					},
-					rows : list.rows
-				}
-			},
-		});
+function internReplaceField(edit, field){
+	const key = field.id || field.name;
+	const val = this 
+		? key === '.' ? this : this[key] 
+		: null
+	;
+	if(val !== undefined && val !== null && val !== this && 'object' !== typeof val){
+		this[key] = [ val ];
 	}
-	if(this){
-		var key = field.id || field.name;
-		var val = this[key];
-		if(val !== undefined && val !== null && 'object' !== typeof val){
-			this[key] = [ val ];
+	if(field.type === 'set' || field.type === 'select'){
+		if(edit && field.list && field.list.columns && field.list.columns.map){
+			const list = field.list
+			const input = field.type === 'set' ? 'checkbox' : 'radio';
+			return Object.create(field, {
+				list : { 
+					value : {
+						attributes : list.attributes,
+						columns : { 
+							column : [{
+								id : 'value',
+								name : 'value',
+								title : input === 'radio' ? ' ๏ ' : ' ☑ ', // ☒
+								type : 'input',
+								extraClass : 'ui-align-center',
+								variant : input,
+								selected : field.selected,
+								name : field.id || field.name
+							}].concat(list.columns)
+						},
+						rows : list.rows
+					}
+				},
+			});
+		}
+		if(field.variant === "edit" && field.options){
+			return Object.create(field, {
+				options : { value : null },
+				option : { 
+					enumerable : true, 
+					value : Array(field.options).map(function(option){
+						if(option.fields && option.fields.map){
+							return Object.create(option, {
+								fields : {
+									enumerable : true, 
+									value : {
+										field : option.fields.map(internReplaceField.bind(this, edit))
+									}
+								}
+							});
+						}
+						return option;
+					}) 
+				},
+			});
 		}
 	}
 	switch(field.variant){
 	case 'sequence':{
-		var key = field.id || field.name;
-		var val = key === '.' ? this : this[key];
 		var enm = field.elementName || 'item';
 		var arr = val[enm];
 		if(!arr){
@@ -483,16 +511,30 @@ function internReplaceField(field, edit){
 		return field;
 	}
 	case 'select':
-		return field.options 
-			? Object.create(field, {
+		if(field.options){
+			return Object.create(field, {
 				options : { value : null },
-				option : { enumerable : true, value : Array(field.options) },
-			})
-			: field
-		;
+				option : { 
+					enumerable : true, 
+					value : Array(field.options).map(function(option){
+						if(option.fields && option.fields.map){
+							return Object.create(option, {
+								fields : {
+									enumerable : true,
+									value : {
+										field : option.fields.map(internReplaceField.bind(this, edit))
+									}
+								}
+							});
+						}
+						return option;
+					}) 
+				},
+			});
+		}
+		return field;
 	case 'view':
 	case 'form':{
-		var key = field.id || field.name;
 		if(!key){
 			if(field.value){
 				var rep = internReplaceValue(field.value);
@@ -503,7 +545,6 @@ function internReplaceField(field, edit){
 			}
 		}else//
 		if(this){
-			var val = this[key];
 			var idx, ext, rep, nxt;
 			if(val && val.layout){
 				rep = internReplaceValue.call(val, val);
@@ -558,7 +599,7 @@ function internReplaceValue(value){
 		layout.layout = 'view';
 		values = "object" === typeof value.values ? Object.create(value.values) : {};
 		value.fields && (layout.fields = {
-			field : value.fields.map(internReplaceField, values)
+			field : value.fields.map(internReplaceField.bind(values, false))
 		});
 		value.values && (layout.values = null);
 		for(var valueKey in values){
@@ -572,7 +613,7 @@ function internReplaceValue(value){
 		layout.layout = 'form';
 		layout.values = "object" === typeof value.values ? Object.create(value.values) : {};
 		value.fields && (layout.fields = {
-			field : value.fields.map(internReplaceField, layout.values)
+			field : value.fields.map(internReplaceField.bind(layout.values, true))
 		});
 		/**
 		if("object" === typeof value.values){
@@ -590,7 +631,7 @@ function internReplaceValue(value){
 		layout = Object.create(value);
 		layout.layout = 'list';
 		value.columns && (layout.columns = {
-			column : value.columns.map(internReplaceField)
+			column : value.columns.map(internReplaceField.bind(null, false))
 		});
 		if(value.elementName || (value.rows && !value.rows.row && Array.isArray(value.rows))){
 			layout.rows = null;
@@ -651,7 +692,7 @@ function makeDataViewFragment(query, layout, extraCommands){
 		}
 		%><fields><%
 			for(var field of layout.fields){
-				= Format.xmlElement('field', internReplaceField(field));
+				= Format.xmlElement('field', internReplaceField.call(layout.values, false, field));
 			}
 			if(extraCommands){
 				= extraCommands;
@@ -795,7 +836,7 @@ function makeDataFormReply(context, layout){
 			}
 			%><fields><%
 				for(var field of layout.fields){
-					= Format.xmlElement('field', internReplaceField(field, true));
+					= Format.xmlElement('field', internReplaceField.call(layout.values, true, field));
 				}
 				if(layout.commands || layout.submit){
 					= Format.xmlElements('command', layout.commands);
@@ -907,7 +948,7 @@ function makeDataTableReply(context, layout){
 			%><columns><%
 				for(c = 0; c < columnCount; ++c){
 					column = columns[c];
-					= Format.xmlElement('column', internReplaceField(column));
+					= Format.xmlElement('column', internReplaceField.call(null, false, column));
 					// item[column.id] = true;
 					switch(column.variant){
 					case 'list':

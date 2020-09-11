@@ -436,7 +436,7 @@
 						<input type="checkbox" name="{$format/@name}" value="{$inputValue}"><xsl:if test="$format/@selected = '*' or $format/@selected = $inputValue or $value/../@*[$format/@selected and local-name() = $format/@selected]"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
 					</xsl:when>
 					<xsl:when test="$format/@variant = 'radio'">
-						<input type="radio" name="{$format/@name}" value="{$inputValue}"><xsl:if test="$format/@selected = $inputValue"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
+						<input type="radio" name="{$format/@name}" value="{$inputValue}" x-ui-debug="input/radio"><xsl:if test="$format/@selected = $inputValue"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
 					</xsl:when>
 					<xsl:otherwise>
 						<input type="{$format/@variant}" name="{$format/@name}" value="{$inputValue}"/>
@@ -932,11 +932,12 @@
 	<xsl:template name="cell">
 		<xsl:param name="column" />
 		<xsl:param name="row" />
+		<xsl:param name="zoom"><xsl:value-of select="$column/@zoom" /><xsl:if test="not($column/@zoom)">compact</xsl:if></xsl:param>
 		<xsl:for-each select="$row[$column/@id = '.'] | $row/@*[local-name() = $column/@id] | $row/*[local-name() = $column/@id] | $row[not($column/@id)]">
 			<xsl:call-template name="formatted">
 				<xsl:with-param name="format" select="$column"/>
 				<xsl:with-param name="value" select="."/>
-				<xsl:with-param name="zoom" select="'compact'"/>
+				<xsl:with-param name="zoom" select="$zoom"/>
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
@@ -1342,7 +1343,7 @@
 		<div class="ui-table-screen-{$zoom}">
 		<div class="ui-table-container">
 		<div class="table-edit">
-			<div class="table ui-edit-table-{$zoom}">
+			<div class="table ui-edit-table-{$zoom} ui-select-view">
 				<xsl:variable name="id" select="generate-id($format)"/>
 				<style><xsl:for-each select="$format/option">
 					<xsl:variable name="ido" select="generate-id(.)"/>
@@ -1406,7 +1407,7 @@
 		<!-- xsl:param name="value" select="."/ -->
 		<xsl:param name="zoom"><xsl:value-of select="@zoom" /><xsl:if test="not(@zoom)"><xsl:value-of select="$zoom" /></xsl:if></xsl:param>
 		<xsl:call-template name="rows">
-			<xsl:with-param name="elements" select="rows/* | *[not(rows/*)]"/>
+			<xsl:with-param name="elements" select="rows/*"/>
 			<xsl:with-param name="format" select="."/>
 			<xsl:with-param name="value" select="."/>
 			<xsl:with-param name="zoom" select="'row'"/>
@@ -1450,14 +1451,16 @@
 			</xsl:when>
 			<xsl:when test="$zoom='compact'">
 				<span class="ui-fldbox-{$zoom} hl-bn-{$format/@hl} {$format/@cssClass}">
-				<table style="width:100%" class="collapse"><tr><td>
-					<div class="field-{$zoom} fldkey">
-						<xsl:call-template name="formats-title">
-							<xsl:with-param name="format" select="$format"/>
-							<xsl:with-param name="suffix" select="':'"/>
-							<xsl:with-param name="zoom" select="$itemZoom"/>
-						</xsl:call-template>
-					</div>
+				<table style="width:100%" class="collapse"><tbody><tr><td>
+					<xsl:if test="$format/@title or $format/title">
+						<div class="field-{$zoom} fldkey">
+							<xsl:call-template name="formats-title">
+								<xsl:with-param name="format" select="$format"/>
+								<xsl:with-param name="suffix" select="':'"/>
+								<xsl:with-param name="zoom" select="$itemZoom"/>
+							</xsl:call-template>
+						</div>
+					</xsl:if>
 					<div class="field-{$zoom} fldval">
 						<xsl:call-template name="input">
 							<xsl:with-param name="format" select="$format"/>
@@ -1465,7 +1468,7 @@
 							<xsl:with-param name="zoom" select="$itemZoom"/>
 						</xsl:call-template>
 					</div>
-				</td></tr></table>
+				</td></tr></tbody></table>
 				</span>
 			</xsl:when>
 			<xsl:otherwise>
@@ -1545,7 +1548,7 @@
 	<xsl:template name="edit">
 		<xsl:param name="format" />
 		<xsl:param name="values" />
-		<xsl:param name="zoom" />
+		<xsl:param name="zoom"><xsl:value-of select="$format/@zoom" /><xsl:if test="not($format/@zoom)"><xsl:value-of select="$zoom" /></xsl:if></xsl:param>
 		<xsl:variable name="itemZoom">
 			<xsl:choose>
 				<xsl:when test="$zoom = 'document' or $zoom = 'window'">
@@ -1565,9 +1568,9 @@
 		<div class="ui-table-container">
 		<div class="table-edit">
 		<xsl:choose>
-			<xsl:when test="$zoom = 'row'">
-				<div class="table ui-edit-table-{$zoom}">
-					<xsl:for-each select="$format/field">
+			<xsl:when test="$zoom = 'row' or $itemZoom = 'compact'">
+				<div class="table ui-edit-table-{$zoom} ui-edit-row">
+					<xsl:for-each select="$format/field | $values/field[not($format/field)]">
 						<xsl:variable name="field" select="."/>
 						<xsl:variable name="name" select="$field/@name"/>
 						<xsl:variable name="value" select="$values[$name = '.'] | $values/*[local-name() = $name and $name != ''] | $values/values/*[local-name() = $name and $name != ''] | $values/values/@*[local-name() = $name and $name != '']"/>
@@ -1580,8 +1583,8 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<table class="table ui-edit-table-{$zoom}">
-					<xsl:for-each select="$format/field">
+				<table class="table ui-edit-table-{$zoom} ui-edit-other">
+					<xsl:for-each select="$format/field | $values/field[not($format/field)]">
 						<xsl:variable name="field" select="."/>
 						<xsl:variable name="name" select="$field/@name"/>
 						<xsl:variable name="value" select="$values[$name = '.'] | $values/*[local-name() = $name and $name != ''] | $values/values/*[local-name() = $name and $name != ''] | $values/values/@*[local-name() = $name and $name != '']"/>

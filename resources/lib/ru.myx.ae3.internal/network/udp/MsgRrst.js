@@ -3,10 +3,8 @@ const Transfer = ae3.Transfer;
 
 const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
 
+const RemoteServiceStateSAPI = require("java.class/ru.myx.ae3.state.RemoteServiceStateSAPI");
 
-/**
- * FIXME: implement build
- */
 const MsgRrst = module.exports = ae3.Class.create(
 	/* name */
 	"MsgRrst",
@@ -20,7 +18,7 @@ const MsgRrst = module.exports = ae3.Class.create(
 	 */
 	function MsgRrst(rrst, serial){
 		// this.MessageRequest();
-		this.rrst = rrst || [ 0x40, 0x05 ];
+		this.rrst = RemoteServiceStateSAPI.parseQuery(rrst || [ "4001", "4004", "4005" ]);
 		this.serial = serial;
 		return this;
 	},
@@ -29,33 +27,33 @@ const MsgRrst = module.exports = ae3.Class.create(
 		code : {
 			value : 0x33 // '3'.charCodeAt(0)
 		},
+		"isRRST" : {
+			value : true
+		},
 		encrypt : {
 			value : true
 		},
 		build : {
 			value : /* UdpServiceHelper.buildMsgRrst || */ (function(b, o){
-				// 2 bytes 0x4005
-				b[o++] = 0x40;
-				b[o++] = 0x05;
-				return 2;
-				
-				return this.rrst.copy(0, b, o, 1280);
+				return this.rrst.formatToBuffer(b, o, 1280);
 			})
 		},
 		toString : {
-			value : function(){
-				if(!this.rrst){
-					return "[MsgRrst "+", sTx:"+(this.serial||0)+"]";
-				}
-				return "[MsgRrst "+Format.bytesRound(this.rrst.length()) + "B, sTx:"+(this.serial||0)+"]";
-			}
+			value : /* UdpServiceHelper.toStringMsgRrst || */ (function(){
+				return "[MsgRrst " + this.rrst.formatAsTextString() + ", sTx:" + (this.serial||0) + "]";
+			})
 		}
 	},
 	/* static */
 	{
 		"parse" : {
-			value : function(b, o, s, L){
-				return new MsgRrst(Transfer.createCopier(b, o, L), s);
+			value : function(b, o, s, L /* locals: */, rrst){
+				if( (rrst = RemoteServiceStateSAPI.parseQueryFromBuffer(b, o, L) ) ){
+					return new MsgRrst(rrst, s);
+				}
+				return undefined;
+				// broken constructor syntax
+				return new MsgRrst(RemoteServiceStateSAPI.parseQueryFromBuffer(b, o, L), s);
 			}
 		},
 		"toString" : {

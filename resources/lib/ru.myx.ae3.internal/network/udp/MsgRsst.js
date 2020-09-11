@@ -1,16 +1,15 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 const Transfer = ae3.Transfer;
 
 const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
 
-/**
- * FIXME: implement build
- */
+const RemoteServiceStateSAPI = require("java.class/ru.myx.ae3.state.RemoteServiceStateSAPI");
+
 const MsgRsst = module.exports = ae3.Class.create(
 	/* name */
 	"MsgRsst",
 	/* inherit */
-	require('./Message').Request,
+	require('./Message').ReplyFinal,
 	/* constructor */
 	/**
 	 * 
@@ -19,7 +18,7 @@ const MsgRsst = module.exports = ae3.Class.create(
 	 */
 	function MsgRsst(rsst, serial){
 		// this.MessageRequest();
-		this.rsst = rsst || [ 0x40, 0x05, 0x34, 0x00 ]; // '4'
+		this.rsst = RemoteServiceStateSAPI.parseReply(rsst || [ "4001:host", "4004:model", "4005:realm" ]);
 		this.serial = serial;
 		return this;
 	},
@@ -28,37 +27,36 @@ const MsgRsst = module.exports = ae3.Class.create(
 		code : {
 			value : 0x34 // '4'.charCodeAt(0)
 		},
+		"isRSST" : {
+			value : true
+		},
+		"isSUCCESS" : {
+			value : true
+		},
 		encrypt : {
 			value : true
 		},
 		build : {
 			value : /* UdpServiceHelper.buildMsgRsst || */ (function(b, o){
-				// 2 bytes 0x4005
-				b[o++] = 0x40;
-				b[o++] = 0x05;
-				// 2 bytes, '4' string
-				b[o++] = 0x34;
-				b[o++] = 0x00;
-
-				return 2+2;
-
-				return this.rsst.copy(0, b, o, 1280);
+				return this.rsst.formatToBuffer(b, o, 1280);
 			})
 		},
 		toString : {
-			value : function(){
-				if(!this.rsst){
-					return "[MsgRsst "+", sTx:"+(this.serial||0)+"]";
-				}
-				return "[MsgRsst "+Format.bytesRound(this.rsst.length()) + "B, sTx:"+(this.serial||0)+"]";
-			}
+			value : /* UdpServiceHelper.toStringMsgRsst || */ (function(){
+				return "[MsgRsst " + this.rsst.formatAsTextString() + ", sTx:" + (this.serial||0) + "]";
+			})
 		}
 	},
 	/* static */
 	{
 		"parse" : {
-			value : function(b, o, s, L){
-				return new MsgRsst(Transfer.createCopier(b, o, L), s);
+			value : function(b, o, s, L /* locals: */, rsst){
+				if( (rsst = RemoteServiceStateSAPI.parseReplyFromBuffer(b, o, L) ) ){
+					return new MsgRsst(rsst, s);
+				}
+				return undefined;
+				// broken constructor syntax
+				return new MsgRsst(RemoteServiceStateSAPI.parseReplyFromBuffer(b, o, L), s);
 			}
 		},
 		"toString" : {

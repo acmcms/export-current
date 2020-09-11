@@ -105,7 +105,7 @@ const UiBasic = module.exports = require('ae3').Class.create(
 			value : function(message, detail){
 				return {
 					layout : 'message',
-					rootName : (message || '').rootName || 'message',
+					rootName : (message || '').rootName || 'denied',
 					code : detail && detail.code || 403,
 					message : message,
 					detail : detail
@@ -116,7 +116,7 @@ const UiBasic = module.exports = require('ae3').Class.create(
 			value : function(message, detail){
 				return {
 					layout : 'message',
-					rootName : (message || '').rootName || 'message',
+					rootName : (message || '').rootName || 'success',
 					code : (message || detail || '').code || 200,
 					message : message,
 					detail : detail
@@ -127,7 +127,7 @@ const UiBasic = module.exports = require('ae3').Class.create(
 			value : function(message, detail){
 				return {
 					layout : 'message',
-					rootName : (message || '').rootName || 'message',
+					rootName : (message || '').rootName || 'failed',
 					code : (message || detail || '').code || 400,
 					message : message,
 					detail : detail
@@ -138,7 +138,7 @@ const UiBasic = module.exports = require('ae3').Class.create(
 			value : function(message, detail){
 				return {
 					layout : 'message',
-					rootName : (message || '').rootName || 'message',
+					rootName : (message || '').rootName || 'unknown',
 					code : (message || detail || '').code || 404,
 					message : message,
 					detail : detail
@@ -149,7 +149,7 @@ const UiBasic = module.exports = require('ae3').Class.create(
 			value : function(message, detail){
 				return {
 					layout : 'message',
-					rootName : (message || '').rootName || 'message',
+					rootName : (message || '').rootName || 'error',
 					code : (message || detail || '').code || 500,
 					message : message,
 					detail : detail

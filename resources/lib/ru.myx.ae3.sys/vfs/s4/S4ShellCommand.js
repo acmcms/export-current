@@ -22,32 +22,33 @@ var commands = {
 		},
 	},
 	check : {
-		args : "[--all] [--full] [--fix] [--verbose] <instanceKey>",
+		args : "[--all/--some] [--full] [--fix] [--purge] [--verbose] <instanceKey>",
 		help : "checks s4 storage instance",
 		run : function runCheck(args){
 			var context = {
 				all : false,
+				some : false,
 				full : false,
 				fix : false,
+				purge : false,
 				verbose : false,
 				console : console
 			};
-			var instanceKey;
+			var instanceKey, current, pos;
 			for(;;){
-				var current = args.shift();
+				current = args.shift();
 				if(!current){
 					break;
 				}
 				if(current.startsWith('--')){
 					current = current.substring(2);
-					var pos = current.indexOf('=');
+					pos = current.indexOf('=');
 					if(pos == -1){
 						context[current] = true;
 					}else{
 						context[current.substring(0, pos)] = current.substring(pos + 1);
 					}
-					continue;
-				}
+				}else//
 				if(instanceKey){
 					instanceKey += " " + current;
 				}else{
@@ -64,7 +65,7 @@ var commands = {
 				return console.fail("Instance '" + instanceKey + "' is unknown!");
 			}
 			
-			var checkContext = instance.createCheckContext && instance.createCheckContext(context);
+			const checkContext = instance.createCheckContext && instance.createCheckContext(context);
 			if(!checkContext){
 				return console.fail("Instance '" + instanceKey + "' doesn't support checking!");
 			}
@@ -75,9 +76,10 @@ var commands = {
 					}
 				}
 
-				console.log("finished, %s items checked, %s errors detected, %s problems fixed.", 
+				console.log("finished, %s items checked, %s/%s errors/warnings, %s problems fixed.", 
 						String(checkContext.checks),
 						String(checkContext.errors),
+						String(checkContext.warnings),
 						String(checkContext.fixes)
 						);
 			}finally{

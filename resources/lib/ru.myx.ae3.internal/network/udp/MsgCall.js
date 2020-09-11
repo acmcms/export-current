@@ -47,12 +47,12 @@ const MsgCall = module.exports = ae3.Class.create(
 			})
 		},
 		toString : {
-			value : function(){
+			value : UdpServiceHelper.toStringMsgCall || (function(){
 				if(!this.argument){
 					return "[MsgCall "+ Format.jsString(this.component) + ", sTx:"+(this.serial||0)+"]";
 				}
 				return "[MsgCall "+ Format.jsString(this.component) + ", " + Format.bytesRound(this.argument.length()) + "B, sTx:"+(this.serial||0)+"]";
-			}
+			})
 		}
 	},
 	/* static */
