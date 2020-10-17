@@ -39,7 +39,9 @@ module.exports = Object.create(Object.prototype, {
 			// TODO: unfinished
 			return;
 		}, {
-			maxBuffer : 16,
+			buffer : 16,
+	 		delay : 0, 
+	 		period : 0
 		})
 	},
 	"toString" : {

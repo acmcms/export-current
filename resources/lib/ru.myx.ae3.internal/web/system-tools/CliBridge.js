@@ -51,7 +51,7 @@ function runCliBridge(context){
 				detailOutput && console.log("result: " + Format.jsDescribe(result));
 				return false;
 			}catch(e){
-				console.error("error: " + (e.message || e) + ", cmd: " + Format.jsString(x));
+				console.error("error: %s, cmd: %s", (e.message || e), Format.jsString(x));
 				return failOnError;
 			}
 		});

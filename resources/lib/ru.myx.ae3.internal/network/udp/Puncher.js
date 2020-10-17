@@ -80,24 +80,34 @@ const Puncher = module.exports = ae3.Class.create(
 		// list of SocketAddress to search
 		"targetList" : TARGET_LIST_PROPERTY,
 		
+		"onUHP" : {
+			value : function(message, address, serial){
+				// if(message.isUHP_FROM_SERVER){
+				if(message.isMEET){
+					return this.onMeet(message, address);
+				}
+				
+				if(message.isSEEN){
+					return this.onSeen(message, address, serial);
+				}
+				// }
+			}
+		},
 		"onMeet" : {
 			value : function(meet, address){
-				console.log(">>>>>> %s: puncher meet in: %s, address: %s", this, seen, address);
+				console.log(">>>>>> %s: puncher meet in: %s, address: %s", this, meet, address);
 				this.puncherReset();
+				return false;
 			}
 		},
 		
 		"onSeen" : {
 			value : function(seen, address, serial){
 				console.log(">>>>>> %s: puncher seen in: %s, address: %s", this, seen, address);
-				var directPacket = false;
-//				if(this.state === 'active'){
-//					//
-//				}
 				Object.defineProperty(this.remote, 'dst',{
 					writable : true,
 					value : address
-				})
+				});
 				// sets loopInterval & loopLimit
 				if(!seen.parseMode(this)){
 					// mode is 0x00 - reset and exit
@@ -162,6 +172,9 @@ const Puncher = module.exports = ae3.Class.create(
 		
 		"loopEnabled" : {
 			value : function(){
+				if(this.state !== "enabled"){
+					return;
+				}
 				this.error && (this.error = "...processing");
 				if(!this.targetList || !this.targetList.length){
 					var spec = this.remote.targetSpec;
@@ -172,8 +185,7 @@ const Puncher = module.exports = ae3.Class.create(
 					if(!this.remote.secret || this.since === 0){
 						if(this.remote.updateToken){
 							try{
-								var done = this.remote.updateToken();
-								if(!done){
+								if(!this.remote.updateToken()){
 									this.error = "Can't updateToken.";
 									return;
 								}
@@ -230,6 +242,9 @@ const Puncher = module.exports = ae3.Class.create(
 		
 		"loopSearch" : {
 			value : function(){
+				if(this.state !== "search"){
+					return;
+				}
 				const targetList = this.targetList;
 				if(targetList){
 					if(this.since > this.loopLimit){
@@ -251,6 +266,9 @@ const Puncher = module.exports = ae3.Class.create(
 		
 		"loopActive" : {
 			value : function(){
+				if(this.state !== "active"){
+					return;
+				}
 				if(this.since > this.loopLimit){
 					this.since = 0;
 					this.loopLimit = 5;

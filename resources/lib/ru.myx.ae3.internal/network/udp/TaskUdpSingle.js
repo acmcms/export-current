@@ -64,9 +64,9 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 			throw 'TaskUdpSingle: serial should be known!';
 		}
 
+		peer.serialTxqQueue(this.serial, this);
 
 		this.timer = TIMER_IMPL.bind(this);
-		peer.taskPending(this.serial, this);
 		setTimeout(this.timer, ( this.retryDelay = (message.retryDelay || this.defaultRetryDelay) ));
 		return this;
 	},

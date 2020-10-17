@@ -27,7 +27,7 @@ const Transfer = ae3.Transfer;
  */
 
 
-module.exports = function onReceiveBufferImpl(b, d, q, pkt /* locals: */, load, key, peer, crc, m, l, ms, msg){
+const onReceiveBufferImpl = module.exports = function(b, d, q, pkt /* locals: */, load, key, peer, crc, m, l, ms, msg){
 	++ this.stRxLoops;
 	
 	for(;;){
@@ -96,9 +96,10 @@ module.exports = function onReceiveBufferImpl(b, d, q, pkt /* locals: */, load, 
 			++ this.stRxSkip;
 			continue;
 		}
-
-		if(peer.isIgnoreSerial(ms)){
-			console.log('>>>>>> udp-read-skip-repeat: rejected by peer %s: serial: %s, addr: %s:%s', 
+		
+		switch( (msg = (m.prototype.isRequest ? peer.checkRxqSerial(ms) : peer.checkRxrSerial(ms))) ){
+		case true:
+			console.log('>>>>>> udp-read-skip-ignore: rejected by peer %s: serial: %s, addr: %s:%s', 
 				Format.jsObject(peer.key),
 				ms, 
 				pkt.sourceAddress.address.hostAddress, 
@@ -117,6 +118,20 @@ module.exports = function onReceiveBufferImpl(b, d, q, pkt /* locals: */, load, 
 			console.log('>>>>>> udp-read-crc-fail: %s <- %s : %s != %s', m.toString(), Format.jsObject(key), Format.jsObject(load.slice(0, 16)), Format.jsObject(crc));
 			++ this.stCrcFail;
 			continue;
+		}
+		
+		if(msg){
+			if(msg.isReply /** m.prototype.isRequest */){
+				/** TODO: send pre-cached replies using peer.sendUdp */
+				console.log('>>>>>> udp-read-send-repeat: reply re-sent by peer %s: serial: %s, addr: %s:%s', 
+					Format.jsObject(peer.key),
+					ms, 
+					pkt.sourceAddress.address.hostAddress, 
+					pkt.sourceAddress.port
+				);
+				++ this.stRxSkip;
+				continue;
+			}
 		}
 		
 		l = load.length() - 32;

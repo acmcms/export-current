@@ -25,25 +25,18 @@ const UdpService = module.exports = ae3.Class.create(
 		 * to be stopped on 'destroy'
 		 */
 		this.receiveCallback = Concurrent.wrapBuffered(
-			require("ru.myx.ae3.internal/network/udp/BufferedRxParser").bind(this, new ArrayBuffer(1500), new WhirlpoolDigest()), 
-			{
-				maxBuffer : 128,
+			require("ru.myx.ae3.internal/network/udp/BufferedRxParser").bind(
+				this, new ArrayBuffer(1500), new WhirlpoolDigest()
+			), {
+				buffer : 256,
+				overflow : "drop",
+		 		delay : 0, 
+		 		period : 0
 			}
 		);
 	
 		Object.defineProperty(this, "sock", {
 			value : ae3.net.udp.listen(port || 0, this.receiveCallback)
-		});
-		Object.defineProperties(this, {
-			/* commandByKey : {
-				value : this.commandByKey.concat()
-			}, */
-			port : {
-				value : this.sock.port
-			},
-			sendUdp : {
-				value : this.sock.send.bind(this.sock)
-			},
 		});
 		
 		return this;
@@ -71,7 +64,7 @@ const UdpService = module.exports = ae3.Class.create(
 		TaskUdpMultiple : {
 			value : require('ru.myx.ae3.internal/network/udp/TaskUdpMultiple')
 		},
-
+		
 		commandByKey : {
 			value : []
 		},
@@ -82,18 +75,20 @@ const UdpService = module.exports = ae3.Class.create(
 		sock : {
 			value : 'the UdpSocket object'
 		},
+		/**
+		 * service port number
+		 */
 		port : {
-			value : 'the port number'
+			execute : "once", get : function(){
+				return this.sock.port;
+			}
 		},
 		/**
 		 * sends actual payload
 		 */
 		sendUdp : {
-			/**
-			 * constructor will replace this method with bint function
-			 */
-			value : function sendUdp(payload, addr){
-				return this.sock.send(payload, addr)
+			execute : "once", get : function(){
+				return this.sock.send.bind(this.sock);
 			}
 		},
 		description : {

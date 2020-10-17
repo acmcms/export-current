@@ -189,9 +189,6 @@ const Principal = module.exports = ae3.Class.create(
 					for(c of h){
 						c(message, address, serial);
 					}
-					/// h.forEach(function(handler){
-					/// 	handler(message, address, serial);
-					/// });
 					return;
 				}
 				// console.log('>>> >>> %s: onReceive, no handler: %s, address: %s, serial: %s', this, message, address, serial);
@@ -225,7 +222,7 @@ const Principal = module.exports = ae3.Class.create(
 			 * message
 			 * address
 			 */
-			value : function(b, d, m, a){
+			value : UdpServiceHelper.principalSendImpl || (function(b, d, m, a /* locals: */, key, s, len, pkt, k, v){
 				a || (a = this.dst);
 				if(!a){
 					if(false !== m.log){
@@ -233,26 +230,26 @@ const Principal = module.exports = ae3.Class.create(
 					}
 					return 0;
 				}
-				var key = this.key || m.key;
+				key = this.key || m.key;
 				if(!key){
 					console.log('>>>>>> %s: udp-send-skip, no dst alias, message: %s', this, m);
 					return 0;
 				}
 				
-				var s = m.serial || (m.serial = (this.sTx = 1 + Math.max(this.sTx, this.sRx)));
+				s = m.serial || (m.serial = (this.sTx = 1 + Math.max(this.sTx, this.sRx)));
 				
 				b[16 + 12 + 1] = (s >> 16) & 0xFF;
 				b[16 + 12 + 2] = (s >> 8) & 0xFF;
 				b[16 + 12 + 3] = (s) & 0xFF;
 				
-				var len = m.build(b, 32) + 32;
+				len = m.build(b, 32) + 32;
 				
 				key.copy(0, b, 16, 12);
 				
 				
 				b[16 + 12] = m.code;
 				
-				var pkt = Transfer.wrapCopier(b, 0, len);
+				pkt = Transfer.wrapCopier(b, 0, len);
 				
 				m.encrypt && this.payloadEncrypt(b, len, d);
 	
@@ -268,22 +265,12 @@ const Principal = module.exports = ae3.Class.create(
 				 */
 				Transfer.copyBytes(d.result, 0, b, 0, 16);
 				
-				
-				
-				if(!pkt){
-					if(!m || false !== m.log){
-						console.log('>>>>>> %s: udp-send-skip, no payload, message: %s', this, m);
-					}
-					return 0;
-				}
-				if(!m || false !== m.log){
+				if(false && (!m || false !== m.log)){
 					m = Object.create(m);
-					var k, v;
 					for keys(k in m){
 						v = m[k];
 						ae3.net.isSocketAddress(v) && (m[k] = v.address + ':' + v.port);
 					}
-					/**<code>
 					console.log('>>> >>> udp-send: -> %s @ %s:%s, ser: %s, len: %s, %s', 
 						Format.jsObject(key.slice(0, 12)), 
 						a.address.hostAddress, 
@@ -292,12 +279,22 @@ const Principal = module.exports = ae3.Class.create(
 						pkt.length(),
 						m
 					);
-					</code>*/
 				}
 				return this.sendUdp(pkt, a);
+			})
+		},
+		/**
+		 * checks incoming query (outgoing reply) cache
+		 */
+		checkRxqSerial : {
+			value : function(serial){
+				return undefined;
 			}
 		},
-		isIgnoreSerial : {
+		/**
+		 * checks incoming reply (outgoing request) cache
+		 */
+		checkRxrSerial : {
 			value : function(serial){
 				return undefined;
 			}
@@ -326,18 +323,52 @@ const Principal = module.exports = ae3.Class.create(
 		
 		
 		
-		taskPending : {
+		/**
+		 * outgoing query task is waiting for replies with given serial
+		 *
+		 */
+		serialTxqQueue : {
 			value : function(serial, task){
-				console.log('>>>>>> %s: taskPending', this);
-				throw new Error("'taskPending' of Principal is an abstract method and should be overriden!");
+				console.log('>>>>>> %s: serialTxqQueue', this);
+				throw new Error("'serialTxqQueue' of Principal is an abstract method and should be overriden!");
 			}
 		},
-		taskFinished : {
+		/** ... 
+		 * cached when:
+		 * - incoming request routed to principal's handler, (true)
+		 * - outgoing final reply is sent on princinal's behalf, (message || true)
+		 *
+		 * stage 1: message code (type) and serial is known
+		 * stage 2: message signature is verified
+		 *
+		 * result:
+		 * case undefined, any stage - continue processing incoming message
+		 * case true, stage 1 - ignore message
+		 * case <Message>, stage 2 - return cached reply
+		 */
+		serialRxqCache : {
+			value : function(serial, result){
+				console.log('>>>>>> %s: serialRxqCache', this);
+				throw new Error("'serialRxqCache' of Principal is an abstract method and should be overriden!");
+			}
+		},
+		/** ... 
+		 * cached when:
+		 * - task handler's return value is not 'true', 
+		 * // - outgoing request is sent on princinal's behalf
+		 * - incoming final reply is routed to principal's handler, (task || true)
+		 *
+		 * further reply messages with given serial are discarded.
+		 */
+		serialTxqCache : {
 			value : function(serial){
-				console.log('>>>>>> %s: taskFinished', this);
-				throw new Error("'taskPending' of Principal is an abstract method and should be overriden!");
+				console.log('>>>>>> %s: serialTxqCache', this);
+				throw new Error("'serialTxqCache' of Principal is an abstract method and should be overriden!");
 			}
 		},
+		/**
+		 * Sends actial UDP datagram message to the address given
+		 */
 		sendUdp : {
 			value : function(payload, addr){
 				console.log('>>>>>> %s: sendUdp', this);
