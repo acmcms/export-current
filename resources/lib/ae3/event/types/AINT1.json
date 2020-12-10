@@ -1,0 +1,5 @@
+{
+	"name" : "AINT1",
+	"title" : "Abstract Interactive Message",
+	"arguments" : [ "methodS", "urlS" ]
+}

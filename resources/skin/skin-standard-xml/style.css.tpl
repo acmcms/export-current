@@ -729,9 +729,7 @@ A.ui-cmd-link{
 .ui-menu-btn-btn, .menu-button-active, .menu-button, BUTTON.ui-button, SPAN.ui-button{
 	line-height: 1.5em;
 	height: auto;
-	min-height: 1.5em;
-	border-right-color: #000;
-	border-bottom-color: #000;
+	min-height: 1.6em;
 	position: relative;
 	display: block;
 	display: inline-block;
@@ -759,6 +757,8 @@ BUTTON.ui-button:focus,
 SPAN.ui-button:focus {
 	border-width: 0 2px 2px 0;
 	box-shadow: 2pt 2pt 4pt rgba(0, 0, 0, 0.4);
+	border-right-color: #555;
+	border-bottom-color: #555;
 	outline: 0 !important;
 }
 
@@ -773,11 +773,6 @@ A.ui-button, A.ui-button:focus, A.ui-button:active, A.ui-button:hover, A.ui-butt
 	padding:0;
 	margin:0;
 	border:0;
-}
-
-.submit > A.ui-button > .menu-button, 
-.submit > A.ui-button > .menu-button-active {
-	min-height: 1.62em;
 }
 
 .submit > A.ui-button > .menu-button > .menu-element, 

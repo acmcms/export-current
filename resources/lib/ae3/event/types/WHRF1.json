@@ -1,0 +1,5 @@
+{
+	"name" : "WHRF1",
+	"title" : "Web HTTP(S) Reply",
+	"arguments" : [ "code", "txBytes", "delayMillis", "method", "url" ],
+}

@@ -1,0 +1,6 @@
+{
+	"name" : "AERR1",
+	"title" : "Abstract Error Message",
+	"arguments" : [ "methodS", "urlS" ],
+	"log" : "error"
+}

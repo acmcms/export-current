@@ -1,0 +1,5 @@
+{
+	"name" : "ARPL1",
+	"title" : "Abstract Replay Message",
+	"arguments" : [ "dateZ", "$@" ]
+}

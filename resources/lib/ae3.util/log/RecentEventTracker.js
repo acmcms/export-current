@@ -564,7 +564,7 @@ function internMapLogged(e){
 		data = JSON.parse(e.toCharacter().textContent);
 	}
 	
-	return new this.EventObject(/*key,*/ eid.date, this.name, this.icon, data, null /* relId */);
+	return new this.EventObject(eid.date, this.name, this.icon, data, null /* relId */);
 }
 
 /**
@@ -601,5 +601,5 @@ function internMapRecent(e){
 		data = JSON.parse(e.toCharacter().textContent);
 	}
 	
-	return new this.EventObject(/*key,*/ eid.date, this.name, this.icon, data, null /* relId */);
+	return new this.EventObject(eid.date, this.name, this.icon, data, null /* relId */);
 }

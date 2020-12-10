@@ -1,0 +1,6 @@
+{
+	"name" : "ADBG1",
+	"title" : "Abstract Debug Message",
+	"arguments" : [ "methodS", "urlS" ],
+	"log" : "debug"
+}

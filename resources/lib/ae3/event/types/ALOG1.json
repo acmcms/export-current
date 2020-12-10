@@ -1,0 +1,5 @@
+{
+	"name" : "ALOG1",
+	"title" : "Abstract Log Message",
+	"arguments" : [ "methodS", "urlS" ]
+}

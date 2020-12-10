@@ -1,0 +1,5 @@
+{
+	"name" : "WHRS1",
+	"title" : "Web HTTP(S) Request",
+	"arguments" : [ "method", "url" ],
+}
