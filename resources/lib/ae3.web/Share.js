@@ -16,13 +16,16 @@ const Share = module.exports = ae3.Class.create(
 	/* inherit */
 	require('./AbstractWebPage'),
 	/* constructor */
-	function(){
+	function(settings){
 		this.AbstractWebPage();
-		Object.defineProperties(this, {
-			dateStarted : {
-				value : new Date()
-			}
+		Object.defineProperty(this, "dateStarted", {
+			value : new Date()
 		});
+		if(settings){
+			Object.defineProperty(this, "settings", {
+				value : settings
+			});
+		}
 		return this;
 	},
 	/* inherit */

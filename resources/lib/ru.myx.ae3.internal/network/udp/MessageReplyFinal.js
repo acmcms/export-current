@@ -1,24 +1,30 @@
-function MessageReplyFinal(){
-	// this.MessageReply();
-	return this;
-}
+const ae3 = require('ae3');
 
-MessageReplyFinal.prototype = Object.create(require('./MessageReply').prototype, {
-	MessageReplyFinal : {
-		value : MessageReplyFinal
+const MessageReplyFinal = module.exports = ae3.Class.create(
+	/* name */
+	"MessageReplyFinal",
+	/* inherit */
+	require('./MessageReply'),
+	/* constructor */
+	function(){
+		// this.MessageReply();
+		return this;
 	},
-	isReplyFinal : {
-		value : true
-	},
-	toString : {
-		value : function(){
-			return "[MessageReplyFinal]";
+	/* instance */
+	{
+		isReplyFinal : {
+			value : true
+		},
+		isRequest : {
+			value : false
+		},
+		isReply : {
+			value : true
+		},
+		toString : {
+			value : function(){
+				return "[MessageReplyFinal]";
+			}
 		}
 	}
-});
-
-MessageReplyFinal.toString = function(){
-	return "MessageReplyFinal";
-};
-
-module.exports = MessageReplyFinal;
+);

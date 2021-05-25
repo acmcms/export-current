@@ -10,20 +10,11 @@
 	padding: 0;
 	cursor: default;
 	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-
 	border-radius: 3px;
-	-moz-border-radius: 3px;
 	box-shadow: 3px 3px 7px rgba(0,0,0,0.4);
-	-webkit-box-shadow: 3px 3px 7px rgba(0,0,0,0.4);
-	-moz-box-shadow: 3px 3px 7px rgba(0,0,0,0.4);
 }
 .menu-button-disabled{
 	box-shadow: none;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
 }
 .menu-button, .menu-button-active{
 	font-size: 100%;

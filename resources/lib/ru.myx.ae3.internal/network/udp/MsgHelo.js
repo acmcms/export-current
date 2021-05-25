@@ -32,13 +32,13 @@ const MsgHelo = module.exports = ae3.Class.create(
 		build : {
 			value : UdpServiceHelper.buildMsgHelo || (function(b, o){
 				// 4 bytes length, IPv4
-				var addr = this.src.address.address;
+				const addr = this.src.address.address;
 				b[o++] = addr[0];
 				b[o++] = addr[1];
 				b[o++] = addr[2];
 				b[o++] = addr[3];
 				// 2 bytes length, port
-				var port = this.src.port;
+				const port = this.src.port;
 				b[o++] = (port & 0xFF00) >> 8;
 				b[o++] = port & 0x00FF;
 				return 6;

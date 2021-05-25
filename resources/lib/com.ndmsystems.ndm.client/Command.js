@@ -1,3 +1,5 @@
+const ae3 = require("ae3");
+
 /**
  * NDMC shell command-line interface
  */
@@ -206,7 +208,7 @@ var commands = {
 
 			const keys = client.components.ndmp.confirmedMatingKeys;
 			if(keys){
-				const Secp256r1 = require('ae3').net.ssl.EllipticCurveSecp256r1;
+				const Secp256r1 = ae3.crypto.EllipticCurveSecp256r1;
 				console.log("ndmp mating client key: %s", Secp256r1.formatPublicKeyAsHexCompressed(keys.client));
 				console.log("ndmp mating server key: %s", Secp256r1.formatPublicKeyAsHexCompressed(keys.server));
 				return true;

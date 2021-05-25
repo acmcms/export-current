@@ -1,5 +1,5 @@
 const ae3 = require("ae3");
-const Secp256r1 = ae3.net.ssl.EllipticCurveSecp256r1;
+const Secp256r1 = ae3.crypto.EllipticCurveSecp256r1;
 
 const ComponentNdmp = module.exports = ae3.Class.create(
 	"ComponentNdmp",
@@ -13,7 +13,7 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 			value : "ndmp"
 		},
 		acceptXmlNotifications : {
-			value : ['ut1']
+			value : ['ut1','cc1']
 		},
 		
 		requestXmlNotifications : {
@@ -41,7 +41,7 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 		prepareMatingKeys : {
 			value : function(forceNew){
 				if(!forceNew){
-					let keys = this.preparedMatingKeys;
+					const keys = this.preparedMatingKeys;
 					if(keys){
 						return keys;
 					}
@@ -89,9 +89,28 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 					writable : true
 				});
 				if(forceAll){
-					this.client.vfs.setContentUndefined("ndmpKeyPublic");
-					this.client.vfs.setContentUndefined("ndmpKeyPrivate");
-					this.client.vfs.setContentUndefined("ndmpSvcPublic");
+					/**
+					// this.client.vfs.setContentUndefined("ndmpKeyPrivate");
+					// this.client.vfs.setContentUndefined("ndmpKeyPublic");
+					// this.client.vfs.setContentUndefined("ndmpSvcPublic");
+					**/
+					this.client.vfs.setContent({
+						"ndmpKeyPrivate" : {
+							field : true,
+							index : false,
+							value : undefined
+						},
+						"ndmpKeyPublic" : {
+							field : true,
+							index : true,
+							value : undefined
+						},
+						"ndmpSvcPublic" : {
+							field : true,
+							index : true,
+							value : undefined
+						}
+					});
 					Object.defineProperty(this, "confirmedMatingKeys", {
 						value : null,
 						configurable : true,
@@ -104,11 +123,12 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 		
 		confirmedMatingKeys : {
 			get : function(){
-				// const ndmpKeyPublic = this.client.vfs.getContentAsBinary("ndmpKeyPublic");
-				const ndmpKeyPublic = this.client.vfs.relativeBinary("ndmpKeyPublic");
 				
 				// const ndmpKeyPrivate = this.client.vfs.getContentAsBinary("ndmpKeyPrivate");
 				const ndmpKeyPrivate = this.client.vfs.relativeBinary("ndmpKeyPrivate");
+
+				// const ndmpKeyPublic = this.client.vfs.getContentAsBinary("ndmpKeyPublic");
+				const ndmpKeyPublic = this.client.vfs.relativeBinary("ndmpKeyPublic");
 				
 				// const ndmpSvcPublic = this.client.vfs.getContentAsBinary("ndmpSvcPublic");
 				const ndmpSvcPublic = this.client.vfs.relativeBinary("ndmpSvcPublic");
@@ -174,12 +194,29 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 				 */
 				console.log("ndm.client '%s': ndmp: storing newly confirmed EC pair", this.client.clientId);
 	
-				this.client.vfs.setContentPublicTreeBinary("ndmpKeyPrivate", //
-						ae3.Transfer.createCopier(Secp256r1.formatPrivateKeyAsBytesPKCS8(pair.getPrivate())));
-				this.client.vfs.setContentPublicTreeBinary("ndmpKeyPublic", //
-						ae3.Transfer.createCopier(Secp256r1.formatPublicKeyAsBytesCompressed(devicePublic)));
-				this.client.vfs.setContentPublicTreeBinary("ndmpSvcPublic", //
-						ae3.Transfer.createCopier(Secp256r1.formatPublicKeyAsBytesCompressed(servicePublic)));
+				/**
+				// this.client.vfs.setContentPublicTreeBinary("ndmpKeyPrivate", //
+				//		ae3.Transfer.createCopier(Secp256r1.formatPrivateKeyAsBytesPKCS8(pair.getPrivate())));
+				// this.client.vfs.setContentPublicTreeBinary("ndmpKeyPublic", //
+				//		ae3.Transfer.createCopier(Secp256r1.formatPublicKeyAsBytesCompressed(devicePublic)));
+				// this.client.vfs.setContentPublicTreeBinary("ndmpSvcPublic", //
+				//		ae3.Transfer.createCopier(Secp256r1.formatPublicKeyAsBytesCompressed(servicePublic)));
+				**/
+
+				this.client.vfs.setContent({
+					"ndmpKeyPrivate" : {
+						index : false,
+						value : ae3.Transfer.createCopier(Secp256r1.formatPrivateKeyAsBytesPKCS8(pair.getPrivate()))
+					},
+					"ndmpKeyPublic" : {
+						index : true,
+						value : ae3.Transfer.createCopier(Secp256r1.formatPublicKeyAsBytesCompressed(devicePublic))
+					},
+					"ndmpSvcPublic" : {
+						index : true,
+						value : ae3.Transfer.createCopier(Secp256r1.formatPublicKeyAsBytesCompressed(servicePublic))
+					}
+				});
 
 				Object.defineProperty(this, "confirmedMatingKeys", {
 					value : pair,

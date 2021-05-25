@@ -8,17 +8,11 @@
 
 .border .TabOffl {
 	border-left: solid 1px buttonhighlight;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
 .border .offr {
 	border-right: solid 1px buttonhighlight;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -29,9 +23,6 @@
 	height: 16;
 	padding: 2px 4px 0 4px;
 	white-space: nowrap;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -43,25 +34,16 @@
 	padding: 4px 0 0 4px;
 	width: 100;
 	white-space: nowrap;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
 .zakladka .TabOn DIV .title {
 	padding: 0 10px 0 0;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
 .zakladka .submenu {
 	padding: 2px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -71,9 +53,6 @@
 	font-weight: bold;
 	padding: 1px 3px 0 3px;
 	behavior: url(/_submenuicon.htc);
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -90,8 +69,5 @@
 	margin: 0 1px 0 1px;
 	border-right: solid 1px buttonhighlight;
 	border-left: solid 1px buttonshadow;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }

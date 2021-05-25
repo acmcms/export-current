@@ -18,9 +18,6 @@ H1 {
 
 
 .BorderBox {
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -30,9 +27,6 @@ H1 {
 	border-top: solid 1px buttonshadow;
 	border-left: solid 1px buttonshadow;
 	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
 }
 
 .FrameBorder2 {
@@ -42,9 +36,6 @@ H1 {
 	border-left: solid 1px buttonhighlight;
 	background-color: buttonface;
 	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-ms-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
 }
 
 .FrameHeader {
@@ -59,9 +50,6 @@ H1 {
 	border-top: solid 1px buttonshadow;
 	border-left: solid 1px buttonshadow;
 	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-ms-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
 }
 
 .TopMenu {
@@ -70,9 +58,6 @@ H1 {
 	border: solid 1px buttonface;
 	text-align: center;
 	padding: 0 10px 0 10px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -82,9 +67,6 @@ H1 {
 	padding: 0;
 	margin: 0;
 	border: solid 1px buttonface;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -98,9 +80,6 @@ H1 {
 	border-right: solid 1px buttonshadow;
 	border-top: solid 1px buttonhighlight;
 	border-left: solid 1px buttonhighlight;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -115,9 +94,6 @@ H1 {
 	border-right: solid 1px buttonshadow;
 	border-top: solid 1px buttonhighlight;
 	border-left: solid 1px buttonhighlight;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -132,17 +108,11 @@ H1 {
 	border-right: solid 1px buttonhighlight;
 	border-top: solid 1px buttonshadow;
 	border-left: solid 1px buttonshadow;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
 .Menu IMG,.MenuOn IMG {
 	margin: 0 3px 0 0;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -189,9 +159,6 @@ H1 {
 	border-right: solid 1px buttonshadow;
 	border-top: solid 1px buttonhighlight;
 	border-left: solid 1px buttonhighlight;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -200,9 +167,6 @@ H1 {
 	font-size: 8pt;
 	border-bottom: solid 1px appworkspace;
 	background-color: appworkspace;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -211,9 +175,6 @@ H1 {
 	font-family: Tahoma, Arial;
 	font-size: 8pt;
 	color: highlighttext;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -221,9 +182,6 @@ H1 {
 	padding: 2px 3px 2px 3px;
 	font-family: Tahoma, Arial;
 	font-size: 8pt;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -249,9 +207,6 @@ H1 {
 	border-top: solid 1px buttonshadow;
 	border-left: solid 1px buttonshadow;
 	padding: 1px 5px 1px 5px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -286,9 +241,6 @@ H1 {
 	border: solid 1px buttonface;
 	height: 16px;
 	padding: 0;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -302,9 +254,6 @@ H1 {
 	border-right: solid 1px buttonshadow;
 	border-top: solid 1px buttonhighlight;
 	border-left: solid 1px buttonhighlight;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -313,9 +262,6 @@ H1 {
 	font-size: 8pt;
 	border: solid 1px buttonface;
 	behavior: url(/_icon.htc);
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -325,8 +271,5 @@ H1 {
 	border: solid 1px buttonface;
 	behavior: url(/_icon.htc);
 	height: 21px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }

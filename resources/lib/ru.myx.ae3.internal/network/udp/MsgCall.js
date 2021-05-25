@@ -33,17 +33,16 @@ const MsgCall = module.exports = ae3.Class.create(
 		},
 		build : {
 			value : UdpServiceHelper.buildMsgCall || (function(b, o){
-				var l = 0;
+				var l = o;
 				// component X bytes
-				l += Transfer.createCopierUtf8(this.component).copy(0, b, o, 128);
+				l += Transfer.createCopierUtf8(this.component).copy(0, b, l, 128);
 				// ZERO byte
-				b[o + l] = 0;
-				++ l;
+				b[++l] = 0;
 				// argument X bytes
 				if(this.argument){
-					l += this.argument.copy(0, b, o + l, 1024);
+					l += this.argument.copy(0, b, l, 1024);
 				}
-				return l;
+				return l - o;
 			})
 		},
 		toString : {

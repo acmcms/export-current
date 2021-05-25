@@ -1,4 +1,4 @@
-<%FINAL: 'text/xsl' %><?xml version="1.0" encoding="UTF-8"?>
+<%FINAL: 'text/xml' %><%FORMAT: 'xml' %><?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output method="html" media-type="text/html" indent="no"/>
 	<xsl:variable name="namespacePrefix" select="/xml/@namespacePrefix"/>
@@ -129,4 +129,4 @@
 		<div class="ui-label ui-right"><a href="#top">top ^^^</a></div>
 		<hr style="clear:both"/>
 	</xsl:template>
-</xsl:stylesheet><%/FINAL%>
+</xsl:stylesheet><%/FORMAT%><%/FINAL%>

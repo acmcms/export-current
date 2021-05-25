@@ -249,9 +249,6 @@ Effects.Shadow.prototype.init = function(){
 			var same = ""; // overflow for IE6
 			var sh1 = target.ownerDocument.createElement("div");
 			sh1.style.cssText = "filter:progid:DXImageTransform.Microsoft.Glow(color=#666666,strength=2) progid:DXImageTransform.Microsoft.Shadow(color=#000055,direction=135,strength=6);"+
-								"-ms-filter:progid:DXImageTransform.Microsoft.Glow(color=#666666,strength=2) progid:DXImageTransform.Microsoft.Shadow(color=#000055,direction=135,strength=6);"+
-								"-moz-box-shadow:3px 3px 10px #000000;"+
-								"-webkit-box-shadow:3px 3px 10px #000000;"+
 								"box-shadow:3px 3px 10px #000000;"+
 								"position:absolute;"+
 								"opacity:0.4;"+

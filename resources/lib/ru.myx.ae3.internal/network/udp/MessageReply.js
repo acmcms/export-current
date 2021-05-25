@@ -1,27 +1,27 @@
-function MessageReply(){
-	// this.Message();
-	return this;
-}
+const ae3 = require('ae3');
 
-MessageReply.prototype = Object.create(require('./Message').prototype, {
-	MessageReply : {
-		value : MessageReply
+const MessageReply = module.exports = ae3.Class.create(
+	/* name */
+	"MessageReply",
+	/* inherit */
+	require('./Message'),
+	/* constructor */
+	function(){
+		// this.Message();
+		return this;
 	},
-	isRequest : {
-		value : false
-	},
-	isReply : {
-		value : true
-	},
-	toString : {
-		value : function(){
-			return "[MessageReply]";
+	/* instance */
+	{
+		isRequest : {
+			value : false
+		},
+		isReply : {
+			value : true
+		},
+		toString : {
+			value : function(){
+				return "[MessageReply]";
+			}
 		}
 	}
-});
-
-MessageReply.toString = function(){
-	return "MessageReply";
-};
-
-module.exports = MessageReply;
+);

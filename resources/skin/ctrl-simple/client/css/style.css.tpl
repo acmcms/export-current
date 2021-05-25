@@ -1,17 +1,11 @@
 .border-box{
 	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-ms-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
 }
 
 body {
 	margin: 0;
 	padding: 0 1% 15pt 1%;
 	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-ms-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
 }
 
 form {
@@ -47,8 +41,6 @@ button {
 	margin: 1px;
 	vertical-align: middle;
 	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 }
 
 .btn img {
@@ -192,9 +184,6 @@ input,button,select,.fm,.fml,.mn {
 	width: 600px;
 	width: 85%;
 	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-ms-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
 }
 
 .ac {

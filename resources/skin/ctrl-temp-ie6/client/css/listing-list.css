@@ -33,9 +33,6 @@ A {
 	padding: 0 10px 0 0;
 	width: 0;
 	height: 16px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -47,9 +44,6 @@ A {
 	border-style: solid;
 	border-width: 1px;
 	white-space: nowrap;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -61,9 +55,6 @@ A {
 	background-color: buttonface;
 	color: buttontext;
 	padding: 0;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -77,9 +68,6 @@ A {
 .dtab .title {
 	padding: 0 0 0 4px;
 	border: 0;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -95,9 +83,6 @@ A {
 	font-family: Tahoma, Arial;
 	font-size: 8pt;
 	behavior2: url(_list-header.htc);
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -125,18 +110,12 @@ A {
 	font-size: 10px;
 	line-height: 8px;
 	padding: 0 3px 0 3px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
 .listTDheader .title {
 	width: 100%;
 	padding-right: 4px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -161,8 +140,5 @@ INPUT,SELECT {
 	margin-top: -1px;
 	margin-bottom: -1px;
 	width: 100%;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }

@@ -638,9 +638,6 @@ Layouts.Layout.prototype = {
 			"}"+
 			"size-height{"+
 				"box-sizing:border-box;"+
-				"-moz-box-sizing:border-box;"+
-				"-ms-box-sizing:border-box;"+
-				"-webkit-box-sizing:border-box;"+
 			"}"+
 			"";
 		this.setupRegisterCss(document, source);

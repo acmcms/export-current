@@ -1,27 +1,27 @@
-function MessageRequest(){
-	// this.Message();
-	return this;
-}
+const ae3 = require('ae3');
 
-MessageRequest.prototype = Object.create(require('./Message').prototype, {
-	MessageRequest : {
-		value : MessageRequest
+const MessageRequest = module.exports = ae3.Class.create(
+	/* name */
+	"MessageRequest",
+	/* inherit */
+	require('./Message'),
+	/* constructor */
+	function(){
+		// this.Message();
+		return this;
 	},
-	isRequest : {
-		value : true
-	},
-	isReply : {
-		value : false
-	},
-	toString : {
-		value : function(){
-			return "[MessageRequest]";
+	/* instance */
+	{
+		isRequest : {
+			value : true
+		},
+		isReply : {
+			value : false
+		},
+		toString : {
+			value : function(){
+				return "[MessageRequest]";
+			}
 		}
 	}
-});
-
-MessageRequest.toString = function(){
-	return "MessageRequest";
-};
-
-module.exports = MessageRequest;
+);

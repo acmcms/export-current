@@ -2,6 +2,11 @@ const ae3 = require('ae3');
 const Transfer = ae3.Transfer;
 const UdpServiceHelper = require("java.class/ru.myx.ae3.internal.net.UdpServiceHelper");
 
+const wrapCopier = Transfer.wrapCopier;
+const copyBytes = Transfer.copyBytes;
+const xorBytes = Transfer.xorBytes;
+const updateMessageDigest = Transfer.updateMessageDigest;
+
 const Principal = module.exports = ae3.Class.create(
 	/* name */
 	"Principal",
@@ -60,8 +65,14 @@ const Principal = module.exports = ae3.Class.create(
 		MsgPoke : {
 			value : require('./MsgPoke')
 		},
+		MsgPokeDirect : {
+			value : require('./MsgPokeDirect')
+		},
 		MsgSeen : {
 			value : require('./MsgSeen')
+		},
+		MsgMeet : {
+			value : require('./MsgMeet')
 		},
 		TaskUdpSingle : {
 			value : require('./TaskUdpSingle')
@@ -173,7 +184,7 @@ const Principal = module.exports = ae3.Class.create(
 		},
 		
 		onReceive : {
-			value : UdpServiceHelper.principalOnReceive || (function(message, address, serial, /* locals: */ c, h){
+			value : UdpServiceHelper.principalOnReceive || (function(message, address, serial /* locals: */, c, h){
 				if(this.sTx < serial && (serial > 16000000) === (this.sTx > 16000000)){
 					this.sTx = serial;
 				}
@@ -187,7 +198,8 @@ const Principal = module.exports = ae3.Class.create(
 				if(h){
 					// console.log('>>>>>> %s: onReceive, type: %s, address: %s, serial: %s, type: %s', this, message, address, serial, Format.jsDescribe(h));
 					for(c of h){
-						c(message, address, serial);
+						setTimeout(c.bind(this, message, address, serial), 0);
+						// c(message, address, serial);
 					}
 					return;
 				}
@@ -223,15 +235,13 @@ const Principal = module.exports = ae3.Class.create(
 			 * address
 			 */
 			value : UdpServiceHelper.principalSendImpl || (function(b, d, m, a /* locals: */, key, s, len, pkt, k, v){
-				a || (a = this.dst);
-				if(!a){
+				if( ! (a || (a = this.dst)) ){
 					if(false !== m.log){
 						console.log('>>>>>> %s: udp-send-skip, no address, message: %s', this, m);
 					}
 					return 0;
 				}
-				key = this.key || m.key;
-				if(!key){
+				if( ! (key = this.key || m.key) ){
 					console.log('>>>>>> %s: udp-send-skip, no dst alias, message: %s', this, m);
 					return 0;
 				}
@@ -249,7 +259,7 @@ const Principal = module.exports = ae3.Class.create(
 				
 				b[16 + 12] = m.code;
 				
-				pkt = Transfer.wrapCopier(b, 0, len);
+				pkt = wrapCopier(b, 0, len);
 				
 				m.encrypt && this.payloadEncrypt(b, len, d);
 	
@@ -263,7 +273,7 @@ const Principal = module.exports = ae3.Class.create(
 				/**
 				 * put signature in the header
 				 */
-				Transfer.copyBytes(d.result, 0, b, 0, 16);
+				copyBytes(d.result, 0, b, 0, 16);
 				
 				if(false && (!m || false !== m.log)){
 					m = Object.create(m);
@@ -306,17 +316,17 @@ const Principal = module.exports = ae3.Class.create(
 		payloadEncrypt : {
 			value : UdpServiceHelper.payloadEncrypt || (function(b, payloadLength, digest){
 				digest = digest.clone();
-				Transfer.updateMessageDigest(digest, b, 16, 16);
+				updateMessageDigest(digest, b, 16, 16);
 				this.secret.updateMessageDigest(digest);
-				Transfer.xorBytes(b, 32, digest.result, payloadLength);
+				xorBytes(b, 32, digest.result, payloadLength);
 			})
 		},
 		payloadDecrypt : {
 			value : UdpServiceHelper.payloadDecrypt || (function(pkt, b, offset, payloadLength, digest){
 				digest = digest.clone();
-				Transfer.updateMessageDigest(digest, pkt, 16, 16);
+				updateMessageDigest(digest, pkt, 16, 16);
 				this.secret.updateMessageDigest(digest);
-				Transfer.xorBytes(pkt, 32, digest.result, b, offset, payloadLength);
+				xorBytes(pkt, 32, digest.result, b, offset, payloadLength);
 			})
 		},
 		

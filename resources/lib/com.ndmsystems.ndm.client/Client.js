@@ -44,6 +44,7 @@ const Client = module.exports = ae3.Class.create(
 					"base"  : require("./components/base/ComponentBase").newInstance(this),
 					"cloud" : require("./components/cloud/ComponentCloud").newInstance(this),
 					"ndmp"  : require("./components/ndmp/ComponentNdmp").newInstance(this),
+					"ndns"  : require("./components/ndns/ComponentNdns").newInstance(this),
 				}
 			}
 		});
@@ -218,11 +219,6 @@ const Client = module.exports = ae3.Class.create(
 				}
 			}
 		},
-		createEpoch2ClientRequest : {
-			value : function(ndssHost, ndssPort, licenseNumber){
-				return new ClientRequest(new Epoch2Client(ndssHost, ndssPort, licenseNumber));
-			}
-		},
 		createRobotClientRequest : {
 			value : function(ndssHost, ndssPort, robotPass){
 				if(!ndssHost){
@@ -327,7 +323,7 @@ function internAppendRegister(clientRequest, reason){
 			sn			: ___ECMA_IMPL_HOST_NAME___,
 			v			: 2,
 			address		: ae3.net.localAddress,
-			xns			: ['ub1', 'ut1']
+			xns			: ['ubA', 'ut1', 'cc1']
 		},
 		onSuccess	: (function(map){
 			// const address = map.address;
@@ -338,7 +334,7 @@ function internAppendRegister(clientRequest, reason){
 				for(n of Array(notify)){
 					console.log("ndm.client '%s': got notification: %s", this.clientId, Format.jsObjectReadable(n));
 					id = n.id;
-					if(id === 'ub1'){
+					if(id === 'ubA'){
 						this.ddnsName = n.name;
 						this.ddnsZone = n.domain;
 						this.ddnsAddr = n.address;
@@ -467,22 +463,6 @@ const DeviceClient = ae3.Class.create(
 			},
 			post : {
 				pw : serviceKey
-			}
-		};
-		return this;
-	}
-);
-
-
-const Epoch2Client = ae3.Class.create(
-	"Epoch2Client",
-	undefined,
-	function(ndssHost, ndssPort, licenseNumber){
-		this.ndssHost = ndssHost;
-		this.ndssPort = ndssPort;
-		this.auth = {
-			get : {
-				license : licenseNumber
 			}
 		};
 		return this;

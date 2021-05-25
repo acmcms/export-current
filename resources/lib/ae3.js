@@ -71,6 +71,15 @@ const prototype = Object.create(Object.prototype, {
 			return result;
 		}
 	},
+	"crypto" : {
+		get : function ae3Crypto(){
+			const result = require('ae3/crypto');
+			Object.defineProperty(this, "crypto", {
+				value : result
+			});
+			return result;
+		}
+	},
 	"net" : {
 		get : function ae3Net(){
 			const result = require('ae3/net');

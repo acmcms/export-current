@@ -1,5 +1,12 @@
 const FiltersFormLayout = require('./FiltersFormLayout');
 
+const formatJsObject = Format.jsObject;
+const formatXmlAttribute = Format.xmlAttribute;
+const formatXmlAttributes = Format.xmlAttributes;
+const formatXmlElement = Format.xmlElement;
+const formatXmlElements = Format.xmlElements;
+const formatXmlNodeValue = Format.xmlNodeValue;
+
 /**
  * TODO: leave XML in XML, but move 'html-js', etc in other places.
  */
@@ -57,7 +64,7 @@ function buildAuthenticationFailedReply(context){
 			layout : 'final',
 			code : 403,
 			contentType : 'text/json',
-			content : Format.jsObject({
+			content : formatJsObject({
 				layout : 'message',
 				code : '403',
 				message : 'Autentication failed!'
@@ -67,8 +74,8 @@ function buildAuthenticationFailedReply(context){
 	case 'xml':{
 		var xml;
 		$output(xml){
-			%><authentication-failed<%= Format.xmlAttribute('title', context.title || 'Authentication failed') %> layout="menu" zoom="document"><%
-				= Format.xmlElement('client', context.share.clientElementProperties(context));
+			%><authentication-failed<%= formatXmlAttribute('title', context.title || 'Authentication failed') %> layout="menu" zoom="document"><%
+				= formatXmlElement('client', context.share.clientElementProperties(context));
 				%><message><%
 					%>This service requires all clients to sign-in. There was an authentication failure.<%
 				%></message><%
@@ -123,7 +130,7 @@ function buildAuthenticationSuccessReply(context){
 		return {
 			layout : 'final',
 			contentType : 'text/json',
-			content : Format.jsObject({
+			content : formatJsObject({
 				layout : 'message',
 				message : 'Autentication success!'
 			})
@@ -132,8 +139,8 @@ function buildAuthenticationSuccessReply(context){
 	case 'xml':{
 		var xml;
 		$output(xml){
-			%><authentication-success<%= Format.xmlAttribute('title', context.title || 'Authentication Success') %>><%
-				= Format.xmlElement('client', context.share.clientElementProperties(context));
+			%><authentication-success<%= formatXmlAttribute('title', context.title || 'Authentication Success') %>><%
+				= formatXmlElement('client', context.share.clientElementProperties(context));
 			%></authentication-success><%
 		}
 		return {
@@ -184,9 +191,9 @@ function buildAuthenticationLogoutReply(context){
 		var url = "//" + query.targetExact + '/';
 		var xml;
 		$output(xml){
-			%><authentication-logout<%= Format.xmlAttribute('title', context.title || 'Log-Out') %>><%
-				= Format.xmlElement('client', context.share.clientElementProperties(context));
-				%><redirect><%= Format.xmlNodeValue(url) %></redirect><%
+			%><authentication-logout<%= formatXmlAttribute('title', context.title || 'Log-Out') %>><%
+				= formatXmlElement('client', context.share.clientElementProperties(context));
+				%><redirect><%= formatXmlNodeValue(url) %></redirect><%
 			%></authentication-logout><%
 		}
 		return {
@@ -238,8 +245,8 @@ function buildAuthenticateReply(context){
 		var url = query.url;
 		var xml;
 		$output(xml){
-			%><authenticate<%= Format.xmlAttribute('title', context.title || message) %> layout="menu" zoom="document"><%
-				= Format.xmlElement('client', context.share.clientElementProperties(context));
+			%><authenticate<%= formatXmlAttribute('title', context.title || message) %> layout="menu" zoom="document"><%
+				= formatXmlElement('client', context.share.clientElementProperties(context));
 				if(query.attributes["Secure"] !== "true" && url.startsWith("http://")){
 					%><message><%
 						%>This service requires all clients to sign-in. Encrypted communication required to proceed.<%
@@ -284,7 +291,7 @@ function makeDoneRefreshReply(title, forward){
 	return {
 		layout : 'xml',
 		xsl : '/!/skin/skin-standard-xml/showState.xsl',
-		content : Format.xmlElement('done', {
+		content : formatXmlElement('done', {
 			title : title || 'updated...',
 			updated : (new Date()).toISOString(),
 			forward : forward || undefined
@@ -304,7 +311,7 @@ function makeMessageReply(context, layout){
 	var reason = layout.reason || (message && (message.reason || message.title));
 	
 	
-	if(code && !(hl || icon) && Number(code) === code){
+	if(code && !(hl || icon) && (code^0 === code)){
 		switch(code){
 		case 400:{
 			hl || (hl = 'error');
@@ -380,14 +387,14 @@ function makeMessageReply(context, layout){
 	var xml = '';
 	$output(xml){
 		%><<%= element; = 'string' === typeof title 
-			? Format.xmlAttributes({
+			? formatXmlAttributes({
 				title : title,
 				code : code,
 				icon : icon,
 				hl : hl,
 				zoom : layout.zoom
 			})
-			: Format.xmlAttributes(Object.create(title, {
+			: formatXmlAttributes(Object.create(title, {
 				code : {
 					value : code,
 					enumerable : true
@@ -404,15 +411,15 @@ function makeMessageReply(context, layout){
 		 %> layout="message"<%
 		%>><%
 			if(context.share){
-				= Format.xmlElement('client', context.share.clientElementProperties(context));
+				= formatXmlElement('client', context.share.clientElementProperties(context));
 			}
 			if(filters && filters.fields){
-				= Format.xmlElement('prefix', new FiltersFormLayout(filters));
+				= formatXmlElement('prefix', new FiltersFormLayout(filters));
 			}
-			%><reason><%= Format.xmlNodeValue(reason || 'Unclassified message.') %></reason><%
+			%><reason><%= formatXmlNodeValue(reason ? (reason.title || reason) : 'Unclassified message.') %></reason><%
 			if(message && message !== reason){
 				if('string' === typeof message){
-					%><message class="code style--block"><%= Format.xmlNodeValue(message) %></message><%
+					%><message class="code style--block"><%= formatXmlNodeValue(message) %></message><%
 				}else //
 				if(message.layout){
 					= internOutputValue('message', message || reason);
@@ -420,7 +427,7 @@ function makeMessageReply(context, layout){
 			}
 			if(detail){
 				if('string' === typeof detail){
-					%><detail class="code style--block"><%= Format.xmlNodeValue(detail) %></detail><%
+					%><detail class="code style--block"><%= formatXmlNodeValue(detail) %></detail><%
 				}else{
 					= internOutputValue('detail', detail);
 				}
@@ -663,7 +670,7 @@ function internReplaceValue(value){
 }
 
 function internOutputValue(key, value){
-	return Format.xmlElements(key, internReplaceValue(value));
+	return formatXmlElements(key, internReplaceValue(value));
 }
 
 
@@ -688,20 +695,20 @@ function makeDataViewFragment(query, layout, extraCommands){
 			= internOutputValue('prefix', layout.prefix);
 		}
 		if(filters && filters.fields){
-			= Format.xmlElement('prefix', new FiltersFormLayout(filters));
+			= formatXmlElement('prefix', new FiltersFormLayout(filters));
 		}
 		%><fields><%
 			for(var field of layout.fields){
-				= Format.xmlElement('field', internReplaceField.call(layout.values, false, field));
+				= formatXmlElement('field', internReplaceField.call(layout.values, false, field));
 			}
 			if(extraCommands){
 				= extraCommands;
 			}
 			if(layout.commands){
-				= Format.xmlElements('command', layout.commands);
+				= formatXmlElements('command', layout.commands);
 			}
 			if(layout.help && (!query || query.parameters.format !== 'clean')){
-				= Format.xmlElement('help', { src : layout.help });
+				= formatXmlElement('help', { src : layout.help });
 			}
 		%></fields><%
 		if("object" === typeof layout.values){
@@ -753,12 +760,12 @@ function makeDataViewReply(context, layout){
 	return {
 		layout	: "xml",
 		xsl	: "/!/skin/skin-standard-xml/show.xsl",
-		content	:	'<' + element + Format.xmlAttributes(attributes || {}) + '>' + 
-					(query && Format.xmlElement('client', context.share.clientElementProperties(context)) || '') +
+		content	:	'<' + element + formatXmlAttributes(attributes || {}) + '>' + 
+					(query && formatXmlElement('client', context.share.clientElementProperties(context)) || '') +
 					makeDataViewFragment(
 						query,
 						layout, 
-						query && !query.parameters.___output && query.parameters.___all && Format.xmlElement('command', {
+						query && !query.parameters.___output && query.parameters.___all && formatXmlElement('command', {
 							title : 'Download as XLS',
 							icon : 'disk',
 							url : '?___output=xls&' + Format.queryStringParameters(filters && filters.values)
@@ -817,9 +824,9 @@ function makeDataFormReply(context, layout){
 
 	var xml = '';
 	$output(xml){
-		%><<%= element; %><%= Format.xmlAttributes(attributes); %>><%
+		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
 			if(query){
-				= Format.xmlElement('client', context.share.clientElementProperties(context));
+				= formatXmlElement('client', context.share.clientElementProperties(context));
 				if(context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
@@ -832,26 +839,26 @@ function makeDataFormReply(context, layout){
 				= internOutputValue('prefix', layout.prefix);
 			}
 			if(filters && filters.fields){
-				= Format.xmlElement('prefix', new FiltersFormLayout(filters));
+				= formatXmlElement('prefix', new FiltersFormLayout(filters));
 			}
 			%><fields><%
 				for(var field of layout.fields){
-					= Format.xmlElement('field', internReplaceField.call(layout.values, true, field));
+					= formatXmlElement('field', internReplaceField.call(layout.values, true, field));
 				}
 				if(layout.commands || layout.submit){
-					= Format.xmlElements('command', layout.commands);
-					= Format.xmlElements('submit', layout.submit);
+					= formatXmlElements('command', layout.commands);
+					= formatXmlElements('submit', layout.submit);
 				}else//
 				if(false && query && !query.parameters.___output){
 					// Request.modifyQueryStringParameter(url, 'format', 'xls' )
-					= Format.xmlElement('command', {
+					= formatXmlElement('command', {
 						title : 'Download as XLS',
 						icon : 'disk',
 						url : '?___output=xls&' + Format.queryStringParameters(filters && filters.values)
 					});
 				}
 				if(layout.help && (!query || query.parameters.format !== 'clean')){
-					= Format.xmlElement('help', { src : layout.help });
+					= formatXmlElement('help', { src : layout.help });
 				}
 			%></fields><%
 			%><values><%
@@ -928,9 +935,9 @@ function makeDataTableReply(context, layout){
 
 	var xml = '', c, column, cn, r, row, item = {}, /* more, */format;
 	$output(xml){
-		%><<%= element; %><%= Format.xmlAttributes(attributes); %>><%
+		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
 			if(query){
-				= Format.xmlElement('client', context.share.clientElementProperties(context));
+				= formatXmlElement('client', context.share.clientElementProperties(context));
 				if(context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
@@ -943,12 +950,12 @@ function makeDataTableReply(context, layout){
 				= internOutputValue('prefix', layout.prefix);
 			}
 			if(filters && filters.fields){
-				= Format.xmlElement('prefix', new FiltersFormLayout(filters));
+				= formatXmlElement('prefix', new FiltersFormLayout(filters));
 			}
 			%><columns><%
 				for(c = 0; c < columnCount; ++c){
 					column = columns[c];
-					= Format.xmlElement('column', internReplaceField.call(null, false, column));
+					= formatXmlElement('column', internReplaceField.call(null, false, column));
 					// item[column.id] = true;
 					switch(column.variant){
 					case 'list':
@@ -980,12 +987,12 @@ function makeDataTableReply(context, layout){
 						more.push(cn);
 					}
 					 */
-					= Format.xmlElement('command', c);
+					= formatXmlElement('command', c);
 				}
 			%></columns><%
 			
 			for(r = 0; r < rowCount; ++r){
-				= Format.xmlElement('item', rows[r]);
+				= formatXmlElement('item', rows[r]);
 				/**
 				 * all columns required for commands and links
 				 * 
@@ -998,12 +1005,12 @@ function makeDataTableReply(context, layout){
 				for(cn in more){
 					item[cn] = row[cn];
 				}
-				= Format.xmlElement('item', item);
+				= formatXmlElement('item', item);
 				*/
 			}
 			
 			if(layout.commands){
-				= Format.xmlElements('command', layout.commands);
+				= formatXmlElements('command', layout.commands);
 			}
 			if(query && !query.parameters.___output){
 				const suffix = Format.queryStringParameters(filters && "object" === typeof filters.values && filters.values || query.parameters, { format : undefined });
@@ -1038,7 +1045,7 @@ function makeDataTableReply(context, layout){
 					});
 				}
 				// Request.modifyQueryStringParameter(url, 'format', 'xls' )
-				= Format.xmlElement('command', {
+				= formatXmlElement('command', {
 					title : 'Download',
 					titleShort : new String(''),
 					icon : 'images',
@@ -1048,13 +1055,13 @@ function makeDataTableReply(context, layout){
 				});
 			}
 			if(layout.help && (!query || query.parameters.format !== 'clean')){
-				= Format.xmlElement('help', { src : layout.help });
+				= formatXmlElement('help', { src : layout.help });
 			}
 			if(layout.suffix){
 				= internOutputValue('suffix', layout.suffix);
 			}
 			if(layout.next && layout.next.uri){
-				= Format.xmlElement('next', layout.next);
+				= formatXmlElement('next', layout.next);
 			}
 		%></<%= element; %>><%
 	}
@@ -1082,12 +1089,12 @@ function makeDocumentationFragment(layout, extraCommands){
 			for(var element of Array(elements)){
 				if(element) {
 					= internOutputValue(element.disposition || 'element', element);
-					// = Format.xmlElement(element.disposition || 'element', element);
+					// = formatXmlElement(element.disposition || 'element', element);
 				}
 			}
 		}
 		if(layout.help){
-			= Format.xmlElement('help', { src : layout.help });
+			= formatXmlElement('help', { src : layout.help });
 		}
 	}
 	return xml;
@@ -1118,11 +1125,11 @@ function makeDocumentationReply(context, layout){
 	return {
 		layout	: "xml",
 		xsl	: "/!/skin/skin-standard-xml/show.xsl",
-		content	:	'<' + element + Format.xmlAttributes(attributes || {}) + '>' + 
-					(query && Format.xmlElement('client', context.share.clientElementProperties(context)) || '') +
+		content	:	'<' + element + formatXmlAttributes(attributes || {}) + '>' + 
+					(query && formatXmlElement('client', context.share.clientElementProperties(context)) || '') +
 					makeDocumentationFragment(
 						layout, 
-						false && query && !query.parameters.___output && Format.xmlElement('command', {
+						false && query && !query.parameters.___output && formatXmlElement('command', {
 							title : 'Download as PDF',
 							icon : 'disk',
 							url : '?___output=pdf&' + Format.queryStringParameters(filters && "object" === typeof filters.values && filters.values)
@@ -1180,9 +1187,9 @@ function makeSequenceReply(context, layout){
 
 	var xml = '';
 	$output(xml){
-		%><<%= element; %><%= Format.xmlAttributes(attributes); %>><%
+		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
 			if(query){
-				= Format.xmlElement('client', context.share.clientElementProperties(context));
+				= formatXmlElement('client', context.share.clientElementProperties(context));
 				if(context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
@@ -1195,7 +1202,7 @@ function makeSequenceReply(context, layout){
 				= internOutputValue('prefix', layout.prefix);
 			}
 			if(filters && filters.fields){
-				= Format.xmlElement('prefix', new FiltersFormLayout(filters));
+				= formatXmlElement('prefix', new FiltersFormLayout(filters));
 			}
 			%><sequence><%
 				for(var item of layout.options){
@@ -1203,10 +1210,10 @@ function makeSequenceReply(context, layout){
 				}
 			%></sequence><%
 			if(layout.commands){
-				= Format.xmlElements('command', layout.commands);
+				= formatXmlElements('command', layout.commands);
 			}else//
 			if(layout.help && (!query || query.parameters.format !== 'clean')){
-				= Format.xmlElement('help', { src : layout.help });
+				= formatXmlElement('help', { src : layout.help });
 			}
 			if(layout.suffix){
 				= internOutputValue('suffix', layout.suffix);
@@ -1268,9 +1275,9 @@ function makeSelectViewReply(context, layout){
 
 	var xml = '';
 	$output(xml){
-		%><<%= element; %><%= Format.xmlAttributes(attributes); %>><%
+		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
 			if(query){
-				= Format.xmlElement('client', context.share.clientElementProperties(context));
+				= formatXmlElement('client', context.share.clientElementProperties(context));
 				if(context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
@@ -1280,22 +1287,22 @@ function makeSelectViewReply(context, layout){
 				}
 			}
 			if(layout.value){
-				%><value><% = Format.xmlNodeValue(layout.value); %></value><%
+				%><value><% = formatXmlNodeValue(layout.value); %></value><%
 			}
 			if(layout.prefix){
 				= internOutputValue('prefix', layout.prefix);
 			}
 			if(filters && filters.fields){
-				= Format.xmlElement('prefix', new FiltersFormLayout(filters));
+				= formatXmlElement('prefix', new FiltersFormLayout(filters));
 			}
 			for(var item of layout.options){
 				= internOutputValue('option', item);
 			}
 			if(layout.commands){
-				= Format.xmlElements('command', layout.commands);
+				= formatXmlElements('command', layout.commands);
 			}else//
 			if(layout.help && (!query || query.parameters.format !== 'clean')){
-				= Format.xmlElement('help', { src : layout.help });
+				= formatXmlElement('help', { src : layout.help });
 			}
 			if(layout.suffix){
 				= internOutputValue('suffix', layout.suffix);

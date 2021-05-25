@@ -12,7 +12,7 @@ const NdmcWebShare = module.exports = ae3.Class.create(
 			value : 'NDMC (Network Device Management Client)'
 		},
 		authenticationProvider : {
-			value : NDSS
+			value : null
 		},
 		index : {
 			get : function(){
@@ -21,13 +21,13 @@ const NdmcWebShare = module.exports = ae3.Class.create(
 		},
 		onDrill : {
 			value : function(context){
-				Object.defineProperty(context, 'ndss', this.ndssPropertyDescriptor);
+				Object.defineProperty(context, 'ndmc', this.ndssPropertyDescriptor);
 				return this.index;
 			}
 		},
 		onHandle : {
 			value : function(context){
-				Object.defineProperty(context, 'ndss', this.ndssPropertyDescriptor);
+				Object.defineProperty(context, 'ndmc', this.ndssPropertyDescriptor);
 				return this.index.handle(context);
 			}
 		}

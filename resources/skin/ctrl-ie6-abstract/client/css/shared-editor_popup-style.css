@@ -3,9 +3,6 @@ BODY {
 	padding: 4px;
 	background-color: buttonface;
 
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing:border-box;
 	box-sizing: border-box;
 }
 
@@ -14,9 +11,6 @@ LEGEND,TD,DIV {
 	font-size: 8pt;
 	color: buttontext;
 
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing:border-box;
 	box-sizing: border-box;
 }
 
@@ -29,9 +23,6 @@ BUTTON {
 	border-width: 1px;
 	color: buttontext;
 
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing:border-box;
 	box-sizing: border-box;
 }
 
@@ -52,8 +43,5 @@ INPUT,SELECT {
 	border-right-color: buttonhighlight;
 	border-bottom-color: buttonhighlight;
 
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing:border-box;
 	box-sizing: border-box;
 }

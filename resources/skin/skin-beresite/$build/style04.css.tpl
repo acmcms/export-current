@@ -47,7 +47,6 @@
 		margin: -1em 4% 1em -4%;
 		max-width: 66%;
 		border-radius: 1px;
-		-moz-border-radius: 1px;
 	}
 	.document_body :first-letter, .document_body:first-letter {
 		font-size: 119%;

@@ -3,10 +3,7 @@ popHint{
 }
 .popHint-container{
 	border-radius: 2px;
-	-moz-border-radius: 2px;
 	box-shadow: 2px 2px 5px #777;
-	-moz-box-shadow: 2px 2px 5px #777;
-	-webkit-box-shadow: 2px 2px 5px #777;
 	
 	border: 1px solid black;
 	padding: 4px;

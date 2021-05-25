@@ -7,7 +7,7 @@ import java.net.SocketAddress;
 
 
 
-module.exports = Object.create(Object.prototype, {
+const Net = module.exports = Object.create(Object.prototype, {
 	/***************************************************************************
 	 * CONSTANTS
 	 */
@@ -128,7 +128,7 @@ module.exports = Object.create(Object.prototype, {
 				return InetAddress.loopbackAddress;
 			} 
 			if ('string' === typeof addr) {
-				return this.dns.resolveOne(addr);
+				return Net.dns.resolveOne(addr);
 			}
 			{
 				/**
@@ -190,7 +190,7 @@ module.exports = Object.create(Object.prototype, {
 					throw ("Spec port is invalid: " + spec);
 				}
 				
-				var addr = this.dns.resolveAll(spec.substring(0, pos));
+				var addr = Net.dns.resolveAll(spec.substring(0, pos));
 				
 				return addr.map(function(addr){
 					return new InetSocketAddress(addr, port);
@@ -231,7 +231,7 @@ module.exports = Object.create(Object.prototype, {
 					
 					var addr;
 					try{
-						addr = this.dns.resolveAll(spec);
+						addr = Net.dns.resolveAll(spec);
 					}catch(e){ 
 						return result;
 					}
@@ -253,7 +253,7 @@ module.exports = Object.create(Object.prototype, {
 					t = this.socketAddressArray(spec);
 					t && t.forEach(result.push, result);
 					return result;
-				}).bind(this), []);
+				}).bind(Net), []);
 			}
 			throw "Unsupported socket address spec: " + Format.jsDescribe(spec);
 		}

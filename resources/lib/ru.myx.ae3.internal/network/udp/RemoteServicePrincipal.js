@@ -1,18 +1,23 @@
 const ae3 = require('ae3');
 
+const formatBinaryAsHex = Format.binaryAsHex;
+
+
 const asyncTaskOnReceive = function(task, message){
 	task.onReceive(message) === true || this.serialTxqCache(task.serial);
 };
 
-const UdpServiceHelper = require("java.class/ru.myx.ae3.internal.net.UdpServiceHelper");
-const Puncher = require('./Puncher');
+const Principal = require('./Principal');
+const principalOnReceive = Principal.prototype.onReceive;
+const principalUpdateSecret = Principal.prototype.updateSecret;
 
+const UdpServiceHelper = require("java.class/ru.myx.ae3.internal.net.UdpServiceHelper");
 
 const RemoteServicePrincipal = module.exports = ae3.Class.create(
 	/* name */
 	"RemoteServicePrincipal",
 	/* inherit */
-	require('./Principal'),
+	Principal,
 	/* constructor */
 	function(key, dst, secret, serial){
 		this.Principal(key, dst, secret, serial);
@@ -60,15 +65,25 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 		 */
 		keyHex : {
 			execute : "once", get : function(){
-				return Format.binaryAsHex(this.key);
+				return formatBinaryAsHex(this.key);
+			}
+		},
+		/** 
+		 * for toString only
+		 */
+		keyShortString : {
+			execute : "once", get : function(){
+				return "[RemoteServicePrincipal " + this.keyHex.substr(0, 8) + "... ";
 			}
 		},
 		checkRxqSerial : {
+			/** function get(serial) **/
 			execute : "once", get : function(){
 				return this.serialRxqCacheWindow.readCheck.bind(this.serialRxqCacheWindow);
 			}
 		},
 		checkRxrSerial : {
+			/** function get(serial) **/
 			execute : "once", get : function(){
 				return this.serialTxqCacheWindow.readCheck.bind(this.serialTxqCacheWindow);
 			}
@@ -77,8 +92,9 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 		 * register pending outgoing request task, see Principal.
 		 */
 		serialTxqQueue : {
-			value : function(serial, task){
-				this.serialTxqQueueWindow.put(serial, task);
+			/** function put(serial, task) **/
+			execute : "once", get : function(){
+				return this.serialTxqQueueWindow.put.bind(this.serialTxqQueueWindow);
 			}
 		},
 		/**
@@ -110,7 +126,10 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 		},
 		start : {
 			value : ae3.Concurrent.wrapSync(function(){
-				this.puncher || (this.puncher = new Puncher(this));
+				if(!this.puncher){
+					const Puncher = require('./Puncher');
+					this.puncher = new Puncher(this);
+				}
 			})
 		},
 		destroy : {
@@ -139,22 +158,16 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 			}
 		},
 		onReceive : {
-			value : function(message, address, serial){
-				// console.log('>>> >>> %s: onReceive: %s, address: %s, serial: %s', this, message, address, serial);
-				const task = message.isReply && this.serialTxqQueueWindow.readCheck(serial);
-				if(task){
-					// console.log('>>> >>> %s: onReceive, task: %s, address: %s, serial: %s, task: %s', this, message, address, serial, task);
-					setTimeout(asyncTaskOnReceive.bind(this, task, message), 0);
-					return;
-				}
+			value : function(message, address, serial /* locals: */, task){
 				if(message.isUHP){
 					if(message.isUHP_PUNCH){
+						console.log('>>>>>> %s: onReceive, UHP punch: %s, address: %s, serial: %s', this, message, address, serial);
 						this.serialRxqCacheWindow.put(serial, true);
 						if(this.sTx < serial && (serial > 16000000) === (this.sTx > 16000000)){
 							this.sTx = serial;
 						}
 						return this.sendSingle(
-								new this.iface.MsgSeen(
+								new this.MsgSeen(
 										serial,
 										address.port, 
 										message.isHELO 
@@ -165,12 +178,45 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 						);
 					}
 
+					console.log('>>>>>> %s: onReceive, UHP other: %s, address: %s, serial: %s, puncher: %s', this, message, address, serial, !!this.puncher);
 					return this.puncher && this.puncher.onUHP(message, address, serial);
 				}
 				
-				// no repetitions for requests
-				message.isRequest && this.serialRxqCacheWindow.put(serial, true);
-				return this.Principal.prototype.onReceive.call(this, message, address, serial);
+				if(message.isReply){
+					/** check task that awaits **/
+					if( (task = this.serialTxqQueueWindow.readCheck(serial)) ){
+						console.log('>>>>>> %s: onReceive, task: %s, address: %s, serial: %s, task: %s', this, message, address, serial, task);
+						setTimeout(asyncTaskOnReceive.bind(this, task, message), 0);
+						return;
+					}
+					return;
+				}
+				
+				if(message.isRequest){
+					console.log('>>>>>> %s: onReceive, request: %s, address: %s, serial: %s', this, message, address, serial);
+					/** no repetitions for requests **/
+					this.serialRxqCacheWindow.put(serial, true);
+					return principalOnReceive.call(this, message, address, serial);
+				}
+
+				console.log('>>>>>> %s: onReceive, skip: %s, address: %s, serial: %s', this, message, address, serial);
+				return;
+			}
+		},
+		updateSecret : {
+			value : function(secret, serial){
+				if(this.sRx < serial && this.sTx < serial && this.secret == secret){
+					return principalUpdateSecret.call(this, secret, serial);
+				}
+				try{
+					return principalUpdateSecret.call(this, secret, serial);
+				}finally{
+					/** caches are not actual now **/
+					this.serialRxqCacheWindow.clear();
+					this.serialTxqCacheWindow.clear();
+					/** clearing the queue and loosing some tasks - TODO:FIXME: come up with something less painful, please **/
+					this.serialTxqQueueWindow.clear();
+				}
 			}
 		},
 		UHP_SEEN_HELO_MODE : {
@@ -186,6 +232,8 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 		},
 		toString : {
 			value : function(){
+				return [this.keyShortString, Format.jsObject(this.hostId || this.address), "]"].join("");
+				return this.keyShortString + Format.jsObject(this.hostId || this.address) + "]";
 				return "[RemoteServicePrincipal " + this.keyHex + ", " + Format.jsObject(this.hostId || this.address) + "]";
 			}
 		}

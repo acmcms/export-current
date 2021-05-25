@@ -45,7 +45,7 @@ function prepareHtmlTable(){
 
 
 Ae3WebShare.prototype = Object.create(require('ae3.web/Share').prototype, {
-	AcmWebShare : {
+	Ae3WebShare : {
 		value : Ae3WebShare
 	},
 	authenticationProvider : {

@@ -1,24 +1,30 @@
-function MessageReplyContinue(){
-	// this.MessageReply();
-	return this;
-}
+const ae3 = require('ae3');
 
-MessageReplyContinue.prototype = Object.create(require('./MessageReply').prototype, {
-	MessageReplyContinue : {
-		value : MessageReplyContinue
+const MessageReplyContinue = module.exports = ae3.Class.create(
+	/* name */
+	"MessageReplyContinue",
+	/* inherit */
+	require('./MessageReply'),
+	/* constructor */
+	function(){
+		// this.MessageReply();
+		return this;
 	},
-	isReplyContinue : {
-		value : true
-	},
-	toString : {
-		value : function(){
-			return "[MessageReplyContinue]";
+	/* instance */
+	{
+		isReplyContinue : {
+			value : true
+		},
+		isRequest : {
+			value : false
+		},
+		isReply : {
+			value : true
+		},
+		toString : {
+			value : function(){
+				return "[MessageReplyContinue]";
+			}
 		}
 	}
-});
-
-MessageReplyContinue.toString = function(){
-	return "MessageReplyContinue";
-};
-
-module.exports = MessageReplyContinue;
+);

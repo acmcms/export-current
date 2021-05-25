@@ -15,7 +15,7 @@ const Transfer = ae3.Transfer;
  * 
  * <ol>Local variables:
  * <li>pkt - packet</li>
- * <li>load</li>
+ * <li>load - payload</li>
  * <li>key</li>
  * <li>peer</li>
  * <li>crc</li>
@@ -27,7 +27,7 @@ const Transfer = ae3.Transfer;
  */
 
 
-const onReceiveBufferImpl = module.exports = function(b, d, q, pkt /* locals: */, load, key, peer, crc, m, l, ms, msg){
+const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt, load, key, peer, crc, m, l, ms, msg){
 	++ this.stRxLoops;
 	
 	for(;;){
@@ -47,7 +47,6 @@ const onReceiveBufferImpl = module.exports = function(b, d, q, pkt /* locals: */
 
 		m = this.commandByKey[b[0] & 0xFF];
 		if(!m){
-			// console.log('>>> >>> udp-read-skip: %s, %s', this, Format.jsDescribe(this.commandByKey));
 			console.log('>>>>>> udp-read-skip: %s, %s, code: %s%s', this, pkt, b[0], (b[0] > 32 && b[0] < 128 ? ', ascii: ' + String.fromCharCode(b[0]) : ''));
 			++ this.stRxSkip;
 			continue;
@@ -57,7 +56,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q, pkt /* locals: */
 
 		peer = this.resolvePeer(key);
 		if(false /* && !peer && this.resolveClientAsync */){
-			// console.log('>>>>>> udp-read-resolve-client: %s <- %s @ %s:%s', m.toString(), Format.jsObject(key), pkt.sourceAddress.address, pkt.sourceAddress.port);
+			// console.log('>>> >>> udp-read-resolve-client: %s <- %s @ %s:%s', m.toString(), Format.jsObject(key), pkt.sourceAddress.address, pkt.sourceAddress.port);
 			// continue;
 			
 			this.resolveClientAsync(key, m, pkt);

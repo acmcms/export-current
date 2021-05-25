@@ -37,10 +37,7 @@
 		border: 1px solid #3bb;
 		background-color: #fff;
 		border-radius: 5px;
-		-moz-border-radius: 5px;
 		box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-		-moz-box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-		-webkit-box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 	}
 	nav.navi_menu a.current {
 		display: block;
@@ -50,10 +47,7 @@
 		border: 1px solid #3bb;
 		background-color: #3bb;
 		border-radius: 5px;
-		-moz-border-radius: 5px;
 		box-shadow: inset 2px 2px 5px rgba(100%,100%,100%,0.4), 2px 2px 5px rgba(0,0,0,0.3);
-		-moz-box-shadow: inset 2px 2px 5px rgba(100%,100%,100%,0.4), 2px 2px 5px rgba(0,0,0,0.3);
-		-webkit-box-shadow: inset 2px 2px 5px rgba(100%,100%,100%,0.4), 2px 2px 5px rgba(0,0,0,0.3);
 	}
 	.document_body {
 		line-height: 1.5em;
@@ -64,12 +58,9 @@
 	.document_body img{
 		float: left;
 		border-radius: 1em;
-		-moz-border-radius: 1em;
 		border: 1px solid #aaa;
 		margin: -1em 4% 1em -4%;
 		box-shadow: inset 2px 2px 5px rgba(100%,100%,100%,0.5), 0.3em 0.3em 0.7em rgba(0,0,0,0.3);
-		-moz-box-shadow: inset 2px 2px 5px rgba(100%,100%,100%,0.5), 0.3em 0.3em 0.7em rgba(0,0,0,0.3);
-		-webkit-box-shadow: inset 2px 2px 5px rgba(100%,100%,100%,0.5), 0.3em 0.3em 0.7em rgba(0,0,0,0.3);
 		max-width: 66%;
 	}
 	header hr, footer hr {
@@ -90,7 +81,6 @@
 	.navi_td {
 		border-left: 1px solid #3bb;
 		border-radius: 5em;
-		-moz-border-radius: 5em;
 	}
 	nav.navi_menu {
 		display: block;

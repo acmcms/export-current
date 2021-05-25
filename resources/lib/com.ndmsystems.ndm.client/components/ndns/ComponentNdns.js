@@ -1,7 +1,7 @@
 const ae3 = require("ae3");
 
-const ComponentCloud = module.exports = ae3.Class.create(
-	"ComponentCloud",
+const ComponentNdns = module.exports = ae3.Class.create(
+	"ComponentNdns",
 	require("./../AbstractComponent"),
 	function(client){
 		this.AbstractComponent.call(this, client);
@@ -9,7 +9,7 @@ const ComponentCloud = module.exports = ae3.Class.create(
 	},
 	{
 		componentName : {
-			value : "cloud"
+			value : "ndns"
 		},
 		acceptXmlNotifications : {
 			value : ['ubA','ut1']
@@ -35,7 +35,7 @@ const ComponentCloud = module.exports = ae3.Class.create(
 	{
 		newInstance : {
 			value : function(client){
-				return new ComponentCloud(client);
+				return new ComponentNdns(client);
 			}
 		}
 	}

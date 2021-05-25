@@ -5,9 +5,6 @@
 	border-left: solid 1px buttonhighlight;
 	background-color: buttonface;
 	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-ms-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
 }
 
 .border TD {

@@ -83,7 +83,7 @@ function buildIndexMenuReply(context, client, admin){
 		$output(xml){
 			%><index<%= Format.xmlAttribute('title', this.pageTitle || this.title) %> layout="menu" zoom="document"><%
 				if(!client && auth && !this.authRequired){
-					= internMakeLoginOptions(query, this);
+					= internMakeLoginOptions(query, share, this);
 				}
 				= Format.xmlElement('client', share.clientElementProperties(context));
 				= indexOutAllXml(this, '', client, admin, 1);
@@ -354,7 +354,7 @@ function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, a
 }
 
 
-function internMakeLoginOptions(query, Index){
+function internMakeLoginOptions(query, share, Index){
 	var url = query.url;
 	var xml = '';
 	$output(xml){
@@ -371,7 +371,7 @@ function internMakeLoginOptions(query, Index){
 			= Format.xmlElement('command', {
 				icon : "accept",
 				title : "The certificate to be trusted for secure connection with this server",
-				key : "/resource/root-ca.crt"
+				key : (share.settings || {})["custom-root-ca-pki-location"] || "/resource/root-ca.crt"
 			});
 			= Format.xmlElement('command', {
 				key : "?login",

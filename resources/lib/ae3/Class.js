@@ -35,7 +35,10 @@ module.exports = {
 						d = Object.create(d);
 						d.get = function(){
 							const result = get.call(this);
-							this === p || Object.defineProperty(this, key, { value : result });
+							this === p || Object.defineProperty(this, key, Object.create(d, { 
+								value : result,
+								get : undefined 
+							}));
 							// console.log("createClass: instance >>>>>> once: " + name + ", " + key);
 							return result;
 						};
@@ -61,7 +64,10 @@ module.exports = {
 						d = Object.create(d);
 						d.get = function(){
 							const result = get.call(this);
-							this === constructor && Object.defineProperty(this, key, { value : result });
+							this === constructor && Object.defineProperty(this, key, Object.create(d, { 
+								value : result,
+								get : undefined 
+							}));
 							// console.log("createClass: statics >>>>>> once: " + name + ", " + key);
 							return result;
 						};
