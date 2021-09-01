@@ -4,6 +4,13 @@ const ae3 = require('ae3');
  * https://ndss.ndmsystems.com/documentation#dialback-callback
  */
 
+const HTTP_CONFIGURATION = {
+	factory : 'HTTP',
+	ignoreTargetPort : true,
+	reverseProxied : true,
+	ifModifiedSince : "before"
+};
+
 const CallbackDialback = module.exports = ae3.Class.create(
 	"CallbackDialback",
 	require("./../AbstractCallback"),
@@ -62,11 +69,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 							this.socket, //
 							this.requestCallback.bind(this), //
 							(this.tunnelType % 100) === 43 || (this.tunnelType % 100) === 83, //
-							{
-								factory : 'HTTP',
-								ignoreTargetPort : true,
-								reverseProxied : true
-							} //
+							HTTP_CONFIGURATION //
 					);
 					console.log("ndm.client:callback:dialback: http server connected, %s", this.server);
 					return;

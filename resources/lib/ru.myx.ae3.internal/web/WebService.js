@@ -41,7 +41,8 @@ function startWeb(){
 				ignoreTargetPort : false,
 				ignoreGzip : false,
 				ignoreKeepAlive : false,
-				reverseProxied : false
+				reverseProxied : false,
+				ifModifiedSince : "exact"
 			} //
 		], //
 		"ACCEPT",
@@ -71,7 +72,8 @@ function startWeb(){
 					ignoreTargetPort : true,
 					ignoreGzip : false,
 					ignoreKeepAlive : false,
-					reverseProxied : true
+					reverseProxied : true,
+					ifModifiedSince : "before"
 				} //
 			], //
 			"ACCEPT",
@@ -108,7 +110,8 @@ function startWeb(){
 				ignoreTargetPort : false,
 				ignoreGzip : false,
 				ignoreKeepAlive : false,
-				reverseProxied : false
+				reverseProxied : false,
+				ifModifiedSince : "before"
 			}, //
 			{ //
 				factory : 'TLS',
