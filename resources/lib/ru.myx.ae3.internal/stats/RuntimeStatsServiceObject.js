@@ -67,15 +67,32 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 				var folder, group, groupKey, groupValues, cookie;
 				try{
 					folder = StatsObject.storeCreateFolder(this.vfs, date);
-					folder.setContentPublicTreeValue('s', (this.started / 1000)|0);
-					folder.setContentPublicTreeValue('u', ((this.committed - this.started) / 1000)|0);
+					const content = {
+						"s" : {
+							"field" : false,
+							"index" : false,
+							"value" : (this.started / 1000)|0
+						},
+						"u" : {
+							"field" : false,
+							"index" : false,
+							"value" : ((this.committed - this.started) / 1000)|0
+						}
+					};
+					// folder.setContentPublicTreeValue('s', (this.started / 1000)|0);
+					// folder.setContentPublicTreeValue('u', ((this.committed - this.started) / 1000)|0);
 					for(group of groups){
 						groupKey = group.key;
 						groupValues = PREV[groupKey] = group.readValues(PREV[groupKey] || (PREV[groupKey] = {}), 'log').values;
 						cookie = JSON.stringify(groupValues);
-						folder.setContentPublicTreeValue(groupKey, cookie);
+						content[groupKey] = {
+							"field" : false,
+							"index" : false,
+							"value" : cookie
+						};
+						// folder.setContentPublicTreeValue(groupKey, cookie);
 					}
-					
+					folder.setContent(content);
 					(txn.commit(), txn = null);
 				}finally{
 					txn && txn.cancel();

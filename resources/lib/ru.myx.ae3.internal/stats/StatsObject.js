@@ -159,10 +159,16 @@ StatsObject.storeMap = function storeMap(vfsStats, date, map){
 	const key = dateString + '-' + next(dateString);
 	
 	const folder = vfsStats.relativeFolderEnsure(key);
-	
+	const content = {};
 	for keys(key in map){
-		folder.setContentPublicTreeValue(key, map[key]);
+		content[key] = {
+			"field" : false,
+			"index" : false,
+			"value" : map[key]
+		};
+		//folder.setContentPublicTreeValue(key, map[key]);
 	}
+	folder.setContent(content);
 	
 	return new StatsObject(key, date, map);
 };
