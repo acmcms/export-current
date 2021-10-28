@@ -196,7 +196,7 @@ function internConnectThenRequestCallbackMessage(parameters){
 	}
 
 	ae3.net.tcp.connect(hostname, port, internRequestCallbackMessage.bind(this, parameters, hostname, port, ssl), {
-		timeout : parameters.connectTimeout || 5000,
+		connectTimeout : parameters.connectTimeout || 5000,
 		reuseTimeout : 5000,
 		reuseBuffer : 32,
 		optionFastRead : parameters.optionFastRead || false,

@@ -124,7 +124,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 			value : function(component){
 				console.log(">>>>>> ndm.client:callback:cloud/dialback: connecting, %s", Format.jsObject(this));
 				ae3.net.tcp.connect(this.targetAddr, this.targetPort, this.connectCallback.bind(this), {
-					timeout : 5000,
+					connectTimeout : 5000,
 					reuseTimeout : 5000,
 					reuseBuffer : 32,
 					optionFastRead : true,
