@@ -1,6 +1,5 @@
 const vfs = require("ae3/vfs");
 const Settings = require("ae3.util/Settings");
-const REGISTRY_PATH = "settings/manual/";
 
 const ManualItemDoc = require('./ManualItemDoc');
 const ManualItemGroup = require('./ManualItemGroup');
@@ -10,7 +9,7 @@ const ManualItemLink = require('./ManualItemLink');
 const Manual = {
 		
 	getTree : Settings.SettingsBuilder.builderCachedLazy()//
-		.setInputFolderPath(REGISTRY_PATH)//
+		.setInputFolderPath("settings/manual")//
 		.setDescriptorReducer(function(settings, description){
 			if(description.type !== "ae3.Manual"){
 				return settings;
@@ -78,7 +77,7 @@ const Manual = {
 		}
 		const ManualGroup = require('./ManualGroup');
 
-		const array = vfs.UNION.relativeFolder("settings/manual/").getContentCollection(null).filter(vfs.isContainerNonEmpty).map(vfs.mapEntryToKey);
+		const array = vfs.UNION.relativeFolder("settings/manual").getContentCollection(null).filter(vfs.isContainerNonEmpty).map(vfs.mapEntryToKey);
 		var key;
 		for(key of array){
 			key[0] === '.' || key === 'CVS' || GROUPS[key] || (GROUPS[key] = new ManualGroup(key, "settings/manual/" + key));

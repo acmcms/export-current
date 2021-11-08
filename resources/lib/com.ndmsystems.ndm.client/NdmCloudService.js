@@ -8,12 +8,6 @@ const Client = require('./Client');
  */
 let stopped = true;
 
-
-/**
- * Client descriptors location
- */
-const SETTINGS_PATH = "settings/ndm.ndss-client";
-
 /**
  * Client persistent state data location
  */
@@ -41,17 +35,17 @@ const f = {
 		});
 
 		const clients = ae3.Util.Settings.SettingsBuilder.builderSimple()//
-			.setInputFolderPath(SETTINGS_PATH)//
+			.setInputFolderPath("settings/ndm.ndss-client")//
 			.setDescriptorReducer(function(settings, description){
 				if (description.type !== "ndm.client/Connection") {
 					return settings;
 				}
-				var name = description.name;
+				const name = description.name;
 				if(!name){
 					throw "Client 'name' is expected!";
 				}
-				var service = description.service;
-				var file = clientsFolder.relativeFolder(name);
+				const service = description.service;
+				const file = clientsFolder.relativeFolder(name);
 				settings[name] = new Client(file, service.host, service.port, service.key, service.pass);
 				return settings;
 			})//
