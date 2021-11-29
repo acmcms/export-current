@@ -17,13 +17,22 @@ const ComponentNdns = module.exports = ae3.Class.create(
 		
 		requestXmlNotifications : {
 			get : function(){
-				if(this.lastUpdated && this.lastUpdated.getDate() + 4 * 60 * 60 * 1000 > Date.now()){
+				if(this.lastUpdated && this.lastUpdated.getDate() + 2 * 60 * 60 * 1000 > Date.now()){
 					return null;
 				}
 				return this.acceptXmlNotifications;
 			}
 		},
 		
+		onXmlNotification : {
+			value : function(id, data){
+				switch(id){
+				case "ub1":
+					return this.client.onUpdateBookingXns(id, data);
+				}
+				return;
+			}
+		},
 		
 		lastUpdated : {
 			/**

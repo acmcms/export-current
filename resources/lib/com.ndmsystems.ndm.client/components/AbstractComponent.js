@@ -42,20 +42,6 @@ const AbstractComponent = module.exports = ae3.Class.create(
 			
 		},
 		
-		checkAcceptXmlNotificationMap : {
-			execute : "once", get : function(){
-				return (this.acceptXmlNotifications || []).reduce(function(acc, x){
-					acc[x] = true;
-					return acc;
-				}, {});
-			}
-		},
-		checkAcceptXmlNotification : {
-			value : function(id){
-				return this.checkAcceptXmlNotificationMap[id];
-			}
-		},
-
 		client : {
 			/** 
 			 * property set by constructor

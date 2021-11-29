@@ -4,6 +4,8 @@ const XmlMultipleRequest = require("ae3.web/XmlMultipleRequest");
 const FutureSimpleObject = require('java.class/ru.myx.ae3.common.FutureSimpleUnknown');
 const Xml = require("ae3.util/Xml");
 
+const http = require("http");
+
 const ClientRequest = module.exports = ae3.Class.create(
 	"ClientRequest",
 	XmlMultipleRequest,
@@ -60,8 +62,8 @@ function internClientUpgradeSuccess(map){
  * @returns
  */
 function internClientDoRequest(future, items, then){
-	var client = this.client;
-	var auth = this.client.auth;
+	const client = this.client;
+	const auth = client.auth;
 
 	if(!items.upgradeEpoch){
 		if(client.licenseNumber && !client.serviceKey && !auth.get.__auth_type){
@@ -101,23 +103,27 @@ function internClientDoRequest(future, items, then){
 		 * Will do simple request, only for one item
 		 */
 		for(var request of items){
-			var get = Object.create(request.get);
-			var post = auth.post;
-			for keys(var key in auth.get){
+			const get = Object.create(request.get);
+			for(var key in auth.get){
 				get[key] = auth.get[key];
 			}
-			for keys(var key in auth.post){
+			const post = auth.post;
+			for(var key in auth.post){
 				post || (post = {});
 				post[key] = auth.post[key];
 			}
-			var url = urlNdss + request.path + "?" + Format.queryStringParameters(get);
+			const url = {
+				host : client.ndssHost,
+				port : client.ndssPort,
+				path : request.path + "?" + Format.queryStringParameters(get),
+				headers : auth.headers,
+			};
 			
-			var callback = internCallbackHttpSimple.bind(this, future, request, then);
-			var http = require("http");
+			const callback = internCallbackHttpSimple.bind(this, future, request, then);
 
-			console.log("ndmc %s: single request: %s", this, url);
+			console.log("ndmc %s: single request: //%s:%s%s", this, url.host, url.port, url.path);
 			
-			post 
+			Object.keys(post).length 
 				? http.post(url, post, callback)
 				: http.get(url, callback);
 		}
@@ -137,16 +143,16 @@ function internClientDoRequest(future, items, then){
 			console.log("ndmc %s: multiple request item['%s']: %s", this, item.name, item.path + (item.get ? '?' + Format.queryStringParameters(item.get) : ''));
 		}
 
-		var xml = this.makeRequestXmlBody.call({ items : items }, auth.post);
+		const xml = this.makeRequestXmlBody.call({ items : items }, auth.post);
+		const headers = Object.create(auth.headers || Object.prototype);
+		headers["Content-Type"] = "text/xml; charset=utf-8";
 		
-		require("http").request({
+		http.request({
 			host : client.ndssHost,
 			port : client.ndssPort,
 			method : 'POST',
 			path : path,
-			headers : {
-				"Content-Type" : "text/xml; charset=utf-8"
-			},
+			headers : headers,
 			body : xml
 		}, callback);
 		return;

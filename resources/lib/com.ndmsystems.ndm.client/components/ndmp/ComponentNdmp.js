@@ -13,7 +13,7 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 			value : "ndmp"
 		},
 		acceptXmlNotifications : {
-			value : ['ut1','cc1']
+			value : ['ut1','cc1','um1']
 		},
 		
 		requestXmlNotifications : {

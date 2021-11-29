@@ -24,6 +24,15 @@ const ComponentCloud = module.exports = ae3.Class.create(
 			}
 		},
 		
+		onXmlNotification : {
+			value : function(id, data){
+				switch(id){
+				case "ut1":
+					return this.client.onUpdateTokenXns(id, data);
+				}
+				return;
+			}
+		},
 		
 		lastUpdated : {
 			/**
