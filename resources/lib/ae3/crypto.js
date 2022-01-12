@@ -11,6 +11,16 @@ module.exports = Object.create(Object.prototype, {
 		value : require("java.class/ru.myx.crypto.SignatureECDSA")
 	},
 	
+	"createDigestMd5" : {
+		value : CryptoApiHelper.createDigestMd5
+	},
+	"createDigestSha256" : {
+		value : CryptoApiHelper.createDigestSha256
+	},
+	"createDigestWhirlpool" : {
+		value : CryptoApiHelper.createDigestWhirlpool
+	},
+	
 	"signStringUtfSha256WithEcdsaAsBase58" : {
 		value : CryptoApiHelper.signStringUtfSha256WithEcdsaAsBase58
 	},
