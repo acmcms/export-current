@@ -18,15 +18,14 @@ const UdpService = module.exports = ae3.Class.create(
 	undefined,
 	/* constructor */
 	function UdpService(port){
-		
-		import ru.myx.ae3.know.WhirlpoolDigest;
-	
 		/**
 		 * to be stopped on 'destroy'
 		 */
 		this.receiveCallback = Concurrent.wrapBuffered(
 			require("ru.myx.ae3.internal/network/udp/BufferedRxParser").bind(
-				this, new ArrayBuffer(1500), new WhirlpoolDigest()
+				this, //
+				new ArrayBuffer(1500), //
+				ae3.crypto.createDigestWhirlpool() //
 			), {
 				buffer : 256,
 				overflow : "drop",
