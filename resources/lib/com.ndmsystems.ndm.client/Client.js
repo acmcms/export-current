@@ -79,7 +79,7 @@ const Client = module.exports = ae3.Class.create(
 		this.serviceKey		= serviceKey || folder.getContentAsText("serviceKey", '');
 		this.ddnsHost		= ddnsHost || folder.getContentAsText("ddnsHost", '');
 		
-		if(!this.validateTagFormat(this.licenseNumber)){
+		if(!this.validateLicenseFormat(this.licenseNumber)){
 			throw "Client['" + this.clientId + "'] Invalid license number: " + this.licenseNumber;
 		}
 		
@@ -93,7 +93,7 @@ const Client = module.exports = ae3.Class.create(
 		UdpCloudClient : {
 			value : require('./UdpCloudClient')
 		},
-		validateTagFormat : {
+		validateLicenseFormat : {
 			value : NATIVE_IMPL.validateLicenseFormat || function(licenseNumber){
 				return licenseNumber.replace(DIGITS_ONLY_REGEXP, "").length === 15;
 			}
@@ -270,7 +270,7 @@ const Client = module.exports = ae3.Class.create(
 		}
 	},
 	{
-		validateTagFormat : {
+		validateLicenseFormat : {
 			value : function(licenseNumber){
 				return licenseNumber.replace(DIGITS_ONLY_REGEXP, "").length === 15;
 			}
