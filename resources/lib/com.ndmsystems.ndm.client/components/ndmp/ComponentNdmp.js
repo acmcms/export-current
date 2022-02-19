@@ -1,5 +1,6 @@
 const ae3 = require("ae3");
 const Secp256r1 = ae3.crypto.EllipticCurveSecp256r1;
+const transferCreateCopier = ae3.Transfer.createCopier;
 
 const ComponentNdmp = module.exports = ae3.Class.create(
 	"ComponentNdmp",
@@ -196,25 +197,25 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 	
 				/**
 				// this.client.vfs.setContentPublicTreeBinary("ndmpKeyPrivate", //
-				//		ae3.Transfer.createCopier(Secp256r1.formatPrivateKeyAsBytesPKCS8(pair.getPrivate())));
+				//		transferCreateCopier(Secp256r1.formatPrivateKeyAsBytesPKCS8(pair.getPrivate())));
 				// this.client.vfs.setContentPublicTreeBinary("ndmpKeyPublic", //
-				//		ae3.Transfer.createCopier(Secp256r1.formatPublicKeyAsBytesCompressed(devicePublic)));
+				//		transferCreateCopier(Secp256r1.formatPublicKeyAsBytesCompressed(devicePublic)));
 				// this.client.vfs.setContentPublicTreeBinary("ndmpSvcPublic", //
-				//		ae3.Transfer.createCopier(Secp256r1.formatPublicKeyAsBytesCompressed(servicePublic)));
+				//		transferCreateCopier(Secp256r1.formatPublicKeyAsBytesCompressed(servicePublic)));
 				**/
 
 				this.client.vfs.setContent({
 					"ndmpKeyPrivate" : {
 						index : false,
-						value : ae3.Transfer.createCopier(Secp256r1.formatPrivateKeyAsBytesPKCS8(pair.getPrivate()))
+						value : transferCreateCopier(Secp256r1.formatPrivateKeyAsBytesPKCS8(pair.getPrivate()))
 					},
 					"ndmpKeyPublic" : {
 						index : true,
-						value : ae3.Transfer.createCopier(Secp256r1.formatPublicKeyAsBytesCompressed(devicePublic))
+						value : transferCreateCopier(Secp256r1.formatPublicKeyAsBytesCompressed(devicePublic))
 					},
 					"ndmpSvcPublic" : {
 						index : true,
-						value : ae3.Transfer.createCopier(Secp256r1.formatPublicKeyAsBytesCompressed(servicePublic))
+						value : transferCreateCopier(Secp256r1.formatPublicKeyAsBytesCompressed(servicePublic))
 					}
 				});
 
