@@ -20,7 +20,7 @@ function parseDescriptor(file/* , i, a */) {
 	const key = file.key;
 	if(key.endsWith(".json")){
 		const description = JSON.parse(file.textContent);
-		description.name || (description.name = key.substr(0, -5));
+		description.name ||= key.substr(0, -5);
 		return description;
 	}
 	throw new Error("Unsupported file type: " + key);
@@ -100,7 +100,7 @@ module.exports = Object.create(Object.prototype, {
 				return {};
 			}
 			
-			var cache = callback.cache || (callback.cache = {});
+			var cache = callback.cache ||= {};
 			var cached = cache[cacheKey];
 			if(cached && callback === cached.callback) {
 				const age = Date.now() - cached.timestamp;

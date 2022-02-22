@@ -109,7 +109,7 @@ function internClientDoRequest(future, items, then){
 			}
 			const post = auth.post;
 			for(var key in auth.post){
-				post || (post = {});
+				post ||= {};
 				post[key] = auth.post[key];
 			}
 			const url = {

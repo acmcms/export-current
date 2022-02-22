@@ -64,7 +64,7 @@ const Client = module.exports = ae3.Class.create(
 				value : Object.values(this.components).reduce(function(previousValue, currentValue){
 					if(currentValue){
 						for(let xns of (currentValue.acceptXmlNotifications || [])){
-							(previousValue[xns] || (previousValue[xns] = [])).push(currentValue);
+							(previousValue[xns] ||= []).push(currentValue);
 						}
 					}
 					return previousValue;

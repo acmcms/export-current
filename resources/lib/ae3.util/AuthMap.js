@@ -143,9 +143,7 @@ AuthMap.prototype = Object.create(Auth.prototype, {
 				passwd = this.map.passwd[login] = {
 					user : username
 				};
-				var logins = account.logins;
-				logins || (logins = account.logins = {});
-				logins[login] = true;
+				(account.logins ||= {})[login] = true;
 			}
 			
 			passwd.hash = passwordHash;
@@ -351,8 +349,8 @@ AuthMap.prototype = Object.create(Auth.prototype, {
 			if(!group){
 				throw "Group '"+groupname+"' is unknown!";
 			}
-			(account.membership || (account.membership = {}))[groupname] = true;
-			(group.members || (group.members = {}))[username] = true;
+			(account.membership ||= {})[groupname] = true;
+			(group.members ||= {})[username] = true;
 			return true;
 		}
 	},

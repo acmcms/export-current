@@ -19,9 +19,9 @@ const getSettings = require('ae3.util/Settings').SettingsBuilder.builderCachedLa
 		
 		const name = description.name;
 
-		settings.others || (settings.others = {});
-		settings.shares || (settings.shares = Object.create(settings.others));
-		settings.prefix || (settings.prefix = {});
+		settings.others ||= {};
+		settings.shares ||= Object.create(settings.others);
+		settings.prefix ||= {};
 
 		'string' === typeof reference && (reference = { type : 'require', reference : reference });
 

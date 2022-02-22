@@ -32,7 +32,7 @@ const commands = {
 			const reference = description.reference;
 			// actually name is mandatory
 			if(name){
-				const service = settings[name] || (settings[name] = { 
+				const service = settings[name] ||= { 
 					name : name,
 				});
 				service.reference = reference;

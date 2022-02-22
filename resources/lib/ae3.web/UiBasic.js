@@ -57,7 +57,7 @@ const UiBasic = module.exports = require('ae3').Class.create(
 						ip : query.sourceAddress,
 					});
 				}
-				query || (query = client.query);
+				query ||= client.query;
 				admin === undefined && (admin = client.admin);
 				var command, icon;
 				if(client.userId){

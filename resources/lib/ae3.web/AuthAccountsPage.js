@@ -175,7 +175,7 @@ Object.defineProperties(AuthAccountsPage, {
 		value : function createAuthAccounts(props, auth){
 			const Index = new AuthAccountsPage(props);
 			
-			auth || (auth = props.auth);
+			auth ||= props.auth;
 			auth && (Index.auth = auth);
 
 			return Index;

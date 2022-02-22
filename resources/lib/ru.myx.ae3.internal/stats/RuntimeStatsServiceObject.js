@@ -83,7 +83,7 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 					// folder.setContentPublicTreeValue('u', ((this.committed - this.started) / 1000)|0);
 					for(group of groups){
 						groupKey = group.key;
-						groupValues = PREV[groupKey] = group.readValues(PREV[groupKey] || (PREV[groupKey] = {}), 'log').values;
+						groupValues = PREV[groupKey] = group.readValues(PREV[groupKey] ||= {}, 'log').values;
 						cookie = JSON.stringify(groupValues);
 						content[groupKey] = {
 							"field" : false,

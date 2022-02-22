@@ -25,7 +25,7 @@ const f = {
 		return result;
 	},
 	reduceClientDescriptorsToMap : function(targetMap, file) {
-		targetMap[file.key] || (targetMap[file.key] = new Client(file));
+		targetMap[file.key] ||= new Client(file);
 		return targetMap;
 	},
 	checkClients : function(){

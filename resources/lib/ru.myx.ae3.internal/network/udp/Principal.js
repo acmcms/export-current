@@ -175,7 +175,7 @@ const Principal = module.exports = ae3.Class.create(
 				if(c > 255){
 					throw new Error("'code' must be overriden with integer value in [0..255] range: " + messageClass + ", code: " + c);
 				}
-				(this.handlers[c] || (this.handlers[c] = [])).push(
+				(this.handlers[c] ||= []).push(
 					thisArg
 						? Function.prototype.call.bind(messageCallback, thisArg || null)
 						: messageCallback
@@ -235,7 +235,7 @@ const Principal = module.exports = ae3.Class.create(
 			 * address
 			 */
 			value : UdpServiceHelper.principalSendImpl || (function(b, d, m, a /* locals: */, key, s, len, pkt, k, v){
-				if( ! (a || (a = this.dst)) ){
+				if( ! (a ||= this.dst) ){
 					if(false !== m.log){
 						console.log('>>>>>> %s: udp-send-skip, no address, message: %s', this, m);
 					}
@@ -246,7 +246,7 @@ const Principal = module.exports = ae3.Class.create(
 					return 0;
 				}
 				
-				s = m.serial || (m.serial = (this.sTx = 1 + Math.max(this.sTx, this.sRx)));
+				s = m.serial ||= (this.sTx = 1 + Math.max(this.sTx, this.sRx));
 				
 				b[16 + 12 + 1] = (s >> 16) & 0xFF;
 				b[16 + 12 + 2] = (s >> 8) & 0xFF;

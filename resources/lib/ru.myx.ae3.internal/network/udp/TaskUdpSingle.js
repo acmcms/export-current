@@ -185,7 +185,7 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 						return callback.call(this.parent, this, null);
 					}
 				}
-				this.result || (this.result = result);
+				this.result ||= result;
 				this.logDetail("task-finished", this.peerName, "Single task finished");
 				return false;
 			}
@@ -221,7 +221,7 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 				switch(this.onTaskProgress(message)){
 				case true:
 					// reply received means that send really succeed
-					1 === this.left || (this.left = 1);
+					1 === this.left ||= 1;
 					return true;
 				case false:
 					delete this.left;

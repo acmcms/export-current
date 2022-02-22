@@ -59,7 +59,7 @@ const StatsService = Object.create(Object.prototype, {
 					return settings;
 				}
 	
-				const groups = settings.groups || (settings.groups = {});
+				const groups = settings.groups ||= {};
 				
 				var group, extra;
 				var groupName = description.group;
@@ -67,7 +67,7 @@ const StatsService = Object.create(Object.prototype, {
 					group = groups[groupName];
 					if(group){
 						extra = group.descriptor 
-							? group.descriptor.extra || (group.descriptor.extra = {})
+							? group.descriptor.extra ||= {}
 							: group.extra;
 					}else{
 						extra = {};

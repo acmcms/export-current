@@ -185,7 +185,7 @@ var commands = {
 				if(argument){
 					password = argument;
 				}else{
-					password || (password = console.readPassword("new password"));
+					password ||= console.readPassword("new password");
 				}
 				var result = hash
 					? auth.setPasswordHash(username, login, password)

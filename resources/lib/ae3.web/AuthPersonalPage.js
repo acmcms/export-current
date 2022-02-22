@@ -86,7 +86,7 @@ Object.defineProperties(AuthPersonalPage, {
 		value : function createAuthPersonal(props, auth){
 			const Index = new AuthPersonalPage(props);
 			
-			auth || (auth = props.auth);
+			auth ||= props.auth;
 			auth && (Index.auth = auth);
 
 			return Index;

@@ -52,7 +52,7 @@ function internRequestCallbackMessageToString(parameters, message, code, error){
 		return;
 	}
 	// console.log(">>> >>> $$$$$$ callbackMessageToString, start");
-	code || (code = message.code);
+	code ||= message.code;
 	if(code === 301 || code === 302){
 		this(null, -1, "Too many redirects, location: " + location);
 		return;
@@ -80,7 +80,7 @@ function internRequestCallbackMessageToBinary(parameters, message, code, error){
 		return;
 	}
 	// console.log(">>> >>> $$$$$$ callbackMessageToBinary, start");
-	code || (code = message.code);
+	code ||= message.code;
 	if(code === 301 || code === 302){
 		this(null, -1, "Too many redirects, location: " + location);
 		return;
@@ -110,7 +110,7 @@ function internRequestCallbackMessageWithRedirects(parameters, message, code, er
 		return;
 	}
 
-	code || (code = message.code);
+	code ||= message.code;
 
 	if(code !== 301 && code !== 302){
 		// console.log(">>> >>> $$$$$$ callbackWithRedirects, done, code=" + code);
@@ -256,7 +256,7 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 		break;
 	}
 
-	headers['User-Agent'] || (headers['User-Agent'] = (https ? "ae3.http secure client" : "ae3.http client"));
+	headers['User-Agent'] ??= (https ? "ae3.http secure client" : "ae3.http client");
 	headers['Content-Length'] = body.length();
 	headers['Host'] = parameters.host || (hostname + ':' + port);
 	headers['Connection'] = "close";

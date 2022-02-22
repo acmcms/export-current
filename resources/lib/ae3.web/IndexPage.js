@@ -304,7 +304,7 @@ const IndexPage = module.exports = require('ae3').Class.create(
 				var commands = props.commands;
 				if(commands){
 					page.commands = commands;
-					commands.index && (commands.index.run || (commands.index.run = page));
+					commands.index && (commands.index.run ||= page);
 				}
 				
 				return page;
@@ -334,7 +334,7 @@ function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, a
 			 */
 			link = command.link;
 			if(link !== ''){
-				link || (link = key);
+				link ||= key;
 				/**
 				 * no prefix for rooted links
 				 */
@@ -453,7 +453,7 @@ function indexOutAllXml(index, prefix, client, admin, depth){
 			 */
 			link = command.link;
 			if(link !== ''){
-				link || (link = key);
+				link ||= key;
 				/**
 				 * no prefix for rooted links
 				 */

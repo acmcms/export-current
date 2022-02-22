@@ -22,7 +22,7 @@ const commands = {
 	});
 	
 	for(var i of auth.commandKeys()){
-		commands[i] || (commands[i] = auth.getCommand(i));
+		commands[i] ||= auth.getCommand(i);
 	}
 }
 

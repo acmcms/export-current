@@ -115,7 +115,7 @@ function handle(context, shareHandler){
 					get = Object.create(query.parameters || {});
 					i = path.indexOf('?');
 					if(i !== -1){
-						internPutAll.call(get, (QueryString || (QueryString = require('querystring'))).parse(path.substring(i + 1)));
+						internPutAll.call(get, (QueryString ||= require('querystring')).parse(path.substring(i + 1)));
 						path = path.substring(0, i);
 					}
 				}

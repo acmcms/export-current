@@ -90,7 +90,7 @@ const RRST_PRESETS = {
 	let c, t, k, p;
 	for(c of Object.keys(SUPPORTED_RRST)){
 		t = SUPPORTED_RRST[c];
-		t.preset || (t.preset = []);
+		t.preset ||= [];
 	}
 	for(k of Object.keys(RRST_PRESETS)){
 		p = RRST_PRESETS[k];
@@ -112,7 +112,7 @@ const RemoteServiceStateUi = module.exports = require("ae3").Class.create(
 	{
 		parseQueryFromParameters : {
 			value : function(parameters, parameterName){
-				parameterName || (parameterName = "query");
+				parameterName ||= "query";
 				switch(parameters[parameterName + "V"] || 1){
 				case '1':
 					return RemoteServiceStateSAPI.parseQuery(parameters[parameterName + "Text"] || parameters[parameterName]);
@@ -166,7 +166,7 @@ const RemoteServiceStateUi = module.exports = require("ae3").Class.create(
 		},
 		makeQueryPresetSelectField : {
 			value : function(parameters, parameterName){
-				parameterName || (parameterName = "query");
+				parameterName ||= "query";
 				const presetOptions = Object.keys(RRST_PRESETS).map(function(key){
 					const type = RRST_PRESETS[key];
 					return {
@@ -213,7 +213,7 @@ const RemoteServiceStateUi = module.exports = require("ae3").Class.create(
 		},
 		makeQueryItemsSetSelectField : {
 			value : function(parameters, parameterName){
-				parameterName || (parameterName = "query");
+				parameterName ||= "query";
 				const selectPreset = parameters[parameterName + "Preset"];
 				const queryItems = Array(parameters[parameterName + "Item"] || []);
 				const itemOptions = Object.keys(SUPPORTED_RRST).map(function(key){
@@ -298,7 +298,7 @@ const RemoteServiceStateUi = module.exports = require("ae3").Class.create(
 		},
 		makeQueryField : {
 			value : function(parameters, parameterName, request){
-				parameterName || (parameterName = "query");
+				parameterName ||= "query";
 				const fieldPresetSelect = this.makeQueryPresetSelectField(parameters, parameterName);
 				const fieldItemsSetSelect = this.makeQueryItemsSetSelectField(parameters, parameterName);
 				const v = parameters[parameterName + "V"] || 0;

@@ -314,61 +314,61 @@ function makeMessageReply(context, layout){
 	if(code && !(hl || icon) && (code^0 === code)){
 		switch(code){
 		case 400:{
-			hl || (hl = 'error');
-			icon || (icon = 'stop');
-			element || (element = 'invalid');
-			reason || (reason = 'Invalid Request');
-			message || (message = 'Some of request arguments or format are unacceptable, out of range or malformed.');
+			hl ??= 'error';
+			icon ??= 'stop';
+			element ||= 'invalid';
+			reason ||= 'Invalid Request';
+			message ??= 'Some of request arguments or format are unacceptable, out of range or malformed.';
 			break;
 		}
 		case 403:{
-			hl || (hl = 'error');
-			icon || (icon = 'delete');
-			element || (element = 'denied');
-			reason || (reason = 'Access Denied');
-			message || (message = 'The account is not granted with permission to execute the operation requested.');
+			hl ??= 'error';
+			icon ??= 'delete';
+			element ||= 'denied';
+			reason ||= 'Access Denied';
+			message ??= 'The account is not granted with permission to execute the operation requested.';
 			break;
 		}
 		case 404:{
-			hl || (hl = 'error');
-			icon || (icon = 'error_delete');
-			element || (element = 'failed');
-			reason || (reason = 'Resource Not Found');
-			message || (message = 'The client request references to resource that cannot be found or identified. Please, check the URL and other parameters of your request or contact an administrator if you believe that request is correct.');
+			hl ??= 'error';
+			icon ??= 'error_delete';
+			element ||= 'failed';
+			reason ||= 'Resource Not Found';
+			message ??= 'The client request references to resource that cannot be found or identified. Please, check the URL and other parameters of your request or contact an administrator if you believe that request is correct.';
 			break;
 		}
 		case 500:{
-			hl || (hl = 'error');
-			icon || (icon = 'exclamation');
-			element || (element = 'failed');
-			reason || (reason = 'Internal Server Failure');
-			message || (message = 'The server encountered an internal problem while trying to satisfy the client request. Please, contact the administrator if you are concerned or if problem persists.');
+			hl ??= 'error';
+			icon ??= 'exclamation';
+			element ||= 'failed';
+			reason ||= 'Internal Server Failure';
+			message ??= 'The server encountered an internal problem while trying to satisfy the client request. Please, contact the administrator if you are concerned or if problem persists.';
 			break;
 		}
 		default:{
 			switch((code / 100)^0){
 			case 2:{
-				hl || (hl = 'true');
-				icon || (icon = 'tick');
-				element || (element = 'updated');
-				reason || (reason = 'Operation Successful');
-				message || (message = 'The request seems to be satisfied with no further detail provided.');
+				hl ??= 'true';
+				icon ??= 'tick';
+				element ||= 'updated';
+				reason ||= 'Operation Successful';
+				message ??= 'The request seems to be satisfied with no further detail provided.';
 				break;
 			}
 			case 4:{
-				hl || (hl = 'error');
-				icon || (icon = 'error_delete');
-				element || (element = 'failed');
-				reason || (reason = 'Unclassified Client Failure');
-				message || (message = 'The client request is not considered valid and will not be served.');
+				hl ??= 'error';
+				icon ??= 'error_delete';
+				element ||= 'failed';
+				reason ||= 'Unclassified Client Failure';
+				message ??= 'The client request is not considered valid and will not be served.';
 				break;
 			}
 			case 5:{
-				hl || (hl = 'error');
-				icon || (icon = 'exclamation');
-				element || (element = 'failed');
-				reason || (reason = 'Unclassified Server Failure');
-				message || (message = 'The server encountered an unsolvable problem while trying to satisfy the client request.');
+				hl ??= 'error';
+				icon ??= 'exclamation';
+				element ||= 'failed';
+				reason ||= 'Unclassified Server Failure';
+				message ??= 'The server encountered an unsolvable problem while trying to satisfy the client request.';
 				break;
 			}
 			}
@@ -376,8 +376,8 @@ function makeMessageReply(context, layout){
 		}
 	}
 	
-	element || (element = 'message');
-	reason || (reason = ('string' === typeof message && message) || layout.title);
+	element ||= 'message';
+	reason ||= ('string' === typeof message && message) || layout.title;
 	
 	const title = layout.title || context.title || (context.share || '').systemName || 'Message';
 	const detail = layout.detail;
@@ -660,7 +660,7 @@ function internReplaceValue(value){
 			vale = value[key];
 			repl = internReplaceValue(vale);
 			if(repl !== vale){
-				layout || (layout = Object.create(value));
+				layout ||= Object.create(value);
 				layout[key] = repl;
 			}
 		}
@@ -983,8 +983,7 @@ function makeDataTableReply(context, layout){
 					 * 
 					cn = c.field;
 					if(!item[cn]){
-						more || (more = []);
-						more.push(cn);
+						(more ||= []).push(cn);
 					}
 					 */
 					= formatXmlElement('command', c);

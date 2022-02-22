@@ -18,7 +18,7 @@ function groupsIterate(groups, filter){
 						v = r.values[c.name];
 						f = Object.create(c);
 						f['default'] = v;
-						f.titleShort && f.title && (f.hint || (f.hint = f.title));
+						f.titleShort && f.title && (f.hint ||= f.title);
 						= Format.xmlElement('field', f);
 					}
 				}

@@ -41,7 +41,7 @@ const TaskUdpMultipleFirstPositive = module.exports = ae3.Class.create(
 				}
 				if(result.isReplyFinal || this.isStopOnContinue){
 					this.result = result;
-					this.resultPeer || (this.resultPeer = single.peer);
+					this.resultPeer ||= single.peer;
 					this.logDetail("complete", single.peerName, "positive reply");
 					return false;
 				}

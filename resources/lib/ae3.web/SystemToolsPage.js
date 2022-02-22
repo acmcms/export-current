@@ -95,7 +95,7 @@ Object.defineProperties(SystemToolsPage, {
 		value : function createSystemTools(props, auth){
 			const Index = new SystemToolsPage(props);
 			
-			auth || (auth = props.auth);
+			auth ||= props.auth;
 			auth && (Index.auth = auth);
 
 			return Index;

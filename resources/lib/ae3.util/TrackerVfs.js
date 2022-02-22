@@ -138,7 +138,7 @@ function groupRecentActivity(vfsSubject){
 	if(vfsSubject) {
 		var vfsTrackReference = vfsSubject.relativeFolder(".track");
 		var contents = vfsTrackReference.isContainer() && vfsTrackReference.getContentCollection(null);
-		contents || (contents = []);
+		contents ||= [];
 		contents.sort(internSortByDate);
 		contents = contents.map(internMapReferenceToTrack, this.parent);
 		return contents;
@@ -146,7 +146,7 @@ function groupRecentActivity(vfsSubject){
 	{
 		var vfsTrackReference = this.vfsGroup.relativeFolder(".track");
 		var contents = vfsTrackReference.isContainer() && vfsTrackReference.getContentCollection(null);
-		contents || (contents = []);
+		contents ||= [];
 		contents.sort(internSortByDate);
 		contents = contents.map(internMapReferenceToTrack, this.parent);
 		return contents;
@@ -184,7 +184,7 @@ function groupClean(vfsSubject, command, properties, byUser, byAddress, byGeo){
 	var txn = vfs.createTransaction();
 	try{
 		var contents = vfsSubjectTrack.getContentCollection(null);
-		contents || (contents = []);
+		contents ||= [];
 		// contents.sort(internSortByDate);
 		contents.forEach(groupCleanCallback, this);
 		vfsSubjectTrack.doUnlink();
@@ -426,7 +426,7 @@ function trackClean(vfsSubject, command, properties, byUser, byAddress, byGeo){
 	var txn = vfs.createTransaction();
 	try{
 		var contents = vfsSubjectTrack.getContentCollection(null);
-		contents || (contents = []);
+		contents ||= [];
 		// contents.sort(internSortByDate);
 		contents.forEach(trackCleanCallback, this);
 		vfsSubjectTrack.doUnlink();
@@ -611,14 +611,14 @@ Object.defineProperties(TrackerVfs.prototype, {
 			if(vfsSubject) {
 				var vfsTrackReference = vfsSubject.relativeFolder(".track");
 				var contents = vfsTrackReference.isExist() && vfsTrackReference.isContainer() && vfsTrackReference.getContentCollection(null);
-				contents || (contents = []);
+				contents ||= [];
 				contents.sort(internSortByDate);
 				contents = contents.map(internMapReferenceToTrack, this);
 				return contents;
 			}
 			{
 				var contents = this.vfsJournal.isContainer() && this.vfsJournal.getContentCollection(null);
-				contents || (contents = []);
+				contents ||= [];
 				contents.sort(internSortByDate);
 				contents = contents.map(internMapFileToTrack);
 				return contents;

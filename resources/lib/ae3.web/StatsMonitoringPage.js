@@ -113,7 +113,7 @@ Object.defineProperties(StatsMonitoringPage, {
 		value : function createStatsMonitoring(props, auth){
 			const Index = new StatsMonitoringPage(props);
 			
-			auth || (auth = props.auth);
+			auth ||= props.auth;
 			auth && (Index.auth = auth);
 
 			return Index;
