@@ -221,7 +221,7 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 				switch(this.onTaskProgress(message)){
 				case true:
 					// reply received means that send really succeed
-					1 === this.left ||= 1;
+					1 === this.left || (this.left = 1);
 					return true;
 				case false:
 					delete this.left;
