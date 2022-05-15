@@ -15,6 +15,7 @@
 
 0x3F	00111111 ?	****/RRSS				request
 
+0x40	01000000 D	NDNS/DTUN2				request
 0x44	01000100 D	NDNS/DTUN				request
 0x4E	01001110 N	NDNS/SETN				request
 0x53	01010011 S	NDNS/RSST				reply-final
