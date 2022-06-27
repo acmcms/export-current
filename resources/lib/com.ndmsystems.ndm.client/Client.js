@@ -434,7 +434,7 @@ function internAppendRegister(clientRequest, reason){
 			this.vfs.setContentPublicTreePrimitive("lastRegistered", new Date());
 		}).bind(this),
 		onError	: (function(code, text){
-			console.error("ndm.client '%s':Registration failed, code=%s", this.clientId, code);
+			console.error("ndm.client '%s': Registration failed, code=%s", this.clientId, code);
 		}).bind(this),
 	});
 }

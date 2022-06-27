@@ -59,9 +59,16 @@ const RecentEventTrackerRegistry = module.exports = ae3.Class.create(
 		},
 		"getRelatedEvents" : {
 			value : function(relatedObject, eventTypeNames){
-				const folder = relatedObject['.recent'] || (
-					relatedObject['.recent'] = relatedObject.vfs.relativeFolder("recent")
-				);
+				const folder = relatedObject[".recent"] ?? (function(/* locals: */ folder){
+					folder = this.vfs.relativeFolder("recent");
+					Object.defineProperty(this, ".recent", {
+						writable : true,
+						configurable : true,
+						value : folder
+					});
+					return folder;
+				}).call(relatedObject);
+				
 				if(!folder.isContainer()){
 					return [];
 				}

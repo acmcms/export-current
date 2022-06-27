@@ -64,7 +64,7 @@
 					var profile = User.getUser().getProfile();
 					profile.toolbarOpened = Request.opened ? true : false;
 					User.getUser().setProfile( profile );
-					return { null : true };
+					return { "null" : true };
 				}
 				case "help/panel":{
 					if( !registered ) return $default.redirect( this.getLocation() );

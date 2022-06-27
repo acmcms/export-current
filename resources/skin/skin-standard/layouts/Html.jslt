@@ -11,4 +11,5 @@ return {
 	type	:	"text/html",
 	content	:	layout.content,
 	cache	:	layout.cache,
+	delay	:	layout.delay,
 };
