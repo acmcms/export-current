@@ -176,7 +176,7 @@ const Puncher = module.exports = ae3.Class.create(
 					return;
 				}
 				this.error && (this.error = "...processing");
-				if(!this.targetList || !this.targetList.length){
+				if(!this.targetList?.length){
 					var spec = this.remote.targetSpec;
 					if(!spec){
 						return this.switchDisabled("No target spec");
@@ -208,7 +208,7 @@ const Puncher = module.exports = ae3.Class.create(
 						return;
 					}
 
-					if(!this.targetList || !this.targetList.length){
+					if(!this.targetList?.length){
 						this.error = "Spec produce no usable addresses: " + Format.jsObject(spec);
 						return;
 					}
@@ -222,7 +222,7 @@ const Puncher = module.exports = ae3.Class.create(
 					return;
 				}
 				
-				if(!this.targetList || !this.targetList.length){
+				if(!this.targetList?.length){
 					this.error = "No targets available";
 					return;
 				}

@@ -7,7 +7,7 @@ import java.net.SocketAddress;
 
 
 
-const Net = module.exports = Object.create(Object.prototype, {
+const Net = module.exports = Object.create(Object.create(null, {
 	/***************************************************************************
 	 * CONSTANTS
 	 */
@@ -150,7 +150,7 @@ const Net = module.exports = Object.create(Object.prototype, {
 		value : function(specOrPort, addr){
 			if(addr === undefined && arguments.length === 1){
 				if('string' === typeof specOrPort){
-					var pos = specOrPort.indexOf(':');
+					var pos = specOrPort.lastIndexOf(':');
 					if(pos === -1){
 						throw ("Spec has no port: " + specOrPort);
 					}
@@ -180,7 +180,7 @@ const Net = module.exports = Object.create(Object.prototype, {
 	socketAddressArray : {
 		value : function(spec){
 			if('string' === typeof spec){
-				var pos = spec.indexOf(':');
+				var pos = spec.lastIndexOf(':');
 				if(pos === -1){
 					throw ("Spec has no port: " + spec);
 				}
@@ -217,7 +217,7 @@ const Net = module.exports = Object.create(Object.prototype, {
 				addrs && (Array.isArray(addrs) || (addrs = [ addrs ]));
 				addrs = addrs.reduce((function(result, spec){
 					var shift;
-					var pos = spec.indexOf(':');
+					var pos = spec.lastIndexOf(':');
 					if(pos === -1){
 						shift = 0;
 					}else{
@@ -264,4 +264,4 @@ const Net = module.exports = Object.create(Object.prototype, {
 			return "[Object ae3.net API]";
 		}
 	}
-});
+}));

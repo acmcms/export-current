@@ -1,7 +1,8 @@
 const ae3 = require('ae3');
-const net = ae3.net;
 
 const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
+
+const socketAddress = ae3.net.socketAddress;
 
 const MsgHelo = module.exports = ae3.Class.create(
 	/* name */
@@ -56,16 +57,16 @@ const MsgHelo = module.exports = ae3.Class.create(
 			value : true
 		},
 		"parse" : {
-			value : function(b, o, s){
+			value : function(b, o, serial){
 				return new MsgHelo(
-					net.socketAddress(
+					socketAddress(
 						// address
 						(b[o++]&0xFF) + '.' + (b[o++]&0xFF) + '.' + (b[o++]&0xFF) + '.' + (b[o++]&0xFF) + 
 						':' + 
 						// port
 						(((b[o++]&0xFF) << 8) + (b[o++]&0xFF))
 					),
-					s
+					serial
 				);
 			}
 		},

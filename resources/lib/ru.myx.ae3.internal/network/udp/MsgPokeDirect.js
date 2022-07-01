@@ -1,7 +1,8 @@
 const ae3 = require('ae3');
-const net = ae3.net;
 
 const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
+
+const socketAddress = ae3.net.socketAddress;
 
 const MsgPokeDirect = module.exports = ae3.Class.create(
 	/* name */
@@ -58,7 +59,7 @@ const MsgPokeDirect = module.exports = ae3.Class.create(
 		"parse" : {
 			value : function(b, o, serial){
 				return new MsgPokeDirect(
-					net.socketAddress(
+					socketAddress(
 						// address
 						(b[o++]&0xFF) + '.' + (b[o++]&0xFF) + '.' + (b[o++]&0xFF) + '.' + (b[o++]&0xFF) + 
 						':' + 

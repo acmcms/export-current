@@ -6,6 +6,8 @@ const wrapCopier = Transfer.wrapCopier;
 const copyBytes = Transfer.copyBytes;
 const xorBytes = Transfer.xorBytes;
 const updateMessageDigest = Transfer.updateMessageDigest;
+const isSocketAddress = ae3.net.isSocketAddress;
+const socketAddress = ae3.net.socketAddress;
 
 const Principal = module.exports = ae3.Class.create(
 	/* name */
@@ -16,13 +18,13 @@ const Principal = module.exports = ae3.Class.create(
 	function(key, dst, secret, serial){
 		if(dst){
 			if('string' === typeof dst){
-				dst = ae3.net.socketAddress(dst);
+				dst = socketAddress(dst);
 			}else//
-			if(ae3.net.isSocketAddress(dst)){
+			if(isSocketAddress(dst)){
 				// ignore
 			}else//
 			if(dst.port && (dst.host || dst.ip)){
-				dst = ae3.net.socketAddress(dst);
+				dst = socketAddress(dst);
 			}else{
 				throw "Invalid address: " + Format.jsDescribe(dst);
 			}
@@ -279,7 +281,7 @@ const Principal = module.exports = ae3.Class.create(
 					m = Object.create(m);
 					for keys(k in m){
 						v = m[k];
-						ae3.net.isSocketAddress(v) && (m[k] = v.address + ':' + v.port);
+						isSocketAddress(v) && (m[k] = v.address + ':' + v.port);
 					}
 					console.log('>>> >>> udp-send: -> %s @ %s:%s, ser: %s, len: %s, %s', 
 						Format.jsObject(key.slice(0, 12)), 
