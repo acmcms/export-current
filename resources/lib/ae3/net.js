@@ -5,7 +5,14 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-
+const BaseNetHelper = (function(){
+	try{
+		import ru.myx.ae3.internal.net.BaseNetHelper;
+		return BaseNetHelper;
+	}catch(e){
+		return "";
+	}
+})();
 
 const Net = module.exports = Object.create(Object.create(null, {
 	/***************************************************************************
@@ -112,9 +119,9 @@ const Net = module.exports = Object.create(Object.create(null, {
 		}
 	},
 	loopbackAddress : {
-		get : function(){
+		get : InetAddress.getLoopbackAddress ?? (function(){
 			return InetAddress.loopbackAddress;
-		}
+		})
 	},
 	localAddress : {
 		get : function(){
@@ -123,7 +130,7 @@ const Net = module.exports = Object.create(Object.create(null, {
 	},
 	
 	inetAddress : {
-		value : function(addr){
+		value : BaseNetHelper.inetAddress ?? (function(addr){
 			if (!addr) {
 				return InetAddress.loopbackAddress;
 			} 
@@ -139,7 +146,18 @@ const Net = module.exports = Object.create(Object.create(null, {
 				 */
 				return addr; 
 			}
-		}
+		})
+	},
+	inetAddressFromBuffer : {
+		value : BaseNetHelper.inetAddressFromBuffer ?? (function(buffer, offset, length){
+			switch(length){
+			case 4:
+			case 16:
+				return Net.inetAddress( Format.binaryAsInetAddress(buffer, offset, length) );
+			default:
+				throw new Error("inetAddressFromBuffer: incorrect address length: " + length);
+			}
+		})
 	},
 	isSocketAddress : {
 		value : function(obj){
@@ -257,6 +275,32 @@ const Net = module.exports = Object.create(Object.create(null, {
 			}
 			throw "Unsupported socket address spec: " + Format.jsDescribe(spec);
 		}
+	},
+	
+	"socketAddressFromBuffer" : {
+		/**
+		 * Accepts only 6 (4+2) and 18 (16+2) length argument
+		**/
+		value : BaseNetHelper.socketAddressFromBuffer ?? (function(buffer, offset, length){
+			switch(length){
+			case 6:
+				return new InetSocketAddress(//
+					Net.inetAddress( 
+						Format.binaryAsInetAddress4(buffer, offset), 
+						((buffer[offset+4] & 0xFF) << 8) | (buffer[offset+5] & 0xFF) //
+					) //
+				);
+			case 18:
+				return new InetSocketAddress(//
+					Net.inetAddress( //
+						Format.binaryAsInetAddress6(buffer, offset), //
+						((buffer[offset+16] & 0xFF) << 8) | (buffer[offset+17] & 0xFF) //
+					) //
+				);
+			default:
+				throw new Error("socketAddressFromBuffer: incorrect address length: " + length);
+			}
+		})
 	},
 	
 	"toString" : {
