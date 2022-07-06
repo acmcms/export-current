@@ -51,10 +51,10 @@ module.exports = {
 				"echo '%%'"
 			).output.trim().split('%%');
 		return {
-			sl : dt[0].trim(),
-			sc : dt[1].trim(),
-			sw : dt[2].trim(),
-			sd : dt[3].trim(),
+			sl : dt[0].trim() | 0,
+			sc : dt[1].trim() | 0,
+			sw : dt[2].trim() | 0,
+			sd : dt[3].trim() | 0,
 		};
 	},
 };

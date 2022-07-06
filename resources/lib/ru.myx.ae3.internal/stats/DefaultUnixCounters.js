@@ -53,11 +53,11 @@ module.exports = {
 			).output.trim().split('%%');
 		const la = dt[0].trim().split(' ');
 		return {
-			l0 : la[0],
-			l1 : la[1],
-			l2 : la[2],
-			hn : dt[1].trim(),
-			un : dt[2].trim(),
+			l0 : la[0] | 0,
+			l1 : la[1] | 0,
+			l2 : la[2] | 0,
+			hn : dt[1].trim() | 0,
+			un : dt[2].trim() | 0,
 		};
 	},
 };
