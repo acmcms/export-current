@@ -6,6 +6,8 @@ const formatXmlAttributes = Format.xmlAttributes;
 const formatXmlElement = Format.xmlElement;
 const formatXmlElements = Format.xmlElements;
 const formatXmlNodeValue = Format.xmlNodeValue;
+const formatQueryStringParameters = Format.queryStringParameters;
+const formatXmlAttributeFragment = Format.xmlAttributeFragment;
 
 /**
  * TODO: leave XML in XML, but move 'html-js', etc in other places.
@@ -433,7 +435,7 @@ function makeMessageReply(context, layout){
 				}
 			}
 			if((layout.help || message && message.help) && context.query.parameters.format !== 'clean'){
-				%><help src="<%= Format.xmlAttributeFragment(layout.help || message.help) %>"/><%
+				%><help src="<%= formatXmlAttributeFragment(layout.help || message.help) %>"/><%
 			}
 		%></<%= element; %>><%
 	}
@@ -768,7 +770,7 @@ function makeDataViewReply(context, layout){
 						query && !query.parameters.___output && query.parameters.___all && formatXmlElement('command', {
 							title : 'Download as XLS',
 							icon : 'disk',
-							url : '?___output=xls&' + Format.queryStringParameters(filters && filters.values)
+							url : '?___output=xls&' + formatQueryStringParameters(filters && filters.values)
 						})
 					) +
 					'</' + element + '>'
@@ -854,7 +856,7 @@ function makeDataFormReply(context, layout){
 					= formatXmlElement('command', {
 						title : 'Download as XLS',
 						icon : 'disk',
-						url : '?___output=xls&' + Format.queryStringParameters(filters && filters.values)
+						url : '?___output=xls&' + formatQueryStringParameters(filters && filters.values)
 					});
 				}
 				if(layout.help && (!query || query.parameters.format !== 'clean')){
@@ -1012,7 +1014,7 @@ function makeDataTableReply(context, layout){
 				= formatXmlElements('command', layout.commands);
 			}
 			if(query && !query.parameters.___output){
-				const suffix = Format.queryStringParameters(filters && "object" === typeof filters.values && filters.values || query.parameters, { format : undefined });
+				const suffix = formatQueryStringParameters(filters && "object" === typeof filters.values && filters.values || query.parameters, { format : undefined });
 				const commands = [
 					{
 						title : 'Download as XLS',
@@ -1131,7 +1133,7 @@ function makeDocumentationReply(context, layout){
 						false && query && !query.parameters.___output && formatXmlElement('command', {
 							title : 'Download as PDF',
 							icon : 'disk',
-							url : '?___output=pdf&' + Format.queryStringParameters(filters && "object" === typeof filters.values && filters.values)
+							url : '?___output=pdf&' + formatQueryStringParameters(filters && "object" === typeof filters.values && filters.values)
 						})
 					) +
 					'</' + element + '>'
