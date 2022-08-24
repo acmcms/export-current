@@ -106,7 +106,7 @@ Object.defineProperties(CacheObject.prototype, {
 	},
 	"put" : {
 		value : function(key, value) {
-			return this.cache.put(key, value, this.creator && this.creator.TTL || 15000);
+			return this.cache.put(key, value, this.TTL || 15000);
 		}
 	},
 	"remove" : {
