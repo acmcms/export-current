@@ -48,7 +48,7 @@ function runSetAccountLogin(context){
 			= Format.xmlElement('field', {
 				name : 'accountLogin',
 				title : 'Login',
-				type : 'text',
+				type : 'string',
 				value : accountLogin || undefined
 			});
 			%><field name="newPass" title="New password" type="password" /><%

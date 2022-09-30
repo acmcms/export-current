@@ -188,13 +188,27 @@ var commands = {
 		}
 	},
 	show : {
-		args : "<instance>",
+		args : "<instance> [--short/--full]",
 		help : "show info related to an instance of bdbj storage",
 		run : function runShow(args) {
 			var name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
+			var doShort, doFull;
+			if(args[0] === "--short"){
+				args.shift();
+				doShort = 1;
+			}else//
+			if(args[0] === "--full"){
+				args.shift();
+				doFull = 1;
+			}
+			
+			if(args[0]){
+				return console.fail("unexpected extra arguments: %s", Format.jsStringFragment(args[0]));
+			}
+			
 			var instances = Driver.internGetInstances();
 			var instance = instances[name];
 			if(!instance){
@@ -202,24 +216,61 @@ var commands = {
 			}
 			var size = instance.storageCalculate();
 			var stats = instance.internStorageStats();
-			var info = {
-				name : name,
-				size : size,
-				sizeFormatted : Format.bytesCompact(size),
-				totalLogSize : stats.totalLogSize,
-				totalLogSizeFormatted : Format.bytesCompact(stats.totalLogSize),
-				cleanerBacklog : stats.cleanerBacklog,
-				path : instance.storageLocation,
-			};
-			if(instance.taskDelayExpunge){
-				info.delayExpunge = {
-					lastDate : instance.taskDelayExpunge.lastDate === -1
-						? 'Enabled, waiting to start'
-						: new Date(instance.taskDelayExpunge.lastDate).toISOString(),
-					lastTTL : Format.periodCompact(instance.taskDelayExpunge.lastTTL),
-					lastAvail : Format.decimalCompact(instance.taskDelayExpunge.lastAvail * 100) + '%'
-				};
+			var info = {};
+			
+			if(doShort){
+				Object.assign(info, {
+					sizeFormatted : Format.bytesCompact(size),
+					cleanerBacklog : stats.cleanerBacklog,
+				});
+			}else//
+			if(!doFull){
+				Object.assign(info, {
+					name : name,
+					sizeFormatted : Format.bytesCompact(size),
+					totalLogSizeFormatted : Format.bytesCompact(stats.totalLogSize),
+					cleanerBacklog : stats.cleanerBacklog,
+					path : instance.storageLocation,
+				});
+			}else{
+				Object.assign(info, {
+					name : name,
+					size : size,
+					sizeFormatted : Format.bytesCompact(size),
+					totalLogSize : stats.totalLogSize,
+					totalLogSizeFormatted : Format.bytesCompact(stats.totalLogSize),
+					cleanerBacklog : stats.cleanerBacklog,
+					path : instance.storageLocation,
+				});
 			}
+			
+			if(!doShort && instance.taskDelayExpunge){
+				if(doShort){
+					info.delayExpunge = Format.periodCompact(instance.taskDelayExpunge.lastTTL);
+				}else//
+				if(!doFull){
+					info.delayExpunge = {
+						lastDate : instance.taskDelayExpunge.lastDate === -1
+							? 'Enabled, waiting to start'
+							: new Date(instance.taskDelayExpunge.lastDate).toISOString(),
+						lastTTL : Format.periodCompact(instance.taskDelayExpunge.lastTTL),
+						lastAvail : Format.decimalCompact(instance.taskDelayExpunge.lastAvail * 100) + '%',
+					};
+				}else{
+					info.delayExpunge = {
+						queuePath : instance.taskDelayExpunge.queueLocation,
+						lastDate : instance.taskDelayExpunge.lastDate === -1
+							? 'Enabled, waiting to start'
+							: new Date(instance.taskDelayExpunge.lastDate).toISOString(),
+						lastTTL : Format.periodCompact(instance.taskDelayExpunge.lastTTL),
+						lastAvail : Format.decimalCompact(instance.taskDelayExpunge.lastAvail * 100) + '%',
+						lastQueued : Format.decimalCompact(instance.taskDelayExpunge.lastQueued),
+						lastCleaned : Format.decimalCompact(instance.taskDelayExpunge.lastCleaned),
+						lastOthers : Format.decimalCompact(instance.taskDelayExpunge.lastIgnored),
+					};
+				}
+			}
+			
 			console.sendMessage(Format.jsObjectReadable(info));
 			return true;
 		}
