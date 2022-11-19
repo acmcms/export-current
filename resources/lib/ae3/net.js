@@ -159,6 +159,9 @@ const Net = module.exports = Object.create(Object.create(null, {
 			}
 		})
 	},
+	isValidIPv4 : {
+		value : BaseNetHelper.isValidIPv4
+	},
 	isSocketAddress : {
 		value : function(obj){
 			return obj instanceof SocketAddress;
