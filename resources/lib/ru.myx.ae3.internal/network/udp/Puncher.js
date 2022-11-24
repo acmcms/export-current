@@ -103,7 +103,6 @@ const Puncher = module.exports = ae3.Class.create(
 		
 		"onSeen" : {
 			value : function(seen, address, serial){
-				console.log(">>>>>> %s: puncher seen in: %s, address: %s", this, seen, address);
 				Object.defineProperty(this.remote, 'dst',{
 					writable : true,
 					value : address
@@ -112,6 +111,7 @@ const Puncher = module.exports = ae3.Class.create(
 				if(!seen.parseMode(this)){
 					// mode is 0x00 - reset and exit
 					this.puncherReset();
+					console.log(">>>>>> %s: puncher seen in: %s, address: %s, code 0x00, puncher reset into enabled state.", this, seen, address);
 					return false;
 				}
 				this.since = 0;
@@ -121,7 +121,10 @@ const Puncher = module.exports = ae3.Class.create(
 						writable : true
 					});
 					this.state = 'active';
+					console.log(">>>>>> %s: puncher seen in: %s, address: %s, puncher mode switched search->active", this, seen, address);
+					return true;
 				}
+				console.log(">>>>>> %s: puncher seen in: %s, address: %s", this, seen, address);
 				return true;
 			}
 		},
@@ -237,6 +240,7 @@ const Puncher = module.exports = ae3.Class.create(
 					writable : true
 				});
 				this.state = 'search';
+				console.log(">>>>>> %s: puncher mode switched enabled->search", this);
 			}
 		},
 		
@@ -253,6 +257,7 @@ const Puncher = module.exports = ae3.Class.create(
 							console.log(">>>>>> %s: puncher send meet: %s, %s", this, meet, target);
 						}).bind(this, new this.remote.MsgMeet()));
 						this.puncherReset();
+						console.log(">>>>>> %s: puncher mode switched search->enabled", this);
 						return;
 					}
 					targetList.forEach((function(helo, target){
@@ -278,9 +283,10 @@ const Puncher = module.exports = ae3.Class.create(
 						value : this.loopSearch.bind(this),
 						writable : true
 					});
+					console.log(">>>>>> %s: puncher mode switched active->search", this);
 					return;
 				}
-				// console.log(">>> >>> puncher poke out (direct:%s)", this.directAccess);
+				console.log(">>>>>> %s: puncher poke out (direct:%s)", this, this.directAccess);
 				var poke = this.directAccess 
 					? new this.remote.MsgPokeDirect(this.remote.localSocketAddress) 
 					: new this.remote.MsgPoke(this.remote.localSocketAddress)
@@ -327,8 +333,8 @@ const Puncher = module.exports = ae3.Class.create(
 		
 		"toString" : {
 			value : function(){
-				return ["[Puncher ", this.state, ", ", this.remote, "]"].join("");
 				return "[Puncher " + this.state + ", " + this.remote + "]";
+				return ["[Puncher ", this.state, ", ", this.remote, "]"].join("");
 			}
 		}
 	}
