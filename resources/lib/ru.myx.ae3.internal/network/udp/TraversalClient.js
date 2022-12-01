@@ -19,7 +19,7 @@ TraversalClient.prototype = Object.create(require('./Principal').prototype, {
 			// console.log('>>> >>> %s: onReceive: %s, address: %s, serial: %s', this, message, address, serial);
 			// wrong - use fifo
 			this.sRx = serial;
-			if(message.isUHP){
+			if(message.isUHP_PUNCH){
 				return this.sendSingle(
 					new this.MsgSeen(
 						serial,

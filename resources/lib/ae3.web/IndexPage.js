@@ -1,21 +1,21 @@
 /**
- * TODO: ready-support for '/resources/'
+ * TODO: ready-support for "/resources/"
  */
 
 function buildIndexMenuReply(context, client, admin){
 	const query = context.query;
 	const parameters = query.parameters;
-	switch(parameters.___output || 'xml'){
-	case 'html-js':{
+	switch(parameters.___output || "xml"){
+	case "html-js":{
 		var index = [];
 		var extra = parameters.ref && 
 					parameters.ref.startsWith(query.resourcePrefix) && 
 					parameters.ref.substring(query.resourcePrefix.length) || undefined;
 		var extras = extra && [];
-		indexPushAllHtmlJs(index, this, '/', extra, extras, client, admin);
+		indexPushAllHtmlJs(index, this, "/", extra, extras, client, admin);
 		if(extras && extras.length){
 			extras.push({
-				"icon" : this.icon || 'house',
+				"icon" : this.icon || "house",
 				"title" : "Root Menu",
 				"group" : true,
 				"submenu" : index,
@@ -25,9 +25,9 @@ function buildIndexMenuReply(context, client, admin){
 		if(client){
 			index.push({
 				"title" : "Log out", 
-				"href" : "//no-login:no-password@" + query.targetExact + '/?logout', 
+				"href" : "//no-login:no-password@" + query.targetExact + "/?logout", 
 				"icon" : "door_out",
-				// "access" : 'public',
+				// "access" : "public",
 				// "ui" : true,
 			});
 		} else //
@@ -35,22 +35,22 @@ function buildIndexMenuReply(context, client, admin){
 			if(query.url.startsWith("http://") && query.toSecureChannel()){
 				index.unshift({
 					"title" : "Switch to secure connection", 
-					"href" : '/?secure-login', 
+					"href" : "/?secure-login", 
 					"icon" : "lock_go",
-					// "access" : 'public',
+					// "access" : "public",
 					// "ui" : true,
 				});
 			}else{
 				index.unshift({
 					"title" : "Log in", 
-					"href" : '/?login', 
+					"href" : "/?login", 
 					"icon" : "key",
-					// "access" : 'public',
+					// "access" : "public",
 					// "ui" : true,
 				});
 			}
 		}
-		var html = '';
+		var html = "";
 		$output(html){
 			%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
 			%><html><%
@@ -73,22 +73,22 @@ function buildIndexMenuReply(context, client, admin){
 			"content"	: html
 		};
 	}
-	case 'json':{
+	case "json":{
 	}
-	case 'xml':{
+	case "xml":{
 		const share = context.share;
-		const admin = share.authCheckAccountMembership(context, this.accountMembership || 'admin');
+		const admin = share.authCheckAccountMembership(context, this.accountMembership || "admin");
 		const auth = this.auth || share.authenticationProvider;
 		var xml;
 		$output(xml){
-			%><index<%= Format.xmlAttribute('title', this.pageTitle || this.title) %> layout="menu" zoom="document"><%
+			%><index<%= Format.xmlAttribute("title", context.title || this.title) %> layout="menu" zoom="document"><%
+				= Format.xmlElement("client", share.clientElementProperties(context));
 				if(!client && auth && !this.authRequired){
 					= internMakeLoginOptions(query, share, this);
 				}
-				= Format.xmlElement('client', share.clientElementProperties(context));
-				= indexOutAllXml(this, '', client, admin, 1);
+				= indexOutAllXml(this, "", client, admin, 1);
 				if(client){
-					var url = "//no-login:no-password@" + query.targetExact + '/?logout';
+					var url = "//no-login:no-password@" + query.targetExact + "/?logout";
 					%><command key="<%= url %>" icon="door_out" title="Log out" ui="true" access="public"/><%
 				}
 			%></index><%
@@ -106,11 +106,11 @@ function buildIndexMenuReply(context, client, admin){
 }
 
 
-const IndexPage = module.exports = require('ae3').Class.create(
+const IndexPage = module.exports = require("ae3").Class.create(
 	/* name */
 	"IndexPage",
 	/* inherit */
-	require('./AbstractWebPage'),
+	require("./AbstractWebPage"),
 	/* constructor */
 	function(){
 		this.AbstractWebPage();
@@ -147,11 +147,11 @@ const IndexPage = module.exports = require('ae3').Class.create(
 			value : function onDrill(context){
 				const query = context.query;
 				const identifier = query.resourceIdentifier;
-				if(identifier && identifier !== '/' && identifier !== '/index'){
-					if(identifier === '/xml-request.xml'){
+				if(identifier && identifier !== "/" && identifier !== "/index"){
+					if(identifier === "/xml-request.xml"){
 						return undefined;
 					}
-					const key = identifier.substring(1, ((identifier.indexOf('/', 1) + 1) || identifier.length + 1) - 1);
+					const key = identifier.substring(1, ((identifier.indexOf("/", 1) + 1) || identifier.length + 1) - 1);
 					const command = this.getCommand(key);
 					if(!command){
 						return undefined;
@@ -175,13 +175,13 @@ const IndexPage = module.exports = require('ae3').Class.create(
 				context.title = this.title;
 
 				/**
-				 * TODO: add index itself is not within 'commands'
+				 * TODO: add index itself is not within "commands"
 				 */
-				if(identifier && identifier !== '/' && identifier !== '/index'){
-					if(identifier === '/xml-request.xml'){
-						return require('ae3.web/XmlMultipleRequest').handle(context, this);
+				if(identifier && identifier !== "/" && identifier !== "/index"){
+					if(identifier === "/xml-request.xml"){
+						return require("ae3.web/XmlMultipleRequest").handle(context, this);
 					}
-					var key = identifier.substring(1, ((identifier.indexOf('/', 1) + 1) || identifier.length + 1) - 1);
+					var key = identifier.substring(1, ((identifier.indexOf("/", 1) + 1) || identifier.length + 1) - 1);
 					var command = this.getCommand(key);
 					if(!command){
 						return undefined;
@@ -200,7 +200,7 @@ const IndexPage = module.exports = require('ae3').Class.create(
 
 				var client;
 				switch(query.parameterString){
-				case 'logout':{
+				case "logout":{
 					if(!auth){
 						return this.makeNotFoundLayout("No auth set up!");
 					}
@@ -208,7 +208,7 @@ const IndexPage = module.exports = require('ae3').Class.create(
 					context.client = null;
 					return share.makeAuthenticationLogoutReply(context);
 				}
-				case 'secure-login':{
+				case "secure-login":{
 					if(!auth){
 						return this.makeNotFoundLayout("No auth set up!");
 					}
@@ -221,21 +221,22 @@ const IndexPage = module.exports = require('ae3').Class.create(
 				 * pass-through
 				 */
 				// break;
-				case 'login':{
+				case "login":{
 					if(!auth){
 						return this.makeNotFoundLayout("No auth set up!");
 					}
+					context.title = this.titleUnauthenticated || context.title;
 					share.authRequireDefault(context);
 					return share.makeAuthenticationSuccessReply(context);
 				}
-				case 'bbm-77k':{
-					const ae3 = require('ae3');
+				case "bbm-77k":{
+					const ae3 = require("ae3");
 					return ae3.Reply.binary(
 							"BBM-77k", 
 							query, 
 							{
 								"Content-Type" : "application/octet-stream",
-								"Content-Disposition" : 'attachment; filename=bbm-77k.bin',
+								"Content-Disposition" : "attachment; filename=bbm-77k.bin",
 							},
 							ae3.Transfer.wrapCopier(new ArrayBuffer(77 * 1024)), 
 							"bbm-77k.bin"
@@ -246,7 +247,7 @@ const IndexPage = module.exports = require('ae3').Class.create(
 				}
 					
 				if(auth){
-					client = this.authRequired || parameters.__auth === 'force'
+					client = this.authRequired || parameters.__auth === "force"
 							? share.authRequireDefault(context)
 							: share.authCheckDefault(context);
 				}
@@ -254,19 +255,22 @@ const IndexPage = module.exports = require('ae3').Class.create(
 				/**
 				 * TODO: optional auth
 				 */
-				if(!client && auth){
-					if( parameters.login ){
-						return share.makeAuthenticationFailedReply(context);
-					}
-					if( this.authRequired ){
-						return share.makeAuthenticateReply(context);
+				if(!client){
+					context.title = this.titleUnauthenticated || context.title;
+					if(auth){
+						if( parameters.login ){
+							return share.makeAuthenticationFailedReply(context);
+						}
+						if( this.authRequired ){
+							return share.makeAuthenticateReply(context);
+						}
 					}
 				}
 
 				return this.buildIndexMenuReply(
 					context, 
 					client, 
-					share.authCheckAccountMembership(context, this.accountMembership || 'admin')
+					share.authCheckAccountMembership(context, this.accountMembership || "admin")
 				);
 
 			}
@@ -291,6 +295,8 @@ const IndexPage = module.exports = require('ae3').Class.create(
 			value : function createIndex(props){
 				const page = new this();
 
+				page.title = props.title || undefined;
+				page.titleUnauthenticated = props.titleUnauthenticated;
 				var title = props.title;
 				title && (page.title = title);
 				
@@ -316,16 +322,16 @@ const IndexPage = module.exports = require('ae3').Class.create(
 
 function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, admin){
 	var key, command, item, link, x;
-	for(key of (('function' === typeof index.commandKeys) ? index.commandKeys() : index.commandKeys)){
-		if(prefix !== '/' && (key == "../" || key.endsWith("/resource/documentation.xml") || key.endsWith("/documentation"))){
+	for(key of (("function" === typeof index.commandKeys) ? index.commandKeys() : index.commandKeys)){
+		if(prefix !== "/" && (key == "../" || key.endsWith("/resource/documentation.xml") || key.endsWith("/documentation"))){
 			continue;
 		}
 		command = index.getCommand(key);
-		if((command.ui || key == 'index') && (command.access == 'public' || client && (!command.access || command.access == 'user') || admin)){
+		if((command.ui || key == "index") && (command.access == "public" || client && (!command.access || command.access == "user") || admin)){
 			// new prefix
 			item = {
 				"title" : command.title || key,
-				"access" : command.access || 'user',
+				"access" : command.access || "user",
 			};
 			targetArray.push(item);
 			
@@ -333,12 +339,12 @@ function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, a
 			 * will become new prefix
 			 */
 			link = command.link;
-			if(link !== ''){
+			if(link !== ""){
 				link ||= key;
 				/**
 				 * no prefix for rooted links
 				 */
-				link[0] == '/' || link.lastIndexOf('://', 10) != -1 || (link = (prefix + link));
+				link[0] == "/" || link.lastIndexOf("://", 10) != -1 || (link = (prefix + link));
 				item.href = link;
 			}
 			
@@ -356,24 +362,24 @@ function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, a
 
 function internMakeLoginOptions(query, share, Index){
 	var url = query.url;
-	var xml = '';
+	var xml = "";
 	$output(xml){
 		if(url.startsWith("http://") && query.toSecureChannel()){
-			var URL = require('url');
+			var URL = require("url");
 			var parsed = URL.parse(url);
-			= Format.xmlElement('command', {
+			= Format.xmlElement("command", {
 				icon : "lock_go",
 				title : "Switch to secure connection",
 				key : parsed.port 
 					? "/?secure-login" 
 					: "https" + url.substring(4)
 			});
-			= Format.xmlElement('command', {
+			= Format.xmlElement("command", {
 				icon : "accept",
 				title : "The certificate to be trusted for secure connection with this server",
 				key : (share.settings || {})["custom-root-ca-pki-location"] || "/resource/root-ca.crt"
 			});
-			= Format.xmlElement('command', {
+			= Format.xmlElement("command", {
 				key : "?login",
 				icon : "error_delete",
 				ui : false,
@@ -382,7 +388,7 @@ function internMakeLoginOptions(query, share, Index){
 				title : "(Non-Secure) Login using basic http authentication"
 			});
 		}else{
-			= Format.xmlElement('command', {
+			= Format.xmlElement("command", {
 				key : "?login",
 				icon : "key_go",
 				ui : true,
@@ -390,7 +396,7 @@ function internMakeLoginOptions(query, share, Index){
 				title : "Login using basic http authentication"
 			});
 			if(Index && Index.loginSession){
-				= Format.xmlElement('command', {
+				= Format.xmlElement("command", {
 					key : "?login",
 					icon : "folder_key",
 					ui : true,
@@ -398,22 +404,22 @@ function internMakeLoginOptions(query, share, Index){
 					title : "Login using session cookie and html form",
 					preview : {
 						depthLimit : 1,
-						zoom : 'row',
-						layout : 'form',
-						variant : 'form',
-						action : '?login',
+						zoom : "row",
+						layout : "form",
+						variant : "form",
+						action : "?login",
 						fields : { 
 							field : [ 
-								{ name : 'login', type : 'string', title : 'Login' }, 
-								{ name : 'password', type : 'password', title : 'Password' } 
+								{ name : "login", type : "string", title : "Login" }, 
+								{ name : "password", type : "password", title : "Password" } 
 							], 
-							submit : [ { icon : 'key_go', title : 'Sign In' } ]
+							submit : [ { icon : "key_go", title : "Sign In" } ]
 						},
 					}
 				});
 			}
 			if(Index && Index.signUp){
-				= Format.xmlElement('command', {
+				= Format.xmlElement("command", {
 					key : "?register",
 					icon : "key_add",
 					ui : true,
@@ -429,22 +435,22 @@ function internMakeLoginOptions(query, share, Index){
 
 function indexOutAllXml(index, prefix, client, admin, depth){
 	var key, command, item, link;
-	for(key of (('function' === typeof index.commandKeys) ? index.commandKeys() : index.commandKeys)){
-		if(prefix !== '' && (key === "../" || key.endsWith("/resource/documentation.xml") || key.endsWith("/documentation"))){
+	for(key of (("function" === typeof index.commandKeys) ? index.commandKeys() : index.commandKeys)){
+		if(prefix !== "" && (key === "../" || key.endsWith("/resource/documentation.xml") || key.endsWith("/documentation"))){
 			continue;
 		}
 		command = index.getCommand(key);
 		if(!command || (command.depthLimit || 10) < depth){
 			continue;
 		}
-		if(command.access === 'public' || client && (command.access === 'user' || !command.access) || admin){
+		if(command.access === "public" || client && (command.access === "user" || !command.access) || admin){
 			item = {
 				icon : command.icon || undefined,
 				title : command.title || key,
 				depthLimit : command.depthLimit || undefined,
 				ui : command.ui || false,
 				hidden : !command.ui,
-				admin : command.access || 'user',
+				admin : command.access || "user",
 				preview : command.preview || undefined,
 			};
 			
@@ -452,12 +458,12 @@ function indexOutAllXml(index, prefix, client, admin, depth){
 			 * will become new prefix
 			 */
 			link = command.link;
-			if(link !== ''){
+			if(link !== ""){
 				link ||= key;
 				/**
 				 * no prefix for rooted links
 				 */
-				link[0] === '/' || link.lastIndexOf('://', 10) !== -1 || (link = (prefix + link));
+				link[0] === "/" || link.lastIndexOf("://", 10) !== -1 || (link = (prefix + link));
 				item.key = link;
 			}
 			
@@ -466,11 +472,11 @@ function indexOutAllXml(index, prefix, client, admin, depth){
 					= indexOutAllXml(index.getCommandHandler(command, key), link, client, admin, depth + 1);
 				%></index><%
 			}else{
-				= Format.xmlElement('command', item);
+				= Format.xmlElement("command", item);
 			}
 		}
 	}
-	return '';
+	return "";
 }
 
 
