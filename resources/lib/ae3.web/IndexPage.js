@@ -2,6 +2,8 @@
  * TODO: ready-support for "/resources/"
  */
 
+const UrlParseFn = require("url").parse;
+
 function buildIndexMenuReply(context, client, admin){
 	const query = context.query;
 	const parameters = query.parameters;
@@ -327,7 +329,10 @@ function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, a
 			continue;
 		}
 		command = index.getCommand(key);
-		if((command.ui || key == "index") && (command.access == "public" || client && (!command.access || command.access == "user") || admin)){
+		if(key != "index" && (command.ui || "hidden") === "hidden"){
+			continue;
+		}
+		if(command.access == "public" || client && (!command.access || command.access == "user") || admin){
 			// new prefix
 			item = {
 				"title" : command.title || key,
@@ -365,8 +370,7 @@ function internMakeLoginOptions(query, share, Index){
 	var xml = "";
 	$output(xml){
 		if(url.startsWith("http://") && query.toSecureChannel()){
-			var URL = require("url");
-			var parsed = URL.parse(url);
+			var parsed = UrlParseFn(url);
 			= Format.xmlElement("command", {
 				icon : "lock_go",
 				title : "Switch to secure connection",
@@ -374,19 +378,22 @@ function internMakeLoginOptions(query, share, Index){
 					? "/?secure-login" 
 					: "https" + url.substring(4)
 			});
-			= Format.xmlElement("command", {
-				icon : "accept",
-				title : "The certificate to be trusted for secure connection with this server",
-				key : (share.settings || {})["custom-root-ca-pki-location"] || "/resource/root-ca.crt"
-			});
-			= Format.xmlElement("command", {
-				key : "?login",
-				icon : "error_delete",
-				ui : false,
-				hidden : true,
-				access : "public",
-				title : "(Non-Secure) Login using basic http authentication"
-			});
+			if((share.settings || {})["custom-root-ca-pki-location"]){
+				= Format.xmlElement("command", {
+					icon : "accept",
+					title : "The certificate to be trusted for secure connection with this server",
+					key : share.settings["custom-root-ca-pki-location"]
+				});
+			}else{
+				= Format.xmlElement("command", {
+					key : "?login",
+					icon : "error_delete",
+					ui : false,
+					hidden : true,
+					access : "public",
+					title : "(Non-Secure) Login using basic http authentication"
+				});
+			}
 		}else{
 			= Format.xmlElement("command", {
 				key : "?login",
@@ -440,7 +447,7 @@ function indexOutAllXml(index, prefix, client, admin, depth){
 			continue;
 		}
 		command = index.getCommand(key);
-		if(!command || (command.depthLimit || 10) < depth){
+		if(!command || command.ui === "hidden" || (command.depthLimit || 10) < depth){
 			continue;
 		}
 		if(command.access === "public" || client && (command.access === "user" || !command.access) || admin){
@@ -478,6 +485,3 @@ function indexOutAllXml(index, prefix, client, admin, depth){
 	}
 	return "";
 }
-
-
-

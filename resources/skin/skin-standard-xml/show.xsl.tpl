@@ -45,7 +45,7 @@
 			<xsl:comment> zoom: <xsl:value-of select='$zoom'/> </xsl:comment>
 			<xsl:comment> sudo: <xsl:value-of select='$sudo'/> </xsl:comment>
 			<xsl:comment> stdl: <xsl:value-of select='$standalone'/> </xsl:comment>
-			<xsl:comment> make: 20190617T2136Z </xsl:comment>
+			<xsl:comment> make: 20221201T21236Z </xsl:comment>
 			<xsl:for-each select="*">
 				<head>
 					<title>
@@ -590,6 +590,17 @@
 			<xsl:when test="$format/@variant='view'">
 				<xsl:variable name="describer" select="$format/fields | $value/fields[not($format/fields)]"/>
 		
+				<xsl:variable name="itemZoom">
+					<xsl:choose>
+						<xsl:when test="$zoom = 'document' or $zoom = 'window'">
+							<xsl:text>row</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>compact</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+		
 				<xsl:if test="$zoom = 'document'">
 					<xsl:apply-templates select="$format/prefix[not($clean) or @important = 'true']"/>
 				</xsl:if>
@@ -609,27 +620,65 @@
 							</td>
 							<td class="field fldval">
 								<div>
+									<xsl:variable name="name"><xsl:value-of select="$field/@name"/></xsl:variable>
+									<!-- xsl:variable name="name" select="$field/@name"/ -->
 									<xsl:choose>
-										<xsl:when test="$field/@name = '' or not($field/@name)">
+										<xsl:when test="$name = '' or not($name)">
 											<xsl:call-template name="formatted">
 												<xsl:with-param name="format" select="$field"/>
 												<xsl:with-param name="value" select="$field/@value | $value[not($field/@value)]"/>
+												<xsl:with-param name="zoom" select="$itemZoom"/>
 											</xsl:call-template>
 											<xsl:comment> l: 420 ^ </xsl:comment>
 										</xsl:when>
-										<xsl:when test="$field/@name = '.'">
+										<xsl:when test="$name = '.'">
 											<xsl:call-template name="formatted">
 												<xsl:with-param name="format" select="$field"/>
 												<xsl:with-param name="value" select="$value"/>
+												<xsl:with-param name="zoom" select="$itemZoom"/>
+											</xsl:call-template>
+											<xsl:comment> l: 425 ^ </xsl:comment>
+										</xsl:when>
+										<xsl:when test="$value/values/*[local-name() = $name]">
+											<xsl:call-template name="formatted">
+												<xsl:with-param name="format" select="$field"/>
+												<xsl:with-param name="value" select="$value/values/*[local-name() = $name]"/>
+												<xsl:with-param name="zoom" select="$itemZoom"/>
+											</xsl:call-template>
+											<xsl:comment> l: 426 ^ </xsl:comment>
+										</xsl:when>
+										<xsl:when test="$value/*[local-name() = $name]">
+											<xsl:call-template name="formatted">
+												<xsl:with-param name="format" select="$field"/>
+												<xsl:with-param name="value" select="$value/*[local-name() = $name]"/>
+												<xsl:with-param name="zoom" select="$itemZoom"/>
 											</xsl:call-template>
 											<xsl:comment> l: 427 ^ </xsl:comment>
+										</xsl:when>
+										<xsl:when test="$value/values/@*[local-name() = $name]">
+											<xsl:call-template name="formatted">
+												<xsl:with-param name="format" select="$field"/>
+												<xsl:with-param name="value" select="$value/values/@*[local-name() = $name]"/>
+												<xsl:with-param name="zoom" select="$itemZoom"/>
+											</xsl:call-template>
+											<xsl:comment> l: 428 ^ </xsl:comment>
+										</xsl:when>
+										<xsl:when test="$value/@*[local-name() = $name]">
+											<xsl:call-template name="formatted">
+												<xsl:with-param name="format" select="$field"/>
+												<xsl:with-param name="value" select="$value/@*[local-name() = $name]"/>
+												<xsl:with-param name="zoom" select="$itemZoom"/>
+											</xsl:call-template>
+											<xsl:comment> l: 429 ^ </xsl:comment>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:call-template name="formatted">
 												<xsl:with-param name="format" select="$field"/>
-												<xsl:with-param name="value" select="$value/*[local-name() = $field/@name] | $value/values/*[local-name() = $field/@name] | $value/values/@*[local-name() = $field/@name]"/>
+												<!-- xsl:with-param name="value"><xsl:value-of select="$field/@value | $field/value[not($field/@value)]"/></xsl:with-param -->
+												<xsl:with-param name="value" select="$field/@value | $field/value[not($field/@value)]"/>
+												<xsl:with-param name="zoom" select="$itemZoom"/>
 											</xsl:call-template>
-											<xsl:comment> l: 434 ^ </xsl:comment>
+											<xsl:comment> l: 421 ^ </xsl:comment>
 										</xsl:otherwise>
 									</xsl:choose>
 									<xsl:call-template name="hint"/>
@@ -1542,13 +1591,12 @@
 		</form>
 	</xsl:template>
 
-
-	<xsl:template name="edit">
+	<xsl:template name="edit-fields">
 		<xsl:param name="format" />
 		<xsl:param name="values" />
-		<xsl:param name="zoom"><xsl:value-of select="$format/@zoom" /><xsl:if test="not($format/@zoom)"><xsl:value-of select="$zoom" /></xsl:if></xsl:param>
+		<xsl:param name="zoom" />
 		<xsl:param name="parentInputValue" />
-
+		
 		<xsl:variable name="itemZoom">
 			<xsl:choose>
 				<xsl:when test="$zoom = 'document' or $zoom = 'window'">
@@ -1559,6 +1607,77 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		
+		<xsl:for-each select="$format/field | $values/field[not($format/field)]">
+			<xsl:variable name="field" select="."/>
+			<xsl:variable name="name"><xsl:value-of select="$field/@name"/></xsl:variable>
+			<!-- xsl:variable name="name" select="$field/@name"/ -->
+			<xsl:choose>
+				<xsl:when test="$name = '' or not($name)">
+					<xsl:call-template name="form-field">
+						<xsl:with-param name="format" select="$field"/>
+						<xsl:with-param name="value" select="$field/@value | $values[not($field/@value)]"/>
+						<xsl:with-param name="zoom" select="$itemZoom"/>
+					</xsl:call-template>
+					<xsl:comment> l: 220 ^ </xsl:comment>
+				</xsl:when>
+				<xsl:when test="$name = '.'">
+					<xsl:call-template name="form-field">
+						<xsl:with-param name="format" select="$field"/>
+						<xsl:with-param name="value" select="$values"/>
+						<xsl:with-param name="zoom" select="$itemZoom"/>
+					</xsl:call-template>
+					<xsl:comment> l: 225 ^ </xsl:comment>
+				</xsl:when>
+				<xsl:when test="$values/values/*[local-name() = $name]">
+					<xsl:call-template name="form-field">
+						<xsl:with-param name="format" select="$field"/>
+						<xsl:with-param name="value" select="$values/values/*[local-name() = $name]"/>
+						<xsl:with-param name="zoom" select="$itemZoom"/>
+					</xsl:call-template>
+					<xsl:comment> l: 226 ^ </xsl:comment>
+				</xsl:when>
+				<xsl:when test="$values/*[local-name() = $name]">
+					<xsl:call-template name="form-field">
+						<xsl:with-param name="format" select="$field"/>
+						<xsl:with-param name="value" select="$values/*[local-name() = $name]"/>
+						<xsl:with-param name="zoom" select="$itemZoom"/>
+					</xsl:call-template>
+					<xsl:comment> l: 227 ^ </xsl:comment>
+				</xsl:when>
+				<xsl:when test="$values/values/@*[local-name() = $name]">
+					<xsl:call-template name="form-field">
+						<xsl:with-param name="format" select="$field"/>
+						<xsl:with-param name="value" select="$values/values/@*[local-name() = $name]"/>
+						<xsl:with-param name="zoom" select="$itemZoom"/>
+					</xsl:call-template>
+					<xsl:comment> l: 228 ^ </xsl:comment>
+				</xsl:when>
+				<xsl:when test="$values/@*[local-name() = $name]">
+					<xsl:call-template name="form-field">
+						<xsl:with-param name="format" select="$field"/>
+						<xsl:with-param name="value" select="$values/@*[local-name() = $name]"/>
+						<xsl:with-param name="zoom" select="$itemZoom"/>
+					</xsl:call-template>
+					<xsl:comment> l: 229 ^ </xsl:comment>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="form-field">
+						<xsl:with-param name="format" select="$field"/>
+						<xsl:with-param name="value" select="$field/@value | $field/value[not($field/@value)]"/>
+						<xsl:with-param name="zoom" select="$itemZoom"/>
+					</xsl:call-template>
+					<xsl:comment> l: 221 ^ </xsl:comment>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template name="edit">
+		<xsl:param name="format" />
+		<xsl:param name="values" />
+		<xsl:param name="zoom"><xsl:value-of select="$format/@zoom" /><xsl:if test="not($format/@zoom)"><xsl:value-of select="$zoom" /></xsl:if></xsl:param>
+		<xsl:param name="parentInputValue" />
 
 		<xsl:if test="$zoom = 'document'">
 			<xsl:apply-templates select="$format/prefix[not($clean) or @important = 'true']"/>
@@ -1567,39 +1686,32 @@
 		<div class="ui-table-screen-{$zoom}">
 		<div class="ui-table-container">
 		<div class="table-edit">
-		<xsl:choose>
-			<xsl:when test="$zoom = 'row' or $itemZoom = 'compact'">
-				<div class="table ui-edit-table-{$zoom} ui-edit-row">
-					<xsl:for-each select="$format/field | $values/field[not($format/field)]">
-						<xsl:variable name="field" select="."/>
-						<xsl:variable name="name" select="$field/@name"/>
-						<xsl:variable name="value" select="$values[$name = '.'] | $values/*[local-name() = $name and $name != ''] | $values/values/*[local-name() = $name and $name != ''] | $values/values/@*[local-name() = $name and $name != '']"/>
-						<xsl:call-template name="form-field">
-							<xsl:with-param name="format" select="."/>
-							<xsl:with-param name="value" select="$value | $field/@value[not($value)] | $field/value[not($value) and not($field/@value)]"/>
-							<xsl:with-param name="zoom" select="$itemZoom"/>
+			<xsl:choose>
+				<xsl:when test="$zoom = 'document' or $zoom = 'window'">
+					<table class="table ui-edit-table-{$zoom} ui-edit-other">
+						<xsl:call-template name="edit-fields">
+							<xsl:with-param name="format" select="$format"/>
+							<xsl:with-param name="values" select="$values"/>
+							<xsl:with-param name="zoom" select="$zoom"/>
 						</xsl:call-template>
-					</xsl:for-each>
-				</div>
-			</xsl:when>
-			<xsl:otherwise>
-				<table class="table ui-edit-table-{$zoom} ui-edit-other">
-					<xsl:for-each select="$format/field | $values/field[not($format/field)]">
-						<xsl:variable name="field" select="."/>
-						<xsl:variable name="name" select="$field/@name"/>
-						<xsl:variable name="value" select="$values[$name = '.'] | $values/*[local-name() = $name and $name != ''] | $values/values/*[local-name() = $name and $name != ''] | $values/values/@*[local-name() = $name and $name != '']"/>
-						<xsl:call-template name="form-field">
-							<xsl:with-param name="format" select="."/>
-							<xsl:with-param name="value" select="$value | $field/@value[not($value)] | $field/value[not($value) and not($field/@value)]"/>
-							<xsl:with-param name="zoom" select="$itemZoom"/>
+						<!-- xsl:call-template name="edit-fields"/ -->
+					</table>
+				</xsl:when>
+				<xsl:otherwise>
+					<div class="table ui-edit-table-{$zoom} ui-edit-row">
+						<xsl:call-template name="edit-fields">
+							<xsl:with-param name="format" select="$format"/>
+							<xsl:with-param name="values" select="$values"/>
+							<xsl:with-param name="zoom" select="$zoom"/>
 						</xsl:call-template>
-					</xsl:for-each>
-				</table>
-			</xsl:otherwise>
-		</xsl:choose>
+						<!-- xsl:call-template name="edit-fields"/ -->
+					</div>
+				</xsl:otherwise>
+			</xsl:choose>
 		</div>
 		</div>
 		</div>
+
 		<xsl:if test="$format/help or $format/command or $format/submit">
 			<div class="submit">
 				<xsl:call-template name="command-bar">
@@ -1838,13 +1950,66 @@
 						</xsl:call-template>
 					</td>
 					<td class="field fldval">
-						<xsl:variable name="name" select="$field/@name"/>
-						<xsl:variable name="val" select="$value[$name = '.'] | $value/*[local-name() = $name and $name != ''] | $value/values/*[local-name() = $name and $name != ''] | $value/values/@*[local-name() = $name and $name != '']"/>
-						<xsl:call-template name="formatted">
-							<xsl:with-param name="format" select="."/>
-							<xsl:with-param name="value" select="$val | $field/@value[not($val)] | $field/value[not($val) and not($field/@value)]"/>
-							<xsl:with-param name="zoom" select="$itemZoom"/>
-						</xsl:call-template>
+						<xsl:variable name="name"><xsl:value-of select="$field/@name"/></xsl:variable>
+						<!-- xsl:variable name="name" select="$field/@name"/ -->
+						<xsl:choose>
+							<xsl:when test="$name = '' or not($name)">
+								<xsl:call-template name="formatted">
+									<xsl:with-param name="format" select="$field"/>
+									<xsl:with-param name="value" select="$field/@value | $value[not($field/@value)]"/>
+									<xsl:with-param name="zoom" select="$itemZoom"/>
+								</xsl:call-template>
+								<xsl:comment> l: 320 ^ </xsl:comment>
+							</xsl:when>
+							<xsl:when test="$name = '.'">
+								<xsl:call-template name="formatted">
+									<xsl:with-param name="format" select="$field"/>
+									<xsl:with-param name="value" select="$value"/>
+									<xsl:with-param name="zoom" select="$itemZoom"/>
+								</xsl:call-template>
+								<xsl:comment> l: 325 ^ </xsl:comment>
+							</xsl:when>
+							<xsl:when test="$value/values/*[local-name() = $name]">
+								<xsl:call-template name="formatted">
+									<xsl:with-param name="format" select="$field"/>
+									<xsl:with-param name="value" select="$value/values/*[local-name() = $name]"/>
+									<xsl:with-param name="zoom" select="$itemZoom"/>
+								</xsl:call-template>
+								<xsl:comment> l: 326 ^ </xsl:comment>
+							</xsl:when>
+							<xsl:when test="$value/*[local-name() = $name]">
+								<xsl:call-template name="formatted">
+									<xsl:with-param name="format" select="$field"/>
+									<xsl:with-param name="value" select="$value/*[local-name() = $name]"/>
+									<xsl:with-param name="zoom" select="$itemZoom"/>
+								</xsl:call-template>
+								<xsl:comment> l: 327 ^ </xsl:comment>
+							</xsl:when>
+							<xsl:when test="$value/values/@*[local-name() = $name]">
+								<xsl:call-template name="formatted">
+									<xsl:with-param name="format" select="$field"/>
+									<xsl:with-param name="value" select="$value/values/@*[local-name() = $name]"/>
+									<xsl:with-param name="zoom" select="$itemZoom"/>
+								</xsl:call-template>
+								<xsl:comment> l: 328 ^ </xsl:comment>
+							</xsl:when>
+							<xsl:when test="$value/@*[local-name() = $name]">
+								<xsl:call-template name="formatted">
+									<xsl:with-param name="format" select="$field"/>
+									<xsl:with-param name="value" select="$value/@*[local-name() = $name]"/>
+									<xsl:with-param name="zoom" select="$itemZoom"/>
+								</xsl:call-template>
+								<xsl:comment> l: 329 ^ </xsl:comment>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="formatted">
+									<xsl:with-param name="format" select="$field"/>
+									<xsl:with-param name="value" select="$field/@value | $field/value[not($field/@value)]"/>
+									<xsl:with-param name="zoom" select="$itemZoom"/>
+								</xsl:call-template>
+								<xsl:comment> l: 321 ^ </xsl:comment>
+							</xsl:otherwise>
+						</xsl:choose>
 						<xsl:call-template name="hint"/>
 					</td>
 				</tr>
