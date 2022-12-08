@@ -45,7 +45,7 @@
 			<xsl:comment> zoom: <xsl:value-of select='$zoom'/> </xsl:comment>
 			<xsl:comment> sudo: <xsl:value-of select='$sudo'/> </xsl:comment>
 			<xsl:comment> stdl: <xsl:value-of select='$standalone'/> </xsl:comment>
-			<xsl:comment> make: 20221201T21236Z </xsl:comment>
+			<xsl:comment> make: 20221208T21236Z </xsl:comment>
 			<xsl:for-each select="*">
 				<head>
 					<title>
@@ -1746,7 +1746,7 @@
 			</xsl:if>
 			<xsl:for-each select="$items">
 				<a href="{@key}{@url}" class="ui-cmd-link">
-					<div class="hl hl-bn-{@admin} hl-hd-{@hidden} hl-ui-{@ui} idx-box-cell">
+					<div class="hl hl-bn-{@access} hl-hd-{@hidden} hl-ui-{@ui} idx-box-cell">
 						<div class="ui-cmd-icon">
 							<xsl:if test="@icon">
 								<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
@@ -2402,9 +2402,9 @@
 		</xsl:if>
 		<xsl:variable name="items" select="command | index"/>
 		<xsl:if test="$items">
-			<xsl:if test="$depth = 1 and (@zoom='document' or $zoom='document') and (.//command | .//index)">
+			<xsl:if test="$depth = 1 and (@zoom='document' or $zoom='document') and $items">
 				<div style="clear:both">
-					<xsl:if test=".//command/@hidden | .//index/@hidden">
+					<xsl:if test="$items/@hidden">
 						<button id="{$unique}-btn" class="ui-menu-btn-ini no-print" style="opacity:0.35">
 							<div class="ui-cmd-icon"><img src="{$base}/__i/famfamfam.com/silk/cog_delete.png" class="icon"/></div>
 							<div class="ui-cmd-text">Show all commands</div>
@@ -2451,7 +2451,7 @@
 						</xsl:when>
 						<xsl:when test="local-name()='command'">
 							<a href="{@key}" class="ui-cmd-link">
-								<div class="hl hl-bn-{@admin} hl-hd-{@hidden} hl-ui-{@ui} idx-box-cell">
+								<div class="hl hl-bn-{@access} hl-hd-{@hidden} hl-ui-{@ui} idx-box-cell">
 									<xsl:copy-of select="$iconWithTitle"/>
 									<xsl:if test="$itemZoom != 'compact'">
 										<xsl:for-each select="preview">
@@ -2471,7 +2471,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<a href="{@key}" class="ui-cmd-link">
-								<div class="hl hl-bn-{@admin} hl-hd-{@hidden} hl-ui-{@ui} idx-grp-cell">
+								<div class="hl hl-bn-{@access} hl-hd-{@hidden} hl-ui-{@ui} idx-grp-cell">
 									<xsl:copy-of select="$iconWithTitle"/>
 									<xsl:if test="not(@depthLimit) or (@depthLimit &gt; $depth)">
 										<xsl:apply-templates select=".">

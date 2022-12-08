@@ -419,7 +419,7 @@ TD.hint, TH.hint, DIV.hint{
 	float: right;
 }
 
-.ui-menu-ctn-all .hl-ui-false{
+.ui-menu-ctn-all .hl-ui-false, .ui-menu-ctn-all .hl-ui-{
 	display: list-item;
 	display: block;
 }
@@ -805,7 +805,7 @@ A.ui-button, A.ui-button:focus, A.ui-button:active, A.ui-button:hover, A.ui-butt
 .hl-ui-small {
 	font-size: 80%;
 }
-.hl-ui-false {
+.hl-ui-false, .hl-ui- {
 	display: none;
 }
 .hl-ui-true {

@@ -267,6 +267,11 @@ const IndexPage = module.exports = require("ae3").Class.create(
 								return share.makeAuthenticateReply(context);
 							}
 						}
+						return this.buildIndexMenuReply(
+							context, 
+							undefined, 
+							false
+						);
 					}
 				}
 				
@@ -301,9 +306,7 @@ const IndexPage = module.exports = require("ae3").Class.create(
 				const page = new this();
 
 				page.title = props.title || undefined;
-				page.titleUnauthenticated = props.titleUnauthenticated || undefined;
-				const title = props.title;
-				title && (page.title = title);
+				page.titleUnauthenticated = props.titleUnauthenticated || page.title || undefined;
 				
 				const auth = props.auth || this.authenticationProvider;
 				auth && (page.auth = auth);
@@ -458,9 +461,10 @@ function indexOutAllXml(index, prefix, client, admin, depth){
 				icon : command.icon || undefined,
 				title : command.title || key,
 				depthLimit : command.depthLimit || undefined,
-				ui : command.ui || false,
-				hidden : !command.ui,
-				admin : command.access || "user",
+				ui : command.ui || undefined,
+				hidden : !command.ui || undefined,
+				access : command.access || "user",
+				admin : command.access || "user", /* <<< TODO: remove, transitional support for non-refreshed XSLT */
 				preview : command.preview || undefined,
 			};
 			
