@@ -174,12 +174,12 @@ const IndexPage = module.exports = require("ae3").Class.create(
 				const identifier = query.resourceIdentifier;
 				const parameters = query.parameters;
 
-				context.title = this.title;
-
 				/**
 				 * TODO: add index itself is not within "commands"
 				 */
 				if(identifier && identifier !== "/" && identifier !== "/index"){
+					context.title = this.title;
+
 					if(identifier === "/xml-request.xml"){
 						return require("ae3.web/XmlMultipleRequest").handle(context, this);
 					}
@@ -201,6 +201,7 @@ const IndexPage = module.exports = require("ae3").Class.create(
 				const auth = this.auth || share.authenticationProvider;
 
 				var client;
+				
 				switch(query.parameterString){
 				case "logout":{
 					if(!auth){
@@ -249,25 +250,27 @@ const IndexPage = module.exports = require("ae3").Class.create(
 				}
 					
 				if(auth){
+					context.title = this.titleUnauthenticated || context.title;
 					client = this.authRequired || parameters.__auth === "force"
 							? share.authRequireDefault(context)
 							: share.authCheckDefault(context);
-				}
-				
-				/**
-				 * TODO: optional auth
-				 */
-				if(!client){
-					context.title = this.titleUnauthenticated || context.title;
-					if(auth){
-						if( parameters.login ){
-							return share.makeAuthenticationFailedReply(context);
-						}
-						if( this.authRequired ){
-							return share.makeAuthenticateReply(context);
+							
+					/**
+					 * TODO: optional auth
+					 */
+					if(!client){
+						if(auth){
+							if( parameters.login ){
+								return share.makeAuthenticationFailedReply(context);
+							}
+							if( this.authRequired ){
+								return share.makeAuthenticateReply(context);
+							}
 						}
 					}
 				}
+				
+				context.title = this.title;
 
 				return this.buildIndexMenuReply(
 					context, 
@@ -298,18 +301,18 @@ const IndexPage = module.exports = require("ae3").Class.create(
 				const page = new this();
 
 				page.title = props.title || undefined;
-				page.titleUnauthenticated = props.titleUnauthenticated;
-				var title = props.title;
+				page.titleUnauthenticated = props.titleUnauthenticated || undefined;
+				const title = props.title;
 				title && (page.title = title);
 				
-				var auth = props.auth || this.authenticationProvider;
+				const auth = props.auth || this.authenticationProvider;
 				auth && (page.auth = auth);
-				auth && props.authRequired && (page.authRequired = true);
+				props.authRequired && (page.authRequired = true);
 				
-				var menu = props.menu || DEFAULT_MENU;
+				const menu = props.menu || DEFAULT_MENU;
 				menu && (page.menu = menu);
 				
-				var commands = props.commands;
+				const commands = props.commands;
 				if(commands){
 					page.commands = commands;
 					commands.index && (commands.index.run ||= page);

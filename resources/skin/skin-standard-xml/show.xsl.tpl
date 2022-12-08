@@ -413,10 +413,17 @@
 		<xsl:param name="zoom" />
 		<xsl:param name="parentInputValue" />
 		<xsl:choose>
+			<xsl:when test="not($value) and $format and ($format/@value or $format/value)">
+				<xsl:call-template name="formatted">
+					<xsl:with-param name="format" select="$format"/>
+					<xsl:with-param name="value" select="$format/@value | $format/value"/>
+					<xsl:with-param name="zoom" select="$zoom"/>
+				</xsl:call-template>
+			</xsl:when>
 			<xsl:when test="not($value) and $format and ($format/@default or $format/default)">
 				<xsl:call-template name="formatted">
 					<xsl:with-param name="format" select="$format"/>
-					<xsl:with-param name="value" select="$format/@default | $format/default[not($format/@default)]"/>
+					<xsl:with-param name="value" select="$format/@default | $format/default"/>
 					<xsl:with-param name="zoom" select="$zoom"/>
 				</xsl:call-template>
 			</xsl:when>
@@ -626,7 +633,7 @@
 										<xsl:when test="$name = '' or not($name)">
 											<xsl:call-template name="formatted">
 												<xsl:with-param name="format" select="$field"/>
-												<xsl:with-param name="value" select="$field/@value | $value[not($field/@value)]"/>
+												<xsl:with-param name="value" select="$field/@value | $field/value"/>
 												<xsl:with-param name="zoom" select="$itemZoom"/>
 											</xsl:call-template>
 											<xsl:comment> l: 420 ^ </xsl:comment>
@@ -973,7 +980,8 @@
 		<span>
 			<xsl:call-template name="formatted">
 				<xsl:with-param name="format" select="."/>
-				<xsl:with-param name="value" select="(@value | value | text())[1]"/>
+				<xsl:with-param name="value" select="@value | value | text()[not(@value) and not(value)]"/>
+				<!-- xsl:with-param name="value" select="(@value | value | text())[1]"/ -->
 				<xsl:with-param name="zoom" select="$zoom"/>
 			</xsl:call-template>
 		</span>
@@ -1616,7 +1624,7 @@
 				<xsl:when test="$name = '' or not($name)">
 					<xsl:call-template name="form-field">
 						<xsl:with-param name="format" select="$field"/>
-						<xsl:with-param name="value" select="$field/@value | $values[not($field/@value)]"/>
+						<xsl:with-param name="value" select="$field/@value | $field/value"/>
 						<xsl:with-param name="zoom" select="$itemZoom"/>
 					</xsl:call-template>
 					<xsl:comment> l: 220 ^ </xsl:comment>
@@ -1956,7 +1964,7 @@
 							<xsl:when test="$name = '' or not($name)">
 								<xsl:call-template name="formatted">
 									<xsl:with-param name="format" select="$field"/>
-									<xsl:with-param name="value" select="$field/@value | $value[not($field/@value)]"/>
+									<xsl:with-param name="value" select="$field/@value | $field/value"/>
 									<xsl:with-param name="zoom" select="$itemZoom"/>
 								</xsl:call-template>
 								<xsl:comment> l: 320 ^ </xsl:comment>
