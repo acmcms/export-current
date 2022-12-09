@@ -328,6 +328,7 @@ const IndexPage = module.exports = require("ae3").Class.create(
 );
 
 const HIDE_COMMAND_JS_BY_UI = {
+	"false" : true,
 	"jump" : true,
 	"hidden" : true,
 	"undefined" : true,
