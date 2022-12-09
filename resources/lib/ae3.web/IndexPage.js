@@ -337,7 +337,7 @@ const HIDE_COMMAND_JS_BY_UI = {
 function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, admin){
 	var key, command, item, link, x;
 	for(key of (("function" === typeof index.commandKeys) ? index.commandKeys() : index.commandKeys)){
-		if(prefix !== "/" && (key == "../" || key.endsWith("/resource/documentation.xml") || key.endsWith("/documentation"))){
+		if(prefix !== "/" && (key === "../" || key === "../index" || key.endsWith("/resource/documentation.xml") || key.endsWith("/documentation"))){
 			continue;
 		}
 		command = index.getCommand(key);
