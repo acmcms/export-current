@@ -327,6 +327,10 @@ const IndexPage = module.exports = require("ae3").Class.create(
 	}
 );
 
+const HIDE_COMMAND_JS_BY_UI = {
+	"jump" : true,
+	"hidden" : true,
+};
 
 function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, admin){
 	var key, command, item, link, x;
@@ -335,7 +339,7 @@ function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, a
 			continue;
 		}
 		command = index.getCommand(key);
-		if(key != "index" && (command.ui || "hidden") === "hidden"){
+		if(key != "index" && HIDE_COMMAND_JS_BY_UI[command.ui]){
 			continue;
 		}
 		if(command.access == "public" || client && (!command.access || command.access == "user") || admin){
