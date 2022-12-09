@@ -251,7 +251,7 @@ const IndexPage = module.exports = require("ae3").Class.create(
 					
 				if(auth){
 					context.title = this.titleUnauthenticated || context.title;
-					client = this.authRequired || parameters.__auth === "force"
+					client = this.authRequired || identifier === "/index" || parameters.__auth === "force"
 							? share.authRequireDefault(context)
 							: share.authCheckDefault(context);
 							
@@ -461,10 +461,9 @@ function indexOutAllXml(index, prefix, client, admin, depth){
 				icon : command.icon || undefined,
 				title : command.title || key,
 				depthLimit : command.depthLimit || undefined,
-				ui : command.ui || undefined,
+				ui : command.ui ?? undefined,
 				hidden : !command.ui || undefined,
 				access : command.access || "user",
-				admin : command.access || "user", /* <<< TODO: remove, transitional support for non-refreshed XSLT */
 				preview : command.preview || undefined,
 			};
 			
