@@ -6,7 +6,7 @@ const commands = {
 		icon : "house",
 		title : "System Administration",
 	},
-	"../":{
+	"../index":{
 		icon : "application_get",
 		title : "Root index menu",
 		access : "public",
