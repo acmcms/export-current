@@ -63,7 +63,7 @@ Ae3DistroWebIndex.prototype = Object.create(require('ae3.web/IndexPage').prototy
 					run : this,
 					access : "public",
 				},
-				"../":{
+				"../index":{
 					icon : "application_get",
 					title : "Root index menu",
 					access : "public",

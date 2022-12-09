@@ -7,7 +7,7 @@ const commands = {
 		title : "System Administration",
 		access : "admin",
 	},
-	"../":{
+	"../index":{
 		icon : "application_get",
 		title : "Root index menu",
 		access : "public",

@@ -26,7 +26,7 @@ function DiscoveryWebIndex(lib, props){
 			run : this,
 			access : "admin",
 		},
-		"../":{
+		"../index":{
 			icon : "application_get",
 			title : "Root index menu",
 			access : "public",

@@ -55,7 +55,7 @@ ManualWebIndex.prototype = Object.create(require('ae3.web/IndexPage').prototype,
 					run : this,
 					access : "public",
 				},
-				"../":{
+				"../index":{
 					icon : "application_get",
 					title : "Root index menu",
 					access : "public",

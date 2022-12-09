@@ -10,7 +10,7 @@ module.exports = require('ae3.web/IndexPage').create({
 			run : Index,
 			access : "public",
 		},
-		"../":{
+		"../index":{
 			icon : "application_get",
 			title : "Root index menu",
 			access : "public",

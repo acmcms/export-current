@@ -29,7 +29,7 @@ function StatsMonitoringPage(props){
 			run : this,
 			access : "user",
 		},
-		"../":{
+		"../index":{
 			icon : "application_get",
 			title : "Root index menu",
 			access : "public",
