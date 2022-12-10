@@ -46,14 +46,13 @@ const AbstractWebPage = module.exports = ae3.Class.create(
 				const query = context.query;
 				const identifier = query.resourceIdentifier;
 				const parameters = query.parameters;
-
-				const share = context.share;
-				context.title = this.title;
 				
 				/**
 				 * TODO: add index itself is not within 'commands'
 				 */
 				if(identifier && identifier !== '/' && identifier !== '/index'){
+					context.title = this.title;
+					
 					if(identifier === '/xml-request.xml'){
 						return require('ae3.web/XmlMultipleRequest').handle(context, this);
 					}
@@ -66,50 +65,69 @@ const AbstractWebPage = module.exports = ae3.Class.create(
 					query.shiftRequested(key.length + 1, false);
 					
 					var handler = this.getCommandHandler(command, key);
-					
 
 					return (handler.handle || handler).call(handler, context);
 				}
 
-				var client;
-				if(this.auth){
-					switch(query.parameterString){
-					case 'logout':{
-						client = require("ae3.util/AuthMap").create(AbstractWebPage.AUTH_LOGOUT_MAP).authRequireQuery(query);
-						context.client = null;
-						return share.makeAuthenticationLogoutReply(context);
-					}
-					case 'secure-login':{
-						var redirection = query.toSecureChannel();
-						if(redirection){
-							return redirection;
-						}
-					}
-					/**
-					 * pass-through
-					 */
-					// break;
-					case 'login':{
-						share.authRequireDefault(context);
-						return share.makeAuthenticationSuccessReply(context);
-					}
-					}
-					
-					client = this.authRequired || parameters.__auth === 'force'
-							? share.authRequireDefault(context)
-							: share.authCheckDefault(context);
+				const share = context.share;
+				const auth = this.auth || share.authenticationProvider;
+
+				if(!auth){
+					context.title = this.title;
+					return require('ae3.web/IndexPage').prototype.buildIndexMenuReply.call(
+						this, 
+						context, 
+						undefined, 
+						false
+					);
 				}
+
+				var client;
+
+				switch(query.parameterString){
+				case 'logout':{
+					client = require("ae3.util/AuthMap").create(AbstractWebPage.AUTH_LOGOUT_MAP).authRequireQuery(query);
+					context.client = null;
+					return share.makeAuthenticationLogoutReply(context);
+				}
+				case 'secure-login':{
+					var redirection = query.toSecureChannel();
+					if(redirection){
+						return redirection;
+					}
+				}
+				/**
+				 * pass-through
+				 */
+				// break;
+				case 'login':{
+					context.title = this.titleUnauthenticated || context.title;
+					share.authRequireDefault(context);
+					return share.makeAuthenticationSuccessReply(context);
+				}
+				}
+					
+				context.title = this.titleUnauthenticated || context.title;
+				client = this.authRequired || parameters.__auth === "force"
+						? share.authRequireDefault(context)
+						: share.authCheckDefault(context);
 				
 				/**
 				 * TODO: optional auth
 				 */
-				if(!client && this.auth){
+				if(!client){
 					if( parameters.login ){
 						return share.makeAuthenticationFailedReply(context);
 					}
 					if( this.authRequired ){
 						return share.makeAuthenticateReply(context);
 					}
+					return require('ae3.web/IndexPage').prototype.buildIndexMenuReply.call(
+						this, 
+						context, 
+						undefined, 
+						false
+					);
 				}
 				
 
