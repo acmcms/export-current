@@ -369,7 +369,7 @@
 											</td>
 											<xsl:if test="client/@date">
 												<td class="hl-ui-small" align="right">
-													Date: <date><xsl:value-of select="client/@date"/></date>
+													<date><xsl:value-of select="client/@date"/></date>
 												</td>
 											</xsl:if>
 										</tr>
