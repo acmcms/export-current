@@ -2457,7 +2457,7 @@
 		<xsl:if test="$items">
 			<xsl:if test="$depth = 1 and (@zoom='document' or $zoom='document') and $items">
 				<div style="clear:both">
-					<xsl:if test="$items/@hidden[@key != 'index']">
+					<xsl:if test="$items[@hidden = 'true' and @key != 'index']">
 						<button id="{$unique}-btn" class="ui-menu-btn-ini no-print" style="opacity:0.35">
 							<div class="ui-cmd-icon"><img src="{$base}/__i/famfamfam.com/silk/cog_delete.png" class="icon"/></div>
 							<div class="ui-cmd-text">Show all commands</div>
