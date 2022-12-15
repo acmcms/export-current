@@ -574,7 +574,8 @@
 			<xsl:when test="$format/@variant='form'">
 				<xsl:for-each select="$format">
 					<form action="{@action}" class="ui-form-{$zoom} {$format/@cssClass}">
-						<xsl:if test="@method = 'post' or fields/field/@type = 'file' or fields/field/@type = 'editor' or fields/field/@type = 'password'">
+						<xsl:variable name="fields" select="fields | $format[not(fields)]"/>
+						<xsl:if test="@method = 'post' or $fields/field/@type = 'file' or $fields/field/@type = 'editor' or $fields/field/@type = 'password'">
 							<xsl:attribute name="method">post</xsl:attribute>
 							<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 						</xsl:if>
@@ -588,7 +589,7 @@
 						</xsl:attribute>
 						<xsl:if test="$sudo != ''"><input type="hidden" name="authUserId" value="{$sudo}" /></xsl:if>
 						<xsl:call-template name="edit">
-							<xsl:with-param name="format" select="fields | $format[not(fields)]"/>
+							<xsl:with-param name="format" select="$format"/>
 							<xsl:with-param name="values" select="$value"/>
 							<xsl:with-param name="zoom" select="$zoom"/>
 						</xsl:call-template>
@@ -597,14 +598,14 @@
 			</xsl:when>
 			<xsl:when test="$format/@variant='edit'">
 				<xsl:call-template name="edit">
-					<xsl:with-param name="format" select="$format/fields | $format[not($format/fields)]"/>
+					<xsl:with-param name="format" select="$format"/>
 					<xsl:with-param name="values" select="$value"/>
 					<xsl:with-param name="zoom" select="$zoom"/>
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="$format/@variant='view'">
 				<xsl:call-template name="view">
-					<xsl:with-param name="format" select="$format/fields | $format[not($format/fields)]"/>
+					<xsl:with-param name="format" select="$format"/>
 					<xsl:with-param name="values" select="$value"/>
 					<xsl:with-param name="zoom" select="$zoom"/>
 				</xsl:call-template>
