@@ -424,13 +424,17 @@ TD.hint, TH.hint, DIV.hint{
 	float: right;
 }
 
-.ui-menu-ctn-all .hl-ui-false, .ui-menu-ctn-all .hl-ui-, .ui-menu-ctn-all .ui-cmd-link > .hl-ui-jump {
+DIV.ui-menu-ctn-all .hl-ui-false, DIV.ui-menu-ctn-all .hl-ui-, DIV.ui-menu-ctn-all .ui-cmd-link > .hl-ui-jump {
 	display: list-item;
 	display: block;
 }
 
-.ui-menu-ctn-all .hl-hd-true {
+DIV.ui-menu-ctn-all DIV.hl-hd-true {
 	display: block;
+}
+
+DIV.ui-menu-ctn-all TR.hl-hd-true {
+	display: table-row;
 }
 
 
@@ -898,8 +902,8 @@ A.ui-button, A.ui-button:focus, A.ui-button:active, A.ui-button:hover, A.ui-butt
 	background-color: #fbb;
 }
 
-.hl-hd-true {
-	opacity: 0.5;
+DIV.hl-hd-true, TR.hl-hd-true {
+	opacity: 0.6;
 	display: none;
 }
 
