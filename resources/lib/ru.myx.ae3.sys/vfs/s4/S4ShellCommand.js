@@ -22,7 +22,7 @@ var commands = {
 		},
 	},
 	check : {
-		args : "[--all/--some] [--full] [--fix] [--purge] [--verbose] <instanceKey>",
+		args : "[--all/--some] [--full] [--fix [--purge/--recover]] [--verbose] <instanceKey>",
 		help : "checks s4 storage instance",
 		run : function runCheck(args){
 			var context = {

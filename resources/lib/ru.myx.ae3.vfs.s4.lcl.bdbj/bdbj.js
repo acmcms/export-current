@@ -28,6 +28,32 @@ function checkUsageDatabase(instance, fix){
 	
 }
 
+function internParseOptionsFn(args, options, extraArguments){
+	var value, option;
+	for(;;){
+		value = args.shift();
+		if(value === undefined){
+			if(option){
+				return "option value is expected!";
+			}
+			return options;
+		}
+		if(option){
+			options[option] = value;
+			option = null;
+			continue;
+		}
+		if(value.startsWith("--")){
+			option = value.substr(2);
+			continue;
+		}
+		if(extraArguments){
+			args.unshift(value);
+			return options;
+		}
+		return "invalid option: " + value;
+	}
+}
 
 
 var commands = {
@@ -35,12 +61,11 @@ var commands = {
 		args : "<instance>",
 		help : "runs a cleaner on specified instance",
 		run : function runClean(args){
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
@@ -55,12 +80,11 @@ var commands = {
 		args : "<instance>",
 		help : "runs a compressor loop on specified instance",
 		run : function runCompress(args){
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
@@ -73,12 +97,11 @@ var commands = {
 		args : "<instance>",
 		help : "forces checkpoint on specified instance",
 		run : function stop(args){
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
@@ -106,7 +129,7 @@ var commands = {
 			if(args.length){
 				return console.fail("extra parameters to 'list' command!");
 			}
-			var instances = Driver.internGetInstances();
+			const instances = Driver.internGetInstances();
 			console.sendMessage(Object.keys(instances).join('\n'));
 			return true;
 		}
@@ -115,12 +138,11 @@ var commands = {
 		args : "<instance>",
 		help : "prints host filesystem location for database files of specified instance",
 		run : function stop(args){
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
@@ -132,16 +154,15 @@ var commands = {
 		args : "<instance>",
 		help : "show record count in every table of an instance of bdbj storage",
 		run : function runShow(args) {
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
-			var result = {
+			const result = {
 				name : name,
 				counts : {},
 			};
@@ -157,12 +178,11 @@ var commands = {
 		args : "<instance> [all|guid|item|queue|tail|tree|index|usage]",
 		help : "check/repair an instance of bdbj storage",
 		run : function runRepair(args) {
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
@@ -191,7 +211,7 @@ var commands = {
 		args : "<instance> [--short/--full]",
 		help : "show info related to an instance of bdbj storage",
 		run : function runShow(args) {
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
@@ -209,8 +229,7 @@ var commands = {
 				return console.fail("unexpected extra arguments: %s", Format.jsStringFragment(args[0]));
 			}
 			
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
@@ -279,21 +298,20 @@ var commands = {
 		args : "<instance> [--all-plain]",
 		help : "prints stats for specified instance",
 		run : function stop(args){
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
-			var stats = instance.internStorageStats();
+			const stats = instance.internStorageStats();
 			if('--all-plain' === args.shift()){
 				console.sendMessage(stats.toStringVerbose());
 				return true;
 			}
-			var map = {};
+			const map = {};
 			for(var key of [
 			                     'totalLogSize',
 			                     'fileDeletionBacklog',
@@ -309,12 +327,11 @@ var commands = {
 		args : "<instance>",
 		help : "forces a quick checkpoint on specified instance",
 		run : function stop(args){
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
@@ -324,92 +341,182 @@ var commands = {
 		}
 	},
 	read : {
-		args : "<instance> <table> [--limit 10] [--start <type>:<expr>]",
+		args : "<instance> <table> [--delete --force-delete] [--limit 10] [--start/--prefix/--strict <type>:<expr>] [--stop <type>:<expr>]",
 		help : "show contents of the table of an instance of bdbj storage",
 		run : function runRead(args){
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
-			var tableName = args.shift();
+			const tableName = args.shift();
 			if(!tableName){
 				return console.fail("table name argument is expected!");
 			}
-			var value, option, options = {
+			const options = internParseOptionsFn(args, {
 				limit : 10,
 				start : null
-			};
-			for(;;){
-				value = args.shift();
-				if(value === undefined){
-					if(option){
-						return console.fail("option value is expected!");
-					}
-					break;
-				}
-				if(option){
-					options[option] = value;
-					option = null;
-					continue;
-				}
-				if(value.startsWith('--')){
-					option = value.substr(2);
-					continue;
-				}
-				return console.fail("invalid option: " + value);
+			});
+			if("string" === typeof options){
+				return console.fail(options);
 			}
-			var list = instance.internStorageTableRead(tableName, Number(options.limit || 0), options.start || undefined);
-			console.sendMessage(Format.jsObjectReadable(list));
+			const result = instance.internStorageTableRangeOperation( //
+				options.delete === "--force-delete" ? "delete" : "select",
+				tableName, 
+				Number(options.limit ?? 10), 
+				options.strict || options.exact, 
+				options.prefix || options.match, 
+				options.start, 
+				options.stop //
+			);
+			console.sendMessage(Format.jsObjectReadable(result));
+			return true;
+		}
+	},
+	readItemsByItemGuid : {
+		args : "<instance> [--key guid/azimuth/azimuth+luid/luid+guid] <guid/azimuth/...> [...<guid/azimuth/...>]",
+		help : "read 'item' record by Guid (externalized value) or another key types. Default key type is 'guid'.",
+		run : function readItemsByGuid(args){
+			const name = args.shift();
+			if(!name){
+				return console.fail("instance name argument is expected!");
+			}
+			const instance = Driver.internGetInstances()[name];
+			if(!instance){
+				return console.fail("instance '%s' is unknown!", name);
+			}
+			
+			const options = internParseOptionsFn(args, {
+				key : "guid",
+				limit : 10
+			}, true);
+			if("string" === typeof options){
+				return console.fail(options);
+			}
+			Number.isNaN( (options.limit = Number(options.limit)) ) && (options.limit = 10);
+			
+			var nextGuid, list, collected = [];
+			for(;nextGuid = args.shift();){
+				list = instance.internStorageTableRangeOperation( //
+					"select", "guid", options.limit, null, options.key + ":" + nextGuid, null, null //
+				);
+				collected.push.apply(collected, list);
+			}
+			// console.log(">>> >>> readItemsByGuid collected: %s", Format.jsObjectReadable(collected));
+			collected = collected.map((function (instance, list, x){
+				list = instance.internStorageTableRangeOperation( //
+					"select", "item", 1, "key0_luid6:" + x.key1_luid6, null, null, null //
+				);
+				return list[0] || { "key0_luid6" : x.key1_luid6 };
+			}).bind(instance, instance, undefined));
+			console.sendMessage(Format.jsObjectReadable(collected));
+			return true;
+		}
+	},
+	readTreeByItemGuid : {
+		args : "<instance> [--key guid/azimuth/azimuth+luid/luid+guid] <guid/azimuth/...> [...<guid/azimuth/...>]",
+		help : "read 'item' record by Guid (externalized value) or another key types. Default key type is 'guid'.",
+		run : function readItemsByGuid(args){
+			const name = args.shift();
+			if(!name){
+				return console.fail("instance name argument is expected!");
+			}
+			const instance = Driver.internGetInstances()[name];
+			if(!instance){
+				return console.fail("instance '%s' is unknown!", name);
+			}
+			
+			const options = internParseOptionsFn(args, {
+				key : "guid",
+				limit : 10
+			}, true);
+			if("string" === typeof options){
+				return console.fail(options);
+			}
+			Number.isNaN( (options.limit = Number(options.limit)) ) && (options.limit = 10);
+			
+			var nextGuid, list, collected = [];
+			for(;nextGuid = args.shift();){
+				list = instance.internStorageTableRangeOperation( //
+					"select", "guid", options.limit, null, options.key + ":" + nextGuid, null, null //
+				);
+				collected.push.apply(collected, list);
+			}
+			// console.log(">>> >>> readItemsByGuid collected: %s", Format.jsObjectReadable(collected));
+			collected = collected.map((function (instance, list, x){
+				list = instance.internStorageTableRangeOperation( //
+					"select", "tree", options.limit, null, "key0_luid6:" + x.key1_luid6, null, null //
+				);
+				return list[0] || { "key0_luid6" : x.key1_luid6 };
+			}).bind(instance, instance, undefined));
+			console.sendMessage(Format.jsObjectReadable(collected));
+			return true;
+		}
+	},
+	"delete" : {
+		args : "<instance> <table> [--delete --force-delete] [--limit 1] [--start/--prefix/--strict <type>:<expr>] [--stop <type>:<expr>]",
+		help : "deletes contents of the table of an instance of bdbj storage",
+		run : function runDelete(args){
+			const name = args.shift();
+			if(!name){
+				return console.fail("instance name argument is expected!");
+			}
+			const instance = Driver.internGetInstances()[name];
+			if(!instance){
+				return console.fail("instance '%s' is unknown!", name);
+			}
+			const tableName = args.shift();
+			if(!tableName){
+				return console.fail("table name argument is expected!");
+			}
+			const options = internParseOptionsFn(args, {
+				limit : 1,
+				start : null
+			});
+			if("string" === typeof options){
+				return console.fail(options);
+			}
+			const result = instance.internStorageTableRangeOperation(//
+				options.delete === "--force-delete" ? "delete" : "select",
+				tableName, 
+				Number(options.limit ?? 1), 
+				options.strict || options.exact, //
+				options.prefix || options.match, //
+				options.start, //
+				options.stop //
+			);
+			console.sendMessage(Format.jsObjectReadable(result));
 			return true;
 		}
 	},
 	store : {
 		args : "<instance> <table> <map_expr>",
-		help : "stores a record, example: bdbj store lcl item --map '{key00_luid6:1,val00_schedule2:32767,val01_guidX:Guid(null)}'",
+		help : "stores a record, example: bdbj store lcl item --map '{key0_luid6:1,val0_schedule2:32767,val1_guidX:Guid(null)}'",
 		run : function runStore(args){
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
-			var tableName = args.shift();
+			const tableName = args.shift();
 			if(!tableName){
 				return console.fail("table name argument is expected!");
 			}
-			var value, option, options = {
+			const options = internParseOptionsFn(args, {
 				map : null
-			};
-			for(;;){
-				value = args.shift();
-				if(value === undefined){
-					if(option){
-						return console.fail("option value is expected!");
-					}
-					break;
-				}
-				if(option){
-					options[option] = value;
-					option = null;
-					continue;
-				}
-				if(value.startsWith('--')){
-					option = value.substr(2);
-					continue;
-				}
-				return console.fail("invalid option: " + value);
+			});
+			if("string" === typeof options){
+				return console.fail(options);
 			}
-			var object = options.map || undefined;
-			var list = instance.internStorageTableStore(tableName, object);
-			console.sendMessage(Format.jsObjectReadable(list));
+			const object = options.map || undefined;
+			const result = instance.internStorageTableStore(tableName, object);
+			console.sendMessage(Format.jsObjectReadable(result));
 			return true;
 		}
 	},
@@ -417,16 +524,15 @@ var commands = {
 		args : "<instance>",
 		help : "show list of tables of an instance of bdbj storage",
 		run : function runTables(args) {
-			var name = args.shift();
+			const name = args.shift();
 			if(!name){
 				return console.fail("instance name argument is expected!");
 			}
-			var instances = Driver.internGetInstances();
-			var instance = instances[name];
+			const instance = Driver.internGetInstances()[name];
 			if(!instance){
 				return console.fail("instance '%s' is unknown!", name);
 			}
-			var list = instance.internStorageTables();
+			const list = instance.internStorageTables();
 			console.sendMessage(Format.jsObjectReadable({
 				name : name,
 				tables : list,
