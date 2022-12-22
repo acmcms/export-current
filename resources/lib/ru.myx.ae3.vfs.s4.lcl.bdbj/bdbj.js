@@ -28,6 +28,27 @@ function checkUsageDatabase(instance, fix){
 	
 }
 
+function internParseInstanceFn(args){
+	const name = args.shift();
+	if(!name){
+		return "instance name argument is expected!";
+	}
+	const instance = Driver.internGetInstances()[name];
+	if(!instance){
+		return "instance '"+name+"' is unknown!";
+	}
+	return instance;
+}
+
+/**
+ * internParseOptionsFn
+ *
+ * Only options provided in `options` map are supported. The type of provided options is respected.
+ **/
+const PARSE_OPTIONS_BOOLEAN_VALUES = {
+	"disable":0,"no" :0,"off":0,"false":0,"0":0,
+	"enable" :1,"yes":1,"on" :1,"true" :1,"1":1
+};
 function internParseOptionsFn(args, options, extraArguments){
 	var value, option;
 	for(;;){
@@ -39,13 +60,35 @@ function internParseOptionsFn(args, options, extraArguments){
 			return options;
 		}
 		if(option){
-			options[option] = value;
+			switch(typeof options[option]){
+			case "number":
+				if(Number.isNaN(Number(value))){
+					return "invalid number format: " + value;
+				}
+				options[option] = Number(value);
+				break;
+			case "boolean":
+				if("number" !== typeof PARSE_OPTIONS_BOOLEAN_VALUES[value]){
+					return "invalid boolean format: " + value;
+				}
+				options[option] = !! PARSE_OPTIONS_BOOLEAN_VALUES[value];
+				break;
+c			case "string":
+				options[option] = value;
+				break;
+			default:
+				options[option] = value;
+				break;
+			}
 			option = null;
 			continue;
 		}
 		if(value.startsWith("--")){
 			option = value.substr(2);
-			continue;
+			if(undefined !== options[option] || options["allow-any-option"]){
+				continue;
+			}
+			return "unsupported option: " + value;
 		}
 		if(extraArguments){
 			args.unshift(value);
@@ -341,7 +384,7 @@ var commands = {
 		}
 	},
 	read : {
-		args : "<instance> <table> [--delete --force-delete] [--limit 10] [--start/--prefix/--strict <type>:<expr>] [--stop <type>:<expr>]",
+		args : "<instance> <table> [--delete --force-delete] [--limit 10] [--prefix/--exact/--start/ <type>:<expr>] [--stop <type>:<expr>]",
 		help : "show contents of the table of an instance of bdbj storage",
 		run : function runRead(args){
 			const name = args.shift();
@@ -357,18 +400,23 @@ var commands = {
 				return console.fail("table name argument is expected!");
 			}
 			const options = internParseOptionsFn(args, {
-				limit : 10,
-				start : null
+				"delete" : null,
+				"limit" : 10,
+				"exact" : null,
+				"prefix" : null,
+				"start" : null,
+				"stop" : null
 			});
 			if("string" === typeof options){
 				return console.fail(options);
 			}
+
 			const result = instance.internStorageTableRangeOperation( //
 				options.delete === "--force-delete" ? "delete" : "select",
 				tableName, 
-				Number(options.limit ?? 10), 
-				options.strict || options.exact, 
-				options.prefix || options.match, 
+				options.limit, 
+				options.exact, 
+				options.prefix, 
 				options.start, 
 				options.stop //
 			);
@@ -377,7 +425,7 @@ var commands = {
 		}
 	},
 	readItemsByItemGuid : {
-		args : "<instance> [--key guid/azimuth/azimuth+luid/luid+guid] <guid/azimuth/...> [...<guid/azimuth/...>]",
+		args : "<instance> [--key:guid/azimuth/azimuth+luid/luid+guid] <guid/azimuth/...> [...<guid/azimuth/...>]",
 		help : "read 'item' record by Guid (externalized value) or another key types. Default key type is 'guid'.",
 		run : function readItemsByGuid(args){
 			const name = args.shift();
@@ -396,7 +444,6 @@ var commands = {
 			if("string" === typeof options){
 				return console.fail(options);
 			}
-			Number.isNaN( (options.limit = Number(options.limit)) ) && (options.limit = 10);
 			
 			var nextGuid, list, collected = [];
 			for(;nextGuid = args.shift();){
@@ -405,14 +452,14 @@ var commands = {
 				);
 				collected.push.apply(collected, list);
 			}
-			// console.log(">>> >>> readItemsByGuid collected: %s", Format.jsObjectReadable(collected));
-			collected = collected.map((function (instance, list, x){
+			const result = collected.reduce((function (instance, list, result, x){
 				list = instance.internStorageTableRangeOperation( //
 					"select", "item", 1, "key0_luid6:" + x.key1_luid6, null, null, null //
 				);
-				return list[0] || { "key0_luid6" : x.key1_luid6 };
-			}).bind(instance, instance, undefined));
-			console.sendMessage(Format.jsObjectReadable(collected));
+				result.push.apply(result, list);
+				return result;
+			}).bind(null, instance, undefined), []);
+			console.sendMessage(Format.jsObjectReadable(result));
 			return true;
 		}
 	},
@@ -436,7 +483,6 @@ var commands = {
 			if("string" === typeof options){
 				return console.fail(options);
 			}
-			Number.isNaN( (options.limit = Number(options.limit)) ) && (options.limit = 10);
 			
 			var nextGuid, list, collected = [];
 			for(;nextGuid = args.shift();){
@@ -445,19 +491,19 @@ var commands = {
 				);
 				collected.push.apply(collected, list);
 			}
-			// console.log(">>> >>> readItemsByGuid collected: %s", Format.jsObjectReadable(collected));
-			collected = collected.map((function (instance, list, x){
+			const result = collected.reduce((function (instance, list, result, x){
 				list = instance.internStorageTableRangeOperation( //
 					"select", "tree", options.limit, null, "key0_luid6:" + x.key1_luid6, null, null //
 				);
-				return list[0] || { "key0_luid6" : x.key1_luid6 };
-			}).bind(instance, instance, undefined));
-			console.sendMessage(Format.jsObjectReadable(collected));
+				result.push.apply(result, list);
+				return result;
+			}).bind(null, instance, undefined), []);
+			console.sendMessage(Format.jsObjectReadable(result));
 			return true;
 		}
 	},
 	"delete" : {
-		args : "<instance> <table> [--delete --force-delete] [--limit 1] [--start/--prefix/--strict <type>:<expr>] [--stop <type>:<expr>]",
+		args : "<instance> <table> [--delete --force-delete] [--limit 1] [--exact/--prefix/--start <type>:<expr>] [--stop <type>:<expr>]",
 		help : "deletes contents of the table of an instance of bdbj storage",
 		run : function runDelete(args){
 			const name = args.shift();
@@ -473,19 +519,24 @@ var commands = {
 				return console.fail("table name argument is expected!");
 			}
 			const options = internParseOptionsFn(args, {
-				limit : 1,
-				start : null
+				"delete" : null,
+				"limit" : 1,
+				"exact" : null,
+				"prefix" : null,
+				"start" : null,
+				"stop" : null
 			});
 			if("string" === typeof options){
 				return console.fail(options);
 			}
-			const result = instance.internStorageTableRangeOperation(//
+
+			const result = instance.internStorageTableRangeOperation( //
 				options.delete === "--force-delete" ? "delete" : "select",
 				tableName, 
-				Number(options.limit ?? 1), 
-				options.strict || options.exact, //
-				options.prefix || options.match, //
-				options.start, //
+				options.limit, 
+				options.exact,
+				options.prefix,
+				options.start,
 				options.stop //
 			);
 			console.sendMessage(Format.jsObjectReadable(result));
