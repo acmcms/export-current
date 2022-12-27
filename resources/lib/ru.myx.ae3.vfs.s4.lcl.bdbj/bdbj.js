@@ -50,7 +50,7 @@ const PARSE_OPTIONS_BOOLEAN_VALUES = {
 	"enable" :1,"yes":1,"on" :1,"true" :1,"1":1
 };
 function internParseOptionsFn(args, options, extraArguments){
-	var value, option;
+	var value, option, pos;
 	for(;;){
 		value = args.shift();
 		if(value === undefined){
@@ -85,10 +85,52 @@ c			case "string":
 		}
 		if(value.startsWith("--")){
 			option = value.substr(2);
-			if(undefined !== options[option] || options["allow-any-option"]){
+			pos = option.indexOf(':');
+			if(pos === -1){
+				pos = option.indexOf('=');
+			}else//
+			if(option.indexOf('=') !== -1){
+				pos = Math.min(pos, option.indexOf('='));
+			}
+			
+			if(pos === -1){
+				if(undefined !== options[option] || options["allow-any-option"]){
+					continue;
+				}
+				return "unsupported option: " + value;
+			}
+
+			value = option.substring(pos + 1);
+			option = option.substring(0, pos);
+
+			if(undefined === options[option] && !options["allow-any-option"]){
+				return "unsupported option: " + option;
+			}
+
+			switch(typeof options[option]){
+			case "number":
+				if(Number.isNaN(Number(value))){
+					return "invalid number format: " + value;
+				}
+				options[option] = Number(value);
+				option = undefined
+				continue;
+			case "boolean":
+				if("number" !== typeof PARSE_OPTIONS_BOOLEAN_VALUES[value]){
+					return "invalid boolean format: " + value;
+				}
+				options[option] = !! PARSE_OPTIONS_BOOLEAN_VALUES[value];
+				option = undefined
+				continue;
+c			case "string":
+				options[option] = value;
+				option = undefined
+				continue;
+			default:
+				options[option] = value;
+				option = undefined
 				continue;
 			}
-			return "unsupported option: " + value;
 		}
 		if(extraArguments){
 			args.unshift(value);

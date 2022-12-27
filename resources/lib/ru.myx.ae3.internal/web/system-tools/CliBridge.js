@@ -40,23 +40,23 @@ function runCliBridge(context){
 		var CollectConsole = require("ae3.util/CollectConsole");
 		var console = new CollectConsole();
 		results = [];
-		detailOutput && console.sendMessage("started: " + new Date().toISOString());
+		detailOutput && console.sendMessage("+ started: " + new Date().toISOString());
 		commands.some(function(x){
 			try{
 				x = String(x);
-				detailOutput && console.log("exec: " + x);
+				detailOutput && console.log("> " + x);
 				// var result = Shell.executeNativeInline(x);
 				var result = Shell.executeNativeCommandWithConsole(console, x);
 				results.push(result);
-				detailOutput && console.log("result: " + Format.jsDescribe(result));
+				detailOutput && console.log("< " + Format.jsDescribe(result));
 				return false;
 			}catch(e){
-				console.error("error: %s, cmd: %s", (e.message || e), Format.jsString(x));
+				console.error("! error: %s, cmd: %s", (e.message || e), Format.jsString(x));
 				return failOnError;
 			}
 		});
 		results.length == 1 && (results = results[0]);
-		detailOutput && console.sendMessage("finished: " + new Date().toISOString());
+		detailOutput && console.sendMessage("- finished: " + new Date().toISOString());
 		$output(output){
 			var collected = console.getCollected();
 			if(collected) for(var i = 0, l = collected.length; i < l; ++i){

@@ -42,7 +42,13 @@ var commands = {
 				}
 				if(current.startsWith('--')){
 					current = current.substring(2);
-					pos = current.indexOf('=');
+					pos = current.indexOf(':');
+					if(pos === -1){
+						pos = current.indexOf('=');
+					}else//
+					if(current.indexOf('=') !== -1){
+						pos = Math.min(pos, current.indexOf('='));
+					}
 					if(pos == -1){
 						context[current] = true;
 					}else{
