@@ -43,7 +43,7 @@ function runCliBridge(context){
 		detailOutput && console.sendMessage("+ started: " + new Date().toISOString());
 		commands.some(function(x){
 			try{
-				x = String(x);
+				x = String(x).trim();
 				detailOutput && console.log("> " + x);
 				// var result = Shell.executeNativeInline(x);
 				var result = Shell.executeNativeCommandWithConsole(console, x);
@@ -98,6 +98,7 @@ function runCliBridge(context){
 						});
 					}
 	
+					%><submit icon="arrow_refresh_small" name="run" value="true" title="Re-run again" /><%
 					%><submit icon="script_edit" title="Edit CLI Command" /><%
 					%><help src="/resource/documentation.xml#administration/tools/CliBridge" /><%
 				%></fields><%
