@@ -1,4 +1,4 @@
-var lib = require('ru.myx.acm.iface/AcmWebService');
+var lib = require("ru.myx.acm.iface/AcmWebService");
 var title = "ACM::jails/listJails (ACM Jail List)";
 
 var ServerDomain = require("java.class/ru.myx.srv.acm.ServerDomain");
@@ -35,7 +35,7 @@ function internJailShares(jail){
 
 function runListJails(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, 'admin');
+	const client = share.authRequireAccount(context, "admin");
 	const query = context.query;
 	const auth = share.authenticationProvider;
 
@@ -46,35 +46,35 @@ function runListJails(context){
 	jailNames.sort();
 	
 	const columns = [];
-	if(parameters.format == 'detail'){
+	if(parameters.format == "detail"){
 		columns.push({
-			id : 'id',
-			title : 'Jail Name',
-			type : 'string',
-			description : 'title',
-			extraClass : 'hl-ui-title'
+			id : "id",
+			title : "Jail Name",
+			type : "string",
+			description : "title",
+			extraClass : "hl-ui-title"
 		});
 	}else{
 		columns.push({
-			id : 'id',
-			title : 'Jail Name',
-			type : 'string'
+			id : "id",
+			title : "Jail Name",
+			type : "string"
 		});
 	}
 	columns.push({
-		id : 'domain',
-		title : 'Domain',
-		type : 'string'
+		id : "domain",
+		title : "Domain",
+		type : "string"
 	});
 	
 	columns.push({
-		id : 'controller',
-		title : 'Ctrl?', 
-		variant : 'boolean',
-		type : 'boolean'
+		id : "controller",
+		title : "Ctrl?", 
+		variant : "boolean",
+		type : "boolean"
 	});
 	
-	if(parameters.format == 'detail'){
+	if(parameters.format == "detail"){
 		columns.push({
 			id : "users",
 			title : "Users",
@@ -134,16 +134,16 @@ function runListJails(context){
 			
 			controller : jail.isControllerServer(),
 			
-			users : parameters.format == 'detail' ? internJailUsers(jail) : undefined,
-			shares : parameters.format == 'detail' ? internJailShares(jail) : undefined,
+			users : parameters.format == "detail" ? internJailUsers(jail) : undefined,
+			shares : parameters.format == "detail" ? internJailShares(jail) : undefined,
 		});
 	}
 	
 	return {
-		layout : 'data-table',
+		layout : "data-table",
 		attributes : {
 			title : title,
-			cssId : 'list'
+			cssId : "list"
 		},
 		columns : columns,
 		rowCommands : [
@@ -154,12 +154,12 @@ function runListJails(context){
 				field : "id"
 			}
 		],
-		commands : parameters.format == 'detail' 
+		commands : parameters.format == "detail" 
 			? undefined
 			: {
 				title : "View Detailed List",
 				icon : "zoom_in",
-				url : '../jails/listJails?' + Format.queryStringParameters(parameters, {
+				url : "../jails/listJails?" + Format.queryStringParameters(parameters, {
 					format : "detail"
 				})
 			}

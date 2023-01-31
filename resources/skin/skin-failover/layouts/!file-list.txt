@@ -3,5 +3,6 @@ Container.jslt
 DocumentationLayouts.jslt
 Image.jslt
 Intl.jslt
+Message.jso
 Number.jslt
 Numbered.jslt

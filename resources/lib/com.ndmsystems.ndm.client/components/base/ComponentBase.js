@@ -13,7 +13,7 @@ const ComponentBase = module.exports = ae3.Class.create(
 			value : "base"
 		},
 		acceptXmlNotifications : {
-			value : ['nr1','cs1','dr1','au1','fu2']
+			value : ['nr1','cs2','dr1','au1','fu2']
 		},
 		
 		requestXmlNotifications : {

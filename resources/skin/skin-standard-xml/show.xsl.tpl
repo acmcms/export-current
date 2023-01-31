@@ -2085,9 +2085,7 @@
 	</xsl:template>
 
 	<xsl:template match="article">
-		<xsl:if test="anchor">
-			<a name="{anchor}"></a>
-		</xsl:if>
+		<xsl:apply-templates select="*[local-name() = 'anchor']"/>
 		<xsl:if test="name">
 			<a name="{name}"></a>
 		</xsl:if>

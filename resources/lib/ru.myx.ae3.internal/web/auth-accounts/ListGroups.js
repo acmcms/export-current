@@ -7,7 +7,7 @@ function ListGroups(index, systemName, pathPrefix){
 
 function runListGroups(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
+	const client = share.authRequireAccount(context, this.index.accessGroup || "admin");
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
@@ -19,14 +19,14 @@ function runListGroups(context){
 			: auth.authListGroups()
 	){
 		rows.push({
-			hl : groupName == 'admin',
+			hl : groupName == "admin",
 			key : groupName,
-			admin : groupName == 'admin',
+			admin : groupName == "admin",
 		});
 	}
 	
 	return {
-		layout : 'data-table',
+		layout : "data-table",
 		attributes : {
 			title : this.title,
 			jumpUrl : "addGroup?back=listGroups",
@@ -34,23 +34,23 @@ function runListGroups(context){
 		},
 		columns : [
 			{
-				id : 'key',
-				title : 'Group ID',
-				type : 'string'
+				id : "key",
+				title : "Group ID",
+				type : "string"
 			},
 			{
-				id : 'admin',
-				title : 'Is Admin?',
-				type : 'boolean',
-				variant : 'boolean'
+				id : "admin",
+				title : "Is Admin?",
+				type : "boolean",
+				variant : "boolean"
 			}
 		],
 		rowCommands : [
 			{
-				title : 'View Group',
-				icon : 'zoom_in',
-				prefix : 'readGroup?back=listGroups&key=',
-				field : 'key'
+				title : "View Group",
+				icon : "zoom_in",
+				prefix : "readGroup?back=listGroups&key=",
+				field : "key"
 			},
 			{
 				title : "Drop Group",

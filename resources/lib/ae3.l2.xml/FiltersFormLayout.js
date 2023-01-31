@@ -15,25 +15,25 @@ function FiltersFormLayout(filters){
 
 Object.defineProperties(FiltersFormLayout.prototype, {
 	layout	: {
-		value : 'form',
+		value : "form",
 		enumerable : true
 	},
 	title	: {
-		value : 'Query Parameters',
+		value : "Query Parameters",
 		enumerable : true
 	},
 	zoom	: {
-		value : 'row',
+		value : "row",
 		enumerable : true
 	},
 	cssClass: {
-		value : 'ui-secondary',
+		value : "ui-secondary",
 		enumerable : true
 	},
 	submit	: {
 		value : {
-			icon : 'application_put',
-			title : 'Apply Query Parameters'
+			icon : "application_put",
+			title : "Apply Query Parameters"
 		}
 	}
 });

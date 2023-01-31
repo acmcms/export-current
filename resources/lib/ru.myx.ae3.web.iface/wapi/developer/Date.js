@@ -1,29 +1,29 @@
 const layoutTemplate = {
-	layout : 'data-table',
-	name : 'date',
+	layout : "data-table",
+	name : "date",
 	attributes : {
 		title : "AE3::developer/date (Date)"
 	},
 	columns : [
 		{
-			id : 'type',
-			title : 'Type',
-			type : 'string'
+			id : "type",
+			title : "Type",
+			type : "string"
 		},
 		{
-			id : 'date',
-			title : 'Date String',
-			type : 'string'
+			id : "date",
+			title : "Date String",
+			type : "string"
 		},
 		{
-			id : 'code',
-			title : 'Source Code',
-			type : 'string'
+			id : "code",
+			title : "Source Code",
+			type : "string"
 		},
 	],
 	rows : [
 		{
-			type : 'ISO',
+			type : "ISO",
 			date : new Date().toISOString()
 		}
 	]
@@ -36,14 +36,14 @@ function runDate(context){
 		rows : {
 			value : [
 				{
-					type : 'ISO',
+					type : "ISO",
 					date : date.toISOString(),
-					code : 'date.toISOString()'
+					code : "date.toISOString()"
 				},
 				{
-					type : 'UTC',
+					type : "UTC",
 					date : date.toUTCString(),
-					code : 'date.toUTCString()'
+					code : "date.toUTCString()"
 				},
 			]
 		}

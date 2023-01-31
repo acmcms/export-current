@@ -8,7 +8,7 @@
 
 const ae3 = require("ae3");
 const vfs = ae3.vfs;
-const StatsObject = require('./StatsObject');
+const StatsObject = require("./StatsObject");
 
 /**
  * constructor
@@ -61,7 +61,7 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 			const date = new Date();
 			const now = date.getTime();
 			if(force || now > this.nextPlannedCommit){
-				const groups = require('./Stats').getGroups();
+				const groups = require("./Stats").getGroups();
 				
 				const txn = vfs.createTransaction();
 				var folder, group, groupKey, groupValues, cookie;
@@ -79,11 +79,11 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 							"value" : ((this.committed - this.started) / 1000)|0
 						}
 					};
-					// folder.setContentPublicTreeValue('s', (this.started / 1000)|0);
-					// folder.setContentPublicTreeValue('u', ((this.committed - this.started) / 1000)|0);
+					// folder.setContentPublicTreeValue("s", (this.started / 1000)|0);
+					// folder.setContentPublicTreeValue("u", ((this.committed - this.started) / 1000)|0);
 					for(group of groups){
 						groupKey = group.key;
-						groupValues = PREV[groupKey] = group.readValues(PREV[groupKey] ||= {}, 'log').values;
+						groupValues = PREV[groupKey] = group.readValues(PREV[groupKey] ||= {}, "log").values;
 						cookie = JSON.stringify(groupValues);
 						content[groupKey] = {
 							"field" : false,
@@ -136,7 +136,7 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 				}
 			}
 			/** OLD STUFF */
-			const startOld = cutOff.toISOString() + ';-00000000';
+			const startOld = cutOff.toISOString() + ";-00000000";
 			for(folder of [this.vfs]) {
 				for(;;){
 					contents = folder.getContentRange("3333-12-31T23:59:59.999Z;-00000000", startOld, 250, false, null);
@@ -170,10 +170,10 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 			const query = context.query;
 			const share = context.share;
 			
-			const title = (serviceName || share.serviceName || 'Unknown') + "::" + (pathPrefix || share.pathPrefix || "administration/") + 
+			const title = (serviceName || share.serviceName || "Unknown") + "::" + (pathPrefix || share.pathPrefix || "administration/") + 
 				(baseOnly ? "runtimeMonitoringLog (System Monitoring)" : "runtimeStatsLog (Runtime System Stats)");
 			
-//			var serviceName = clientElementProperties && clientElementProperties.serviceName || 'ND*S';
+//			var serviceName = clientElementProperties && clientElementProperties.serviceName || "ND*S";
 //			var pathPrefix = clientElementProperties && clientElementProperties.pathPrefix || "administration/"
 //			var title = serviceName + "::" + pathPrefix + "listRuntimeSystemStatsLog (Runtime System Stats)";
 
@@ -181,30 +181,30 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 			
 			const filter = parameters.filter || undefined;
 			
-			var backwards = parameters.backwards === 'true';
+			var backwards = parameters.backwards === "true";
 			var limit = Number(parameters.limit || 100) || 100;
 			var start = this.validateOrCreateStartKey(parameters.start, backwards);
 
 			var rowCommands = [
 				{
-					title : 'Runtime Stats Report...',
-					icon : 'zoom_in',
-					prefix : 'runtimeStatsRecord?' + Format.queryStringParameters(parameters, {
-						source : 'log'
-					}) + '&id=',
-					field : 'id'
+					title : "Runtime Stats Report...",
+					icon : "zoom_in",
+					prefix : "runtimeStatsRecord?" + Format.queryStringParameters(parameters, {
+						source : "log"
+					}) + "&id=",
+					field : "id"
 				}
 			];
 			
 			var rows = [];
 			
 			var layout = {
-				name : baseOnly ? 'monitoringStats' : 'systemStats',
-				layout : 'data-table',
+				name : baseOnly ? "monitoringStats" : "systemStats",
+				layout : "data-table",
 				attributes : {
-					cssId : 'list',
+					cssId : "list",
 					title : title,
-					server : require('os').hostname(),
+					server : require("os").hostname(),
 				},
 				filters : {
 					fields : baseOnly ? TABLE_FILTER_BASE_FIELDS : TABLE_FILTER_FULL_FIELDS,
@@ -217,33 +217,33 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 				},
 				columns : [
 					{
-						id : 'd',
-						title : 'Date',
-						type : 'date',
-						variant : 'date'
+						id : "d",
+						title : "Date",
+						type : "date",
+						variant : "date"
 					},
 					{
-						id : 'u',
-						type : 'number',
-						variant : 'period',
+						id : "u",
+						type : "number",
+						variant : "period",
 						scale : 1000,
-						title : 'Σ Time',
-						titleShort : 'Σ(t)',
+						title : "Σ Time",
+						titleShort : "Σ(t)",
 					},
 					{
-						id : 'p',
-						type : 'number',
-						variant : 'period',
+						id : "p",
+						type : "number",
+						variant : "period",
 						scale : 1000,
-						title : 'Δ Time',
-						titleShort : 'Δ(t)',
+						title : "Δ Time",
+						titleShort : "Δ(t)",
 					}
 				],
 				rowCommands : rowCommands,
 				rows : rows
 			};
 
-			var groups = require('./Stats').getGroups();
+			var groups = require("./Stats").getGroups();
 			if(filter){
 				groups = groups.filter(function(group){
 					return group.hasKeyword(this);
@@ -255,9 +255,9 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 				columns = group.getColumns(filter);
 				if(columns){
 					columnsByGroup[group.key] = columns;
-					groupPrefix = group.key + '-';
+					groupPrefix = group.key + "-";
 					for(reading of columns){
-						(reading.log === 'normal' || (detail && reading.log)) && (layout.columns.push({
+						(reading.log === "normal" || (detail && reading.log)) && (layout.columns.push({
 							id : groupPrefix + reading.name,
 							type : reading.type,
 							variant : reading.variant,
@@ -273,11 +273,11 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 			var stats = this.listRuntimeSystemStats(start, limit + 1, backwards);
 			var next = stats && stats.length > limit && stats[limit].id;
 			
-			var detail = parameters.detail == 'true';
+			var detail = parameters.detail == "true";
 
 			if(next){
 				layout.next = {
-					uri : '?' + Format.queryStringParameters(parameters, {
+					uri : "?" + Format.queryStringParameters(parameters, {
 						start : next
 					})
 				};
@@ -303,7 +303,7 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 				startedAtSecs = Number(params.s || 0);
 				
 				row = {
-					hl : 'false',
+					hl : "false",
 					id : item.id,
 					d : item.date.toISOString(),
 					u : (item.date.getTime() / 1000 - startedAtSecs)|0,
@@ -316,9 +316,9 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 					sensorData = params[groupPrefix];
 					if(sensorData){
 						for(reading of columnsByGroup[groupPrefix]){
-							if(reading.log === 'normal' || (detail && reading.log)){
+							if(reading.log === "normal" || (detail && reading.log)){
 								readingKey = reading.name;
-								row[groupPrefix + '-' + readingKey] = sensorData[readingKey];
+								row[groupPrefix + "-" + readingKey] = sensorData[readingKey];
 							}
 						}
 					}
@@ -348,33 +348,33 @@ const PREV = {};
 
 const TABLE_FILTER_BASE_FIELDS = [
 	{
-		id : 'start',
-		name : 'start',
-		title : 'Starting with',
-		type : 'string',
+		id : "start",
+		name : "start",
+		title : "Starting with",
+		type : "string",
 	},
 	{
-		id : 'limit',
-		name : 'limit',
-		title : 'Limit (count)',
-		type : 'number',
-		variant : 'integer'
+		id : "limit",
+		name : "limit",
+		title : "Limit (count)",
+		type : "number",
+		variant : "integer"
 	},
 	{
-		id : 'backwards',
-		name : 'backwards',
-		title : 'Backwards',
-		type : 'boolean',
+		id : "backwards",
+		name : "backwards",
+		title : "Backwards",
+		type : "boolean",
 	},
 ];
 
 
 const TABLE_FILTER_FULL_FIELDS = [
 	{
-		id : 'filter',
-		name : 'filter',
-		title : 'Filter',
-		type : 'string',
+		id : "filter",
+		name : "filter",
+		title : "Filter",
+		type : "string",
 	}
 ].concat(TABLE_FILTER_BASE_FIELDS);
 
@@ -395,9 +395,9 @@ Object.defineProperties(RuntimeStatsServiceObject, {
 	},
 	"keys" : {
 		value : [ //
-			 'started', // service start date millis
-			 'committed', // last saved stats date millis
-			 'currentInterval', // getter, milliseconds since last commit
+			 "started", // service start date millis
+			 "committed", // last saved stats date millis
+			 "currentInterval", // getter, milliseconds since last commit
 		]
 	},
 	"toString" : {

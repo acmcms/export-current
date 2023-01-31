@@ -4,6 +4,11 @@ Abstract.jsob
 Code.jslt
 Container.jslt
 Document.jslt
+Final.jslt
+Html.jslt
 LayoutExample.jslt
 Null.jslt
+Paragraph.jslt
+Section.jslt
 Sequence.jslt
+Xml.jslt

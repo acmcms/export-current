@@ -1,4 +1,4 @@
-const FiltersFormLayout = require('./FiltersFormLayout');
+const FiltersFormLayout = require("./FiltersFormLayout");
 
 const formatJsObject = Format.jsObject;
 const formatXmlAttribute = Format.xmlAttribute;
@@ -18,13 +18,13 @@ function Helper(){
 	return this;
 }
 
-Helper.prototype = Object.create(require('ae3.web/UiBasic').prototype, {
+Helper.prototype = Object.create(require("ae3.web/UiBasic").prototype, {
 	Helper : {
 		value : Helper
 	},
 	toString : {
 		value : function(){
-			return '[require ae3.l3.xml/helper]';
+			return "[require ae3.l3.xml/helper]";
 		}
 	}
 });
@@ -40,9 +40,9 @@ var web = module.exports = new Helper();
 function buildAuthenticationFailedReply(context){
 	const query = context.query;
 	const parameters = query.parameters;
-	switch(parameters.___output || 'xml'){
-	case 'html-js':{
-		var html = '';
+	switch(parameters.___output || "xml"){
+	case "html-js":{
+		var html = "";
 		$output(html){
 			%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
 			%><html><%
@@ -61,23 +61,23 @@ function buildAuthenticationFailedReply(context){
 			content	: html
 		};
 	}
-	case 'json':{
+	case "json":{
 		return {
-			layout : 'final',
+			layout : "final",
 			code : 403,
-			contentType : 'text/json',
+			contentType : "text/json",
 			content : formatJsObject({
-				layout : 'message',
-				code : '403',
-				message : 'Autentication failed!'
+				layout : "message",
+				code : "403",
+				message : "Autentication failed!"
 			})
 		};
 	}
-	case 'xml':{
+	case "xml":{
 		var xml;
 		$output(xml){
-			%><authentication-failed<%= formatXmlAttribute('title', context.title || 'Authentication failed') %> layout="menu" zoom="document"><%
-				= formatXmlElement('client', context.share.clientElementProperties(context));
+			%><authentication-failed<%= formatXmlAttribute("title", context.title || "Authentication failed") %> layout="menu" zoom="document"><%
+				= formatXmlElement("client", context.share.clientElementProperties(context));
 				%><message><%
 					%>This service requires all clients to sign-in. There was an authentication failure.<%
 				%></message><%
@@ -108,9 +108,9 @@ web.buildAuthenticationFailedReply = buildAuthenticationFailedReply;
 function buildAuthenticationSuccessReply(context){
 	const query = context.query;
 	const parameters = query.parameters;
-	switch(parameters.___output || 'xml'){
-	case 'html-js':{
-		var html = '';
+	switch(parameters.___output || "xml"){
+	case "html-js":{
+		var html = "";
 		$output(html){
 			%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
 			%><html><%
@@ -128,21 +128,21 @@ function buildAuthenticationSuccessReply(context){
 			content	: html
 		};
 	}
-	case 'json':{
+	case "json":{
 		return {
-			layout : 'final',
-			contentType : 'text/json',
+			layout : "final",
+			contentType : "text/json",
 			content : formatJsObject({
-				layout : 'message',
-				message : 'Autentication success!'
+				layout : "message",
+				message : "Autentication success!"
 			})
 		};
 	}
-	case 'xml':{
+	case "xml":{
 		var xml;
 		$output(xml){
-			%><authentication-success<%= formatXmlAttribute('title', context.title || 'Authentication Success') %>><%
-				= formatXmlElement('client', context.share.clientElementProperties(context));
+			%><authentication-success<%= formatXmlAttribute("title", context.title || "Authentication Success") %>><%
+				= formatXmlElement("client", context.share.clientElementProperties(context));
 			%></authentication-success><%
 		}
 		return {
@@ -167,9 +167,9 @@ web.buildAuthenticationSuccessReply = buildAuthenticationSuccessReply;
 function buildAuthenticationLogoutReply(context){
 	const query = context.query;
 	const parameters = query.parameters;
-	switch(parameters.___output || 'xml'){
-	case 'html-js':{
-		var html = '';
+	switch(parameters.___output || "xml"){
+	case "html-js":{
+		var html = "";
 		$output(html){
 			%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
 			%><html><%
@@ -187,14 +187,14 @@ function buildAuthenticationLogoutReply(context){
 			content	: html
 		};
 	}
-	case 'json':{
+	case "json":{
 	}
-	case 'xml':{
-		var url = "//" + query.targetExact + '/';
+	case "xml":{
+		var url = "//" + query.targetExact + "/";
 		var xml;
 		$output(xml){
-			%><authentication-logout<%= formatXmlAttribute('title', context.title || 'Log-Out') %>><%
-				= formatXmlElement('client', context.share.clientElementProperties(context));
+			%><authentication-logout<%= formatXmlAttribute("title", context.title || "Log-Out") %>><%
+				= formatXmlElement("client", context.share.clientElementProperties(context));
 				%><redirect><%= formatXmlNodeValue(url) %></redirect><%
 			%></authentication-logout><%
 		}
@@ -221,9 +221,9 @@ web.buildAuthenticationLogoutReply = buildAuthenticationLogoutReply;
 function buildAuthenticateReply(context){
 	const query = context.query;
 	const parameters = query.parameters;
-	switch(parameters.___output || 'xml'){
-	case 'html-js':{
-		var html = '';
+	switch(parameters.___output || "xml"){
+	case "html-js":{
+		var html = "";
 		$output(html){
 			%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><%
 			%><html><%
@@ -241,14 +241,14 @@ function buildAuthenticateReply(context){
 			content	: html
 		};
 	}
-	case 'json':{
+	case "json":{
 	}
-	case 'xml':{
+	case "xml":{
 		var url = query.url;
 		var xml;
 		$output(xml){
-			%><authenticate<%= formatXmlAttribute('title', context.title || message) %> layout="menu" zoom="document"><%
-				= formatXmlElement('client', context.share.clientElementProperties(context));
+			%><authenticate<%= formatXmlAttribute("title", context.title || message) %> layout="menu" zoom="document"><%
+				= formatXmlElement("client", context.share.clientElementProperties(context));
 				if(query.attributes["Secure"] !== "true" && url.startsWith("http://")){
 					%><message><%
 						%>This service requires all clients to sign-in. Encrypted communication required to proceed.<%
@@ -262,7 +262,7 @@ function buildAuthenticateReply(context){
 			%></authenticate><%
 		}
 		return {
-			layout : 'xml',
+			layout : "xml",
 			xsl : "/!/skin/skin-standard-xml/show.xsl",
 			content : xml,
 			cache : false
@@ -291,10 +291,10 @@ function formatterDate(v/*, column, row*/){
 
 function makeDoneRefreshReply(title, forward){
 	return {
-		layout : 'xml',
-		xsl : '/!/skin/skin-standard-xml/showState.xsl',
-		content : formatXmlElement('done', {
-			title : title || 'updated...',
+		layout : "xml",
+		xsl : "/!/skin/skin-standard-xml/showState.xsl",
+		content : formatXmlElement("done", {
+			title : title || "updated...",
 			updated : (new Date()).toISOString(),
 			forward : forward || undefined
 		})
@@ -316,61 +316,61 @@ function makeMessageReply(context, layout){
 	if(code && !(hl || icon) && (code^0 === code)){
 		switch(code){
 		case 400:{
-			hl ??= 'error';
-			icon ??= 'stop';
-			element ||= 'invalid';
-			reason ||= 'Invalid Request';
-			message ??= 'Some of request arguments or format are unacceptable, out of range or malformed.';
+			hl ??= "error";
+			icon ??= "stop";
+			element ||= "invalid";
+			reason ||= "Invalid Request";
+			message ??= "Some of request arguments or format are unacceptable, out of range or malformed.";
 			break;
 		}
 		case 403:{
-			hl ??= 'error';
-			icon ??= 'delete';
-			element ||= 'denied';
-			reason ||= 'Access Denied';
-			message ??= 'The account is not granted with permission to execute the operation requested.';
+			hl ??= "error";
+			icon ??= "delete";
+			element ||= "denied";
+			reason ||= "Access Denied";
+			message ??= "The account is not granted with permission to execute the operation requested.";
 			break;
 		}
 		case 404:{
-			hl ??= 'error';
-			icon ??= 'error_delete';
-			element ||= 'failed';
-			reason ||= 'Resource Not Found';
-			message ??= 'The client request references to resource that cannot be found or identified. Please, check the URL and other parameters of your request or contact an administrator if you believe that request is correct.';
+			hl ??= "error";
+			icon ??= "error_delete";
+			element ||= "failed";
+			reason ||= "Resource Not Found";
+			message ??= "The client request references to resource that cannot be found or identified. Please, check the URL and other parameters of your request or contact an administrator if you believe that request is correct.";
 			break;
 		}
 		case 500:{
-			hl ??= 'error';
-			icon ??= 'exclamation';
-			element ||= 'failed';
-			reason ||= 'Internal Server Failure';
-			message ??= 'The server encountered an internal problem while trying to satisfy the client request. Please, contact the administrator if you are concerned or if problem persists.';
+			hl ??= "error";
+			icon ??= "exclamation";
+			element ||= "failed";
+			reason ||= "Internal Server Failure";
+			message ??= "The server encountered an internal problem while trying to satisfy the client request. Please, contact the administrator if you are concerned or if problem persists.";
 			break;
 		}
 		default:{
 			switch((code / 100)^0){
 			case 2:{
-				hl ??= 'true';
-				icon ??= 'tick';
-				element ||= 'updated';
-				reason ||= 'Operation Successful';
-				message ??= 'The request seems to be satisfied with no further detail provided.';
+				hl ??= "true";
+				icon ??= "tick";
+				element ||= "updated";
+				reason ||= "Operation Successful";
+				message ??= "The request seems to be satisfied with no further detail provided.";
 				break;
 			}
 			case 4:{
-				hl ??= 'error';
-				icon ??= 'error_delete';
-				element ||= 'failed';
-				reason ||= 'Unclassified Client Failure';
-				message ??= 'The client request is not considered valid and will not be served.';
+				hl ??= "error";
+				icon ??= "error_delete";
+				element ||= "failed";
+				reason ||= "Unclassified Client Failure";
+				message ??= "The client request is not considered valid and will not be served.";
 				break;
 			}
 			case 5:{
-				hl ??= 'error';
-				icon ??= 'exclamation';
-				element ||= 'failed';
-				reason ||= 'Unclassified Server Failure';
-				message ??= 'The server encountered an unsolvable problem while trying to satisfy the client request.';
+				hl ??= "error";
+				icon ??= "exclamation";
+				element ||= "failed";
+				reason ||= "Unclassified Server Failure";
+				message ??= "The server encountered an unsolvable problem while trying to satisfy the client request.";
 				break;
 			}
 			}
@@ -378,17 +378,17 @@ function makeMessageReply(context, layout){
 		}
 	}
 	
-	element ||= 'message';
-	reason ||= ('string' === typeof message && message) || layout.title;
+	element ||= "message";
+	reason ||= ("string" === typeof message && message) || layout.title;
 	
-	const title = layout.title || context.title || (context.share || '').systemName || 'Message';
+	const title = layout.title || context.title || (context.share || "").systemName || "Message";
 	const detail = layout.detail;
 	
-	const filters = layout.filters || (message||'').filters;
+	const filters = layout.filters || (message||"").filters;
 	
-	var xml = '';
+	var xml = "";
 	$output(xml){
-		%><<%= element; = 'string' === typeof title 
+		%><<%= element; = "string" === typeof title 
 			? formatXmlAttributes({
 				title : title,
 				code : code,
@@ -413,28 +413,28 @@ function makeMessageReply(context, layout){
 		 %> layout="message"<%
 		%>><%
 			if(context.share){
-				= formatXmlElement('client', context.share.clientElementProperties(context));
+				= formatXmlElement("client", context.share.clientElementProperties(context));
 			}
 			if(filters && filters.fields){
-				= formatXmlElement('prefix', new FiltersFormLayout(filters));
+				= formatXmlElement("prefix", new FiltersFormLayout(filters));
 			}
-			%><reason><%= formatXmlNodeValue(reason ? (reason.title || reason) : 'Unclassified message.') %></reason><%
+			%><reason><%= formatXmlNodeValue(reason ? (reason.title || reason) : "Unclassified message.") %></reason><%
 			if(message && message !== reason){
-				if('string' === typeof message){
+				if("string" === typeof message){
 					%><message class="code style--block"><%= formatXmlNodeValue(message) %></message><%
 				}else //
 				if(message.layout){
-					= internOutputValue('message', message || reason);
+					= internOutputValue("message", message || reason);
 				}
 			}
 			if(detail){
-				if('string' === typeof detail){
+				if("string" === typeof detail){
 					%><detail class="code style--block"><%= formatXmlNodeValue(detail) %></detail><%
 				}else{
-					= internOutputValue('detail', detail);
+					= internOutputValue("detail", detail);
 				}
 			}
-			if((layout.help || message && message.help) && context.query.parameters.format !== 'clean'){
+			if((layout.help || message && message.help) && context.query.parameters.format !== "clean"){
 				%><help src="<%= formatXmlAttributeFragment(layout.help || message.help) %>"/><%
 			}
 		%></<%= element; %>><%
@@ -455,27 +455,27 @@ web.makeMessageReply = makeMessageReply;
 function internReplaceField(edit, field){
 	const key = field.id || field.name;
 	const val = this 
-		? key === '.' ? this : this[key] 
+		? key === "." ? this : this[key] 
 		: null
 	;
-	if(val !== undefined && val !== null && val !== this && 'object' !== typeof val){
+	if(val !== undefined && val !== null && val !== this && "object" !== typeof val){
 		this[key] = [ val ];
 	}
-	if(field.type === 'set' || field.type === 'select'){
+	if(field.type === "set" || field.type === "select"){
 		if(edit && field.list && field.list.columns && field.list.columns.map){
 			const list = field.list
-			const input = field.type === 'set' ? 'checkbox' : 'radio';
+			const input = field.type === "set" ? "checkbox" : "radio";
 			return Object.create(field, {
 				list : { 
 					value : {
 						attributes : list.attributes,
 						columns : { 
 							column : [{
-								id : 'value',
-								name : 'value',
-								title : input === 'radio' ? ' ๏ ' : ' ☑ ', // ☒
-								type : 'input',
-								extraClass : 'ui-align-center',
+								id : "value",
+								name : "value",
+								title : input === "radio" ? " ๏ " : " ☑ ", // ☒
+								type : "input",
+								extraClass : "ui-align-center",
 								variant : input,
 								selected : field.selected,
 								name : field.id || field.name
@@ -509,17 +509,17 @@ function internReplaceField(edit, field){
 		}
 	}
 	switch(field.variant){
-	case 'sequence':{
-		var enm = field.elementName || 'item';
+	case "sequence":{
+		var enm = field.elementName || "item";
 		var arr = val[enm];
 		if(!arr){
 			return field;
 		}
-		key === '.' || (val = this[key] = Object.create(val));
+		key === "." || (val = this[key] = Object.create(val));
 		val[enm] = Array(arr).map(internReplaceValue);
 		return field;
 	}
-	case 'select':
+	case "select":
 		if(field.options){
 			return Object.create(field, {
 				options : { value : null },
@@ -542,12 +542,12 @@ function internReplaceField(edit, field){
 			});
 		}
 		return field;
-	case 'view':
-	case 'form':{
+	case "view":
+	case "form":{
 		if(!key){
 			if(field.value){
 				var rep = internReplaceValue(field.value);
-				if(rep !== undefined && rep !== null && 'object' !== typeof rep){
+				if(rep !== undefined && rep !== null && "object" !== typeof rep){
 					rep = [ rep ];
 				}
 				(field = Object.create(field)).value = rep;
@@ -557,7 +557,7 @@ function internReplaceField(edit, field){
 			var idx, ext, rep, nxt;
 			if(val && val.layout){
 				rep = internReplaceValue.call(val, val);
-				if(rep !== undefined && rep !== null && 'object' !== typeof rep){
+				if(rep !== undefined && rep !== null && "object" !== typeof rep){
 					rep = [ rep ];
 				}
 				this[key] = rep;
@@ -566,7 +566,7 @@ function internReplaceField(edit, field){
 			for(idx in val){
 				ext = val[idx];
 				rep = internReplaceValue.call(val, ext);
-				if(rep !== undefined && rep !== null && 'object' !== typeof rep){
+				if(rep !== undefined && rep !== null && "object" !== typeof rep){
 					rep = [ rep ];
 				}
 				if(rep !== ext){
@@ -585,7 +585,7 @@ function internReplaceField(edit, field){
 		}
 		return field;
 	}
-	case 'list':
+	case "list":
 		if(field.columns && Array.isArray(field.columns)){
 			return Object.create(field, {
 				columns : { enumerable : true, value : { column : field.columns } },
@@ -598,14 +598,14 @@ function internReplaceField(edit, field){
 }
 
 function internReplaceValue(value){
-	if(value === null || value === undefined || 'object' !== typeof value || Array.isArray(value)){
+	if(value === null || value === undefined || "object" !== typeof value || Array.isArray(value)){
 		return value;
 	}
 	var layout, values;
 	switch(value.layout){
-	case 'data-view':
+	case "data-view":
 		layout = Object.create(value);
-		layout.layout = 'view';
+		layout.layout = "view";
 		values = "object" === typeof value.values ? Object.create(value.values) : {};
 		value.fields && (layout.fields = {
 			field : value.fields.map(internReplaceField.bind(values, false))
@@ -617,9 +617,9 @@ function internReplaceValue(value){
 		value.commands && (layout.fields.command = value.commands, layout.commands = null);
 		value.help && (layout.fields.help = value.help, layout.help = null);
 		return layout;
-	case 'data-form':
+	case "data-form":
 		layout = Object.create(value);
-		layout.layout = 'form';
+		layout.layout = "form";
 		layout.values = "object" === typeof value.values ? Object.create(value.values) : {};
 		value.fields && (layout.fields = {
 			field : value.fields.map(internReplaceField.bind(layout.values, true))
@@ -635,10 +635,10 @@ function internReplaceValue(value){
 		value.submit && (layout.fields.submit = value.submit, layout.submit = null);
 		value.help && (layout.fields.help = value.help, layout.help = null);
 		return layout;
-	case 'data-list':
-	case 'data-table':
+	case "data-list":
+	case "data-table":
 		layout = Object.create(value);
-		layout.layout = 'list';
+		layout.layout = "list";
 		value.columns && (layout.columns = {
 			column : value.columns.map(internReplaceField.bind(null, false))
 		});
@@ -649,9 +649,9 @@ function internReplaceValue(value){
 		value.commands && (layout.columns.command = value.commands, layout.commands = null);
 		value.help && (layout.fields.help = value.help, layout.help = null);
 		return layout;
-	case 'documentation':
+	case "documentation":
 		layout = Object.create(value);
-		// layout.layout = 'documentation';
+		// layout.layout = "documentation";
 		value.commands && (layout.fields.command = value.commands, layout.commands = null);
 		value.help && (layout.fields.help = value.help, layout.help = null);
 		return layout;
@@ -691,26 +691,26 @@ function makeDataViewFragment(query, layout, extraCommands){
 
 	const filters = layout.filters;
 	
-	var xml = '';
+	var xml = "";
 	$output(xml){
 		if(layout.prefix){
-			= internOutputValue('prefix', layout.prefix);
+			= internOutputValue("prefix", layout.prefix);
 		}
 		if(filters && filters.fields){
-			= formatXmlElement('prefix', new FiltersFormLayout(filters));
+			= formatXmlElement("prefix", new FiltersFormLayout(filters));
 		}
 		%><fields><%
 			for(var field of layout.fields){
-				= formatXmlElement('field', internReplaceField.call(layout.values, false, field));
+				= formatXmlElement("field", internReplaceField.call(layout.values, false, field));
 			}
 			if(extraCommands){
 				= extraCommands;
 			}
 			if(layout.commands){
-				= formatXmlElements('command', layout.commands);
+				= formatXmlElements("command", layout.commands);
 			}
-			if(layout.help && (!query || query.parameters.format !== 'clean')){
-				= formatXmlElement('help', { src : layout.help });
+			if(layout.help && (!query || query.parameters.format !== "clean")){
+				= formatXmlElement("help", { src : layout.help });
 			}
 		%></fields><%
 		if("object" === typeof layout.values){
@@ -719,7 +719,7 @@ function makeDataViewFragment(query, layout, extraCommands){
 			}
 		}
 		if(layout.suffix){
-			= internOutputValue('suffix', layout.suffix);
+			= internOutputValue("suffix", layout.suffix);
 		}
 	}
 	return xml;
@@ -728,7 +728,7 @@ function makeDataViewFragment(query, layout, extraCommands){
 /**
  * <code>
  * layout = {
- * -rootName : 'view',
+ * -rootName : "view",
  * 	fields: [
  * 	],
  * 	values: {
@@ -744,36 +744,36 @@ function makeDataViewReply(context, layout){
 	const query = context && context.query;
 	if(query && query.parameters.___output){
 		switch(query.parameters.___output){
-		case 'xml':
-			return require('ae3/xml').makeDataViewReply(query, layout);
-		case 'xls':
-			return require('ae3/xls').makeDataViewReply(query, layout);
-		case 'txt':
-			return require('ae3/txt').makeDataViewReply(query, layout);
-		case 'pdf':
-			return require('ae3/pdf').makeDataViewReply(query, layout);
+		case "xml":
+			return require("ae3/xml").makeDataViewReply(query, layout);
+		case "xls":
+			return require("ae3/xls").makeDataViewReply(query, layout);
+		case "txt":
+			return require("ae3/txt").makeDataViewReply(query, layout);
+		case "pdf":
+			return require("ae3/pdf").makeDataViewReply(query, layout);
 		}
 	}
 	
 	const attributes = layout.attributes ? Object.create(layout.attributes) : {};
-	attributes.layout = 'view';
+	attributes.layout = "view";
 	const filters = layout.filters;
-	const element = layout.rootName || 'view';
+	const element = layout.rootName || "view";
 	return {
 		layout	: "xml",
 		xsl	: "/!/skin/skin-standard-xml/show.xsl",
-		content	:	'<' + element + formatXmlAttributes(attributes || {}) + '>' + 
-					(query && formatXmlElement('client', context.share.clientElementProperties(context)) || '') +
+		content	:	"<" + element + formatXmlAttributes(attributes || {}) + ">" + 
+					(query && formatXmlElement("client", context.share.clientElementProperties(context)) || "") +
 					makeDataViewFragment(
 						query,
 						layout, 
-						query && !query.parameters.___output && query.parameters.___all && formatXmlElement('command', {
-							title : 'Download as XLS',
-							icon : 'disk',
-							url : '?___output=xls&' + formatQueryStringParameters(filters && filters.values)
+						query && !query.parameters.___output && query.parameters.___all && formatXmlElement("command", {
+							title : "Download as XLS",
+							icon : "disk",
+							url : "?___output=xls&" + formatQueryStringParameters(filters && filters.values)
 						})
 					) +
-					'</' + element + '>'
+					"</" + element + ">"
 	};
 }
 web.makeDataViewReply = makeDataViewReply;
@@ -781,7 +781,7 @@ web.makeDataViewReply = makeDataViewReply;
 /**
  * <code>
  * layout = {
- * -rootName : 'form',
+ * -rootName : "form",
  * 	fields: [
  * 	],
  * 	values: {
@@ -797,14 +797,14 @@ function makeDataFormReply(context, layout){
 	const query = context && context.query;
 	if(query && query.parameters.___output){
 		switch(query.parameters.___output){
-		case 'xml':
-			return require('ae3/xml').makeDataFormReply(query, layout);
-		case 'xls':
-			return require('ae3/xls').makeDataViewReply(query, layout);
-		case 'txt':
-			return require('ae3/txt').makeDataViewReply(query, layout);
-		case 'pdf':
-			return require('ae3/pdf').makeDataViewReply(query, layout);
+		case "xml":
+			return require("ae3/xml").makeDataFormReply(query, layout);
+		case "xls":
+			return require("ae3/xls").makeDataViewReply(query, layout);
+		case "txt":
+			return require("ae3/txt").makeDataViewReply(query, layout);
+		case "pdf":
+			return require("ae3/pdf").makeDataViewReply(query, layout);
 		}
 	}
 
@@ -818,17 +818,17 @@ function makeDataFormReply(context, layout){
 	}
 
 	const attributes = layout.attributes ? Object.create(layout.attributes) : {};
-	attributes.layout = 'form';
+	attributes.layout = "form";
 	
 	const filters = layout.filters;
 	
-	const element = layout.rootName || 'form';
+	const element = layout.rootName || "form";
 
-	var xml = '';
+	var xml = "";
 	$output(xml){
 		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
 			if(query){
-				= formatXmlElement('client', context.share.clientElementProperties(context));
+				= formatXmlElement("client", context.share.clientElementProperties(context));
 				if(context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
@@ -838,29 +838,29 @@ function makeDataFormReply(context, layout){
 				}
 			}
 			if(layout.prefix){
-				= internOutputValue('prefix', layout.prefix);
+				= internOutputValue("prefix", layout.prefix);
 			}
 			if(filters && filters.fields){
-				= formatXmlElement('prefix', new FiltersFormLayout(filters));
+				= formatXmlElement("prefix", new FiltersFormLayout(filters));
 			}
 			%><fields><%
 				for(var field of layout.fields){
-					= formatXmlElement('field', internReplaceField.call(layout.values, true, field));
+					= formatXmlElement("field", internReplaceField.call(layout.values, true, field));
 				}
 				if(layout.commands || layout.submit){
-					= formatXmlElements('command', layout.commands);
-					= formatXmlElements('submit', layout.submit);
+					= formatXmlElements("command", layout.commands);
+					= formatXmlElements("submit", layout.submit);
 				}else//
 				if(false && query && !query.parameters.___output){
-					// Request.modifyQueryStringParameter(url, 'format', 'xls' )
-					= formatXmlElement('command', {
-						title : 'Download as XLS',
-						icon : 'disk',
-						url : '?___output=xls&' + formatQueryStringParameters(filters && filters.values)
+					// Request.modifyQueryStringParameter(url, "format", "xls" )
+					= formatXmlElement("command", {
+						title : "Download as XLS",
+						icon : "disk",
+						url : "?___output=xls&" + formatQueryStringParameters(filters && filters.values)
 					});
 				}
-				if(layout.help && (!query || query.parameters.format !== 'clean')){
-					= formatXmlElement('help', { src : layout.help });
+				if(layout.help && (!query || query.parameters.format !== "clean")){
+					= formatXmlElement("help", { src : layout.help });
 				}
 			%></fields><%
 			%><values><%
@@ -871,7 +871,7 @@ function makeDataFormReply(context, layout){
 				}
 			%></values><%
 			if(layout.suffix){
-				= internOutputValue('suffix', layout.suffix);
+				= internOutputValue("suffix", layout.suffix);
 			}
 		%></<%= element; %>><%
 	}
@@ -886,7 +886,7 @@ web.makeDataFormReply = makeDataFormReply;
 /**
  * <code>
  * layout = {
- * -rootName : 'list',
+ * -rootName : "list",
  * 	columns: [
  * 	],
  * 	rows: function(i)/arrayOfArrays/arrayOfMaps,
@@ -899,18 +899,18 @@ function makeDataTableReply(context, layout){
 	const query = context && context.query;
 	if(query && query.parameters.___output){
 		switch(query.parameters.___output){
-		case 'xml':
-			return require('ae3/xml').makeDataTableReply(query, layout);
-		case 'xls':
-			return require('ae3/xls').makeDataTableReply(query, layout);
-		case 'txt':
-			return require('ae3/txt').makeDataTableReply(query, layout);
-		case 'pdf':
-			return require('ae3/pdf').makeDataTableReply(query, layout);
-		case 'html':
-			return require('ae3/html').makeDataTableReply(query, layout);
-		case 'csv':
-			return require('ae3/csv').makeDataTableReply(query, layout);
+		case "xml":
+			return require("ae3/xml").makeDataTableReply(query, layout);
+		case "xls":
+			return require("ae3/xls").makeDataTableReply(query, layout);
+		case "txt":
+			return require("ae3/txt").makeDataTableReply(query, layout);
+		case "pdf":
+			return require("ae3/pdf").makeDataTableReply(query, layout);
+		case "html":
+			return require("ae3/html").makeDataTableReply(query, layout);
+		case "csv":
+			return require("ae3/csv").makeDataTableReply(query, layout);
 		}
 	}
 
@@ -924,7 +924,7 @@ function makeDataTableReply(context, layout){
 	}
 
 	const attributes = layout.attributes ? Object.create(layout.attributes) : {};
-	attributes.layout = 'list';
+	attributes.layout = "list";
 	
 	const rows = layout.rows || [];
 	const rowCount = rows.length;
@@ -933,13 +933,13 @@ function makeDataTableReply(context, layout){
 
 	const filters = layout.filters;
 	
-	const element = layout.rootName || 'list';
+	const element = layout.rootName || "list";
 
-	var xml = '', c, column, cn, r, row, item = {}, /* more, */format;
+	var xml = "", c, column, cn, r, row, item = {}, /* more, */format;
 	$output(xml){
 		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
 			if(query){
-				= formatXmlElement('client', context.share.clientElementProperties(context));
+				= formatXmlElement("client", context.share.clientElementProperties(context));
 				if(context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
@@ -949,27 +949,27 @@ function makeDataTableReply(context, layout){
 				}
 			}
 			if(layout.prefix){
-				= internOutputValue('prefix', layout.prefix);
+				= internOutputValue("prefix", layout.prefix);
 			}
 			if(filters && filters.fields){
-				= formatXmlElement('prefix', new FiltersFormLayout(filters));
+				= formatXmlElement("prefix", new FiltersFormLayout(filters));
 			}
 			%><columns><%
 				for(c = 0; c < columnCount; ++c){
 					column = columns[c];
-					= formatXmlElement('column', internReplaceField.call(null, false, column));
+					= formatXmlElement("column", internReplaceField.call(null, false, column));
 					// item[column.id] = true;
 					switch(column.variant){
-					case 'list':
+					case "list":
 						formats[c] = formatterPlain;
 						break;
-					case 'view':
+					case "view":
 						formats[c] = formatterPlain;
 						break;
-					case 'select':
+					case "select":
 						formats[c] = formatterPlain;
 						break;
-					case 'date':
+					case "date":
 						formats[c] = formatterDate;
 						break;
 					default:
@@ -988,12 +988,12 @@ function makeDataTableReply(context, layout){
 						(more ||= []).push(cn);
 					}
 					 */
-					= formatXmlElement('command', c);
+					= formatXmlElement("command", c);
 				}
 			%></columns><%
 			
 			for(r = 0; r < rowCount; ++r){
-				= formatXmlElement('item', rows[r]);
+				= formatXmlElement("item", rows[r]);
 				/**
 				 * all columns required for commands and links
 				 * 
@@ -1006,63 +1006,63 @@ function makeDataTableReply(context, layout){
 				for(cn in more){
 					item[cn] = row[cn];
 				}
-				= formatXmlElement('item', item);
+				= formatXmlElement("item", item);
 				*/
 			}
 			
 			if(layout.commands){
-				= formatXmlElements('command', layout.commands);
+				= formatXmlElements("command", layout.commands);
 			}
 			if(query && !query.parameters.___output){
 				const suffix = formatQueryStringParameters(filters && "object" === typeof filters.values && filters.values || query.parameters, { format : undefined });
 				const commands = [
 					{
-						title : 'Download as XLS',
-						icon : 'page_white_excel',
-						url : '?___output=xls&' + suffix
+						title : "Download as XLS",
+						icon : "page_white_excel",
+						url : "?___output=xls&" + suffix
 					},
 					{
-						title : 'Download as PDF',
-						icon : 'page_white_acrobat',
-						url : '?___output=pdf&' + suffix
+						title : "Download as PDF",
+						icon : "page_white_acrobat",
+						url : "?___output=pdf&" + suffix
 					},
 					{
-						title : 'Download as HTML',
-						icon : 'page_world',
-						url : '?___output=html&' + suffix
+						title : "Download as HTML",
+						icon : "page_world",
+						url : "?___output=html&" + suffix
 					},
 					{
-						title : 'Download as CSV',
-						icon : 'page_white_text',
-						url : '?___output=csv&' + suffix
+						title : "Download as CSV",
+						icon : "page_white_text",
+						url : "?___output=csv&" + suffix
 					}
 				];
-				if(query.parameters.format === 'clean' || query.verb !== 'POST'){
+				if(query.parameters.format === "clean" || query.verb !== "POST"){
 					commands.push({
-						title : 'Open as Listing Page',
-						icon : 'world_link',
-						url : '?' + suffix,
-						target : '_blank'
+						title : "Open as Listing Page",
+						icon : "world_link",
+						url : "?" + suffix,
+						target : "_blank"
 					});
 				}
-				// Request.modifyQueryStringParameter(url, 'format', 'xls' )
-				= formatXmlElement('command', {
-					title : 'Download',
-					titleShort : new String(''),
-					icon : 'images',
+				// Request.modifyQueryStringParameter(url, "format", "xls" )
+				= formatXmlElement("command", {
+					title : "Download",
+					titleShort : new String(""),
+					icon : "images",
 					group : {
 						command : commands
 					}
 				});
 			}
-			if(layout.help && (!query || query.parameters.format !== 'clean')){
-				= formatXmlElement('help', { src : layout.help });
+			if(layout.help && (!query || query.parameters.format !== "clean")){
+				= formatXmlElement("help", { src : layout.help });
 			}
 			if(layout.suffix){
-				= internOutputValue('suffix', layout.suffix);
+				= internOutputValue("suffix", layout.suffix);
 			}
 			if(layout.next && layout.next.uri){
-				= formatXmlElement('next', layout.next);
+				= formatXmlElement("next", layout.next);
 			}
 		%></<%= element; %>><%
 	}
@@ -1081,21 +1081,21 @@ function makeDocumentationFragment(layout, extraCommands){
 	if(!elements){
 		throw new Error("Documant 'elements' array is required!");
 	}
-	var xml = '';
+	var xml = "";
 	$output(xml){
 		if(layout.prefix){
-			= internOutputValue('prefix', layout.prefix);
+			= internOutputValue("prefix", layout.prefix);
 		}
 		if(elements){
 			for(var element of Array(elements)){
 				if(element) {
-					= internOutputValue(element.disposition || 'element', element);
-					// = formatXmlElement(element.disposition || 'element', element);
+					= internOutputValue(element.disposition || "element", element);
+					// = formatXmlElement(element.disposition || "element", element);
 				}
 			}
 		}
 		if(layout.help){
-			= formatXmlElement('help', { src : layout.help });
+			= formatXmlElement("help", { src : layout.help });
 		}
 	}
 	return xml;
@@ -1105,7 +1105,7 @@ function makeDocumentationFragment(layout, extraCommands){
 /**
  * <code>
  * layout = {
- * -rootName : 'documentation',
+ * -rootName : "documentation",
  * 	elements: [
  * 	],
  * }
@@ -1115,28 +1115,28 @@ function makeDocumentationFragment(layout, extraCommands){
  */
 function makeDocumentationReply(context, layout){
 	const query = context && context.query;
-	if(query && query.parameters.___output === 'xls'){
+	if(query && query.parameters.___output === "xls"){
 		throw "No XLS support for 'documentation' layout.";
-		return require('ae3/xls').makeDataViewReply(query, layout);
+		return require("ae3/xls").makeDataViewReply(query, layout);
 	}
 	
 	const attributes = layout.attributes ? Object.create(layout.attributes) : {};
-	attributes.layout = 'documentation';
-	const element = layout.rootName || 'documentation';
+	attributes.layout = "documentation";
+	const element = layout.rootName || "documentation";
 	return {
 		layout	: "xml",
 		xsl	: "/!/skin/skin-standard-xml/show.xsl",
-		content	:	'<' + element + formatXmlAttributes(attributes || {}) + '>' + 
-					(query && formatXmlElement('client', context.share.clientElementProperties(context)) || '') +
+		content	:	"<" + element + formatXmlAttributes(attributes || {}) + ">" + 
+					(query && formatXmlElement("client", context.share.clientElementProperties(context)) || "") +
 					makeDocumentationFragment(
 						layout, 
-						false && query && !query.parameters.___output && formatXmlElement('command', {
-							title : 'Download as PDF',
-							icon : 'disk',
-							url : '?___output=pdf&' + formatQueryStringParameters(filters && "object" === typeof filters.values && filters.values)
+						false && query && !query.parameters.___output && formatXmlElement("command", {
+							title : "Download as PDF",
+							icon : "disk",
+							url : "?___output=pdf&" + formatQueryStringParameters(filters && "object" === typeof filters.values && filters.values)
 						})
 					) +
-					'</' + element + '>'
+					"</" + element + ">"
 	};
 }
 web.makeDocumentationReply = makeDocumentationReply;
@@ -1145,7 +1145,7 @@ web.makeDocumentationReply = makeDocumentationReply;
 /**
  * <code>
  * layout = {
- * -rootName : 'sequence',
+ * -rootName : "sequence",
  * 	options: [
  * 	],
  * 	commands: [
@@ -1159,13 +1159,13 @@ function makeSequenceReply(context, layout){
 	const query = context && context.query;
 	if(query && query.parameters.___output){
 		switch(query.parameters.___output){
-		case 'xml':
+		case "xml":
 			return require("ae3/xml").makeDataFormReply(query, layout);
-		case 'xls':
+		case "xls":
 			return require("ae3/xls").makeDataViewReply(query, layout);
-		case 'txt':
+		case "txt":
 			return require("ae3/txt").makeDataViewReply(query, layout);
-		case 'pdf':
+		case "pdf":
 			return require("ae3/pdf").makeDataViewReply(query, layout);
 		}
 	}
@@ -1180,17 +1180,17 @@ function makeSequenceReply(context, layout){
 	}
 
 	const attributes = layout.attributes ? Object.create(layout.attributes) : {};
-	attributes.layout = 'sequence';
+	attributes.layout = "sequence";
 	
 	const filters = layout.filters;
 	
-	const element = layout.rootName || 'sequence';
+	const element = layout.rootName || "sequence";
 
-	var xml = '';
+	var xml = "";
 	$output(xml){
 		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
 			if(query){
-				= formatXmlElement('client', context.share.clientElementProperties(context));
+				= formatXmlElement("client", context.share.clientElementProperties(context));
 				if(context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
@@ -1200,24 +1200,24 @@ function makeSequenceReply(context, layout){
 				}
 			}
 			if(layout.prefix){
-				= internOutputValue('prefix', layout.prefix);
+				= internOutputValue("prefix", layout.prefix);
 			}
 			if(filters && filters.fields){
-				= formatXmlElement('prefix', new FiltersFormLayout(filters));
+				= formatXmlElement("prefix", new FiltersFormLayout(filters));
 			}
 			%><sequence><%
 				for(var item of layout.options){
-					= internOutputValue('item', item);
+					= internOutputValue("item", item);
 				}
 			%></sequence><%
 			if(layout.commands){
-				= formatXmlElements('command', layout.commands);
+				= formatXmlElements("command", layout.commands);
 			}else//
-			if(layout.help && (!query || query.parameters.format !== 'clean')){
-				= formatXmlElement('help', { src : layout.help });
+			if(layout.help && (!query || query.parameters.format !== "clean")){
+				= formatXmlElement("help", { src : layout.help });
 			}
 			if(layout.suffix){
-				= internOutputValue('suffix', layout.suffix);
+				= internOutputValue("suffix", layout.suffix);
 			}
 		%></<%= element; %>><%
 	}
@@ -1233,7 +1233,7 @@ web.makeSequenceReply = makeSequenceReply;
 /**
  * <code>
  * layout = {
- * -rootName : 'sequence',
+ * -rootName : "sequence",
  * 	options: [
  * 	],
  * 	commands: [
@@ -1247,13 +1247,13 @@ function makeSelectViewReply(context, layout){
 	const query = context && context.query;
 	if(query && query.parameters.___output){
 		switch(query.parameters.___output){
-		case 'xml':
+		case "xml":
 			return require("ae3/xml").makeDataFormReply(query, layout);
-		case 'xls':
+		case "xls":
 			return require("ae3/xls").makeDataViewReply(query, layout);
-		case 'txt':
+		case "txt":
 			return require("ae3/txt").makeDataViewReply(query, layout);
-		case 'pdf':
+		case "pdf":
 			return require("ae3/pdf").makeDataViewReply(query, layout);
 		}
 	}
@@ -1268,17 +1268,17 @@ function makeSelectViewReply(context, layout){
 	}
 
 	const attributes = layout.attributes ? Object.create(layout.attributes) : {};
-	attributes.layout = 'select-view';
+	attributes.layout = "select-view";
 	
 	const filters = layout.filters;
 	
-	const element = layout.rootName || 'sequence';
+	const element = layout.rootName || "sequence";
 
-	var xml = '';
+	var xml = "";
 	$output(xml){
 		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
 			if(query){
-				= formatXmlElement('client', context.share.clientElementProperties(context));
+				= formatXmlElement("client", context.share.clientElementProperties(context));
 				if(context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
@@ -1291,22 +1291,22 @@ function makeSelectViewReply(context, layout){
 				%><value><% = formatXmlNodeValue(layout.value); %></value><%
 			}
 			if(layout.prefix){
-				= internOutputValue('prefix', layout.prefix);
+				= internOutputValue("prefix", layout.prefix);
 			}
 			if(filters && filters.fields){
-				= formatXmlElement('prefix', new FiltersFormLayout(filters));
+				= formatXmlElement("prefix", new FiltersFormLayout(filters));
 			}
 			for(var item of layout.options){
-				= internOutputValue('option', item);
+				= internOutputValue("option", item);
 			}
 			if(layout.commands){
-				= formatXmlElements('command', layout.commands);
+				= formatXmlElements("command", layout.commands);
 			}else//
-			if(layout.help && (!query || query.parameters.format !== 'clean')){
-				= formatXmlElement('help', { src : layout.help });
+			if(layout.help && (!query || query.parameters.format !== "clean")){
+				= formatXmlElement("help", { src : layout.help });
 			}
 			if(layout.suffix){
-				= internOutputValue('suffix', layout.suffix);
+				= internOutputValue("suffix", layout.suffix);
 			}
 		%></<%= element; %>><%
 	}

@@ -1,47 +1,47 @@
 
 function handleArguments(context){
-	const enum = require('java.class/ru.myx.ae3.exec.ModifierArguments');
+	const enum = require("java.class/ru.myx.ae3.exec.ModifierArguments");
 
 	const layout = {
-		layout : 'data-table',
+		layout : "data-table",
 		attributes : {
-			cssId : 'list',
+			cssId : "list",
 			title : "AE3 VLIW VM Info: Operation Argument Specifiers"
 		},
 		columns : [
 			{
-				id : 'od',
-				title : 'IDX',
-				type : 'number',
-				variant : 'integer'
+				id : "od",
+				title : "IDX",
+				type : "number",
+				variant : "integer"
 			},
 			{
-				id : 'ag',
-				title : 'Argument Modifier',
-				type : 'string',
-				extraClass : 'code',
+				id : "ag",
+				title : "Argument Modifier",
+				type : "string",
+				extraClass : "code",
 			},
 			{
-				id : 'an',
-				title : 'Notation',
-				type : 'string',
+				id : "an",
+				title : "Notation",
+				type : "string",
 			},
 			{
-				id : 'sr',
-				title : 'Stack Read',
-				type : 'number',
-				variant : 'integer'
+				id : "sr",
+				title : "Stack Read",
+				type : "number",
+				variant : "integer"
 			},
 			{
-				id : 'sw',
-				title : 'Stack Write',
-				type : 'number',
-				variant : 'integer'
+				id : "sw",
+				title : "Stack Write",
+				type : "number",
+				variant : "integer"
 			},
 			{
-				id : 'cv',
-				title : 'Constant Value',
-				type : 'string',
+				id : "cv",
+				title : "Constant Value",
+				type : "string",
 			},
 		],
 		rows : enum.values().map(function(argument){
@@ -61,38 +61,38 @@ function handleArguments(context){
 
 
 function handleRegisters(context){
-	const enum = require('java.class/ru.myx.ae3.exec.ModifierRegister');
+	const enum = require("java.class/ru.myx.ae3.exec.ModifierRegister");
 
 	const layout = {
-		layout : 'data-table',
+		layout : "data-table",
 		attributes : {
-			cssId : 'list',
+			cssId : "list",
 			title : "AE3 VLIW VM Info: Context (Thread) Registers"
 		},
 		columns : [
 			{
-				id : 'od',
-				title : 'IDX',
-				type : 'number',
-				variant : 'integer'
+				id : "od",
+				title : "IDX",
+				type : "number",
+				variant : "integer"
 			},
 			{
-				id : 'rg',
-				title : 'Register',
-				type : 'string',
-				extraClass : 'code',
+				id : "rg",
+				title : "Register",
+				type : "string",
+				extraClass : "code",
 			},
 			{
-				id : 'ii',
-				title : 'isInt?',
-				type : 'boolean',
-				variant : 'boolean'
+				id : "ii",
+				title : "isInt?",
+				type : "boolean",
+				variant : "boolean"
 			},
 			{
-				id : 'io',
-				title : 'isObj?',
-				type : 'boolean',
-				variant : 'boolean'
+				id : "io",
+				title : "isObj?",
+				type : "boolean",
+				variant : "boolean"
 			},
 		],
 		rows : enum.values().map(function(register){
@@ -111,32 +111,32 @@ function handleRegisters(context){
 
 
 function handleStoreTargets(context){
-	const enum = require('java.class/ru.myx.ae3.exec.ResultHandler$DirectTransport');
+	const enum = require("java.class/ru.myx.ae3.exec.ResultHandler$DirectTransport");
 	
 	const layout = {
-		layout : 'data-table',
+		layout : "data-table",
 		attributes : {
-			cssId : 'list',
+			cssId : "list",
 			title : "AE3 VLIW VM Info: Instruction DirectTransport Store Targets"
 		},
 		columns : [
 			{
-				id : 'od',
-				title : 'IDX',
-				type : 'number',
-				variant : 'integer'
+				id : "od",
+				title : "IDX",
+				type : "number",
+				variant : "integer"
 			},
 			{
-				id : 'st',
-				title : 'Store',
-				type : 'string',
-				extraClass : 'code',
+				id : "st",
+				title : "Store",
+				type : "string",
+				extraClass : "code",
 			},
 			{
-				id : 'ip',
-				title : 'isStack?',
-				type : 'boolean',
-				variant : 'boolean'
+				id : "ip",
+				title : "isStack?",
+				type : "boolean",
+				variant : "boolean"
 			},
 		],
 		rows : enum.values().map(function(store){
@@ -154,44 +154,44 @@ function handleStoreTargets(context){
 
 
 function handleResultStateCodes(context){
-	const enum = require('java.class/ru.myx.ae3.exec.ExecStateCode');
+	const enum = require("java.class/ru.myx.ae3.exec.ExecStateCode");
 
 	const layout = {
-		layout : 'data-table',
+		layout : "data-table",
 		attributes : {
-			cssId : 'list',
+			cssId : "list",
 			title : "AE3 VLIW VM Info: Execution Result State Codes"
 		},
 		columns : [
 			{
-				id : 'od',
-				title : 'IDX',
-				type : 'number',
-				variant : 'integer'
+				id : "od",
+				title : "IDX",
+				type : "number",
+				variant : "integer"
 			},
 			{
-				id : 'cd',
-				title : 'Code',
-				type : 'string',
-				extraClass : 'code',
+				id : "cd",
+				title : "Code",
+				type : "string",
+				extraClass : "code",
 			},
 			{
-				id : 'iee',
-				title : 'isExecExit?',
-				type : 'boolean',
-				variant : 'boolean'
+				id : "iee",
+				title : "isExecExit?",
+				type : "boolean",
+				variant : "boolean"
 			},
 			{
-				id : 'ien',
-				title : 'isExecNext?',
-				type : 'boolean',
-				variant : 'boolean'
+				id : "ien",
+				title : "isExecNext?",
+				type : "boolean",
+				variant : "boolean"
 			},
 			{
-				id : 'icr',
-				title : 'isCallReturn?',
-				type : 'boolean',
-				variant : 'boolean'
+				id : "icr",
+				title : "isCallReturn?",
+				type : "boolean",
+				variant : "boolean"
 			},
 		],
 		rows : enum.values().map(function(code){
@@ -209,7 +209,7 @@ function handleResultStateCodes(context){
 }
 
 
-module.exports = require('ae3.web/IndexPage').create({
+module.exports = require("ae3.web/IndexPage").create({
 	title : "AE3::developer/vm-vliw (AE3 VLIW VM Detail)", 
 	commands : {
 		/**
@@ -230,7 +230,7 @@ module.exports = require('ae3.web/IndexPage').create({
 		operations:{
 			icon : "help",
 			title : "Processing Operations",
-			run : [ require, './VmOperations' ],
+			run : [ require, "./VmOperations" ],
 			access : "public",
 			ui : true
 		},
@@ -242,7 +242,7 @@ module.exports = require('ae3.web/IndexPage').create({
 			ui : true,
 			preview : {
 				depthLimit : 1,
-				variant : 'document-url',
+				variant : "document-url",
 				src : "arguments?type=all"
 			}
 		},
@@ -255,7 +255,7 @@ module.exports = require('ae3.web/IndexPage').create({
 			ui : true,
 			preview : {
 				depthLimit : 1,
-				variant : 'document-url',
+				variant : "document-url",
 				src : "registers?type=all"
 			}
 		},
@@ -268,7 +268,7 @@ module.exports = require('ae3.web/IndexPage').create({
 			ui : true,
 			preview : {
 				depthLimit : 1,
-				variant : 'document-url',
+				variant : "document-url",
 				src : "stores?type=all"
 			}
 		},
@@ -280,11 +280,11 @@ module.exports = require('ae3.web/IndexPage').create({
 			ui : true,
 			preview : {
 				depthLimit : 1,
-				variant : 'document-url',
+				variant : "document-url",
 				src : "results?type=all"
 			}
 		},
-		'/!/skin/skin-developer-tools/try-ae3.bytecode.htm' : {
+		"/!/skin/skin-developer-tools/try-ae3.bytecode.htm" : {
 			icon : "bullet_go",
 			title : "AE3 Byte Code Preview, try-it-yourself demo",
 			access : "public",
