@@ -9,6 +9,8 @@ const updateMessageDigest = Transfer.updateMessageDigest;
 const isSocketAddress = ae3.net.isSocketAddress;
 const socketAddress = ae3.net.socketAddress;
 
+const WhirlpoolDigest = require("java.class/ru.myx.ae3.know.WhirlpoolDigest");
+
 const Principal = module.exports = ae3.Class.create(
 	/* name */
 	"Principal",
@@ -225,7 +227,6 @@ const Principal = module.exports = ae3.Class.create(
 			 * should be overriden to re-use pre-allocated buffer and/or digest
 			 */
 			value : function(m, a){
-				import ru.myx.ae3.know.WhirlpoolDigest;
 				return this.sendImpl(new ArrayBuffer(1500), new WhirlpoolDigest(), m, a);
 			}
 		},

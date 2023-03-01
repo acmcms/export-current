@@ -285,7 +285,7 @@ const AbstractTask = module.exports = ae3.Class.create(
 		cancelAll : {
 			value : function(tasks, task){
 				for(task of tasks){
-					task && task.cancel && task.cancel();
+					task?.cancel && task.cancel();
 				}
 			}
 		},

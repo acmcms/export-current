@@ -953,6 +953,24 @@ DIV.ui-illustration-central{
 	min-width: 200pt;
 }
 
+@media (max-width: 800px) {
+
+	.icon.ui-message-icon-document, .icon.ui-message-icon-window {
+		width: 3.5em;
+		height: 3.5em;
+		opacity: 0.9;
+	}
+	
+	.ui-message-west-document, .ui-message-west-window {
+		width: 4em;
+	}
+	
+	.ui-message-table-document, .ui-message-table-window {
+		padding: .5em
+	}
+	
+}
+
 @media (max-width: 559px) {
 	IMG.ui-small{
 		zoom:0.75;
@@ -960,6 +978,21 @@ DIV.ui-illustration-central{
 	DIV.ui-small{
 		width: 80%;
 	}
+
+	.icon.ui-message-icon-document, .icon.ui-message-icon-window {
+		width: 3em;
+		height: 3em;
+		opacity: 0.9;
+	}
+	
+	.ui-message-west-document, .ui-message-west-window {
+		width: 3.1em;
+	}
+	
+	.ui-message-table-document, .ui-message-table-window {
+		padding: .3em
+	}
+	
 }
 
 

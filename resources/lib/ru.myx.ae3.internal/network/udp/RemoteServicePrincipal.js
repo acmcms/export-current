@@ -11,6 +11,8 @@ const Principal = require('./Principal');
 const principalOnReceive = Principal.prototype.onReceive;
 const principalUpdateSecret = Principal.prototype.updateSecret;
 
+const CoarseDelayCache = ae3.Concurrent.CoarseDelayCache;
+
 const UdpServiceHelper = require("java.class/ru.myx.ae3.internal.net.UdpServiceHelper");
 
 const RemoteServicePrincipal = module.exports = ae3.Class.create(
@@ -24,7 +26,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 
 		Object.defineProperties(this, {
 			"serialTxqQueueWindow" : {
-				value : new ae3.Concurrent.CoarseDelayCache(3200, 5, (UdpServiceHelper.serialTxqQueueExpire || (
+				value : new CoarseDelayCache(3200, 5, (UdpServiceHelper.serialTxqQueueExpire || (
 					function(serial, task){
 						this.serialTxqCacheWindow.put(serial, task);
 						task.onDestroy();
@@ -32,7 +34,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 				)).bind(this))
 			},
 			"serialRxqCacheWindow" : {
-				value : new ae3.Concurrent.CoarseDelayCache(3800, 5, (UdpServiceHelper.serialAxqCacheExpire || (
+				value : new CoarseDelayCache(3800, 5, (UdpServiceHelper.serialAxqCacheExpire || (
 					function(serial, task){
 						if(this.sRx < serial && (serial > 16000000) === (this.sRx > 16000000)){
 							this.sRx = serial;
@@ -41,7 +43,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 				)).bind(this))
 			},
 			"serialTxqCacheWindow" : {
-				value : new ae3.Concurrent.CoarseDelayCache(3800, 5, (UdpServiceHelper.serialAxqCacheExpire || (
+				value : new CoarseDelayCache(3800, 5, (UdpServiceHelper.serialAxqCacheExpire || (
 					function(serial, task){
 						if(this.sRx < serial && (serial > 16000000) === (this.sRx > 16000000)){
 							this.sRx = serial;
@@ -101,8 +103,9 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 		 * register incoming routed request, see Principal.
 		 */
 		serialRxqCache : {
-			value : function(serial, result){
-				this.serialRxqCacheWindow.put(serial, result || true);
+			/** function put(serial, result) **/
+			execute : "once", get : function(){
+				return this.serialRxqCacheWindow.put.bind(this.serialRxqCacheWindow);
 			}
 		},
 		serialTxqCache : {
@@ -162,7 +165,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 				if(message.isUHP){
 					if(message.isUHP_PUNCH){
 						console.log('>>>>>> %s: onReceive, UHP punch: %s, address: %s, serial: %s', this, message, address, serial);
-						this.serialRxqCacheWindow.put(serial, true);
+						this.serialRxqCache(serial, true);
 						if(this.sTx < serial && (serial > 16000000) === (this.sTx > 16000000)){
 							this.sTx = serial;
 						}
@@ -195,7 +198,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 				if(message.isRequest){
 					console.log('>>>>>> %s: onReceive, request: %s, address: %s, serial: %s', this, message, address, serial);
 					/** no repetitions for requests **/
-					this.serialRxqCacheWindow.put(serial, true);
+					this.serialRxqCache(serial, true);
 					return principalOnReceive.call(this, message, address, serial);
 				}
 
