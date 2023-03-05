@@ -235,6 +235,7 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 		},
 		"toString" : {
 			value : function(){
+				return "[TaskUdpSingle " + Format.jsObject(this.peerName) + " / " + STAGE_MAP[this.left] + "]";
 				return "[TaskUdpSingle " + Format.jsObject(this.peerName) + " " + this.message + " / " + STAGE_MAP[this.left] + "]";
 			}
 		}
