@@ -87,7 +87,7 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 			value : 0
 		},
 		"peerName" : {
-			get : function(){
+			execute : "once", get : function(){
 				return this.peer.name || this.peer.hostId || this.peer.keyHex || this.peer;
 			}
 		},
