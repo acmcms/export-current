@@ -34,7 +34,7 @@ const commands = {
 			if(name){
 				const service = settings[name] ||= { 
 					name : name,
-				});
+				};
 				service.reference = reference;
 			}
 			return settings;
