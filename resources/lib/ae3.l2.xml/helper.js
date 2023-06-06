@@ -511,7 +511,7 @@ function internReplaceField(edit, field){
 	switch(field.variant){
 	case "sequence":{
 		var enm = field.elementName || "item";
-		var arr = val[enm];
+		var arr = val?.[enm];
 		if(!arr){
 			return field;
 		}

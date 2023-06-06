@@ -23,9 +23,6 @@ const CacheType = require('java.class/ru.myx.ae3.cache.CacheType').SMALL_JAVA_SO
  */
 function CacheObject(key, createCallback, validateCallback) {
 	if (createCallback) {
-		if ('function' !== typeof createCallback) {
-			throw new TypeError("'createCallback' must be either function, either evaluate to 'false'");
-		}
 		this.setFactory(createCallback);
 	}
 	Object.defineProperty(this, "cache", {
@@ -49,7 +46,7 @@ Object.defineProperties(CacheObject.prototype, {
 			});
 			Object.defineProperties(this, {
 				"TTL" : {
-					value : this.creator && this.creator.TTL || this.TTL || 15000,
+					value : createCallback?.TTL || this.TTL || 15000,
 					writable : true
 				}
 			});
@@ -90,18 +87,27 @@ Object.defineProperties(CacheObject.prototype, {
 		 * @returns
 		 */
 		value : function(key, creationAttachment, creationKey, creatorCallback) {
-			if(!key){
+			if (!key) {
 				throw "'key' is required!";
 			}
 			if (!creatorCallback) {
-				creatorCallback = this.creator;
-				if (!creatorCallback) {
-					throw new Error("'callback' is required or must be set during constructor call!");
+				/** assignment in condition **/
+				if (! (creatorCallback = this.creator) ) {
+					throw new Error("'callback' is required or must be set during initialization of the cache object!");
 				}
-			}else{
-				creatorCallback = Cache.createBaseFactory(creatorCallback, this);
+				return this.cache.getCreate(
+					key, 
+					creationAttachment, 
+					creationKey ?? key, 
+					creatorCallback
+				);
 			}
-			return this.cache.getCreate(key, creationAttachment, creationKey || key, creatorCallback);
+			return this.cache.getCreate(
+				key, 
+				creationAttachment, 
+				creationKey ?? key, 
+				Cache.createBaseFactory(creatorCallback, this)
+			);
 		}
 	},
 	"put" : {
