@@ -5,21 +5,20 @@ Object.defineProperties(exports, {
 	},
 	run : {
 		value : function(){
-			console.sendMessage("NDM.Client: periodic start.");
+			console.sendMessage("ndm.client: periodic start.");
 			const NdmCloudService = require('./NdmCloudService');
 			const clients = NdmCloudService.getClients();
 			for(let client of clients){
-				console.sendMessage("NDM.Client: running: " + client.clientId);
+				console.sendMessage("ndm.client: running: " + client.clientId);
 				client.run(console);
 			}
-			console.sendMessage("NDM.Client: periodic done.");
+			console.sendMessage("ndm.client: periodic done.");
 			return true;
 		}
 	},
 	toString : {
 		value : function(){
-			return "[NDM.Client  PeriodicTask]";
+			return "[ndm.client  PeriodicTask]";
 		}
 	}
 });
-

@@ -1,5 +1,6 @@
+const Reply = require("ae3").Reply;
 
-const UiBasic = module.exports = require('ae3').Class.create(
+const UiBasic = module.exports = require("ae3").Class.create(
 	/* name */
 	"UiBasic",
 	/* inherit */
@@ -16,7 +17,7 @@ const UiBasic = module.exports = require('ae3').Class.create(
 				if(!auth){
 					throw new Error("No 'auth' is defined for given interface, cannot create 'AuthPersonal' module!");
 				}
-				return require('ae3.web/AuthPersonalPage').create(props, auth);
+				return require("ae3.web/AuthPersonalPage").create(props, auth);
 			}
 		},
 		createIndex : {
@@ -26,7 +27,7 @@ const UiBasic = module.exports = require('ae3').Class.create(
 			 * @returns
 			 */
 			value : function createIndex(props){
-				return require('ae3.web/IndexPage').create(props);
+				return require("ae3.web/IndexPage").create(props);
 			}
 		},
 		clientElement : {
@@ -35,7 +36,7 @@ const UiBasic = module.exports = require('ae3').Class.create(
 			 * {
 			 * 	query : context.query,
 			 * 	admin : false,
-			 * 	id : 'ndm-myx',
+			 * 	id : "ndm-myx",
 			 * 	date : new Date(),
 			 * 	menu : {
 			 * 	},
@@ -52,8 +53,8 @@ const UiBasic = module.exports = require('ae3').Class.create(
 			 */
 			value : function clientElement(client, admin, query){
 				if(!client){
-					return Format.xmlElement('client', {
-						geo : query.attributes['Geo-Mean'],
+					return Format.xmlElement("client", {
+						geo : query.attributes["Geo-Mean"],
 						ip : query.sourceAddress,
 					});
 				}
@@ -62,20 +63,20 @@ const UiBasic = module.exports = require('ae3').Class.create(
 				var command, icon;
 				if(client.userId){
 					import ru.myx.ae3.help.QueryString;
-					var params = QueryString.parseQueryString(query.parameterString, 'utf-8');
+					var params = QueryString.parseQueryString(query.parameterString, "utf-8");
 					delete params.authUserId;
-					command = '?' + Format.queryStringParameters(params);
+					command = "?" + Format.queryStringParameters(params);
 					icon = "cross";
 				}
-				return Format.xmlElement('client', {
-					id : String(client.id || ("string" === typeof client ? client : '')),
+				return Format.xmlElement("client", {
+					id : String(client.id || ("string" === typeof client ? client : "")),
 					admin : admin || client.admin,
-					geo : query.attributes['Geo-Mean'],
+					geo : query.attributes["Geo-Mean"],
 					ip : query.sourceAddress,
 					userId : client.userId,
 					icon : icon,
 					command : command,
-					ae3 : query.parameters.ae3 === 'true' || undefined,
+					ae3 : query.parameters.ae3 === "true" || undefined,
 					date : (client.date || (new Date())).toISOString(),
 					time : client.time,
 					menu : client.menu,
@@ -87,7 +88,6 @@ const UiBasic = module.exports = require('ae3').Class.create(
 		},
 		layoutUnmaskable : {
 			value : function(query, layout){
-				const Reply = require('ae3').Reply;
 				return Reply.exception(
 					Reply.object( "unmaskable", query, layout)
 				);
@@ -95,7 +95,6 @@ const UiBasic = module.exports = require('ae3').Class.create(
 		},
 		layoutAccessDeniedUnmaskable : {
 			value : function(query, message, detail){
-				const Reply = require('ae3').Reply;
 				return Reply.exception(
 					Reply.object( "unmaskable", query, this.makeAccessDeniedLayout(message, detail) )
 				);
@@ -104,8 +103,8 @@ const UiBasic = module.exports = require('ae3').Class.create(
 		makeAccessDeniedLayout : {
 			value : function(message, detail){
 				return {
-					layout : 'message',
-					rootName : (message || '').rootName || 'denied',
+					layout : "message",
+					rootName : (message || "").rootName || "denied",
 					code : detail && detail.code || 403,
 					message : message,
 					detail : detail
@@ -115,9 +114,9 @@ const UiBasic = module.exports = require('ae3').Class.create(
 		makeUpdateSuccessLayout : {
 			value : function(message, detail){
 				return {
-					layout : 'message',
-					rootName : (message || '').rootName || 'success',
-					code : (message || detail || '').code || 200,
+					layout : "message",
+					rootName : (message || "").rootName || "success",
+					code : (message || detail || "").code || 200,
 					message : message,
 					detail : detail
 				};
@@ -126,9 +125,9 @@ const UiBasic = module.exports = require('ae3').Class.create(
 		makeClientFailureLayout : {
 			value : function(message, detail){
 				return {
-					layout : 'message',
-					rootName : (message || '').rootName || 'failed',
-					code : (message || detail || '').code || 400,
+					layout : "message",
+					rootName : (message || "").rootName || "failed",
+					code : (message || detail || "").code || 400,
 					message : message,
 					detail : detail
 				};
@@ -137,9 +136,9 @@ const UiBasic = module.exports = require('ae3').Class.create(
 		makeNotFoundLayout : {
 			value : function(message, detail){
 				return {
-					layout : 'message',
-					rootName : (message || '').rootName || 'unknown',
-					code : (message || detail || '').code || 404,
+					layout : "message",
+					rootName : (message || "").rootName || "unknown",
+					code : (message || detail || "").code || 404,
 					message : message,
 					detail : detail
 				};
@@ -148,9 +147,9 @@ const UiBasic = module.exports = require('ae3').Class.create(
 		makeServerFailureLayout : {
 			value : function(message, detail){
 				return {
-					layout : 'message',
-					rootName : (message || '').rootName || 'error',
-					code : (message || detail || '').code || 500,
+					layout : "message",
+					rootName : (message || "").rootName || "error",
+					code : (message || detail || "").code || 500,
 					message : message,
 					detail : detail
 				};

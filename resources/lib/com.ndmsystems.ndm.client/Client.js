@@ -195,7 +195,7 @@ const Client = module.exports = ae3.Class.create(
 				if(n.alias && n.settings && n.settings.domain){
 					this.ndmpZone = n.settings.domain;
 					this.ndmpHost = n.alias.substring(0, 24) + '.' + this.ndmpZone;
-					console.log("ndm.client '%s': 'ut1' notification handler, system name: %s", this.clientId, this.ndmpHost);
+					console.log("ndm.client: '%s': 'ut1' notification handler, system name: %s", this.clientId, this.ndmpHost);
 				}
 				if(id !== this.ndmpHost){
 					if(this.ndmpHost){
@@ -358,7 +358,7 @@ function internCheckStats(clientRequest){
 	}
 	var next = stats && stats.length > limit && stats[stats.length-1].id;
 
-	// console.log(">>>>>>> " + Format.jsDescribe(stats));
+	// console.log("ndm.client:intern-check-stats >>>>>>> " + Format.jsDescribe(stats));
 	throw "CHECKPOINT";
 	
 	var data = {};
@@ -420,7 +420,7 @@ function internAppendRegister(clientRequest, reason){
 			console.log("ndm.client '%s': registration result OK, got notifications: %s", this.clientId, (!!notify));
 			if(notify){
 				for(notification of Array(notify)){
-					console.log("ndm.client '%s': got notification: %s", this.clientId, Format.jsObjectReadable(notification));
+					console.log("ndm.client '%s': got notification: %s", this.clientId, Format.jsObject(notification));
 					id = notification.id;
 					handlers = this.notificationHandlers[id];
 					if(handlers){
@@ -513,5 +513,3 @@ const DeviceClient = ae3.Class.create(
 		return this;
 	}
 );
-
-

@@ -54,7 +54,7 @@ const f = {
 		
 		clientsFolder.getContentCollection(null).filter(vfs.isContainer).reduce(f.reduceClientDescriptorsToMap, clients);
 		
-		console.log(">>>>>> NdmCloudService: checkClients start, clients folder: ", clientsFolder);
+		console.log(">>>>>> ndm.client:NdmCloudService: checkClients start, clients folder: ", clientsFolder);
 		for(var key of Object.keys(clients)){
 			if(!clientObjects[key]){
 				clientObjects[key] = clients[key];
@@ -67,7 +67,7 @@ const f = {
 				delete clientObjects[key];
 			}
 		}
-		console.log(">>>>>> NdmCloudService: checkClients done");
+		console.log(">>>>>> ndm.client:NdmCloudService: checkClients done");
 	}
 };
 

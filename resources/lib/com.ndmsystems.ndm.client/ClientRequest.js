@@ -121,7 +121,7 @@ function internClientDoRequest(future, items, then){
 			
 			const callback = internCallbackHttpSimple.bind(this, future, request, then);
 
-			console.log("ndmc %s: single request: //%s:%s%s", this, url.host, url.port, url.path);
+			console.log("ndm.client %s: single request: //%s:%s%s", this, url.host, url.port, url.path);
 			
 			Object.keys(post).length 
 				? http.post(url, post, callback)
@@ -137,10 +137,10 @@ function internClientDoRequest(future, items, then){
 		
 		var path = "/xml-request.xml?___output=text/html&" + Format.queryStringParameters(auth.get);
 		
-		console.log("ndmc %s: multiple request: %s", this, urlNdss + path);
+		console.log("ndm.client %s: multiple request: %s", this, urlNdss + path);
 
 		for(var item of items){
-			console.log("ndmc %s: multiple request item['%s']: %s", this, item.name, item.path + (item.get ? '?' + Format.queryStringParameters(item.get) : ''));
+			console.log("ndm.client %s: multiple request item['%s']: %s", this, item.name, item.path + (item.get ? '?' + Format.queryStringParameters(item.get) : ''));
 		}
 
 		const xml = this.makeRequestXmlBody.call({ items : items }, auth.post);
@@ -170,7 +170,7 @@ function internCallbackHttpSimple(future, request, then, message){
 	var body = message.text;
 
 	var code = message.code;
-	console.log("ndmc %s: single response: code=%s", this, code);
+	console.log("ndm.client %s: single response: code=%s", this, code);
 	if(code != 200){
 		request.onError 
 			? future.setResult(request.onError.call(request, code, body) || true)
@@ -200,14 +200,14 @@ function internCallbackXmlMultiple(future, items, then, message){
 		var body = message.toCharacter().text;
 		
 		var code = message.code;
-		console.log("ndmc %s: multiple response: code=%s", this, code);
+		console.log("ndm.client %s: multiple response: code=%s", this, code);
 		if(code != 200){
 			future.setError(new Error("Error executing client request: code=" + code + ", " + body));
 			return;
 		}
 		
 		var map = Xml.toBase("xml-response", body, null, null, null) || {};
-		// console.log("ndmc %: multiple response map: %", this, Format.jsDescribe(map));
+		// console.log("ndm.client %: multiple response map: %", this, Format.jsDescribe(map));
 
 		results = Array(map['result']);
 	}
@@ -219,7 +219,7 @@ function internCallbackXmlMultiple(future, items, then, message){
 			throw new Error("Unknown result, name=" + name);
 		}
 		var code = result.code;
-		console.log("ndmc %s: multiple response item['%s']: code=%s", this, name, code);
+		console.log("ndm.client %s: multiple response item['%s']: code=%s", this, name, code);
 		
 		var body = result.body;
 		if(code == 200){

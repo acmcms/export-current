@@ -34,7 +34,7 @@ var commands = {
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments!");
 			}
 			const NdmCloudService = require('./NdmCloudService');
 			const client = NdmCloudService.getClient(clientId);
@@ -48,7 +48,7 @@ var commands = {
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments!");
 			}
 			const reason = args.shift() || 'manual';
 			const NdmCloudService = require('./NdmCloudService');
@@ -63,7 +63,7 @@ var commands = {
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments!");
 			}
 			const NdmCloudService = require('./NdmCloudService');
 			const client = NdmCloudService.getClient(clientId);
@@ -77,7 +77,7 @@ var commands = {
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments!");
 			}
 			const NdmCloudService = require('./NdmCloudService');
 			const client = NdmCloudService.getClient(clientId);
@@ -91,7 +91,7 @@ var commands = {
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments!");
 			}
 			const NdmCloudService = require('./NdmCloudService');
 			const client = NdmCloudService.getClient(clientId);
@@ -111,7 +111,7 @@ var commands = {
 			const licenseNumber = args.shift();
 			const serviceKey = args.shift() || '';
 			if(!licenseNumber){
-				return console.fail("Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments!");
 			}
 			const NdmCloudService = require('./NdmCloudService');
 			
@@ -136,24 +136,24 @@ var commands = {
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments!");
 			}
 			const forceNew = args.shift();
 			if(forceNew && forceNew !== "--force-new"){
-				return console.fail("'--force-new' it the only allowed value!");
+				return console.fail("ndm.client: '--force-new' it the only allowed value!");
 			}
 			const NdmCloudService = require('./NdmCloudService');
 			const client = NdmCloudService.getClient(clientId);
 			if(!client){
-				return console.fail("Client is unknown: " + clientId);
+				return console.fail("ndm.client: Client is unknown: " + clientId);
 			}
 
 			const link = client.components.ndmp.prepareMatingLink(forceNew);
 			if(link){
-				console.log("ndmp link url is: " + link);
+				console.log("ndm.client: ndmp link url is: " + link);
 				return true;
 			}
-			return console.fail("ndmp link is not available!");
+			return console.fail("ndm.client: ndmp link is not available!");
 		}
 	},
 	"ndmp/unlink" : {
@@ -165,14 +165,14 @@ var commands = {
 		run : function(args){
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments!");
 			}
 
 			const NdmCloudService = require('./NdmCloudService');
 			if(clientId === '--all'){
 				for(let client of NdmCloudService.getClients()){
 					if(!client.components.ndmp.invalidateMatingKeys(true)){
-						return console.fail("ndmp unlink is not available!, client: %s", Format.jsObjectReadable(client));
+						return console.fail("ndm.client: ndmp unlink is not available!, client: %s", Format.jsObjectReadable(client));
 					}
 					console.sendMessage("client: " + client.clientId + ", ndmp link data clean");
 				}
@@ -181,14 +181,14 @@ var commands = {
 			
 			const client = NdmCloudService.getClient(clientId);
 			if(!client){
-				return console.fail("Client is unknown: " + clientId);
+				return console.fail("ndm.client: Client is unknown: " + clientId);
 			}
 
 			const result = client.components.ndmp.invalidateMatingKeys(true);
 			if(result){
 				return true;
 			}
-			return console.fail("ndmp unlink is not available!");
+			return console.fail("ndm.client: ndmp unlink is not available!");
 		}
 	},
 	"ndmp/status" : {
@@ -198,22 +198,22 @@ var commands = {
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments!");
 			}
 			const NdmCloudService = require('./NdmCloudService');
 			const client = NdmCloudService.getClient(clientId);
 			if(!client){
-				return console.fail("Client is unknown: " + clientId);
+				return console.fail("ndm.client: Client is unknown: " + clientId);
 			}
 
 			const keys = client.components.ndmp.confirmedMatingKeys;
 			if(keys){
 				const Secp256r1 = ae3.crypto.EllipticCurveSecp256r1;
-				console.log("ndmp mating client key: %s", Secp256r1.formatPublicKeyAsHexCompressed(keys.client));
-				console.log("ndmp mating server key: %s", Secp256r1.formatPublicKeyAsHexCompressed(keys.server));
+				console.log("ndm.client: ndmp mating client key: %s", Secp256r1.formatPublicKeyAsHexCompressed(keys.client));
+				console.log("ndm.client: ndmp mating server key: %s", Secp256r1.formatPublicKeyAsHexCompressed(keys.server));
 				return true;
 			}
-			return console.fail("ndmp service is not linked!");
+			return console.fail("ndm.client: ndmp service is not linked!");
 		}
 	},
 	"ndns/update" : {
@@ -278,7 +278,7 @@ exports.run = function run() {
 		}
 		var command = commands[commandName];
 		if (!command) {
-			return console.fail("unsupported command: %s", commandName);
+			return console.fail("ndm.client: unsupported command: %s", commandName);
 		}
 
 		return command.run(args, options);

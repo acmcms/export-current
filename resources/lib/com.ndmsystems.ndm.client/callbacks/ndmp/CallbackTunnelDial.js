@@ -1,7 +1,7 @@
 const ae3 = require('ae3');
 
-const CallbackMakeTunnel = module.exports = ae3.Class.create(
-	"CallbackMakeTunnel",
+const CallbackTunnelDial = module.exports = ae3.Class.create(
+	"CallbackTunnelDial",
 	require("./../AbstractCallback"),
 	function(args){
 		this.group = args[1];
@@ -15,13 +15,13 @@ const CallbackMakeTunnel = module.exports = ae3.Class.create(
 	{
 		"prepareCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:ndmp/makeTunnel: refused: no service link established %s, %s", this.group, this.cookie);
+				console.log(">>>>>> ndm.client:callback:ndmp/tunnelDial: refused: no service link established %s, %s", this.group, this.cookie);
 				return false;
 			}
 		},
 		"executeCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:ndmp/makeTunnel: %s, %s", this.group, this.cookie);
+				console.log(">>>>>> ndm.client:callback:ndmp/tunnelDial: %s, %s", this.group, this.cookie);
 			}
 		},
 	}

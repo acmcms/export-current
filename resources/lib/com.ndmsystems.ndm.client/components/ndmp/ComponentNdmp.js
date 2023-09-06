@@ -182,7 +182,7 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 				const devicePublic = Secp256r1.parsePublicKeyFromHexCompressed(deviceEcPublic);
 				
 				if(pair.getPublic() != devicePublic){
-					console.log(">>>>>> ComponentNDMP: devicePublic mismatch %s != %s", pair.getPublic(), devicePublic);
+					console.log(">>>>>> ndm.client:ComponentNDMP: devicePublic mismatch %s != %s", pair.getPublic(), devicePublic);
 					return false;
 				}
 				
