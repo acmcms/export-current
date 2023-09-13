@@ -262,9 +262,7 @@ const Share = module.exports = ae3.Class.create(
 					return null;
 				}
 				if(Array.isArray(membership)){
-					if(membership.some(function(group){
-						return auth.authCheckMembership(client, group);
-					})){
+					if(membership.some(auth.authCheckMembership.bind(auth, client))){
 						return client;
 					}
 					return null;
@@ -314,9 +312,7 @@ const Share = module.exports = ae3.Class.create(
 					throw this.layoutAccessDeniedUnmaskable(context.query, "Group Membership Required");
 				}
 				if(Array.isArray(membership)){
-					if(membership.some(function(group){
-						return auth.authCheckMembership(client, group);
-					})){
+					if(membership.some(auth.authCheckMembership.bind(auth, client))){
 						return client;
 					}
 					throw this.layoutAccessDeniedUnmaskable(context.query, "Group Membership Required");
