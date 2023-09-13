@@ -87,7 +87,7 @@ const SUPPORTED_RRST = {
 	},
 	"5106" : {
 		"name" : "managementNames",
-		"description" : "All management FQDNs separated by '\n'."
+		"description" : "All management FQDNs separated by '\\n'."
 	},
 };
 
