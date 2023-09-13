@@ -13,13 +13,13 @@ const SUPPORTED_RRST = {
 		"name" : "proxyAlias",
 		"description" : "Supply Destination Alias for the Proxy."
 	},
-	"1000" : {
-		"name" : "authToken",
-		"description" : "Supply Authentication Token (hex)."
-	},
 	"2000" : {
 		"name" : "protoLevelInt",
 		"description" : "Read Support RRST/RSST Protocol Version."
+	},
+	"2011" : {
+		"name" : "dialbackVersion",
+		"description" : "Read Supported Version of Dialback call."
 	},
 	"3000" : {
 		"name" : "statusFlagsInt",
@@ -32,6 +32,22 @@ const SUPPORTED_RRST = {
 	"3002" : {
 		"name" : "weightedLoad",
 		"description" : "Read Weighted Load. 0..9999 -> 0-100%."
+	},
+	"4000" : {
+		"name" : "versionBaseString",
+		"description" : "Read Device Base Version String."
+	},
+	"4001" : {
+		"name" : "directTlsHostString",
+		"description" : "Hostname (if any) on default port to connect to RCI directly using TLS/SNI.",
+	},
+	"4002" : {
+		"name" : "directHttpsSocketString",
+		"description" : "Socket address (if any) to connect to RCI directly.",
+	},
+	"4003" : {
+		"name" : "directUdpSocketString",
+		"description" : "Socket address (if any) to send UDP packets directly.",
 	},
 	"4004" : {
 		"name" : "modelNameString",
@@ -68,6 +84,10 @@ const SUPPORTED_RRST = {
 	"5104" : {
 		"name" : "uhpTokenAlias",
 		"description" : "Read Full Cloud Token Alias."
+	},
+	"5106" : {
+		"name" : "managementNames",
+		"description" : "All management FQDNs separated by '\n'."
 	},
 };
 
