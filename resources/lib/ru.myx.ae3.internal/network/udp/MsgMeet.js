@@ -38,7 +38,7 @@ const MsgMeet = module.exports = require('ae3').Class.create(
 	},
 	/* static */
 	{
-		"parse" : {
+		"parseBinaryMessage" : {
 			value : function(){
 				return new MsgMeet();
 			}

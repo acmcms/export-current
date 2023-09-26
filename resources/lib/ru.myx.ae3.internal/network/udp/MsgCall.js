@@ -56,7 +56,7 @@ const MsgCall = module.exports = ae3.Class.create(
 	},
 	/* static */
 	{
-		"parse" : {
+		"parseBinaryMessage" : {
 			value : function(b, o, s, L){
 				var l = 0, component;
 				for(;l < b.length; ++l){

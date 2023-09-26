@@ -141,7 +141,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 			load.copy(32, b, 0, l);
 		}
 
-		msg = m.parse(b, 0, ms, l);
+		msg = m.parseBinaryMessage(b, 0, ms, l);
 		
 		if(!msg){
 			console.log('>>>>>> udp-read-bad-body: invalid payload rejected, %s <- %s, serial: %s, packetLen: %s', m.toString(), Format.jsObject(key), ms, load.length());

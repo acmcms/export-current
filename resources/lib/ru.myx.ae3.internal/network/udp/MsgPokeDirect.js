@@ -56,7 +56,7 @@ const MsgPokeDirect = module.exports = ae3.Class.create(
 		"isUHP" : {
 			value : true
 		},
-		"parse" : {
+		"parseBinaryMessage" : {
 			value : function(b, o, serial){
 				return new MsgPokeDirect(
 					socketAddress(

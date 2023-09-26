@@ -46,7 +46,7 @@ const MsgRrst = module.exports = ae3.Class.create(
 	},
 	/* static */
 	{
-		"parse" : {
+		"parseBinaryMessage" : {
 			value : function(b, o, s, L /* locals: */, rrst){
 				if( (rrst = RemoteServiceStateSAPI.parseQueryFromBuffer(b, o, L) ) ){
 					return new MsgRrst(rrst, s);

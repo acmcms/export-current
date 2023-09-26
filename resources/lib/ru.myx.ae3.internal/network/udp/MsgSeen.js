@@ -50,7 +50,7 @@ const MsgSeen = module.exports = require('ae3').Class.create(
 	},
 	/* static */
 	{
-		"parse" : {
+		"parseBinaryMessage" : {
 			value : function(b, o, s){
 				return new MsgSeen(
 					// serial

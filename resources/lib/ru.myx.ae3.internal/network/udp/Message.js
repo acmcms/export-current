@@ -54,9 +54,9 @@ const Message = module.exports = ae3.Class.create(
 		/**
 		 * parse payload from the buffer, return message
 		 */
-		parse : {
+		parseBinaryMessage : {
 			value : function(buffer, offset){
-				throw this + ': "parse" method must be overriden, returns \'message\'!';
+				throw this + ': "parseBinaryMessage" method must be overriden, returns \'message\'!';
 			}
 		},
 		Request : {

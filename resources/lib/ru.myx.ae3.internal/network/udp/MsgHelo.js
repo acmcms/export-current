@@ -56,7 +56,7 @@ const MsgHelo = module.exports = ae3.Class.create(
 		"isUHP" : {
 			value : true
 		},
-		"parse" : {
+		"parseBinaryMessage" : {
 			value : function(b, o, serial){
 				return new MsgHelo(
 					socketAddress(
