@@ -9,7 +9,7 @@ const MSG_RF_RSST = module.exports = ae3.Class.create(
 	/* name */
 	"MSG_RF_RSST",
 	/* inherit */
-	require('./Message').ReplyFinal,
+	require('./../Message').ReplyFinal,
 	/* constructor */
 	/**
 	 * 

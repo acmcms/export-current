@@ -2,7 +2,7 @@ const MSG_Q_MEET = module.exports = require('ae3').Class.create(
 	/* name */
 	"MSG_Q_MEET",
 	/* inherit */
-	require('./Message').Request,
+	require('./../Message').Request,
 	/* constructor */
 	function(){
 		// this.MessageRequest();

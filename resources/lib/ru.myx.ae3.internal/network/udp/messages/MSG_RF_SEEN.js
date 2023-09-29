@@ -4,7 +4,7 @@ const MSG_RF_SEEN = module.exports = require('ae3').Class.create(
 	/* name */
 	"MSG_RF_SEEN",
 	/* inherit */
-	require('./Message').ReplyFinal,
+	require('./../Message').ReplyFinal,
 	/* constructor */
 	function(serial, port, mode){
 		// this.MessageReplyFinal();

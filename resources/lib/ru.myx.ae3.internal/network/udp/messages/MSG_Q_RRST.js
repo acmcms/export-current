@@ -9,7 +9,7 @@ const MSG_Q_RRST = module.exports = ae3.Class.create(
 	/* name */
 	"MSG_Q_RRST",
 	/* inherit */
-	require('./Message').Request,
+	require('./../Message').Request,
 	/* constructor */
 	/**
 	 * 
