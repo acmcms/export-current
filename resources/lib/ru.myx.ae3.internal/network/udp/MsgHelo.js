@@ -47,7 +47,7 @@ const MsgHelo = module.exports = ae3.Class.create(
 		},
 		toString : {
 			value : function(){
-				return "[MsgHelo " + this.src.address + ":" + this.src.port + "]";
+				return "[HELO " + this.src.address + ":" + this.src.port + "]";
 			}
 		}
 	},

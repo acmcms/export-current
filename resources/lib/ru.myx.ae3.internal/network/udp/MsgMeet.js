@@ -32,7 +32,7 @@ const MsgMeet = module.exports = require('ae3').Class.create(
 		},
 		toString : {
 			value : function(){
-				return "[MsgMeet]";
+				return "[MEET]";
 			}
 		}
 	},

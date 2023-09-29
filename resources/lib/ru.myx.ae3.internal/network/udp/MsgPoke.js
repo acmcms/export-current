@@ -47,7 +47,7 @@ const MsgPoke = module.exports = ae3.Class.create(
 		},
 		toString : {
 			value : function(){
-				return "[MsgPoke " + this.src.address + ":" + this.src.port + "]";
+				return "[POKE " + this.src.address + ":" + this.src.port + "]";
 			}
 		}
 	},

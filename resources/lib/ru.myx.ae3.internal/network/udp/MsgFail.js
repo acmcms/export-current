@@ -27,7 +27,7 @@ const MsgFail = module.exports = require('ae3').Class.create(
 		},
 		toString : {
 			value : function(){
-				return "[MsgFail]";
+				return "[FAIL]";
 			}
 		}
 	},

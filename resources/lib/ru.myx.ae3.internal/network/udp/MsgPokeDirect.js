@@ -47,7 +47,7 @@ const MsgPokeDirect = module.exports = ae3.Class.create(
 		},
 		toString : {
 			value : function(){
-				return "[MsgPokeDirect " + this.src.address + ":" + this.src.port + "]";
+				return "[POKE-DIRECT " + this.src.address + ":" + this.src.port + "]";
 			}
 		}
 	},

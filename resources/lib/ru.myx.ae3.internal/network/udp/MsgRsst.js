@@ -43,7 +43,7 @@ const MsgRsst = module.exports = ae3.Class.create(
 		},
 		toString : {
 			value : /* UdpServiceHelper.toStringMsgRsst || */ (function(){
-				return "[MsgRsst " + this.rsst.formatAsTextString() + ", sTx:" + (this.serial||0) + "]";
+				return "[RSST " + this.rsst.formatAsTextString() + ", sTx:" + (this.serial||0) + "]";
 			})
 		}
 	},

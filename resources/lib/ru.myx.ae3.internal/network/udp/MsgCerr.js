@@ -29,7 +29,7 @@ const MsgCerr = module.exports = require('ae3').Class.create(
 		},
 		toString : {
 			value : function(){
-				return "[MsgCerr 0x" + (this.errorCode|0).toString(16) + "]";
+				return "[CERR 0x" + (this.errorCode|0).toString(16) + "]";
 			}
 		}
 	},

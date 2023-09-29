@@ -44,7 +44,7 @@ const MsgSeen = module.exports = require('ae3').Class.create(
 		},
 		toString : {
 			value : function(){
-				return "[MsgSeen serial:" + this.serial + ", port:" + this.port + ", mode:0x" + this.mode.toString(16) + "]";
+				return "[SEEN serial:" + this.serial + ", port:" + this.port + ", mode:0x" + this.mode.toString(16) + "]";
 			}
 		}
 	},

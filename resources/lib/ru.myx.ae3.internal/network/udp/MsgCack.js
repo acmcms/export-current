@@ -27,7 +27,7 @@ const MsgCack = module.exports = require('ae3').Class.create(
 		},
 		"toString" : {
 			value : function(){
-				return "[MsgCack]";
+				return "[CACK]";
 			}
 		}
 	},

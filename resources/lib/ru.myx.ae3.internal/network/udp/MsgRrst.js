@@ -40,7 +40,7 @@ const MsgRrst = module.exports = ae3.Class.create(
 		},
 		toString : {
 			value : /* UdpServiceHelper.toStringMsgRrst || */ (function(){
-				return "[MsgRrst " + this.rrst.formatAsTextString() + ", sTx:" + (this.serial||0) + "]";
+				return "[RRST " + this.rrst.formatAsTextString() + ", sTx:" + (this.serial||0) + "]";
 			})
 		}
 	},

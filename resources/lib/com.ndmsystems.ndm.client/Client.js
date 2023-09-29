@@ -12,6 +12,8 @@ const http = require("http");
 const ae3 = require('ae3');
 const vfs = ae3.vfs;
 
+const MakeRsstDomainFn = require("java.class/ru.myx.ae3.state.RemoteServiceStateSAPI").makeRemoteServiceStateDomain;
+
 const ClientRequest = require('./ClientRequest');
 
 
@@ -47,6 +49,9 @@ const Client = module.exports = ae3.Class.create(
 			clientId : {
 				value : folder.key,
 				enumerable : true
+			},
+			stateDomain : {
+				value : MakeRsstDomainFn(null)
 			},
 			components : {
 				value : {
