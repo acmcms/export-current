@@ -21,7 +21,7 @@ TraversalClient.prototype = Object.create(require('./Principal').prototype, {
 			this.sRx = serial;
 			if(message.isUHP_PUNCH){
 				return this.sendSingle(
-					new this.MsgSeen(
+					new this.MSG_RF_SEEN(
 						serial,
 						address.port, 
 						message.isHELO 

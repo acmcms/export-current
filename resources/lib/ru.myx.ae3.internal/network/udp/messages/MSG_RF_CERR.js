@@ -1,8 +1,8 @@
-const MsgCerr = module.exports = require('ae3').Class.create(
+const MSG_RF_CERR = module.exports = require('ae3').Class.create(
 	/* name */
-	"MsgCerr",
+	"MSG_RF_CERR",
 	/* inherit */
-	require('./Message').ReplyFinal,
+	require('./../Message').ReplyFinal,
 	/* constructor */
 	function(serial, errorCode){
 		// this.MessageReplyFinal();
@@ -37,12 +37,12 @@ const MsgCerr = module.exports = require('ae3').Class.create(
 	{
 		"parseBinaryMessage" : {
 			value : function(b, o, s){
-				return new MsgCerr(s, b[o]);
+				return new MSG_RF_CERR(s, b[o]);
 			}
 		},
 		"toString" : {
 			value : function(){
-				return "MsgCerr";
+				return "MSG_RF_CERR";
 			}
 		}
 	}

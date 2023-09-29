@@ -4,11 +4,11 @@ const Transfer = ae3.Transfer;
 const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
 
 
-const MsgCall = module.exports = ae3.Class.create(
+const MSG_Q_CALL = module.exports = ae3.Class.create(
 	/* name */
-	"MsgCall",
+	"MSG_Q_CALL",
 	/* inherit */
-	require('./Message').Request,
+	require('./../Message').Request,
 	/* constructor */
 	/**
 	 * 
@@ -16,7 +16,7 @@ const MsgCall = module.exports = ae3.Class.create(
 	 * @param argument binary
 	 * @returns {@G}
 	 */
-	function MsgCall(component, argument, serial){
+	function(component, argument, serial){
 		// this.MessageRequest();
 		this.component = component;
 		this.argument = argument;
@@ -65,12 +65,12 @@ const MsgCall = module.exports = ae3.Class.create(
 						break;
 					}
 				}
-				return new MsgCall(component, Transfer.createCopier(b, o + l, L - l), s);
+				return new MSG_Q_CALL(component, Transfer.createCopier(b, o + l, L - l), s);
 			}
 		},
 		"toString" : {
 			value : function(){
-				return "MsgCall";
+				return "MSG_Q_CALL";
 			}
 		}
 	}

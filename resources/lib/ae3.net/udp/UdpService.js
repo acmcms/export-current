@@ -144,10 +144,8 @@ const UdpService = module.exports = ae3.Class.create(
 		},
 		"registerMessageClass" : {
 			value : function(serviceClass, messageClass){
-				const prototype = serviceClass.prototype;
-				const commandByKey = serviceClass.commandByKey || (
-					prototype.commandByKey = serviceClass.commandByKey = prototype.commandByKey.concat()
-				);
+
+				/** validate messageClass **/
 				if('boolean' !== typeof messageClass.prototype.isRequest){
 					throw new Error("isRequest must be overriden with boolean value: " + messageClass);
 				}
@@ -167,7 +165,14 @@ const UdpService = module.exports = ae3.Class.create(
 				if(c > 255){
 					throw new Error("'code' must be overriden with integer value in [0..255] range: " + messageClass + ", code: " + c);
 				}
-				if(commandByKey[c]){
+				
+				/** obtain command map **/
+				const prototype = serviceClass.prototype;
+				const commandByKey = serviceClass.commandByKey || (
+					prototype.commandByKey = serviceClass.commandByKey = prototype.commandByKey.concat()
+				);
+				
+				if(commandByKey[c] && !(MessageClass.prototype instanceof commandByKey[c])){
 					throw new Error("Duplicate UDP Command Code: " + c);
 				}
 				const C = messageClass.toString();
@@ -199,15 +204,15 @@ const UdpService = module.exports = ae3.Class.create(
 {
 	UdpService.commandByKey = UdpService.prototype.commandByKey;
 	
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgFail'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgHelo'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgMeet'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgPoke'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgPokeDirect'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgSeen'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgCall'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgCack'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgCerr'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgRrst'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/MsgRsst'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_FAIL'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_HELO'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_MEET'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_POKE'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_POKD'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_SEEN'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_CALL'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_CACK'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_CERR'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_RRST'));
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_RSST'));
 }

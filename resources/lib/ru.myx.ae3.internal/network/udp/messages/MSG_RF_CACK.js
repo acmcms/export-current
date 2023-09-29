@@ -1,8 +1,8 @@
-const MsgCack = module.exports = require('ae3').Class.create(
+const MSG_RF_CACK = module.exports = require('ae3').Class.create(
 	/* name */
-	"MsgCack",
+	"MSG_RF_CACK",
 	/* inherit */
-	require('./Message').ReplyFinal,
+	require('./../Message').ReplyFinal,
 	/* constructor */
 	function(serial){
 		// this.MessageReplyFinal();
@@ -35,12 +35,12 @@ const MsgCack = module.exports = require('ae3').Class.create(
 	{
 		"parseBinaryMessage" : {
 			value : function(b, o, s){
-				return new MsgCack(s);
+				return new MSG_RF_CACK(s);
 			}
 		},
 		"toString" : {
 			value : function(){
-				return "MsgCack";
+				return "MSG_RF_CACK";
 			}
 		}
 	}

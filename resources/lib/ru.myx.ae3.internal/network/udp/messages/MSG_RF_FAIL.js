@@ -1,8 +1,8 @@
-const MsgFail = module.exports = require('ae3').Class.create(
+const MSG_RF_FAIL = module.exports = require('ae3').Class.create(
 	/* name */
-	"MsgFail",
+	"MSG_RF_FAIL",
 	/* inherit */
-	require('./Message').ReplyFinal,
+	require('./../Message').ReplyFinal,
 	/* constructor */
 	function(serial){
 		// this.MessageReplyFinal();
@@ -35,12 +35,12 @@ const MsgFail = module.exports = require('ae3').Class.create(
 	{
 		"parseBinaryMessage" : {
 			value : function(b, o, s){
-				return new MsgFail(s);
+				return new MSG_RF_FAIL(s);
 			}
 		},
 		"toString" : {
 			value : function(){
-				return "MsgFail";
+				return "MSG_RF_FAIL";
 			}
 		}
 	}

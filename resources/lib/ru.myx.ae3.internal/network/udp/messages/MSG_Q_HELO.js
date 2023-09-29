@@ -4,11 +4,11 @@ const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3
 
 const socketAddress = ae3.net.socketAddress;
 
-const MsgPokeDirect = module.exports = ae3.Class.create(
+const MSG_Q_HELO = module.exports = ae3.Class.create(
 	/* name */
-	"MsgPokeDirect",
+	"MSG_Q_HELO",
 	/* inherit */
-	require('./Message').Request,
+	require('./../Message').Request,
 	/* constructor */
 	function(src, serial){
 		// this.MessageRequest();
@@ -19,7 +19,7 @@ const MsgPokeDirect = module.exports = ae3.Class.create(
 	/* instance */
 	{
 		code : {
-			value : 0x32 // '2'.charCodeAt(0)
+			value : 0x30 // '0'.charCodeAt(0)
 		},
 		isUHP_PUNCH : {
 			value : true
@@ -27,11 +27,11 @@ const MsgPokeDirect = module.exports = ae3.Class.create(
 		isUHP : {
 			value : true
 		},
-		isPOKE : {
+		isHELO : {
 			value : true
 		},
 		build : {
-			value : UdpServiceHelper.buildMsgPoke || (function(b, o){
+			value : UdpServiceHelper.buildMsgHelo || (function(b, o){
 				// 4 bytes length, IPv4
 				const addr = this.src.address.address;
 				b[o++] = addr[0];
@@ -47,7 +47,7 @@ const MsgPokeDirect = module.exports = ae3.Class.create(
 		},
 		toString : {
 			value : function(){
-				return "[POKE-DIRECT " + this.src.address + ":" + this.src.port + "]";
+				return "[HELO " + this.src.address + ":" + this.src.port + "]";
 			}
 		}
 	},
@@ -58,7 +58,7 @@ const MsgPokeDirect = module.exports = ae3.Class.create(
 		},
 		"parseBinaryMessage" : {
 			value : function(b, o, serial){
-				return new MsgPokeDirect(
+				return new MSG_Q_HELO(
 					socketAddress(
 						// address
 						(b[o++]&0xFF) + '.' + (b[o++]&0xFF) + '.' + (b[o++]&0xFF) + '.' + (b[o++]&0xFF) + 
@@ -72,7 +72,7 @@ const MsgPokeDirect = module.exports = ae3.Class.create(
 		},
 		"toString" : {
 			value : function(){
-				return "MsgPokeDirect";
+				return "MSG_Q_HELO";
 			}
 		}
 	}

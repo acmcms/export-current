@@ -1,8 +1,8 @@
 const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
 
-const MsgSeen = module.exports = require('ae3').Class.create(
+const MSG_RF_SEEN = module.exports = require('ae3').Class.create(
 	/* name */
-	"MsgSeen",
+	"MSG_RF_SEEN",
 	/* inherit */
 	require('./Message').ReplyFinal,
 	/* constructor */
@@ -29,7 +29,7 @@ const MsgSeen = module.exports = require('ae3').Class.create(
 		},
 		parseMode : {
 			value : function(target){
-				return MsgSeen.parseMode(this.mode, target);
+				return MSG_RF_SEEN.parseMode(this.mode, target);
 			}
 		},
 		build : {
@@ -52,7 +52,7 @@ const MsgSeen = module.exports = require('ae3').Class.create(
 	{
 		"parseBinaryMessage" : {
 			value : function(b, o, s){
-				return new MsgSeen(
+				return new MSG_RF_SEEN(
 					// serial
 					s,
 					// port
@@ -76,7 +76,7 @@ const MsgSeen = module.exports = require('ae3').Class.create(
 		},
 		"toString" : {
 			value : function(){
-				return "MsgSeen";
+				return "MSG_RF_SEEN";
 			}
 		}
 	}

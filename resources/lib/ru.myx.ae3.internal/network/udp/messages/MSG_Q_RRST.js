@@ -5,9 +5,9 @@ const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3
 
 const RemoteServiceStateSAPI = require("java.class/ru.myx.ae3.state.RemoteServiceStateSAPI");
 
-const MsgRrst = module.exports = ae3.Class.create(
+const MSG_Q_RRST = module.exports = ae3.Class.create(
 	/* name */
-	"MsgRrst",
+	"MSG_Q_RRST",
 	/* inherit */
 	require('./Message').Request,
 	/* constructor */
@@ -16,7 +16,7 @@ const MsgRrst = module.exports = ae3.Class.create(
 	 * @param rrst binary
 	 * @returns {@G}
 	 */
-	function MsgRrst(rrst, serial){
+	function(rrst, serial){
 		// this.MessageRequest();
 		this.rrst = RemoteServiceStateSAPI.parseQuery(rrst || [ "4001", "4004", "4005" ]);
 		this.serial = serial;
@@ -49,16 +49,16 @@ const MsgRrst = module.exports = ae3.Class.create(
 		"parseBinaryMessage" : {
 			value : function(b, o, s, L /* locals: */, rrst){
 				if( (rrst = RemoteServiceStateSAPI.parseQueryFromBuffer(b, o, L) ) ){
-					return new MsgRrst(rrst, s);
+					return new MSG_Q_RRST(rrst, s);
 				}
 				return undefined;
 				// broken constructor syntax
-				return new MsgRrst(RemoteServiceStateSAPI.parseQueryFromBuffer(b, o, L), s);
+				return new MSG_Q_RRST(RemoteServiceStateSAPI.parseQueryFromBuffer(b, o, L), s);
 			}
 		},
 		"toString" : {
 			value : function(){
-				return "MsgRrst";
+				return "MSG_Q_RRST";
 			}
 		}
 	}

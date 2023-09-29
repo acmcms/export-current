@@ -255,7 +255,7 @@ const Puncher = module.exports = ae3.Class.create(
 						targetList.forEach((function(meet, target){
 							this.remote.sendSingle(meet, target);
 							console.log(">>>>>> %s: puncher send meet: %s, %s", this, meet, target);
-						}).bind(this, new this.remote.MsgMeet()));
+						}).bind(this, new this.remote.MSG_Q_MEET()));
 						this.puncherReset();
 						console.log(">>>>>> %s: puncher mode switched search->enabled", this);
 						return;
@@ -263,7 +263,7 @@ const Puncher = module.exports = ae3.Class.create(
 					targetList.forEach((function(helo, target){
 						this.remote.sendSingle(helo, target);
 						console.log(">>>>>> %s: puncher send helo: %s, %s", this, helo, target);
-					}).bind(this, new this.remote.MsgHelo(this.remote.localSocketAddress, ++this.remote.sTx)));
+					}).bind(this, new this.remote.MSG_Q_HELO(this.remote.localSocketAddress, ++this.remote.sTx)));
 				}
 				++ this.since;
 			}
@@ -288,8 +288,8 @@ const Puncher = module.exports = ae3.Class.create(
 				}
 				console.log(">>>>>> %s: puncher poke out (direct:%s)", this, this.directAccess);
 				var poke = this.directAccess 
-					? new this.remote.MsgPokeDirect(this.remote.localSocketAddress) 
-					: new this.remote.MsgPoke(this.remote.localSocketAddress)
+					? new this.remote.MSG_Q_POKD(this.remote.localSocketAddress) 
+					: new this.remote.MSG_Q_POKE(this.remote.localSocketAddress)
 				;
 				this.remote.sendSingle(poke, null);
 				++ this.since;

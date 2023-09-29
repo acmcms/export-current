@@ -170,7 +170,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 							this.sTx = serial;
 						}
 						return this.sendSingle(
-								new this.MsgSeen(
+								new this.MSG_RF_SEEN(
 										serial,
 										address.port, 
 										message.isHELO 

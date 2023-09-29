@@ -63,20 +63,20 @@ const Principal = module.exports = ae3.Class.create(
 	},
 	/* instance */
 	{
-		MsgHelo : {
-			value : require('./MsgHelo')
+		MSG_Q_HELO : {
+			value : require('./messages/MSG_Q_HELO')
 		},
-		MsgPoke : {
-			value : require('./MsgPoke')
+		MSG_Q_POKE : {
+			value : require('./messages/MSG_Q_POKE')
 		},
-		MsgPokeDirect : {
-			value : require('./MsgPokeDirect')
+		MSG_Q_POKD : {
+			value : require('./messages/MSG_Q_POKD')
 		},
-		MsgSeen : {
-			value : require('./MsgSeen')
+		MSG_RF_SEEN : {
+			value : require('./messages/MSG_RF_SEEN')
 		},
-		MsgMeet : {
-			value : require('./MsgMeet')
+		MSG_Q_MEET : {
+			value : require('./messages/MSG_Q_MEET')
 		},
 		TaskUdpSingle : {
 			value : require('./TaskUdpSingle')
