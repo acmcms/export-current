@@ -2,7 +2,7 @@
 	layout	: "document",
 	title	: "Layouts / Лэйауты",
 	author	: "Alexander I. Kharitchev",
-	email	: "myx@myx.ru",
+	email	: "myx@myx.nz",
 	keywords: "layouts layout engine rendering visualization",
 	content	: [
 		{
@@ -487,12 +487,12 @@
 								content	: [
 									{
 										layout	: 'link',
-										href	: 'http://myx.ru'
+										href	: 'http://myx.nz'
 									},
 									{
 										layout	: 'link',
 										title	: 'MyX.ru',
-										href	: 'http://myx.ru'
+										href	: 'http://myx.nz'
 									}
 								]
 							}

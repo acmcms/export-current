@@ -172,7 +172,7 @@ const UdpService = module.exports = ae3.Class.create(
 					prototype.commandByKey = serviceClass.commandByKey = prototype.commandByKey.concat()
 				);
 				
-				if(commandByKey[c] && !(MessageClass.prototype instanceof commandByKey[c])){
+				if(commandByKey[c] && !(messageClass.prototype instanceof commandByKey[c])){
 					throw new Error("Duplicate UDP Command Code: " + c);
 				}
 				const C = messageClass.toString();

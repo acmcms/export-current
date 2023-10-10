@@ -457,11 +457,11 @@ function httpRequest(parameters, callback){
 /*
  * calc "require('http').request({hostname:'voh.russianpost.ru',port:8080,method:'POST',path:'/niips-operationhistory-web/OperationHistory',headers:{'Content-Type': 'text/xml', SOAPAction: '\"\"'}, body : '<xml/>'})"
  *
- * calc "require('http').request({hostname:'myx.ru',port:80,method:'GET',path:'/', body : ''})"
+ * calc "require('http').request({hostname:'myx.co.nz',port:80,method:'GET',path:'/', body : ''})"
  *
- * calc "require('http').request({hostname:'myx.ru',port:80,method:'GET',path:'/info/', headers : { a : 5 }, body : ''})"
+ * calc "require('http').request({hostname:'myx.co.nz',port:80,method:'GET',path:'/info/', headers : { a : 5 }, body : ''})"
  * 
- * calc "require('http').request.asString({hostname:'myx.ru',port:80,method:'GET',path:'/info/', headers : { a : 5 }, body : ''})"
+ * calc "require('http').request.asString({hostname:'myx.co.nz',port:80,method:'GET',path:'/info/', headers : { a : 5 }, body : ''})"
  */
 
 /**
@@ -515,20 +515,20 @@ module.exports = {
 	 * get.
 	 * 
 	 * <code>
-	 * require('http').get('http://myx.ru/info')
-	 * require('http').get('http://myx.ru/info/')
+	 * require('http').get('http://myx.co.nz/info')
+	 * require('http').get('http://myx.co.nz/info/')
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').get.asString('http://myx.ru/info')
-	 * require('http').get.asString('http://myx.ru/info/')
+	 * require('http').get.asString('http://myx.co.nz/info')
+	 * require('http').get.asString('http://myx.co.nz/info/')
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').get.asString('https://myx.ru/info/')
-	 * require('http').get.asBinary('https://myx.ru/info/')
-	 * require('http').get.asString('https://ndls.ndm.myx.ru/administration/listAccounts')
-	 * require('http').get('https://ndls.ndm.myx.ru/administration/listAccounts')
+	 * require('http').get.asString('https://myx.co.nz/info/')
+	 * require('http').get.asBinary('https://myx.co.nz/info/')
+	 * require('http').get.asString('https://ndls.ndm.myx.co.nz/administration/listAccounts')
+	 * require('http').get('https://ndls.ndm.myx.co.nz/administration/listAccounts')
 	 * </code>
 	 * 
 	 * <ul>callback is:
@@ -542,15 +542,15 @@ module.exports = {
 	 * post.
 	 * 
 	 * <code>
-	 * require('http').post('http://myx.ru/info/', { var1 : 1, var2 : '22222' })
+	 * require('http').post('http://myx.co.nz/info/', { var1 : 1, var2 : '22222' })
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').post.asString('http://myx.ru/info/', { var1 : 1, var2 : '22222' })
+	 * require('http').post.asString('http://myx.co.nz/info/', { var1 : 1, var2 : '22222' })
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').post.asBinary('http://myx.ru/info/', { var1 : 1, var2 : '22222' })
+	 * require('http').post.asBinary('http://myx.co.nz/info/', { var1 : 1, var2 : '22222' })
 	 * </code>
 	 * 
 	 * <ul>callback is:
@@ -565,15 +565,15 @@ module.exports = {
 	 * request.
 	 * 
 	 * <code>
-	 * require('http').request({hostname:'myx.ru', port:80, method:'GET',path:'/info/', headers : { a : 5 }, body : ''})
+	 * require('http').request({hostname:'myx.co.nz', port:80, method:'GET',path:'/info/', headers : { a : 5 }, body : ''})
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').request.asString({hostname:'myx.ru', port:80, method:'GET', path:'/info/', headers : { a : 5 }, body : ''})
+	 * require('http').request.asString({hostname:'myx.co.nz', port:80, method:'GET', path:'/info/', headers : { a : 5 }, body : ''})
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').request.asBinary({hostname:'myx.ru', port:80, method:'GET', path:'/info/', headers : { a : 5 }, body : ''})
+	 * require('http').request.asBinary({hostname:'myx.co.nz', port:80, method:'GET', path:'/info/', headers : { a : 5 }, body : ''})
 	 * </code>
 	 * 
 	 * <ul>callback is:

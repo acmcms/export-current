@@ -28,9 +28,9 @@ BUI.Respect = {
 			{ 
 				layout	: "button",
 				icon : "link_go", 
-				href : "http://myx.ru/",
-				title : "http://myx.ru/",
-				text : "<font style='font-weight:bold;font-family:courier new, courier, monospace'>-= MyX =-</font><small><br>http://myx.ru</small>" 
+				href : "http://myx.co.nz/",
+				title : "http://myx.co.nz/",
+				text : "<font style='font-weight:bold;font-family:courier new, courier, monospace'>-= MyX =-</font><small><br>http://myx.co.nz</small>" 
 			},
 			{ 
 				layout	: "button",

@@ -1,5 +1,20 @@
 const UdpCloudService = require('./../UdpCloudService');
-const MakeRsstReplyFn = require("java.class/ru.myx.ae3.state.RemoteServiceStateSAPI").makeRsstReplyUsingDomain;
+
+/**
+ * 'this' to be bint to stateDomain
+ **/
+const MakeRsstReplyFn = function(rrst){
+	var queryItem, rsst = this.createReplyBuilder();
+	/** FIXME: TODO: */
+	var supported = this.allSupportedResponseCodes();
+	
+	for(queryItem of rrst){
+		console.log(">>>>>> ndm.client:UdpCloudService::iterateRRST: %s", queryItem.formatAsTextString());
+		// this.
+		// rsst.add(stateDomain);
+	}
+	return rsst;
+};
 
 /**
  * 
@@ -18,10 +33,8 @@ const HandlerRrst = module.exports = function(message, address, serial){
 	// this.sendSingle(new UdpCloudService.MSG_RF_CERR(serial, 0x01 /* No Such Component */), address);
 	// return;
 
-	/** FIXME: TODO: */
-	const rsst = MakeRsstReplyFn(rrst, this.client.stateDomain);
+	const rsst = MakeRsstReplyFn.call(this.client.stateDomain, rrst);
 
-	console.log(">>>>>> ndm.client:UdpCloudService::handlerRRST(%s, %s) => RSST, request", this, message);
+	console.log(">>>>>> ndm.client:UdpCloudService::handlerRRST(%s, %s) => RSST: %s", this, message, rsst);
 	this.sendSingle(new UdpCloudService.MSG_RF_RSST(rsst, serial), address);
-	setTimeout(result, 0);
 };

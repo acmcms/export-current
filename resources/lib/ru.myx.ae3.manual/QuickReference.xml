@@ -156,7 +156,7 @@ var reply = HTTP.post('https://microsoft.co.nz/', {
 			]]></code>
 			<code><![CDATA[
 var reply = HTTP.post({
-	hostname : 'myx.ru', 
+	hostname : 'myx.co.nz', 
 	port : 443, 
 	path : '/info/', 
 }, { 
@@ -167,7 +167,7 @@ var reply = HTTP.post({
 			<paragraph>Raw request:</paragraph>
 			<code><![CDATA[
 var resp = HTTP.request({
-	hostname : 'myx.ru', 
+	hostname : 'myx.co.nz', 
 	port : 443, 
 	method : 'GET', 
 	path : '/info/', 
@@ -179,7 +179,7 @@ var resp = HTTP.request({
 			]]></code>
 			<code><![CDATA[
 var resp = HTTP.request({
-	hostname : 'myx.ru', 
+	hostname : 'myx.co.nz', 
 	port : 80, 
 	method : 'POST',
 	path : '/info/', 
@@ -192,7 +192,7 @@ var resp = HTTP.request({
 			]]></code>
 			<code><![CDATA[
 var resp = HTTP.request({
-	hostname : 'myx.ru', 
+	hostname : 'myx.co.nz', 
 	port : 80, 
 	method : 'POST',
 	path : '/info/', 
@@ -224,7 +224,7 @@ var binary = HTTP.post.asBinary('https://microsoft.co.nz/', {
 			]]></code>
 			<code><![CDATA[
 var string = HTTP.request.asString({
-	hostname : 'myx.ru', 
+	hostname : 'myx.co.nz', 
 	port : 80, 
 	method : 'GET',
 	path : '/info/', 
@@ -267,7 +267,7 @@ var responseXml = require('http').request.asString({
 			]]></code>
 			<code><![CDATA[
 var binaryResponse = HTTP.request.asBinary({
-	hostname : 'myx.ru', 
+	hostname : 'myx.co.nz', 
 	port : 80, 
 	method : 'GET',
 	path : '/info/', 

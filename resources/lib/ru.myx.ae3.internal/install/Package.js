@@ -18,7 +18,7 @@ const Counter = ae3.Util.Counter;
  */
 
 
-var BASE_SRC_URL = "https://myx.ru/distro/ae3/";
+var BASE_SRC_URL = "https://myx.co.nz/distro/ae3/";
 
 
 /**

@@ -100,7 +100,7 @@ var commands = {
 		}
 	},
 	setup : {
-		// ndm.client setup default ndss.myx.ru 443 997195123879923 0spmyvum9sq8727
+		// ndm.client setup default ndss.myx.nz 443 997195123879923 0spmyvum9sq8727
 		// ndm.client setup local ndss.macmyxpro.local 8443 075771260069315 KWrNhOJV3263192
 		args : "<clientAlias> <ndssHost> <ndssHttpsPort> <licenseNumber> <serviceKey>",
 		help : "configure NDSS Client",
