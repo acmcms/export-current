@@ -26,9 +26,13 @@ const MSG_RF_FAIL = module.exports = require('ae3').Class.create(
 			}
 		},
 		toString : {
-			value : function(){
-				return "[FAIL]";
-			}
+			value : ___ECMA_IMPL_DEBUG___ 
+				? function(){
+					return "[FAIL serial:" + this.serial + "]";
+				}
+				: function(){
+					return "[FAIL]";
+				}
 		}
 	},
 	/* static */
