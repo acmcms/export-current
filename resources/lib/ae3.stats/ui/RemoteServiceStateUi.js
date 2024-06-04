@@ -17,9 +17,41 @@ const SUPPORTED_RRST = {
 		"name" : "protoLevelInt",
 		"description" : "Read Support RRST/RSST Protocol Version."
 	},
+	"2001" : {
+		"name" : "versionEpochInt",
+		"description" : "Version Epoch (1st number of version string)."
+	},
+	"2002" : {
+		"name" : "versionMajorInt",
+		"description" : "Version Major (2nd number of version string)."
+	},
 	"2011" : {
 		"name" : "dialbackVersion",
 		"description" : "Read Supported Version of Dialback call."
+	},
+	"2012" : {
+		"name" : "shellVersion",
+		"description" : "RCI Interface Protocol Version."
+	},
+	"2021" : {
+		"name" : "uhpProto",
+		"description" : "UHP Session IP Protocol Number."
+	},
+	"2022" : {
+		"name" : "uhpClientPort",
+		"description" : "UHP Session Client Port (as seen by client)."
+	},
+	"2023" : {
+		"name" : "uhpCloudPort",
+		"description" : "UHP Session Server Port (as seen by client)."
+	},
+	"2081" : {
+		"name" : "proxyPort",
+		"description" : "UHP Session Client Port (as seen by server)."
+	},
+	"2082" : {
+		"name" : "proxyFlags",
+		"description" : "UHP Session Flags (as seen by server)."
 	},
 	"3000" : {
 		"name" : "statusFlagsInt",
@@ -57,9 +89,25 @@ const SUPPORTED_RRST = {
 		"name" : "authRealm",
 		"description" : "Read Authentication Realm.",
 	},
+	"4006" : {
+		"name" : "hardwareId",
+		"description" : "hwId String from Device.",
+	},
 	"4011" : {
 		"name" : "replyDetail",
 		"description" : "Include Debug Detail in Reply."
+	},
+	"4022" : {
+		"name" : "uhpClientHost",
+		"description" : "UHP Client Address (ip or ipv6, as seen by client)."
+	},
+	"4023" : {
+		"name" : "uhpCloudHost",
+		"description" : "UHP Server Address (ip or ipv6, as seen by client)."
+	},
+	"4081" : {
+		"name" : "proxySerials",
+		"description" : "UHP Session Serials (sRx / sTx)."
 	},
 	"4087" : {
 		"name" : "uptime",
@@ -84,6 +132,10 @@ const SUPPORTED_RRST = {
 	"5104" : {
 		"name" : "uhpTokenAlias",
 		"description" : "Read Full Cloud Token Alias."
+	},
+	"5105" : {
+		"name" : "friendlyVersionString",
+		"description" : "Public, UI-friendly Version String."
 	},
 	"5106" : {
 		"name" : "managementNames",
