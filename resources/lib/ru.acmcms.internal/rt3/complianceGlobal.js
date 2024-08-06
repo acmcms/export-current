@@ -465,54 +465,54 @@ function mapToZip(x){
  */
 const PATCH_REQUEST = {
 	"Address" : {
-		value : function requestFnAddress(){
+		value : function(){
 			return Request.currentRequest.sourceAddress;
 		}
 	},
 	"Language" : {
-		value : function requestFnLanguage(){
+		value : function(){
 			return Request.currentRequest.language;
 		}
 	},
 	"Path" : {
-		value : function requestFnPath(){
+		value : function(){
 			return Request.currentRequest.resourceIdentifier.substring(1);
 		}
 	},
 	"QueryString" : {
-		value : function requestFnQueryString(){
+		value : function(){
 			return Request.currentRequest.parameterString;
 		}
 	},
 	"Referer" : {
-		value : function requestFnReferer(){
+		value : function(){
 			return (Request.currentRequest.attributes || {})['Referer'];
 		}
 	},
 	"RequestParams" : {
-		value : function requestFnRequestParams(){
+		value : function(){
 			return Request.currentRequest.parameters || {};
 		}
 	},
 	"URL" : {
-		value : function requestFnRequestURL(){
+		value : function(){
 			return Request.currentRequest.url;
 		}
 	},
 	"UserAgent" : {
-		value : function requestFnRequestUserAgent(){
+		value : function(){
 			return Request.userAgent;
 		}
 	},
 	// _WRONG_ spelling
 	"getResourcePreffix" : {
-		value : function requestFnRequestResourcePreffix(){
+		value : function(){
 			return this.getResourcePrefix();
 		}
 	},
 	// _WRONG_ spelling
 	"resourcePreffix" : {
-		get : function requestFnRequestResourcePreffix(){
+		get : function(){
 			return this.getResourcePrefix();
 		}
 	},
@@ -524,7 +524,7 @@ const PATCH_REQUEST = {
  */
 const PATCH_RUNTIME = {
 	"GetLoginUrl" : {
-		value : function runtimeGetLoginUrl(returnUrl){
+		value : function(returnUrl){
 			var rp = Request.getResourcePrefix();
 			return (rp
 					? rp.substring( 1 ) + '/'
@@ -535,17 +535,17 @@ const PATCH_RUNTIME = {
 		}
 	},
 	"UrlAsMessage" : {
-		value : function runtimeUrlAsMessage(url){
+		value : function(url){
 			return require('http').get(url);
 		}
 	},
 	"UrlAsBuffer" : {
-		value : function runtimeUrlAsBuffer(url){
+		value : function(url){
 			return require('http').get.asBinary(url).nextCopy();
 		}
 	},
 	"UrlAsString" : {
-		value : function runtimeUrlAsString(url, encoding){
+		value : function(url, encoding){
 			return encoding && encoding != 'utf-8' && encoding != 'UTF-8' 
 				? require('http').get.asBinary(url).toString(encoding)
 				: require('http').get.asString(url);
@@ -573,20 +573,10 @@ function setupMore(){
 
 exports.setupContext = function(context) {
 
-	console.log("RT3 complianceGlobal, ACM677 compatiility, going to patch 'global' object...");
+	console.log("RT3 complianceGlobal, ACM677 compatibility, going to patch 'global' object...");
 
-	function add(name, value){
-		console.log("RT3 complianceGlobal, ACM677 compatiility, added: %s", name);
-		Object.defineProperty(context, name, {
-			value : value,
-			writable : true,
-			enumerable : false,
-			configurable : true
-		});
-	}
-	
 	const add = (function(name, value){
-		console.log("RT3 complianceGlobal, ACM677 compatiility, added: %s", name);
+		console.log("RT3 complianceGlobal, ACM677 compatibility, added: %s", name);
 		Object.defineProperty(this, name, {
 			value : value,
 			writable : true,
@@ -667,6 +657,6 @@ exports.setupContext = function(context) {
 
 	setupMore();
 
-	console.log("RT3 complianceGlobal, ACM677 compatiility, complete");
+	console.log("RT3 complianceGlobal, ACM677 compatibility, complete");
 
 };
