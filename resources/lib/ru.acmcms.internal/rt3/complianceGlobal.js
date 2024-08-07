@@ -460,79 +460,6 @@ function mapToZip(x){
 	return require('ae3.util/Codecs').mapToZip(x);
 }
 
-/**
- * Some obsolete and extra RequestSAPI methods
- */
-const PATCH_REQUEST = {
-	"Path" : {
-		value : function(){
-			return Request.currentRequest.resourceIdentifier.substring(1);
-		}
-	},
-	"Referer" : {
-		value : function(){
-			return (Request.currentRequest.attributes || {})['Referer'];
-		}
-	},
-	"RequestParams" : {
-		value : function(){
-			return Request.currentRequest.parameters || {};
-		}
-	},
-};
-
-
-/**
- * Some obsolete and extra RuntimeSAPI methods
- */
-const PATCH_RUNTIME = {
-	"GetLoginUrl" : {
-		value : function(returnUrl){
-			var rp = Request.getResourcePrefix();
-			return (rp
-					? rp.substring( 1 ) + '/'
-					: "") //
-					+ (returnUrl
-						? "?tp=GetLoginUrl3&back=" + Text.encodeUriComponent( returnUrl, Engine.CHARSET_UTF8 )
-						: "login.user?tp=GetLoginUrl2");
-		}
-	},
-	"UrlAsMessage" : {
-		value : function(url){
-			return require('http').get(url);
-		}
-	},
-	"UrlAsBuffer" : {
-		value : function(url){
-			return require('http').get.asBinary(url).nextCopy();
-		}
-	},
-	"UrlAsString" : {
-		value : function(url, encoding){
-			return encoding && encoding != 'utf-8' && encoding != 'UTF-8' 
-				? require('http').get.asBinary(url).toString(encoding)
-				: require('http').get.asString(url);
-		}
-	},
-};
-
-
-function setupMore(){
-	{
-		import ru.myx.sapi.RuntimeSAPI;
-		var dbi = require('ru.acmcms/dbi');
-		Object.defineProperties(RuntimeSAPI.PROTOTYPE, {
-			'dbExecuteCallback' : { value : dbi.executeCallback },
-			'dbExecuteTransaction' : { value : dbi.executeTransaction },
-		});
-		Object.defineProperties(RuntimeSAPI.PROTOTYPE, PATCH_RUNTIME);
-	}
-	{
-		import ru.myx.sapi.RequestSAPI;
-		Object.defineProperties(RequestSAPI.PROTOTYPE, PATCH_REQUEST);
-	}
-}
-
 
 exports.setupContext = function(context) {
 
@@ -605,8 +532,7 @@ exports.setupContext = function(context) {
 	add("mapToZip", mapToZip);
 
 	try{
-		var ExcelSAPI = require('ae3/xls');
-		add("ExcelWorkbook", ExcelSAPI);
+		add("ExcelWorkbook", require('ae3/xls'));
 	}catch(e){
 		console.error("Problems with ExcelSAPI: " + (e.getMessage ? Format.throwableAsPlainText(e) : e));
 	}
@@ -617,8 +543,6 @@ exports.setupContext = function(context) {
 	if (strlen("677") != 3 || !StartsWith("677", "67")) {
 		throw "677 compliance failed!";
 	}
-
-	setupMore();
 
 	console.log("RT3 complianceGlobal, ACM677 compatibility, complete");
 
