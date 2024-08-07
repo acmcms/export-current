@@ -73,7 +73,7 @@ function SetDefaults(){
 
 <SCRIPT>
 
-<%EXEC:UAver = indexOf( Request.UserAgent() || '', 'MSIE 5.0') > 0 ? '5' : '0' %>
+<%EXEC:UAver = indexOf( Request.getUserAgent() || '', 'MSIE 5.0') > 0 ? '5' : '0' %>
 
 function SubMit(){
 	if(URL.value.indexOf('mailto:') < 0 && URL.value.indexOf('tp:/') < 0){

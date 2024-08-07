@@ -29,7 +29,7 @@
 	%><code class="errorsource"><%
 		%><%= Format.xmlNodeValue( content.body || Format.throwableAsPlainText(Flags.exception) ) %><%
 	%></code><%
-	%><%EXEC: request = (context && context.query || Request.currentRequest).parameters %><%
+	%><%EXEC: request = (context?.query ?? Request.currentRequest).parameters %><%
 	%><%IF: request.back || content.back %><%
 		%><br /><%
 		%><center><%

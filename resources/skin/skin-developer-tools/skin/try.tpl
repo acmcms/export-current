@@ -7,7 +7,7 @@
 
 %><%EXEC: title = 'Developer Tools: Try-It-Yourself: ' + content.title %><%
 
-%><%EXEC: request = context && context.query || Request.getCurrentRequest() %><%
+%><%EXEC: request = context?.query ?? Request.currentRequest %><%
 %><%EXEC: parameters = request.parameters || {} %><%
 
 %><%IF: parameters.preview %><%

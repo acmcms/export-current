@@ -464,24 +464,9 @@ function mapToZip(x){
  * Some obsolete and extra RequestSAPI methods
  */
 const PATCH_REQUEST = {
-	"Address" : {
-		value : function(){
-			return Request.currentRequest.sourceAddress;
-		}
-	},
-	"Language" : {
-		value : function(){
-			return Request.currentRequest.language;
-		}
-	},
 	"Path" : {
 		value : function(){
 			return Request.currentRequest.resourceIdentifier.substring(1);
-		}
-	},
-	"QueryString" : {
-		value : function(){
-			return Request.currentRequest.parameterString;
 		}
 	},
 	"Referer" : {
@@ -492,28 +477,6 @@ const PATCH_REQUEST = {
 	"RequestParams" : {
 		value : function(){
 			return Request.currentRequest.parameters || {};
-		}
-	},
-	"URL" : {
-		value : function(){
-			return Request.currentRequest.url;
-		}
-	},
-	"UserAgent" : {
-		value : function(){
-			return Request.userAgent;
-		}
-	},
-	// _WRONG_ spelling
-	"getResourcePreffix" : {
-		value : function(){
-			return this.getResourcePrefix();
-		}
-	},
-	// _WRONG_ spelling
-	"resourcePreffix" : {
-		get : function(){
-			return this.getResourcePrefix();
 		}
 	},
 };

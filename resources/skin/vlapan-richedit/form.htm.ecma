@@ -8,7 +8,7 @@ $output(body){
 			<%
 			/*
 			<br/>P:<%= Request.getUrlBase() %>
-			<br/>P:<%= Request.getResourcePreffix() %>
+			<br/>P:<%= Request.getResourcePrefix() %>
 			<br/>P:<%= Request.getResourceIdentifier() %>
 			*/
 			for(var editorName in Array(params.editor)){

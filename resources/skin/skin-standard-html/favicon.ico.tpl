@@ -6,7 +6,7 @@
 %><%CODE: 'ACM.ECMA' %>
 	{
 		// using variable for debug
-		var query = context && context.query || Request.currentRequest;
+		var query = context?.query ?? Request.currentRequest;
 		var settings = query.settings || {};
 		var attributes = query.attributes;
 		var skinner = query.attributes.skinner;

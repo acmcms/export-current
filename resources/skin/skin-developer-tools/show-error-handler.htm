@@ -4,7 +4,7 @@
 	//
 	//
 	
-%><%EXEC: request = (context && context.query) || Request.getCurrentRequest() %><%
+%><%EXEC: request = context?.query ?? Request.currentRequest %><%
 %><%IF: request.preview %><%
 	%><%THROW: 'example-error' %><%
 %><%/IF%><%

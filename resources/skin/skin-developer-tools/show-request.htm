@@ -3,7 +3,7 @@
 	%><%= '<!' + '-- ' %><%
 	%>-->
 		<%CODE: 'ACM.ECMA' %>
-			var request = context && context.query || Request.getCurrentRequest();
+			var request = context?.query ?? Request.currentRequest;
 			var methods = [
 				'title', 
 				'owner', 

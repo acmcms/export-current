@@ -25,7 +25,7 @@
 %><%EXEC: requireJs.add("/!/skin/ctrl-ie6-richedit-modal/client/js/editor_actions") %><%
 
 // attributes are not working here - they are accessible only for layouts!
-%><%EXEC: testing = attributes && attributes.testing || Request.target.indexOf('.test.') != -1 %><%
+%><%EXEC: testing = attributes?.testing ?? Request.target.indexOf('.test.') != -1 %><%
 
 // to select first tab
 %><%EXEC: firstTab = true %><%

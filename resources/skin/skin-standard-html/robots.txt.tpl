@@ -13,7 +13,7 @@
 	//
 	
 %><%CODE: 'ACM.ECMA' %>
-	query = context && context.query || Request.currentRequest;
+	query = context?.query ?? Request.currentRequest;
 	attributes = query.attributes;
 <%/CODE%><%
 %><%FORMAT: 'default' %><%FINAL: 'text/plain' %>

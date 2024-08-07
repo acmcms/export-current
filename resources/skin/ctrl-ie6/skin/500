@@ -4,7 +4,7 @@
 		http://www.netmechanic.com/news/vol4/html_no22.htm 
 
 %><%IGNORE%><%
-%><%IF: Request.UserAgent() && (-1 == indexOf( Request.UserAgent(), 'IE' ))%><%
+%><%IF: Request.getUserAgent() && (-1 == indexOf( Request.getUserAgent(), 'IE' ))%><%
 	%><%FINAL:'text/html'%><%
 		%>This backoffice interface designed only for <a href="http://www.microsoft.com/windows/ie/">Microsoft Internet Explorer</a> for Windows (or later). <%
 	%><%/FINAL%><%

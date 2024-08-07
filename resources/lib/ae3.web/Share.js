@@ -365,7 +365,7 @@ const Share = module.exports = ae3.Class.create(
 			value : function(context, admin){
 				const query = context.query;
 				const client = context.client;
-				const format = client && client.uiFormat || query.parameters.format || 'xml';
+				const format = client?.uiFormat || query.parameters.format || 'xml';
 				const result = {
 					geo : query.attributes['Geo-Mean'],
 					ip : query.sourceAddress,

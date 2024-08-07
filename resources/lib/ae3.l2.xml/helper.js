@@ -741,8 +741,8 @@ function makeDataViewFragment(query, layout, extraCommands){
  * @returns
  */
 function makeDataViewReply(context, layout){
-	const query = context && context.query;
-	if(query && query.parameters.___output){
+	const query = context?.query;
+	if(query?.parameters.___output){
 		switch(query.parameters.___output){
 		case "xml":
 			return require("ae3/xml").makeDataViewReply(query, layout);
@@ -794,8 +794,8 @@ web.makeDataViewReply = makeDataViewReply;
  * @returns
  */
 function makeDataFormReply(context, layout){
-	const query = context && context.query;
-	if(query && query.parameters.___output){
+	const query = context?.query;
+	if(query?.parameters.___output){
 		switch(query.parameters.___output){
 		case "xml":
 			return require("ae3/xml").makeDataFormReply(query, layout);
@@ -896,8 +896,8 @@ web.makeDataFormReply = makeDataFormReply;
  * @returns
  */
 function makeDataTableReply(context, layout){
-	const query = context && context.query;
-	if(query && query.parameters.___output){
+	const query = context?.query;
+	if(query?.parameters.___output){
 		switch(query.parameters.___output){
 		case "xml":
 			return require("ae3/xml").makeDataTableReply(query, layout);
@@ -1114,8 +1114,8 @@ function makeDocumentationFragment(layout, extraCommands){
  * @returns
  */
 function makeDocumentationReply(context, layout){
-	const query = context && context.query;
-	if(query && query.parameters.___output === "xls"){
+	const query = context?.query;
+	if(query?.parameters.___output === "xls"){
 		throw "No XLS support for 'documentation' layout.";
 		return require("ae3/xls").makeDataViewReply(query, layout);
 	}
@@ -1156,8 +1156,8 @@ web.makeDocumentationReply = makeDocumentationReply;
  * @returns
  */
 function makeSequenceReply(context, layout){
-	const query = context && context.query;
-	if(query && query.parameters.___output){
+	const query = context?.query;
+	if(query?.parameters.___output){
 		switch(query.parameters.___output){
 		case "xml":
 			return require("ae3/xml").makeDataFormReply(query, layout);
@@ -1244,8 +1244,8 @@ web.makeSequenceReply = makeSequenceReply;
  * @returns
  */
 function makeSelectViewReply(context, layout){
-	const query = context && context.query;
-	if(query && query.parameters.___output){
+	const query = context?.query;
+	if(query?.parameters.___output){
 		switch(query.parameters.___output){
 		case "xml":
 			return require("ae3/xml").makeDataFormReply(query, layout);
