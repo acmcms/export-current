@@ -75,6 +75,8 @@ H1 {
 .SubmenuFrame {
 	background-color: activecaption;
 	color: captiontext;
+	background-color: Highlight;
+	color: HighlightText;
 	padding: 3px;
 	font-family: Tahoma, Arial;
 	font-size: 7pt;
@@ -86,6 +88,7 @@ H1 {
 
 .SubmenuFrame TD,.SubmenuFrame DIV {
 	color: captiontext;
+	color: HighlightText;
 	font-family: Tahoma, Arial;
 	font-size: 7pt;
 }
@@ -95,16 +98,20 @@ H1 {
 	font-size: 7pt;
 	border: 0;
 	background-color: activecaption;
+	background-color: Highlight;
 	color: captiontext;
+	color: HighlightText;
 }
 
 .SubmenuFrame A {
 	color: captiontext;
+	color: HighlightText;
 	text-decoration: none;
 }
 
 .SubmenuFrame A:hover {
 	color: captiontext;
+	color: HighlightText;
 	text-decoration: underline;
 }
 
@@ -121,12 +128,16 @@ H1 {
 	padding: 2px 3px 2px 3px;
 	font-family: Tahoma, Arial;
 	font-size: 8pt;
+	text-align: left;
+	width: 100%;
 }
 
 .SubmenuButton TD {
 	color: buttontext;
 	font-family: Tahoma, Arial;
 	font-size: 8pt;
+	vertical-align: middle;
+	text-aligh: left;
 }
 
 .SubmenuButton .on {
