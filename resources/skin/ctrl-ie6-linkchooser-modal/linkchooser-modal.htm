@@ -81,7 +81,7 @@
 											"User-Agent" : "Local"
 										}
 									});
-									require = response ? response.toCharacter().text : "Not found";
+									require = response?.toCharacter().text ?? "Not found";
 									(!response || response.getCode() != 200) && 
 										(require = "alert(\"FATAL: require.js error: " + Format.jsStringFragment( require ) + "\")");
 								<%/CODE%><%

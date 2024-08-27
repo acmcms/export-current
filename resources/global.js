@@ -105,6 +105,9 @@ const cachePkg = {};
  * @returns
  */
 function requireImpl( focusPath, moduleName ){
+	// if(Array.isArray(moduleName)){
+	//	return //
+	// }
 	if(moduleName[0] === '.'){
 		if(moduleName[1] === '/' /* moduleName.startsWith("./") */){
 			// relative require

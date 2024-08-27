@@ -302,6 +302,10 @@ samp, .samp{
 	text-align: left;
 }
 
+.cell-tp-date {
+	white-space: nowrap;
+}
+
 DIV.idx-box-row, DIV.idx-box-cell {
 	position: relative;
 	max-width: 100%;

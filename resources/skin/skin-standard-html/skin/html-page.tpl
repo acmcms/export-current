@@ -317,7 +317,7 @@
 								"User-Agent" : "Local"
 							}
 						});
-						require = response ? response.toCharacter().getText() : "Not found";
+						require = response?.toCharacter().getText() ?? "Not found";
 						(!response || response.getCode() != 200) && 
 							(require = "alert('FATAL: require.js error: " + Format.jsStringFragment( require ) + "')");
 
