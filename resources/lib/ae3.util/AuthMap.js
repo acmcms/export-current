@@ -93,7 +93,7 @@ AuthMap.prototype = Object.create(Auth.prototype, {
 			{
 				var lastLogged = account.lastLogged;
 				var newLastLogged = new Date();
-				(newLastLogged - (lastLogged||0)) > 60_000 && (account.lastLogged = newLastLogged);
+				(newLastLogged - (lastLogged||0)) > 60000 && (account.lastLogged = newLastLogged);
 			}
 		}
 	},
