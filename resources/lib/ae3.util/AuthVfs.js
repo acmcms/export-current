@@ -104,7 +104,7 @@ const AuthVfs = module.exports = ae3.Class.create(
 				{
 					var vfsLastLogged = vfsAccount.relativeFile("lastLogged");
 					var newLastLogged = new Date();
-					(newLastLogged - (vfsLastLogged.primitiveValue||0)) > 60000 && vfsLastLogged.doSetPrimitive(newLastLogged);
+					(newLastLogged - (vfsLastLogged.primitiveValue||0)) > 60_000 && vfsLastLogged.doSetPrimitive(newLastLogged);
 				}
 			}
 		},

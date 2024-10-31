@@ -9,7 +9,7 @@ const EventBus = module.exports = require("ae3").Class.create(
 		/**
 		 * evtTypeId - eg. "NBNF2"
 		 * consumer - function(e){}
-		 * expiration - now/delete (0), never (-1), unixtime millis from now (eg. 60000)
+		 * expiration - now/delete (0), never (-1), unixtime millis from now (eg. 60_000)
 		 */
 		updateSubscription : {
 			value : function(evtTypeId, consumer, expiration){
