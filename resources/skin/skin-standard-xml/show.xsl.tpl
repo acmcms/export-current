@@ -1227,6 +1227,9 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<select type="select" name="{$format/@name}" value="{$value}">
+							<xsl:if test="not($format/@required = 'false')">
+								<xsl:attribute name="required">required</xsl:attribute>
+							</xsl:if>
 							<xsl:for-each select="option | options">
 								<option value="{@value}">
 									<xsl:if test="$value = @value">

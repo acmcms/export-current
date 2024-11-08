@@ -328,11 +328,13 @@ INPUT[type="string"]:invalid,
 INPUT[type="number"]:invalid, 
 INPUT[type="password"]:invalid {
 	background-color: #fee;
-	outline: thick solid #fcc;
+	outline: 4pt solid #fcc;
+	outline-offset: -0.75pt;
 }
 
 SELECT:invalid{
-	outline: thick solid #fcc;
+	outline: 4pt solid #fcc;
+	outline-offset: -0.75pt;
 }
 
 INPUT.el-radio[type="radio"]:invalid+LABEL.el-radio {
