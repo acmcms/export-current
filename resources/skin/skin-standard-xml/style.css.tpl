@@ -321,17 +321,28 @@ TABLE.items TD.cell-tp-number, TD.cell-tp-number{
 	text-align: right;
 	white-space: nowrap;
 }
+
 INPUT[type=""]:invalid, 
 INPUT[type="text"]:invalid, 
+INPUT[type="string"]:invalid, 
 INPUT[type="number"]:invalid, 
-INPUT[type="password"]:invalid, 
+INPUT[type="password"]:invalid {
+	background-color: #fee;
+	outline: thick solid #fcc;
+}
+
+SELECT:invalid{
+	outline: thick solid #fcc;
+}
+
 INPUT.el-radio[type="radio"]:invalid+LABEL.el-radio {
 	background-color: #fee;
 }
+
 INPUT, SELECT{
 	min-width: 160pt;
 }
-INPUT[type=""], INPUT[type="text"]{
+INPUT[type=""], INPUT[type="text"], INPUT[type="string"]{
 	width: 100%;
 }
 INPUT[type=number]{
