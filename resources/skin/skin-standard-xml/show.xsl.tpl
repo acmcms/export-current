@@ -449,13 +449,31 @@
 				</xsl:variable>
 				<xsl:choose>
 					<xsl:when test="$format/@variant = 'checkbox'">
-						<input type="checkbox" name="{$format/@name}" value="{$inputValue}" x-ui-debug="formatted/input/checkbox {$parentInputValue}"><xsl:if test="$format/@selected = '*' or $format/@selected = $inputValue or $value/../@*[$format/@selected and local-name() = $format/@selected]"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
+						<input type="checkbox" name="{$format/@name}" value="{$inputValue}" x-ui-debug="formatted/input/checkbox {$parentInputValue}">
+							<xsl:if test="$format/@selected = '*' or $format/@selected = $inputValue or $value/../@*[$format/@selected and local-name() = $format/@selected]">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="not($format/@required = 'false')">
+								<xsl:attribute name="required">required</xsl:attribute>
+							</xsl:if>
+						</input>
 					</xsl:when>
 					<xsl:when test="$format/@variant = 'radio'">
-						<input type="radio" name="{$format/@name}" value="{$inputValue}" x-ui-debug="formatted/input/radio {$parentInputValue}"><xsl:if test="$format/@selected = $inputValue or $parentInputValue = $inputValue"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
+						<input type="radio" name="{$format/@name}" value="{$inputValue}" x-ui-debug="formatted/input/radio {$parentInputValue}">
+							<xsl:if test="$format/@selected = $inputValue or $parentInputValue = $inputValue">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="not($format/@required = 'false')">
+								<xsl:attribute name="required">required</xsl:attribute>
+							</xsl:if>
+						</input>
 					</xsl:when>
 					<xsl:otherwise>
-						<input type="{$format/@variant}" name="{$format/@name}" value="{$inputValue}" x-ui-debug="formatted/input/other"/>
+						<input type="{$format/@variant}" name="{$format/@name}" value="{$inputValue}" x-ui-debug="formatted/input/other">
+							<xsl:if test="$format/@required = 'true'">
+								<xsl:attribute name="required">required</xsl:attribute>
+							</xsl:if>
+						</input>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -1146,6 +1164,9 @@
 									<xsl:if test="$value = @value">
 										<xsl:attribute name="checked">checked</xsl:attribute>
 									</xsl:if>
+									<xsl:if test="not($format/@required = 'false')">
+										<xsl:attribute name="required">required</xsl:attribute>
+									</xsl:if>
 								</input><label for="m{$id}-{@value}" class="el-radio st-radio-tab"><xsl:value-of select='@title'/></label>
 							</xsl:for-each>
 							<xsl:for-each select="option | options">
@@ -1172,6 +1193,9 @@
 									<xsl:if test="$value = @value">
 										<xsl:attribute name="checked">checked</xsl:attribute>
 									</xsl:if>
+									<xsl:if test="not($format/@required = 'false')">
+										<xsl:attribute name="required">required</xsl:attribute>
+									</xsl:if>
 								</input><label for="m{$id}-{@value}" class="el-radio st-radio-sel"><xsl:value-of select='@title'/></label>
 								<div id="s{$id}-{@value}" class="el-radio-sel-item">
 									<xsl:call-template name="edit">
@@ -1193,6 +1217,9 @@
 								<input id="m{$id}-{@value}" type="radio" name="{$format/@name}" value="{@value}" class="el-radio st-radio-sel">
 									<xsl:if test="$value = @value">
 										<xsl:attribute name="checked">checked</xsl:attribute>
+									</xsl:if>
+									<xsl:if test="not($format/@required = 'false')">
+										<xsl:attribute name="required">required</xsl:attribute>
 									</xsl:if>
 								</input><label for="m{$id}-{@value}" class="el-radio st-radio-sel"><xsl:value-of select='@title'/></label>
 							</xsl:for-each>
@@ -1308,6 +1335,9 @@
 						<input id="m{$id}-{$ido}" type="radio" name="{$id}" value="{$ido}" class="el-radio st-radio-sel">
 							<xsl:if test="$values/value = @value">
 								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="not($format/@required = 'false')">
+								<xsl:attribute name="required">required</xsl:attribute>
 							</xsl:if>
 						</input><label for="m{$id}-{$ido}" class="el-radio st-radio-sel"><xsl:value-of select='@title'/></label>
 						<div id="s{$id}-{$ido}" class="el-radio-sel-item">
