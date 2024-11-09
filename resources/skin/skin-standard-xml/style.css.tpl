@@ -1079,39 +1079,35 @@ DIV.ui-illustration-central{
 	display: none;
 }
 
-@keyframes el-radio-sel-item-display {
-	0% {
-		opacity: 0;
-		display: none;
-	}
-	50% {
-		opacity: 0.5;
-		display: block;
-	}
-	100% {
-		opacity: 1;
-		display: block;
-	}
-}
-
 DIV.el-radio-sel-item {
+	/* prevents transition on inputs
 	display: none;
+	content-visibility: hidden;
+	*/
 	margin: 0 0 0 1em;
-	animation: el-radio-sel-item-display 0.75s;
+	height: 0;
+	width: 0;
+	overflow: hidden;
 }
 
 DIV.el-radio-sel-item INPUT{
 	opacity: 0;
-	transition: opacity 3ms;
+	content-visibility: hidden;
+	transition: opacity 3ms, content-visibility 3ms;
 }
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item {
+	/* prevents transition on inputs
 	display: block;
-	opacity: 1;
+	content-visibility: visible;
+	*/
+	height: unset;
+	width: unset;
 }
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item INPUT{
 	opacity: 1;
+	content-visibility: visible;
 }
 
 INPUT.el-radio {

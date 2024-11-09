@@ -31,7 +31,6 @@ function initInputValidationWhenVisible(){
 		e.setAttribute("x-js-validate", "required");
 		e.addEventListener("change", fn);
 		e.addEventListener("input", fn);
-		e.addEventListener("transitionrun", setTimeout.bind(null, fn, 15));
 		e.addEventListener("transitionend", setTimeout.bind(null, fn, 15));
 		setTimeout(fn, 0);
 	}
