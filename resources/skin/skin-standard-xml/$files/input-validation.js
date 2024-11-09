@@ -2,34 +2,43 @@
  * Prevent validation running on invisible inputs
  */
 
-var inputValidateCheckVisible = function(x){
-	return x.checkVisibility({visibilityProperty:true});
-};
 
 var inputValidateRequiredIfVisible = function(event){
-	if(!inputValidateCheckVisible(this) && !Array.from(this.labels??[]).some(inputValidateCheckVisible)){
-		console.log("InputValidationIfVisible: check, hidden, %s", this.name);
-		this.setCustomValidity("");
-		return;
+	function checkVisible(x){
+		return x.checkVisibility({visibilityProperty:true});
 	}
-	const es = this.form.elements[this.name];
+	
+	const es = this.form?.elements[this.name];
 	if(!es){
 		console.log("InputValidationIfVisible: check, orphan, %s", this.name);
-		this.setCustomValidity("");
 		return;
 	}
 	const ea = "function" === typeof es.forEach ? es : [].concat(es);
+	if(![this].concat(Array.from(this.labels??[])).some(checkVisible)){
+		console.log("InputValidationIfVisible: check, hidden, %s", this.name);
+		ea.forEach(function(x){ 
+			x.setAttribute("disabled", "disabled");
+			x.setCustomValidity(""); 
+		});
+		return;
+	}
 	if(es.value != ""){
 		console.log("InputValidationIfVisible: check, valid, %s", this.name);
-		ea.forEach(function(x){x.setCustomValidity("");});
+		ea.forEach(function(x){ 
+			x.removeAttribute("disabled"); 
+			x.setCustomValidity(""); 
+		});
 		return;
 	}
 	console.log("InputValidationIfVisible: check, required, %s", this.name);
-	ea.forEach(function(x){x.setCustomValidity("Required field.");});
+	ea.forEach(function(x){ 
+		x.removeAttribute("disabled"); 
+		x.setCustomValidity("Required field."); 
+	});
 };
 
 function initInputValidationWhenVisible(){
-	var inputs = document.querySelectorAll('input[required=required], select[required=required]');
+	var inputs = document.querySelectorAll("input[required=required], select[required=required]");
 	if(!inputs || inputs.length == 0){
 		console.log("InputValidationIfVisible: no illegible inputs found");
 	}
@@ -41,7 +50,7 @@ function initInputValidationWhenVisible(){
 	}
 	var i, e, fn, input;
 	for(i = inputs.length - 1; i >= 0; --i){
-		e = inputs[i]; if(!e.form) continue;
+		e = inputs[i]; if(!e.form || !e.name || e.hasAttribute("disabled")) continue;
 		fn = inputValidateRequiredIfVisible.bind(e);
 		e.removeAttribute("required");
 		e.setAttribute("x-js-validate", "required");

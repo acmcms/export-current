@@ -2,7 +2,7 @@
  * Show ISO MS GMT dates in user format and timezone
  */
 
-var dateParseISO = (new Date('1970-01-01T00:00:00.001Z')).getTime() == 1
+var dateParseISO = (new Date("1970-01-01T00:00:00.001Z")).getTime() == 1
 	? function(x){
 		return new Date(x);
 	}
@@ -23,7 +23,7 @@ var dateParseISO = (new Date('1970-01-01T00:00:00.001Z')).getTime() == 1
 		d[12] && date.setMilliseconds(Number("0." + d[12]) * 1000);
 		if (d[14]) {
 			offset = (Number(d[16]) * 60) + Number(d[17]);
-			offset *= ((d[15] == '-') ? 1 : -1);
+			offset *= ((d[15] == "-") ? 1 : -1);
 		}
 	
 		offset -= date.getTimezoneOffset();
@@ -33,11 +33,11 @@ var dateParseISO = (new Date('1970-01-01T00:00:00.001Z')).getTime() == 1
 	};
 
 function initDates(){
-	var dates = document.querySelectorAll('date');
+	var dates = document.querySelectorAll("date");
 	for(var i = dates.length - 1; i >= 0; --i){
 		var cell = dates[i];
 		var value = cell.innerHTML;
-		if(value.length === '2013-01-01T15:40:43.288Z'.length && value[4] === '-' && value[10] === 'T'){
+		if(value.length === "2013-01-01T15:40:43.288Z".length && value[4] === "-" && value[10] === "T"){
 			var date = dateParseISO(value);
 			if(date.getTime() > 1){
 				cell.setAttribute("title", value);
