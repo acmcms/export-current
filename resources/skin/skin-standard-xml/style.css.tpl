@@ -1097,13 +1097,12 @@ DIV.ui-illustration-central{
 DIV.el-radio-sel-item {
 	display: none;
 	margin: 0 0 0 1em;
-	animation: el-radio-sel-item-display 0.1s;
+	animation: el-radio-sel-item-display 0.75s;
 }
 
 DIV.el-radio-sel-item INPUT{
 	opacity: 0;
-	transition-property: opacity;
-	transition-duration: 1ms;
+	transition: opacity 3ms;
 }
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item {

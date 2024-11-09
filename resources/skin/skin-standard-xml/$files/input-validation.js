@@ -32,6 +32,7 @@ function initInputValidationWhenVisible(){
 		e.addEventListener("change", fn);
 		e.addEventListener("input", fn);
 		e.addEventListener("transitionrun", setTimeout.bind(null, fn, 15));
+		e.addEventListener("transitionend", setTimeout.bind(null, fn, 15));
 		setTimeout(fn, 0);
 	}
 }
