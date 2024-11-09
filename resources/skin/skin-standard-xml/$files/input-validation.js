@@ -5,7 +5,7 @@
 
 var inputValidateRequiredIfVisible = function(event){
 	console.log("InputValidationIfVisible: callback, %s, %s", this.name, event?.type);
-	if(!this.checkVisibility({visibilityProperty:true}) || this.value != ""){
+	if(!this.checkVisibility({visibilityProperty:true}) || this.form.elements[this.name].value != ""){
 		this.setCustomValidity("");
 		return;
 	}
@@ -13,7 +13,7 @@ var inputValidateRequiredIfVisible = function(event){
 };
 
 function initInputValidationWhenVisible(){
-	var inputs = document.querySelectorAll('input[required=required]');
+	var inputs = document.querySelectorAll('input[required=required], select[required=required]');
 	if(!inputs || inputs.length == 0){
 		console.log("InputValidationIfVisible: no illegible inputs found");
 	}
@@ -25,7 +25,7 @@ function initInputValidationWhenVisible(){
 	}
 	var i, e, fn, input;
 	for(i = inputs.length - 1; i >= 0; --i){
-		e = inputs[i];
+		e = inputs[i]; if(!e.form) continue;
 		fn = inputValidateRequiredIfVisible.bind(e);
 		e.removeAttribute("required");
 		e.setAttribute("x-js-validate", "required");
