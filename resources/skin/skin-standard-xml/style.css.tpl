@@ -1079,12 +1079,25 @@ DIV.ui-illustration-central{
 	display: none;
 }
 
+@keyframes el-radio-sel-item-display {
+	0% {
+		opacity: 0;
+		display: none;
+	}
+	50% {
+		opacity: 0.5;
+		display: block;
+	}
+	100% {
+		opacity: 1;
+		display: block;
+	}
+}
+
 DIV.el-radio-sel-item {
 	display: none;
 	margin: 0 0 0 1em;
-	transition-property: display;
-	transition-delay: 5ms;
-	transition-duration: 5ms;
+	animation: el-radio-sel-item-display 0.1s;
 }
 
 DIV.el-radio-sel-item INPUT{
@@ -1095,6 +1108,7 @@ DIV.el-radio-sel-item INPUT{
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item {
 	display: block;
+	opacity: 1;
 }
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item INPUT{
