@@ -1081,11 +1081,10 @@ DIV.ui-illustration-central{
 
 DIV.el-radio-sel-item {
 	display: none;
-	opacity: 0;
-	content-visibility: hidden;
 	margin: 0 0 0 1em;
-	transition-property: opacity;
-	transition-duration: 1ms;
+	transition-property: display;
+	transition-delay: 5ms;
+	transition-duration: 5ms;
 }
 
 DIV.el-radio-sel-item INPUT{
@@ -1096,8 +1095,6 @@ DIV.el-radio-sel-item INPUT{
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item {
 	display: block;
-	opacity: 1;
-	content-visibility: visible;
 }
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item INPUT{

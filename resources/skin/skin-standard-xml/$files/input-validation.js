@@ -4,6 +4,7 @@
 
 
 var inputValidateRequiredIfVisible = function(event){
+	console.log("InputValidationIfVisible: callback, %s, %s", this.name, event?.type);
 	if(!this.checkVisibility() || this.value != ""){
 		this.setCustomValidity("");
 		return;
