@@ -12,13 +12,20 @@ var inputValidateRequiredIfVisible = function(event){
 		this.setCustomValidity("");
 		return;
 	}
-	if(this.form.elements[this.name]?.value != ""){
+	const es = this.form.elements[this.name];
+	if(!es){
+		console.log("InputValidationIfVisible: check, orphan, %s", this.name);
+		this.setCustomValidity("");
+		return;
+	}
+	const ea = "function" === typeof es.forEach ? es : [].concat(es);
+	if(es.value != ""){
 		console.log("InputValidationIfVisible: check, valid, %s", this.name);
-		[].concat(this.form.elements[this.name]).forEach(function(x){x.setCustomValidity("");});
+		ea.forEach(function(x){x.setCustomValidity("");});
 		return;
 	}
 	console.log("InputValidationIfVisible: check, required, %s", this.name);
-	[].concat(this.form.elements[this.name]).forEach(function(x){x.setCustomValidity("Required field.");});
+	ea.forEach(function(x){x.setCustomValidity("Required field.");});
 };
 
 function initInputValidationWhenVisible(){
