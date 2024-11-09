@@ -2,14 +2,22 @@
  * Prevent validation running on invisible inputs
  */
 
+var inputValidateCheckVisible = function(x){
+	return x.checkVisibility({visibilityProperty:true});
+};
 
 var inputValidateRequiredIfVisible = function(event){
-	if(!this.checkVisibility({visibilityProperty:true}) || this.form.elements[this.name]?.value != ""){
-		console.log("InputValidationIfVisible: callback, valid, %s, %s", this.name, event?.type);
+	if(!inputValidateCheckVisible(this) && !Array.from(this.labels??[]).some(inputValidateCheckVisible)){
+		console.log("InputValidationIfVisible: callback, hidden, %s, %s", this.name);
 		this.setCustomValidity("");
 		return;
 	}
-	console.log("InputValidationIfVisible: callback, required, %s, %s", this.name, event?.type);
+	if(this.form.elements[this.name]?.value != ""){
+		console.log("InputValidationIfVisible: callback, valid, %s, %s", this.name);
+		this.setCustomValidity("");
+		return;
+	}
+	console.log("InputValidationIfVisible: callback, required, %s, %s", this.name);
 	this.setCustomValidity("Required field.");
 };
 
@@ -32,7 +40,7 @@ function initInputValidationWhenVisible(){
 		e.setAttribute("x-js-validate", "required");
 		e.addEventListener("change", fn);
 		e.addEventListener("input", fn);
-		e.addEventListener("transitionend", setTimeout.bind(null, fn, 15));
-		setTimeout(fn, 0);
+		e.addEventListener("transitionend", setTimeout.bind(null, fn, 17));
+		setTimeout(fn, 17);
 	}
 }
