@@ -1079,15 +1079,29 @@ DIV.ui-illustration-central{
 	display: none;
 }
 
-.el-radio-sel-item {
+DIV.el-radio-sel-item {
 	display: none;
+	opacity: 0;
 	content-visibility: hidden;
 	margin: 0 0 0 1em;
+	transition-property: opacity;
+	transition-duration: 1ms;
+}
+
+DIV.el-radio-sel-item INPUT{
+	opacity: 0;
+	transition-property: opacity;
+	transition-duration: 1ms;
 }
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item {
 	display: block;
+	opacity: 1;
 	content-visibility: visible;
+}
+
+INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item INPUT{
+	opacity: 1;
 }
 
 INPUT.el-radio {
