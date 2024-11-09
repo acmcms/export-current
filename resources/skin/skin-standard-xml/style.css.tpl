@@ -1092,8 +1092,8 @@ DIV.el-radio-sel-item {
 
 DIV.el-radio-sel-item INPUT{
 	opacity: 0;
-	content-visibility: hidden;
-	transition: opacity 3ms, content-visibility 3ms;
+	visibility: hidden;
+	transition: opacity 3ms, visibility 3ms;
 }
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item {
@@ -1107,7 +1107,7 @@ INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item {
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item INPUT{
 	opacity: 1;
-	content-visibility: visible;
+	visibility: visible;
 }
 
 INPUT.el-radio {
