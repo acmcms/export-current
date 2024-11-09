@@ -5,14 +5,13 @@
 
 var inputValidateRequiredIfVisible = function(event){
 	if(!this.checkVisibility() || this.value != ""){
-		setCustomValidity("");
+		this.setCustomValidity("");
 		return;
 	}
-	setCustomValidity("Required field");
+	this.setCustomValidity("Required field.");
 };
 
 function initInputValidationWhenVisible(){
-	// var inputs = document.getElementsByTagName('input');
 	var inputs = document.querySelectorAll('input[required=required]');
 	if(!inputs || inputs.length == 0){
 		console.log("InputValidationIfVisible: no illegible inputs found");
@@ -23,14 +22,14 @@ function initInputValidationWhenVisible(){
 	if("function" !== typeof inputs[0].checkVisibility){
 		console.log("InputValidationIfVisible: checkVisibility is not supported, won't initialize.");
 	}
-	var i, fn, input;
+	var i, e, fn, input;
 	for(i = inputs.length - 1; i >= 0; --i){
-		input = inputs[i];
-		fn = inputValidateRequiredIfVisible.bind(input);
-		input.removeAttribute("required");
-		input.setAttribute("x-js-validate", "required");
-		input.addEventListener("change", fn);
-		input.addEventListener("input", fn);
+		e = inputs[i];
+		fn = inputValidateRequiredIfVisible.bind(e);
+		e.removeAttribute("required");
+		e.setAttribute("x-js-validate", "required");
+		e.addEventListener("change", fn);
+		e.addEventListener("input", fn);
 		setTimeout(fn, 0);
 	}
 }
