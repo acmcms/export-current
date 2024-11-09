@@ -327,18 +327,18 @@ INPUT[type="text"]:invalid,
 INPUT[type="string"]:invalid, 
 INPUT[type="number"]:invalid, 
 INPUT[type="password"]:invalid {
-	background-color: #fee;
+	background-color: #fffafa;
 	outline: 4pt solid #fcc;
 	outline-offset: -0.75pt;
 }
 
 SELECT:invalid{
-	outline: 4pt solid #fcc;
+	outline: 4pt solid #ffcccc;
 	outline-offset: -0.75pt;
 }
 
 INPUT.el-radio[type="radio"]:invalid+LABEL.el-radio {
-	background-color: #fee;
+	background-color: #ffe0e0;
 }
 
 INPUT, SELECT{
@@ -1075,9 +1075,18 @@ DIV.ui-illustration-central{
 	opacity: 1;
 }
 
-
-.el-radio-tab-item, .el-radio-sel-item {
+.el-radio-tab-item {
 	display: none;
+}
+
+.el-radio-sel-item {
+	display: none;
+	content-visibility: hidden;
+}
+
+INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item {
+	display: block;
+	content-visibility: visible;
 }
 
 .el-radio-sel-item {

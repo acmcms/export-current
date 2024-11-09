@@ -1185,9 +1185,6 @@
 						<div x-ui-debug="input/select/edit">
 							<xsl:variable name="id" select="generate-id($format)"/>
 							<xsl:variable name="itemZoom"><xsl:value-of select="$format/@zoom" /><xsl:if test="not($format/@zoom)"><xsl:value-of select="$zoom" /></xsl:if></xsl:variable>
-							<style><xsl:for-each select="option | options">
-									#m<xsl:value-of select='$id'/>-<xsl:value-of select='@value'/>:checked ~ #s<xsl:value-of select="$id"/>-<xsl:value-of select="@value"/>{ display: block; opacity: 1; }
-							</xsl:for-each></style>
 							<xsl:for-each select="option | options">
 								<input id="m{$id}-{@value}" type="radio" name="{$format/@name}" value="{@value}" class="el-radio st-radio-sel">
 									<xsl:if test="$value = @value">
@@ -1196,8 +1193,9 @@
 									<xsl:if test="not($format/@required = 'false')">
 										<xsl:attribute name="required">required</xsl:attribute>
 									</xsl:if>
-								</input><label for="m{$id}-{@value}" class="el-radio st-radio-sel"><xsl:value-of select='@title'/></label>
-								<div id="s{$id}-{@value}" class="el-radio-sel-item">
+								</input><label for="m{$id}-{@value}" class="el-radio st-radio-sel">
+									<xsl:value-of select='@title'/>
+								</label><div id="s{$id}-{@value}" class="el-radio-sel-item">
 									<xsl:call-template name="edit">
 										<xsl:with-param name="format" select="fields"/>
 										<xsl:with-param name="values" select="values"/>
@@ -1328,10 +1326,6 @@
 		<div class="table-edit">
 			<div class="table ui-edit-table-{$zoom} ui-select-view">
 				<xsl:variable name="id" select="generate-id($format)"/>
-				<style><xsl:for-each select="$format/option">
-					<xsl:variable name="ido" select="generate-id(.)"/>
-					#m<xsl:value-of select='$id'/>-<xsl:value-of select='$ido'/>:checked ~ #s<xsl:value-of select="$id"/>-<xsl:value-of select="$ido"/>{ display: block; opacity: 1; }
-				</xsl:for-each></style>
 				<xsl:for-each select="$format/option">
 					<div class="hl hl-bn-user hl-hd-false hl-ui-true idx-box-cell">
 						<xsl:variable name="ido" select="generate-id(.)"/>
@@ -1342,8 +1336,9 @@
 							<xsl:if test="not($format/@required = 'false')">
 								<xsl:attribute name="required">required</xsl:attribute>
 							</xsl:if>
-						</input><label for="m{$id}-{$ido}" class="el-radio st-radio-sel"><xsl:value-of select='@title'/></label>
-						<div id="s{$id}-{$ido}" class="el-radio-sel-item">
+						</input><label for="m{$id}-{$ido}" class="el-radio st-radio-sel">
+							<xsl:value-of select='@title'/>
+						</label><div id="s{$id}-{$ido}" class="el-radio-sel-item">
 							<xsl:apply-templates select="."/>
 						</div>
 					</div>
