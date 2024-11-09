@@ -8,17 +8,17 @@ var inputValidateCheckVisible = function(x){
 
 var inputValidateRequiredIfVisible = function(event){
 	if(!inputValidateCheckVisible(this) && !Array.from(this.labels??[]).some(inputValidateCheckVisible)){
-		console.log("InputValidationIfVisible: callback, hidden, %s, %s", this.name);
+		console.log("InputValidationIfVisible: check, hidden, %s", this.name);
 		this.setCustomValidity("");
 		return;
 	}
 	if(this.form.elements[this.name]?.value != ""){
-		console.log("InputValidationIfVisible: callback, valid, %s, %s", this.name);
-		this.setCustomValidity("");
+		console.log("InputValidationIfVisible: check, valid, %s", this.name);
+		this.form.elements[this.name].forEach(function(x){x.setCustomValidity("");});
 		return;
 	}
-	console.log("InputValidationIfVisible: callback, required, %s, %s", this.name);
-	this.setCustomValidity("Required field.");
+	console.log("InputValidationIfVisible: check, required, %s", this.name);
+	this.form.elements[this.name].forEach(function(x){x.setCustomValidity("Required field.");});
 };
 
 function initInputValidationWhenVisible(){
