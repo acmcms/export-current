@@ -1082,15 +1082,12 @@ DIV.ui-illustration-central{
 .el-radio-sel-item {
 	display: none;
 	content-visibility: hidden;
+	margin: 0 0 0 1em;
 }
 
 INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item {
 	display: block;
 	content-visibility: visible;
-}
-
-.el-radio-sel-item {
-	margin: 0 0 0 1em;
 }
 
 INPUT.el-radio {

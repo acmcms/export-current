@@ -109,9 +109,11 @@
 							require.script([
 								srot + "skin-jsclient/js/Layouts/Layout.js",
 								srot + "skin-jsclient/js/Layouts/Date.js",
-								srot + "skin-standard-xml/$files/dates.js"
+								srot + "skin-standard-xml/$files/dates.js",
+								srot + "skin-standard-xml/$files/input-validation.js",
 							], function(){
 								initDates();
+								initInputValidationWhenVisible();
 							});
 							
 							<xsl:if test="client/time">

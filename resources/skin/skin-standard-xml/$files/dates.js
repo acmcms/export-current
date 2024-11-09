@@ -1,6 +1,6 @@
-// IE wake up!
-document.createElement('date');
-
+/**
+ * Show ISO MS GMT dates in user format and timezone
+ */
 
 var dateParseISO = (new Date('1970-01-01T00:00:00.001Z')).getTime() == 1
 	? function(x){
@@ -33,9 +33,7 @@ var dateParseISO = (new Date('1970-01-01T00:00:00.001Z')).getTime() == 1
 	};
 
 function initDates(){
-	// IE wake up!
-	document.createElement('date');
-	var dates = document.getElementsByTagName('date');
+	var dates = document.querySelectorAll('date');
 	for(var i = dates.length - 1; i >= 0; --i){
 		var cell = dates[i];
 		var value = cell.innerHTML;
