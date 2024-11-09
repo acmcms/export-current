@@ -4,11 +4,12 @@
 
 
 var inputValidateRequiredIfVisible = function(event){
-	console.log("InputValidationIfVisible: callback, %s, %s", this.name, event?.type);
-	if(!this.checkVisibility({visibilityProperty:true}) || this.form.elements[this.name].value != ""){
+	if(!this.checkVisibility({visibilityProperty:true}) || this.form.elements[this.name]?.value != ""){
+		console.log("InputValidationIfVisible: callback, valid, %s, %s", this.name, event?.type);
 		this.setCustomValidity("");
 		return;
 	}
+	console.log("InputValidationIfVisible: callback, required, %s, %s", this.name, event?.type);
 	this.setCustomValidity("Required field.");
 };
 
