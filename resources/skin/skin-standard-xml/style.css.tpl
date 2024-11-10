@@ -1090,7 +1090,8 @@ DIV.el-radio-sel-item {
 	overflow: hidden;
 }
 
-DIV.el-radio-sel-item INPUT{
+DIV.el-radio-sel-item INPUT, 
+DIV.el-radio-sel-item SELECT{
 	opacity: 0;
 	visibility: hidden;
 	transition: opacity 3ms, visibility 3ms;
@@ -1105,7 +1106,8 @@ INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item {
 	width: unset;
 }
 
-INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item INPUT{
+INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item INPUT, 
+INPUT.el-radio:checked + LABEL.el-radio + DIV.el-radio-sel-item SELECT{
 	opacity: 1;
 	visibility: visible;
 }

@@ -4,17 +4,15 @@
 
 
 var inputValidateRequiredIfVisible = function(event){
-	function checkVisible(x){
-		return x.checkVisibility({visibilityProperty:true});
-	}
-	
 	const es = this.form?.elements[this.name];
 	if(!es){
 		console.log("InputValidationIfVisible: check, orphan, %s", this.name);
 		return;
 	}
 	const ea = "function" === typeof es.forEach ? es : [].concat(es);
-	if(![this].concat(Array.from(this.labels??[])).some(checkVisible)){
+	if(![this].concat(Array.from(this.labels??[])).some(function(x){
+			return x.checkVisibility({visibilityProperty:true});
+	})){
 		console.log("InputValidationIfVisible: check, hidden, %s", this.name);
 		ea.forEach(function(x){ 
 			x.setAttribute("disabled", "disabled");
@@ -50,7 +48,10 @@ function initInputValidationWhenVisible(){
 	}
 	var i, e, fn, input;
 	for(i = inputs.length - 1; i >= 0; --i){
-		e = inputs[i]; if(!e.form || !e.name || e.hasAttribute("disabled")) continue;
+		e = inputs[i]; if(!e.form || !e.name || e.hasAttribute("disabled")) {
+			console.log("InputValidationIfVisible: skip element: %s", e.name || e);
+			continue;
+		}
 		fn = inputValidateRequiredIfVisible.bind(e);
 		e.removeAttribute("required");
 		e.setAttribute("x-js-validate", "required");
