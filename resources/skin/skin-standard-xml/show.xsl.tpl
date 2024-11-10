@@ -387,6 +387,17 @@
 			</xsl:for-each>
 		</html>
 	</xsl:template>
+
+	<xsl:template name="input-attributes">
+		<xsl:param name="format" />
+
+		<xsl:if test="not($format/@required = 'false')">
+			<xsl:attribute name="required">required</xsl:attribute>
+		</xsl:if>
+		<xsl:if test="$format/@disabled = 'true'">
+			<xsl:attribute name="disabled">disabled</xsl:attribute>
+		</xsl:if>
+	</xsl:template>
 	
 	<xsl:template name="split-list">
 		<xsl:param name="format" />
@@ -455,6 +466,9 @@
 							<xsl:if test="$format/@selected = '*' or $format/@selected = $inputValue or $value/../@*[$format/@selected and local-name() = $format/@selected]">
 								<xsl:attribute name="checked">checked</xsl:attribute>
 							</xsl:if>
+							<xsl:call-template name="input-attributes">
+								<xsl:with-param name="format" select="$format" />
+							</xsl:call-template>
 							<xsl:if test="not($format/@required = 'false')">
 								<xsl:attribute name="required">required</xsl:attribute>
 							</xsl:if>
@@ -465,6 +479,9 @@
 							<xsl:if test="$format/@selected = $inputValue or $parentInputValue = $inputValue">
 								<xsl:attribute name="checked">checked</xsl:attribute>
 							</xsl:if>
+							<xsl:call-template name="input-attributes">
+								<xsl:with-param name="format" select="$format" />
+							</xsl:call-template>
 							<xsl:if test="not($format/@required = 'false')">
 								<xsl:attribute name="required">required</xsl:attribute>
 							</xsl:if>
@@ -472,6 +489,9 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<input type="{$format/@variant}" name="{$format/@name}" value="{$inputValue}" x-ui-debug="formatted/input/other">
+							<xsl:call-template name="input-attributes">
+								<xsl:with-param name="format" select="$format" />
+							</xsl:call-template>
 							<xsl:if test="$format/@required = 'true'">
 								<xsl:attribute name="required">required</xsl:attribute>
 							</xsl:if>
@@ -1099,6 +1119,9 @@
 			</xsl:when>
 			<xsl:when test="$format/@type='price' or $format/@variant='price'">
 				<input type="number" step="0.01" min="0" name="{$format/@name}" value="{$value}" x-ui-debug="input/price {$zoom}">
+					<xsl:call-template name="input-attributes">
+						<xsl:with-param name="format" select="$format" />
+					</xsl:call-template>
 					<xsl:if test="not($format/@required = 'false')">
 						<xsl:attribute name="required">required</xsl:attribute>
 					</xsl:if>
@@ -1166,6 +1189,9 @@
 									<xsl:if test="$value = @value">
 										<xsl:attribute name="checked">checked</xsl:attribute>
 									</xsl:if>
+									<xsl:call-template name="input-attributes">
+										<xsl:with-param name="format" select="$format" />
+									</xsl:call-template>
 									<xsl:if test="not($format/@required = 'false')">
 										<xsl:attribute name="required">required</xsl:attribute>
 									</xsl:if>
@@ -1192,6 +1218,9 @@
 									<xsl:if test="$value = @value">
 										<xsl:attribute name="checked">checked</xsl:attribute>
 									</xsl:if>
+									<xsl:call-template name="input-attributes">
+										<xsl:with-param name="format" select="$format" />
+									</xsl:call-template>
 									<xsl:if test="not($format/@required = 'false')">
 										<xsl:attribute name="required">required</xsl:attribute>
 									</xsl:if>
@@ -1218,6 +1247,9 @@
 									<xsl:if test="$value = @value">
 										<xsl:attribute name="checked">checked</xsl:attribute>
 									</xsl:if>
+									<xsl:call-template name="input-attributes">
+										<xsl:with-param name="format" select="$format" />
+									</xsl:call-template>
 									<xsl:if test="not($format/@required = 'false')">
 										<xsl:attribute name="required">required</xsl:attribute>
 									</xsl:if>
@@ -1227,6 +1259,9 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<select type="select" name="{$format/@name}" value="{$value}">
+							<xsl:call-template name="input-attributes">
+								<xsl:with-param name="format" select="$format" />
+							</xsl:call-template>
 							<xsl:if test="not($format/@required = 'false')">
 								<xsl:attribute name="required">required</xsl:attribute>
 							</xsl:if>
@@ -1265,6 +1300,9 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<input type="{$format/@type}" name="{$format/@name}" value="{$value}">
+					<xsl:call-template name="input-attributes">
+						<xsl:with-param name="format" select="$format" />
+					</xsl:call-template>
 					<xsl:if test="not($format/@required = 'false')">
 						<xsl:attribute name="required">required</xsl:attribute>
 					</xsl:if>
@@ -1335,6 +1373,9 @@
 							<xsl:if test="$values/value = @value">
 								<xsl:attribute name="checked">checked</xsl:attribute>
 							</xsl:if>
+							<xsl:call-template name="input-attributes">
+								<xsl:with-param name="format" select="$format" />
+							</xsl:call-template>
 							<xsl:if test="not($format/@required = 'false')">
 								<xsl:attribute name="required">required</xsl:attribute>
 							</xsl:if>
