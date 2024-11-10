@@ -904,7 +904,7 @@
 		<xsl:if test="($format/@name or $format/@field) and $value and $format/@type='constant'">
 			<xsl:variable name="fieldName"><xsl:value-of select="$format/@field"/><xsl:value-of select="$format/@name[not($format/@field)]"/></xsl:variable>
 			<xsl:if test="$fieldName and $fieldName != '' and $fieldName != '.'">
-				<input type="hidden" name="{$fieldName}" value="{$value} x-ui-input="true" />
+				<input type="hidden" name="{$fieldName}" value="{$value}" x-ui-input="true" />
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
