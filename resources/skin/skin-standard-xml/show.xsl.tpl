@@ -110,7 +110,7 @@
 								srot + "skin-jsclient/js/Layouts/Layout.js",
 								srot + "skin-jsclient/js/Layouts/Date.js",
 								srot + "skin-standard-xml/$files/dates.js",
-								srot + "skin-standard-xml/$files/input-visibility.js",
+								srot + "skin-standard-xml/$files/input-label-block-visibility.js",
 							], function(){
 								initDates();
 								initInputDisableInvisible();
@@ -391,11 +391,16 @@
 	<xsl:template name="input-attributes">
 		<xsl:param name="format" />
 
-		<xsl:if test="not($format/@required = 'false')">
-			<xsl:attribute name="required">required</xsl:attribute>
+		<xsl:if test="not($format/@disabled = 'true')">
+			<xsl:attribute name="x-ui-input">true</xsl:attribute>
 		</xsl:if>
+		
 		<xsl:if test="$format/@disabled = 'true'">
 			<xsl:attribute name="disabled">disabled</xsl:attribute>
+		</xsl:if>
+		
+		<xsl:if test="not($format/@required = 'false')">
+			<xsl:attribute name="required">required</xsl:attribute>
 		</xsl:if>
 	</xsl:template>
 	
