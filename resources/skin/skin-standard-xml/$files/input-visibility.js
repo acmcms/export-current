@@ -17,13 +17,12 @@ var inputVisibilityUpdate = function(event){
 		ea.forEach(function(x){ 
 			x.removeAttribute("disabled"); 
 		});
-	}else{}
+	}else{
 		console.log("InputVisibility: check, hidden, %s", this.name);
 		ea.forEach(function(x){ 
 			x.setAttribute("disabled", "disabled");
 		});
 	}
-	return;
 };
 
 function initInputDisableInvisible(){
