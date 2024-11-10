@@ -394,13 +394,26 @@
 		<xsl:if test="not($format/@disabled = 'true')">
 			<xsl:attribute name="x-ui-input">true</xsl:attribute>
 		</xsl:if>
-		
 		<xsl:if test="$format/@disabled = 'true'">
 			<xsl:attribute name="disabled">disabled</xsl:attribute>
 		</xsl:if>
-		
 		<xsl:if test="not($format/@required = 'false')">
 			<xsl:attribute name="required">required</xsl:attribute>
+		</xsl:if>
+		<xsl:if test="$format/@step">
+			<xsl:attribute name="step"><xsl:value-of select="$format/@step"/></xsl:attribute>
+		</xsl:if>
+		<xsl:if test="$format/@min">
+			<xsl:attribute name="min"><xsl:value-of select="$format/@min"/></xsl:attribute>
+		</xsl:if>
+		<xsl:if test="$format/@max">
+			<xsl:attribute name="max"><xsl:value-of select="$format/@max"/></xsl:attribute>
+		</xsl:if>
+		<xsl:if test="$format/@size">
+			<xsl:attribute name="size"><xsl:value-of select="$format/@size"/></xsl:attribute>
+		</xsl:if>
+		<xsl:if test="$format/@pattern">
+			<xsl:attribute name="pattern"><xsl:value-of select='$format/@pattern'/></xsl:attribute>
 		</xsl:if>
 	</xsl:template>
 	
@@ -1286,18 +1299,6 @@
 					<xsl:call-template name="input-attributes">
 						<xsl:with-param name="format" select="$format" />
 					</xsl:call-template>
-					<xsl:if test="$format/@step">
-						<xsl:attribute name="step"><xsl:value-of select="$format/@step"/></xsl:attribute>
-					</xsl:if>
-					<xsl:if test="$format/@min">
-						<xsl:attribute name="min"><xsl:value-of select="$format/@min"/></xsl:attribute>
-					</xsl:if>
-					<xsl:if test="$format/@max">
-						<xsl:attribute name="max"><xsl:value-of select="$format/@max"/></xsl:attribute>
-					</xsl:if>
-					<xsl:if test="$format/@size">
-						<xsl:attribute name="size"><xsl:value-of select="$format/@size"/></xsl:attribute>
-					</xsl:if>
 				</input>
 			</xsl:otherwise>
 		</xsl:choose>
