@@ -328,7 +328,7 @@
 									<div class="ui-document-out">
 										<div class="ui-document-in">
 											<xsl:if test="@sub-title or title/@sub-title">
-												<div class="tbar-up ui-blk-caption"><xsl:value-of select='@sub-title | title/@sub-title'/></div>
+												<!-- <div class="tbar-up ui-blk-caption"><xsl:value-of select='@sub-title | title/@sub-title'/></div> -->
 											</xsl:if>
 											<xsl:apply-templates select="."/>
 										</div>
