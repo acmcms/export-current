@@ -4,7 +4,7 @@
 
 
 var blockVisibilityUpdate = function(block, event){
-	const es = block.querySelectorAll("INPUT[x-ui-input=true]");
+	const es = block.querySelectorAll("INPUT[x-ui-input=true], SELECT[x-ui-input=true], TEXTAREA[x-ui-input=true]");
 	if(!es){
 		console.log("blockVisibility: no eligible inputs, %s", this.name);
 		return;
