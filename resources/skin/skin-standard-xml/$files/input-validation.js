@@ -39,12 +39,15 @@ function initInputValidationWhenVisible(){
 	var inputs = document.querySelectorAll("input[required=required], select[required=required]");
 	if(!inputs || inputs.length == 0){
 		console.log("InputValidationIfVisible: no illegible inputs found");
+		return;
 	}
 	if("function" !== typeof inputs[0].setCustomValidity){
 		console.log("InputValidationIfVisible: setCustomValidity is not supported, won't initialize.");
+		return;
 	}
 	if("function" !== typeof inputs[0].checkVisibility){
 		console.log("InputValidationIfVisible: checkVisibility is not supported, won't initialize.");
+		return;
 	}
 	var i, e, fn, input;
 	for(i = inputs.length - 1; i >= 0; --i){
