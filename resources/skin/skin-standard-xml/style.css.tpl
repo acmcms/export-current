@@ -335,6 +335,7 @@ INPUT[type="password"]:invalid {
 
 SELECT:invalid{
 	outline: 4pt solid #ffcccc;
+	outline: 400em solid rgba(255,100,100,0.25);
 	outline-offset: -0.75pt;
 }
 
