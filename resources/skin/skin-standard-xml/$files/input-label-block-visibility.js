@@ -33,9 +33,9 @@ function initInputDisableInvisible(){
 		console.log("blockVisibility: checkVisibility is not supported, won't initialize.");
 		return;
 	}
-	var idx, block, input, fn;
-	for(idx = blocks.length - 1; i >= 0; --i){
-		block = blocks[idx];
+	var i, block, input, fn;
+	for(i = blocks.length - 1; i >= 0; --i){
+		block = blocks[i];
 		input = e.previousElementSibling.previousElementSibling;
 		if(!input.form || input.hasAttribute("disabled")) {
 			console.log("InputVisibility: skip element: %s", e.name || e);

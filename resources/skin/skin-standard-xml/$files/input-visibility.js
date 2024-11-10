@@ -35,17 +35,17 @@ function initInputDisableInvisible(){
 		console.log("InputVisibility: checkVisibility is not supported, won't initialize.");
 		return;
 	}
-	var i, e, fn;
+	var i, input, fn;
 	for(i = inputs.length - 1; i >= 0; --i){
-		e = inputs[i]; if(!e.form || !e.name || e.hasAttribute("disabled")) {
-			console.log("InputVisibility: skip element: %s", e.name || e);
+		input = inputs[i]; if(!input.form || !input.name || input.hasAttribute("disabled")) {
+			console.log("InputVisibility: skip element: %s", input.name || input);
 			continue;
 		}
-		fn = inputVisibilityUpdate.bind(e);
-		e.setAttribute("x-js-validate", "disable-invisible");
-		e.addEventListener("change", fn);
-		e.addEventListener("input", fn);
-		e.addEventListener("transitionend", setTimeout.bind(null, fn, 17));
+		fn = inputVisibilityUpdate.bind(input);
+		input.setAttribute("x-js-validate", "disable-invisible");
+		input.addEventListener("change", fn);
+		input.addEventListener("input", fn);
+		input.addEventListener("transitionend", setTimeout.bind(null, fn, 17));
 		setTimeout(fn, 17);
 	}
 }
