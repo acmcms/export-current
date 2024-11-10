@@ -903,7 +903,7 @@
 		</xsl:choose>
 		<xsl:if test="($format/@name or $format/@field) and $value and $format/@type='constant'">
 			<xsl:variable name="fieldName"><xsl:value-of select="$format/@field"/><xsl:value-of select="$format/@name[not($format/@field)]"/></xsl:variable>
-			<xsl:if test="$fieldName and $fieldName != '' and $fieldName != '.'">
+			<xsl:if test="$fieldName and $fieldName != '' and $fieldName != '.' and $format/@disabled != 'true'">
 				<input type="hidden" name="{$fieldName}" value="{$value}" x-ui-input="true" />
 			</xsl:if>
 		</xsl:if>
@@ -1138,7 +1138,9 @@
 					</xsl:attribute>
 					<xsl:apply-templates select="$value"/>
 				</a>
-				<input type="hidden" name="{$format/@name}" value="{$value}" x-ui-input="true" />
+				<xsl:if test="$format/@disabled != 'true'">
+					<input type="hidden" name="{$format/@name}" value="{$value}" x-ui-input="true" />
+				</xsl:if>
 			</xsl:when>
 			<xsl:when test="$format/@type='boolean'">
 				<select type="select" name="{$format/@name}" value="{$value}">
@@ -1446,7 +1448,9 @@
 		<xsl:variable name="itemZoom"><xsl:value-of select="$format/@zoom" /><xsl:if test="not($format/@zoom)"><xsl:value-of select="$zoom" /></xsl:if></xsl:variable>
 		<xsl:choose>
 			<xsl:when test="$format/@type='hidden'">
-				<input type="hidden" name="{$format/@name}" value="{$value}" x-ui-input="true" />
+				<xsl:if test="$format/@disabled != 'true'">
+					<input type="hidden" name="{$format/@name}" value="{$value}" x-ui-input="true" />
+				</xsl:if>
 			</xsl:when>
 			<xsl:when test="$zoom='compact'">
 				<span class="ui-fldbox-{$zoom} hl-bn-{$format/@hl} {$format/@cssClass}">
