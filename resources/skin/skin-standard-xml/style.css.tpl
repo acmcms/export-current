@@ -329,7 +329,7 @@ INPUT[type="number"]:invalid,
 INPUT[type="password"]:invalid {
 	background-color: #fffafa;
 	outline: 4pt solid #fcc;
-	outline: 400em solid #fcc;
+	outline: 400em solid rgba(255,0,0,0.25);
 	outline-offset: -0.75pt;
 }
 
