@@ -236,6 +236,7 @@ DIV.submit{
 
 TABLE.table>TBODY>TR>TD, TABLE.table>THEAD>TR>TH, TABLE.table>TBODY>TR>TH {
 	padding: 3pt;
+	overflow: hidden;
 }
 
 FORM{
