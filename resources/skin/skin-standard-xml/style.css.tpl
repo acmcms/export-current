@@ -1187,6 +1187,20 @@ INPUT.el-radio + LABEL.st-radio-sel:active::before {
 	white-space: nowrap;
 }
 
+.ui-chk-master, .ui-chk-label{
+	line-height: 1.1em; 
+	float:right; 
+	height: 1.1em; 
+}
+
+.ui-chk-master{
+	width: 1em;
+}
+
+.ui-chk-label{
+	margin-left: 0.3em;
+}
+
 @media print {
 	HTML{
 		font-size: 80%;

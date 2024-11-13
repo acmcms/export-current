@@ -465,6 +465,7 @@ function internReplaceField(edit, field){
 		if(edit && field.list && field.list.columns && field.list.columns.map){
 			const list = field.list
 			const input = field.type === "set" ? "checkbox" : "radio";
+			const required = input === "checkbox" ? false : undefined;
 			return Object.create(field, {
 				list : { 
 					value : {
@@ -477,6 +478,7 @@ function internReplaceField(edit, field){
 								type : "input",
 								extraClass : "ui-align-center",
 								variant : input,
+								required : required,
 								selected : field.selected,
 								name : field.id || field.name
 							}].concat(list.columns)

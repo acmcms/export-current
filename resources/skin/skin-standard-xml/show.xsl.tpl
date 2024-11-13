@@ -1288,7 +1288,11 @@
 					<xsl:otherwise>
 						<table value="{$value}">
 							<xsl:for-each select="option | options">
-								<tr><label><td><input type="checkbox" name="{$format/@name}" value="{@value}"><xsl:if test="$format/@selected = '*' or $format/@selected = @value or @*[$format/@selected and local-name() = $format/@selected]"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input></td><td><xsl:value-of select="@title"/></td></label></tr>
+								<tr><label><td><input type="checkbox" name="{$format/@name}" value="{@value}">
+									<xsl:if test="$format/@selected = '*' or $format/@selected = @value or @*[$format/@selected and local-name() = $format/@selected]">
+										<xsl:attribute name="checked">checked</xsl:attribute>
+									</xsl:if>
+								</input></td><td><xsl:value-of select="@title"/></td></label></tr>
 							</xsl:for-each>
 						</table>
 					</xsl:otherwise>
@@ -2097,8 +2101,8 @@
 					</xsl:if>
 					<xsl:if test="detail">
 						<div style="margin-top: -1em; font-size:80%">
-							<label for="{generate-id(.)}" class="ui-chk-label" style="line-height: 1.1em; float:right; height: 1.1em; margin-left: 0.3em">show detail</label>
-							<input class="ui-chk-master" style="line-height: 1.1em; width: 1em; height: 1.1em; float:right" id="{generate-id(.)}" type="checkbox"/>
+							<label for="{generate-id(.)}" class="ui-chk-label">show detail</label>
+							<input class="ui-chk-master" id="{generate-id(.)}" type="checkbox"/>
 							<div class="ui-clear"></div><div style="margin-top: 0.2em" class="ui-chk-slave"><xsl:apply-templates select="detail"/></div>
 						</div>
 					</xsl:if>
