@@ -66,9 +66,20 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 
 		peer.serialTxqQueue(this.serial, this);
 
-		this.timer = TIMER_IMPL.bind(this);
-		setTimeout(this.timer, ( this.retryDelay = (message.retryDelay || this.defaultRetryDelay) ));
-		return this;
+		if( (this.retryDelay = /* message.retryDelay ?? */ this.defaultRetryDelay) > 100 ){
+			/** do retries **/
+			this.timer = TIMER_IMPL.bind(this);
+			setTimeout(this.timer, Math.min( //
+				(message.queryTTL || this.defaultQueryTtl), 
+				this.retryDelay
+			));
+			return this;
+		}else{
+			/** no retries **/
+			this.timer = TIMER_NO_RETRIES_IMPL.bind(this);
+			setTimeout(this.timer, (message.queryTTL || this.defaultQueryTtl));
+			return this;
+		}
 	},
 	/* instance */
 	{
@@ -95,10 +106,16 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 		 * default query TTL (when not specified by: message.queryTTL)
 		 */
 		"defaultQueryTtl" : {
-			value : 5000
+			value : 6000
 		},
 		"defaultRetryDelay" : {
 			value : 600
+		},
+		"defaultRetryDelayMultiply" : {
+			value : 1.15
+		},
+		"defaultRetryDelayIncrement" : {
+			value : 450
 		},
 		"cancel" : {
 			/**
@@ -242,12 +259,6 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 	},
 	/* static */
 	{
-		"DEFAULT_QUERY_TTL" : {
-			value : 5000
-		},
-		"DEFAULT_RETRY_DELAY" : {
-			value : 600
-		},
 		"sendOnce" : {
 			value : function(peer, message){
 				if(peer.sendSingle( message.serial ? message : Object.create(message) )){
@@ -291,9 +302,31 @@ const TIMER_IMPL = ae3.Concurrent.wrapSync(function(/* locals: */deadLine){
 		if(this.peer.sendSingle(this.message)){
 			this.logDetail("timer-repeat", this.peerName, this.message);
 			// console.log('>>> >>> %s: timer, repeat', this);
-			setTimeout(this.timer, ( this.retryDelay += (this.message.retryDelayGrow||0) ));
+			setTimeout( this.timer, Math.min( //
+				deadLine + 100, 
+				( this.retryDelay = //
+					this.retryDelay * ( /* this.message.retryDelayMultiply ?? */ this.defaultRetryMultiply) // 
+					+ ( /* this.message.retryDelayIncrement ?? */ this.defaultRetryIncrement) //
+				) //
+			));
 			return true;
 		}
+	}
+	this.logDetail("expired", "timer", "task timeout expired");
+	delete this.left;
+	setTimeout(FINISH_FN_CALL.bind(this, this.timeoutReply), 0);
+	return;
+});
+
+const TIMER_NO_RETRIES_IMPL = ae3.Concurrent.wrapSync(function(/* locals: */deadLine){
+	if(!this.left){
+		// console.log('>>> >>> %s: timer, already done', this);
+		return;
+	}
+	deadLine = this.expire - Date.now() - 100;
+	if(deadLine > 0){
+		setTimeout(this.timer, deadLine + 100);
+		return;
 	}
 	this.logDetail("expired", "timer", "task timeout expired");
 	delete this.left;

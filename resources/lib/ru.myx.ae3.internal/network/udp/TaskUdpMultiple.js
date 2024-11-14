@@ -193,9 +193,6 @@ const TaskUdpMultiple = module.exports = ae3.Class.create(
 	},
 	/* static */
 	{
-		DEFAULT_QUERY_TTL : {
-			value : 5200
-		},
 		CountReplies : {
 			execute : "once", get : function(){
 				return require("./TaskUdpMultipleCountReplies");
