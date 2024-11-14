@@ -109,7 +109,7 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 			value : 6000
 		},
 		"defaultRetryDelay" : {
-			value : 600
+			value : 500
 		},
 		"defaultRetryDelayMultiply" : {
 			value : 1.15
