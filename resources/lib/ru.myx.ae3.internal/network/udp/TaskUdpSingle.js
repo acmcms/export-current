@@ -305,8 +305,8 @@ const TIMER_IMPL = ae3.Concurrent.wrapSync(function(/* locals: */deadLine){
 			setTimeout( this.timer, Math.min( //
 				deadLine + 100, 
 				( this.retryDelay = //
-					this.retryDelay * ( /* this.message.retryDelayMultiply ?? */ this.defaultRetryMultiply) // 
-					+ ( /* this.message.retryDelayIncrement ?? */ this.defaultRetryIncrement) //
+					this.retryDelay * ( /* this.message.retryDelayMultiply ?? */ this.defaultRetryDelayMultiply) // 
+					+ ( /* this.message.retryDelayIncrement ?? */ this.defaultRetryDelayIncrement) //
 				) //
 			));
 			return true;
