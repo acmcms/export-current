@@ -17,7 +17,7 @@ const Principal = module.exports = ae3.Class.create(
 	/* inherit */
 	undefined,
 	/* constructor */
-	function(key, dst, secret, serial){
+	function(key, dst, secret, serial, previousPeer){
 		if(dst){
 			if('string' === typeof dst){
 				dst = socketAddress(dst);
@@ -39,12 +39,12 @@ const Principal = module.exports = ae3.Class.create(
 			},
 			'dst' : {
 				writable : true, 
-				value : dst || null
+				value : dst || previousPeer?.dst || null
 			},
 			'secret' : {
 				writable : true, 
 				configurable : true, 
-				value : secret || null
+				value : secret || previousPeer?.secret || null
 			},
 			'sRx' : {
 				writable : true, 
@@ -337,7 +337,7 @@ const Principal = module.exports = ae3.Class.create(
 		
 		
 		/**
-		 * outgoing query task is waiting for replies with given serial
+		 * given outgoing query `task` is waiting for replies with given `serial`
 		 *
 		 */
 		serialTxqQueue : {
@@ -373,10 +373,10 @@ const Principal = module.exports = ae3.Class.create(
 		 *
 		 * further reply messages with given serial are discarded.
 		 */
-		serialTxqCache : {
+		serialRxrCache : {
 			value : function(serial){
-				console.log('>>>>>> %s: serialTxqCache', this);
-				throw new Error("'serialTxqCache' of Principal is an abstract method and should be overriden!");
+				console.log('>>>>>> %s: serialRxrCache', this);
+				throw new Error("'serialRxrCache' of Principal is an abstract method and should be overriden!");
 			}
 		},
 		/**
