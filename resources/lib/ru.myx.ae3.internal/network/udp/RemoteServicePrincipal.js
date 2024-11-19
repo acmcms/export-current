@@ -22,8 +22,8 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 	/* inherit */
 	Principal,
 	/* constructor */
-	function(key, dst, secret, serial, previousPeer){
-		this.Principal(key, dst, secret, serial, previousPeer);
+	function(key, dst, secret, serial){
+		this.Principal(key, dst, secret, serial);
 		
 		Object.defineProperties(this, {
 			"serialTxqQueueWindow" : {

@@ -17,7 +17,7 @@ const Principal = module.exports = ae3.Class.create(
 	/* inherit */
 	undefined,
 	/* constructor */
-	function(key, dst, secret, serial, previousPeer){
+	function(key, dst, secret, serial){
 		if(dst){
 			if('string' === typeof dst){
 				dst = socketAddress(dst);
@@ -39,24 +39,24 @@ const Principal = module.exports = ae3.Class.create(
 			},
 			'dst' : {
 				writable : true, 
-				value : dst || previousPeer?.dst || null
+				value : dst || null
 			},
 			'secret' : {
 				writable : true, 
 				configurable : true, 
-				value : secret || previousPeer?.secret || null
+				value : secret || null
 			},
 			'sRx' : {
 				writable : true, 
 				enumerable : true, 
 				configurable : true, 
-				value : serial || 0
+				value : serial ?? 0
 			},
 			'sTx' : {
 				writable : true, 
 				enumerable : true, 
 				configurable : true, 
-				value : serial || 0
+				value : serial ?? 0
 			},
 		});
 		return this;
@@ -115,14 +115,14 @@ const Principal = module.exports = ae3.Class.create(
 		 */
 		updateSecret : {
 			value : function(secret, serial){
-				console.log(">>>>>> %s: Secret update: secret changed: %s, serial: %s", this, (secret != this.secret), serial);
+				console.log(">>>>>> %s: Secret update: secret changed: %s, serial: %s", this, (secret && secret != this.secret), serial);
 
 				serial = (serial ^ 0) || 0;
 				Object.defineProperties(this, {
 					'secret' : {
 						writable : true, 
 						configurable : true, 
-						value : secret || null
+						value : secret ?? this.secret ?? null
 					},
 					'sRx' : {
 						writable : true, 
