@@ -48,7 +48,7 @@ const Puncher = module.exports = ae3.Class.create(
 		});
 		this.puncherReset();
 		setTimeout(this.timerLoop, 1000);
-		console.log(">>>>>> %s: puncher created", this);
+		console.log("UdpInterface::Puncher:init %s: puncher created", this);
 		return this;
 	},
 	/* instance methods */
@@ -95,7 +95,7 @@ const Puncher = module.exports = ae3.Class.create(
 		},
 		"onMeet" : {
 			value : function(meet, address){
-				console.log(">>>>>> %s: puncher meet in: %s, address: %s", this, meet, address);
+				console.log("UdpInterface::Puncher:onMeet: %s: %s, address: %s", this, meet, address);
 				this.puncherReset();
 				return false;
 			}
@@ -111,7 +111,7 @@ const Puncher = module.exports = ae3.Class.create(
 				if(!seen.parseMode(this)){
 					// mode is 0x00 - reset and exit
 					this.puncherReset();
-					console.log(">>>>>> %s: puncher seen in: %s, address: %s, code 0x00, puncher reset into enabled state.", this, seen, address);
+					console.log("UdpInterface::Puncher:onSeen: %s: %s, address: %s, code 0x00, puncher reset into enabled state.", this, seen, address);
 					return false;
 				}
 				this.since = 0;
@@ -121,10 +121,10 @@ const Puncher = module.exports = ae3.Class.create(
 						writable : true
 					});
 					this.state = 'active';
-					console.log(">>>>>> %s: puncher seen in: %s, address: %s, puncher mode switched search->active", this, seen, address);
+					console.log("UdpInterface::Puncher:onSeen: %s: %s, address: %s, puncher mode switched search->active", this, seen, address);
 					return true;
 				}
-				console.log(">>>>>> %s: puncher seen in: %s, address: %s", this, seen, address);
+				console.log("UdpInterface::Puncher:onSeen: %s: %s, address: %s", this, seen, address);
 				return true;
 			}
 		},
@@ -240,7 +240,7 @@ const Puncher = module.exports = ae3.Class.create(
 					writable : true
 				});
 				this.state = 'search';
-				console.log(">>>>>> %s: puncher mode switched enabled->search", this);
+				console.log("UdpInterface::Puncher:loopEnabled: %s: puncher mode switched to 'search'", this);
 			}
 		},
 		
@@ -254,15 +254,15 @@ const Puncher = module.exports = ae3.Class.create(
 					if(this.since > this.loopLimit){
 						targetList.forEach((function(meet, target){
 							this.remote.sendSingle(meet, target);
-							console.log(">>>>>> %s: puncher send meet: %s, %s", this, meet, target);
+							console.log("UdpInterface::Puncher:loopSearch: %s: puncher send meet: %s, %s", this, meet, target);
 						}).bind(this, new this.remote.MSG_Q_MEET()));
 						this.puncherReset();
-						console.log(">>>>>> %s: puncher mode switched search->enabled", this);
+						console.log("UdpInterface::Puncher:loopSearch: %s: puncher mode switched to 'enabled'", this);
 						return;
 					}
 					targetList.forEach((function(helo, target){
 						this.remote.sendSingle(helo, target);
-						console.log(">>>>>> %s: puncher send helo: %s, %s", this, helo, target);
+						console.log("UdpInterface::Puncher:loopSearch: %s: send helo: %s, %s", this, helo, target);
 					}).bind(this, new this.remote.MSG_Q_HELO(this.remote.localSocketAddress, ++this.remote.sTx)));
 				}
 				++ this.since;
@@ -283,10 +283,10 @@ const Puncher = module.exports = ae3.Class.create(
 						value : this.loopSearch.bind(this),
 						writable : true
 					});
-					console.log(">>>>>> %s: puncher mode switched active->search", this);
+					console.log("UdpInterface::Puncher:loopActive: %s: mode switched to 'search'", this);
 					return;
 				}
-				console.log(">>>>>> %s: puncher poke out (direct:%s)", this, this.directAccess);
+				console.log("UdpInterface::Puncher:loopActive: %s: poke out (direct:%s)", this, this.directAccess);
 				var poke = this.directAccess 
 					? new this.remote.MSG_Q_POKD(this.remote.localSocketAddress) 
 					: new this.remote.MSG_Q_POKE(this.remote.localSocketAddress)
@@ -327,7 +327,7 @@ const Puncher = module.exports = ae3.Class.create(
 					writable : true
 				});
 				this.state = 'stopped';
-				console.log(">>>>>> %s: puncher destroyed", this);
+				console.log("UdpInterface::Puncher:destroy: %s: puncher destroyed", this);
 			}
 		},
 		

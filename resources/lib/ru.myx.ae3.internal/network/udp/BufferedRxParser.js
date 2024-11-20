@@ -48,7 +48,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 
 		m = this.commandByKey[b[0] & 0xFF];
 		if(!m){
-			console.log('>>>>>> udp-read-skip: iface: %s, unsupported command, %s, code: %s%s', 
+			console.log("UdpInterface::Read: skip-command: iface: %s, unsupported command, %s, code: %s%s", 
 				this, 
 				pkt, 
 				b[0], 
@@ -63,7 +63,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 		peer = this.resolvePeer(key);
 		if(false /* && !peer && this.resolveClientAsync */){
 			/**
-			console.log('>>>>>> udp-read-resolve-client: iface: %s, peerKey: %s, %s <- @ %s:%s',
+			console.log("UdpInterface::Read: resolve-client: iface: %s, peerKey: %s, %s <- @ %s:%s",
 				this, 
 				FN_FORMAT_BINARY_AS_HEX(key), 
 				m.toString(), 
@@ -77,7 +77,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 			continue;
 		}
 		if(!peer){
-			console.log('>>>>>> udp-read-client-unknown: iface: %s, peerKey: %s, %s : sign: %s, addr: %s:%s', 
+			console.log("UdpInterface::Read: client-unknown: iface: %s, peerKey: %s, %s : sign: %s, addr: %s:%s", 
 				this, 
 				FN_FORMAT_BINARY_AS_HEX(key), 
 				m.toString(), 
@@ -90,7 +90,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 
 		ms = ((b[1] & 0xFF) << 16) | ((b[2] & 0xFF) << 8) | (b[3] & 0xFF);
 		if(ms <= peer.sRx){
-			console.log('>>>>>> udp-read-skip-serial: iface: %s, peer: %s, message serial: %s, peer serial: %s, addr: %s:%s',
+			console.log("UdpInterface::Read: skip-serial: iface: %s, peer: %s, message serial: %s, peer serial: %s, addr: %s:%s",
 				this, 
 				peer.shortHostString ?? peer,
 				ms, 
@@ -103,7 +103,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 		}
 		
 		if(!peer.secret){
-			console.log('>>>>>> udp-read-skip-secret: iface: %s, peer: %s, secret is not set, addr: %s:%s', 
+			console.log("UdpInterface::Read: skip-secret: iface: %s, peer: %s, secret is not set, addr: %s:%s", 
 				this, 
 				peer.shortHostString ?? peer,
 				pkt.sourceAddress.address.hostAddress, 
@@ -115,7 +115,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 		
 		switch( (msg = (m.prototype.isRequest ? peer.checkRxqSerial(ms) : peer.checkRxrSerial(ms))) ){
 		case true:
-			console.log('>>>>>> udp-read-skip-ignore: iface: %s, peer: %s, rejected by peer, serial: %s, addr: %s:%s', 
+			console.log("UdpInterface::Read: skip-ignore: iface: %s, peer: %s, rejected by peer, serial: %s, addr: %s:%s", 
 				this, 
 				peer.shortHostString ?? peer,
 				ms, 
@@ -132,7 +132,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 		crc = Transfer.wrapCopier(crc.result, 0, 16);
 		
 		if(load.slice(0, 16) != crc){
-			console.log('>>>>>> udp-read-crc-fail: iface: %s, peer: %s, crc mismatch, %s : %s != %s',
+			console.log("UdpInterface::Read: crc-fail: iface: %s, peer: %s, crc mismatch, %s : %s != %s",
 				this, 
 				peer.shortHostString ?? peer,
 				m.toString(), 
@@ -146,7 +146,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 		if(msg){
 			if(msg.isReply /** m.prototype.isRequest */){
 				/** TODO: send pre-cached replies using peer.sendUdp */
-				console.log('>>>>>> udp-read-send-repeat: iface: %s, peer: %s, reply re-sent by peer, serial: %s, addr: %s:%s', 
+				console.log("UdpInterface::Read: send-repeat: iface: %s, peer: %s, reply re-sent by peer, serial: %s, addr: %s:%s", 
 					this, 
 					peer.shortHostString ?? peer,
 					ms, 
@@ -169,7 +169,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 		msg = m.parseBinaryMessage(b, 0, ms, l);
 		
 		if(!msg){
-			console.log('>>>>>> udp-read-bad-body: iface: %s, peer: %s, invalid payload rejected, %s, serial: %s, packetLen: %s', 
+			console.log("UdpInterface::Read: bad-body: iface: %s, peer: %s, invalid payload rejected, %s, serial: %s, packetLen: %s", 
 				this, 
 				peer.shortHostString ?? peer,
 				m.toString(), 
@@ -181,7 +181,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 		}
 
 		/*
-		console.log('>>>>>> udp-read: iface: %s, peer: %s @ %s:%s, len: %s, serial: %s, %s',
+		console.log("UdpInterface::Read: received: iface: %s, peer: %s @ %s:%s, len: %s, serial: %s, %s"",
 			this, 
 			peer.shortHostString ?? peer,
 			pkt.sourceAddress.address.hostAddress, 

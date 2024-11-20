@@ -163,7 +163,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 			value : function(message, address, serial /* locals: */, task){
 				if(message.isUHP){
 					if(message.isUHP_PUNCH){
-						console.log('>>>>>> %s: onReceive, UHP punch: %s, address: %s, serial: %s', this, message, address, serial);
+						console.log("UdpInterface::Principal:onReceive:UhpPunch: %s: %s, address: %s, serial: %s", this, message, address, serial);
 						this.serialRxqCache(serial, true);
 						if(this.sTx < serial && (serial > 16000000) === (this.sTx > 16000000)){
 							this.sTx = serial;
@@ -180,34 +180,35 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 						);
 					}
 
-					console.log('>>>>>> %s: onReceive, UHP other: %s, address: %s, serial: %s, puncher: %s', this, message, address, serial, !!this.puncher);
+					console.log("UdpInterface::Principal:onReceive:UhpOther: %s: %s, address: %s, serial: %s, puncher?: %s", this, message, address, serial, !!this.puncher);
 					return this.puncher && this.puncher.onUHP(message, address, serial);
 				}
 				
 				if(message.isReply){
 					/** check task that awaits **/
 					if( (task = this.serialTxqQueueWindow.readCheck(serial)) ){
-						console.log('>>>>>> %s: onReceive, task: %s, address: %s, serial: %s, task: %s', this, message, address, serial, task);
+						console.log("UdpInterface::Principal:onReceive:ReplyTask: %s: %s, address: %s, serial: %s, task: %s", this, message, address, serial, task);
 						setTimeout(FN_ON_REPLY_ASYNC.bind(this, task, message), 0);
 						return;
 					}
+					console.log("UdpInterface::Principal:onReceive:ReplySkip: %s: %s, address: %s, serial: %s", this, message, address, serial);
 					return;
 				}
 				
 				if(message.isRequest){
-					console.log('>>>>>> %s: onReceive, request: %s, address: %s, serial: %s', this, message, address, serial);
+					console.log("UdpInterface::Principal:onReceive:Request: %s: %s, address: %s, serial: %s", this, message, address, serial);
 					/** no repetitions for requests **/
 					this.serialRxqCache(serial, true);
 					return FN_ON_RECEIVE_PRINCIPAL.call(this, message, address, serial);
 				}
 
-				console.log('>>>>>> %s: onReceive, skip: %s, address: %s, serial: %s', this, message, address, serial);
+				console.log("UdpInterface::Principal:onReceive:Skip: %s: %s, address: %s, serial: %s", this, message, address, serial);
 				return;
 			}
 		},
 		updateSecret : {
 			value : function(secret, serial){
-				console.log('>>>>>> %s: updateSecret: %s, serial: %s, puncher: %s', this, !!secret, serial, this.puncher?.state);
+				console.log("UdpInterface::Principal:updateSecret: %s: secret?: %s, serial: %s, puncher?: %s", this, !!secret, serial, this.puncher?.state);
 				return FN_UPDATE_SECRET_PRINCIPAL.call(this, secret, serial);
 			}
 		},
