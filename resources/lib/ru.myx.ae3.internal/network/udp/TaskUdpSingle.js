@@ -217,7 +217,7 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 			 */
 			value : ae3.Concurrent.wrapSync(function(){
 				if(0 === this.left){
-					// console.log('>>> >>> %s: onDestroy: done.', this);
+					// console.log("UdpService::TaskUdpSingle:onDestroy: %s: already done.", this);
 					return;
 				}
 				this.logDebug("on-destroy", "local", "unfinished task closed");
@@ -231,10 +231,10 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 			 */
 			value : ae3.Concurrent.wrapSync(function(message){
 				if(0 === this.left){
-					// console.log('>>> >>> %s: onReceive, ignored, reply: %s', this, message);
+					// console.log("UdpService::TaskUdpSingle:onReceive: %s: ignored, already done, reply: %s", this, message);
 					return;
 				}
-				// console.log('>>> >>> %s: onReceive, reply: %s', this, message);
+				// console.log("UdpService::TaskUdpSingle:onReceive: %s: reply: %s", this, message);
 				switch(this.onTaskProgress(message)){
 				case true:
 					// reply received means that send really succeed
@@ -262,11 +262,11 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 		"sendOnce" : {
 			value : function(peer, message){
 				if(peer.sendSingle( message.serial ? message : Object.create(message) )){
-					console.log('>>>>>> TaskUdpSingle: sendOnce, done, 1 messages sent, peers: 1, message: %s', message);
+					console.log("UdpService::TaskUdpSingle:sendOnce: done, 1 messages sent, peers: 1, message: %s", message);
 					return 1;
 				} 
 				
-				console.log('>>>>>> TaskUdpSingle: sendOnce, done, 0 messages sent, peers: 1, message: %s', message);
+				console.log("UdpService::TaskUdpSingle:sendOnce: done, 0 messages sent, peers: 1, message: %s", message);
 				return 0;
 			}
 		}
@@ -288,20 +288,20 @@ const FINISH_FN_CALL = function(result){
 
 const TIMER_IMPL = ae3.Concurrent.wrapSync(function(/* locals: */deadLine){
 	if(!this.left){
-		// console.log('>>> >>> %s: timer, already done', this);
+		// console.log("UdpService::TaskUdpSingle:Timer: %s: timer, already done", this);
 		return;
 	}
 	deadLine = this.expire - Date.now() - 100;
 	if(deadLine > 0){
 		// reply seen, no need to re-send
 		if(1 === this.left){
-			// console.log('>>> >>> %s: timer, repeat', this);
+			// console.log("UdpService::TaskUdpSingle:Timer: %s: timer, repeat", this);
 			setTimeout(this.timer, deadLine + 100);
 			return true;
 		}
 		if(this.peer.sendSingle(this.message)){
 			this.logDetail("timer-repeat", this.peerName, this.message);
-			// console.log('>>> >>> %s: timer, repeat', this);
+			// console.log("UdpService::TaskUdpSingle:Timer: %s: timer, repeat", this);
 			setTimeout( this.timer, Math.min( //
 				deadLine + 100, 
 				( this.retryDelay = //
@@ -320,7 +320,7 @@ const TIMER_IMPL = ae3.Concurrent.wrapSync(function(/* locals: */deadLine){
 
 const TIMER_NO_RETRIES_IMPL = ae3.Concurrent.wrapSync(function(/* locals: */deadLine){
 	if(!this.left){
-		// console.log('>>> >>> %s: timer, already done', this);
+		// console.log("UdpService::TaskUdpSingle:TimerNoRetries: %s: timer, already done", this);
 		return;
 	}
 	deadLine = this.expire - Date.now() - 100;

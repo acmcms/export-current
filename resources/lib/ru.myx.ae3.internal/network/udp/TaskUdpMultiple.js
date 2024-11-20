@@ -86,19 +86,19 @@ const TaskUdpMultiple = module.exports = ae3.Class.create(
 		
 		if(null === this.pending){
 			setTimeout(this.onTaskFinished.bind(this), 0);
-			console.log('>>>>>> %s: count: %s, null pending', this, c);
+			console.log("UdpService::TaskUdpMultiple: %s: count: %s, null pending", this, c);
 			return this;
 		}
 		if(pending.isEmpty()){
 			this.pending = null;
 			setTimeout(this.onTaskFinished.bind(this), 0);
-			console.log('>>>>>> %s: count: %s, nothing pending', this, c);
+			console.log("UdpService::TaskUdpMultiple: %s: count: %s, nothing pending", this, c);
 			return this;
 		}
 		{
 			// assignment in arguments
 			setTimeout( (this.timer = timerImpl.bind(this)) , 1000);
-			console.log('>>>>>> %s: count: %s, waiting for replies', this, c);
+			console.log("UdpService::TaskUdpMultiple: %s: count: %s, waiting for replies", this, c);
 			return this;
 		}
 	},
@@ -217,7 +217,7 @@ const TaskUdpMultiple = module.exports = ae3.Class.create(
 					} 
 				}
 				
-				console.log('>>>>>> TaskUdpMultiple: sendOnce, done, %s messages sent, peers: %s, message: %s', c, peers.length, message);
+				console.log("UdpService::TaskUdpMultiple:sendOnce: done, %s messages sent, peers: %s, message: %s", c, peers.length, message);
 				return c;
 			}
 		}
@@ -228,7 +228,7 @@ const TaskUdpMultiple = module.exports = ae3.Class.create(
 
 const callbackLast = Concurrent.wrapSync(function(singleTask){
 	if(this.pending === null){
-		// console.log('>>>>>> %s: callback-last, already done, singleTask: %s, reply: %s', this, singleTask, reply);
+		// console.log("UdpService::TaskUdpMultiple:callbackLast: %s: already done, singleTask: %s, reply: %s", this, singleTask, reply);
 		return false;
 	}
 	
@@ -247,7 +247,7 @@ const callbackLast = Concurrent.wrapSync(function(singleTask){
 
 const callbackStop = Concurrent.wrapSync(function(/* locals: */ p){
 	if( (p = this.pending) === null){
-		// console.log(">>>>>> %s: callback-stop, already done");
+		// console.log("UdpService::TaskUdpMultiple:callbackStop: %s: already done");
 		return false;
 	}
 
@@ -266,13 +266,13 @@ const callbackStop = Concurrent.wrapSync(function(/* locals: */ p){
 
 const callbackImpl = /* deadlock, need something like Concurrent.wrapSerialSyncThis() Concurrent.wrapSync( */function callbackImpl(singleTask, reply){
 	if(this.pending === null){
-		//// console.log('>>>>>> %s: callback, already done, peer: %s, reply: %s', this, singleTask.peerName, reply);
+		//// console.log("UdpService::TaskUdpMultiple:callback: %s: already done, peer: %s, reply: %s", this, singleTask.peerName, reply);
 		return;
 	}
 	
 	if(null === reply || "string" === typeof reply){
 		if(null === singleTask || false === this.onSingleTaskFinished(singleTask, reply)){
-			//// console.log('>>>>>> %s: callback, peer: %s, reply: %s, last reply.', this, singleTask.peerName, reply);
+			//// console.log("UdpService::TaskUdpMultiple:callback: %s: peer: %s, reply: %s, last reply.", this, singleTask.peerName, reply);
 			return callbackStop.call(this);
 		}
 		return callbackLast.call(this, singleTask);
@@ -281,13 +281,13 @@ const callbackImpl = /* deadlock, need something like Concurrent.wrapSerialSyncT
 	switch(this.onSingleTaskFinished(singleTask, reply)){
 	case true:
 		singleTask.expire < this.expire && (singleTask.expire = this.expire);
-		//// console.log('>>>>>> %s: callback, peer: %s, reply: %s, continue await.', this, singleTask.peerName, reply);
+		//// console.log('UdpService::TaskUdpMultiple:callback: %s: peer: %s, reply: %s, continue await.', this, singleTask.peerName, reply);
 		return true;
 	case false:
-		//// console.log('>>>>>> %s: callback, peer: %s, reply: %s, last reply.', this, singleTask.peerName, reply);
+		//// console.log('UdpService::TaskUdpMultiple:callback: %s: peer: %s, reply: %s, last reply.', this, singleTask.peerName, reply);
 		return callbackStop.call(this);
 	default:
-		//// console.log('>>>>>> %s: callback, peer: %s, reply: %s', this, singleTask.peerName, reply);
+		//// console.log('UdpService::TaskUdpMultiple:callback: %s: peer: %s, reply: %s', this, singleTask.peerName, reply);
 		return callbackLast.call(this, singleTask);
 	}
 }/* ) */;
@@ -295,12 +295,12 @@ const callbackImpl = /* deadlock, need something like Concurrent.wrapSerialSyncT
 
 const timerImpl = Concurrent.wrapSync(function(/* locals: */p, deadLine){
 	if( (p = this.pending) === null){
-		// console.log('>>> >>> %s: timer, already done', this);
+		// console.log('UdpService::TaskUdpMultiple:timer: %s: already done', this);
 		return;
 	}
 	deadLine = this.expire - Date.now() - 100;
 	if(deadLine > 0){
-		//// console.log('>>>>>> %s: timer repeat', this);
+		//// console.log('UdpService::TaskUdpMultiple:time: %s: repeat', this);
 		setTimeout(this.timer, deadLine > 1100 ? 1100 : deadLine);
 		// this.logDebug("continue", "*", "timer re-set");
 		return;
