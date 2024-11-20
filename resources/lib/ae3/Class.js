@@ -17,11 +17,20 @@
 	}
 }
 
+const FN_RETURN_STRING_THIS = function(){
+	return this;
+};
+
+const FN_RETURN_STRING_CLASS = function(){
+	return "[class]";
+};
+
 module.exports = {
 	"create" : function(name, inherit, constructor, properties, statics){
 		const p = constructor.prototype = inherit
-			? Object.create(inherit.prototype || inherit)
-			: {};
+			? Object.create(inherit.prototype ?? inherit)
+			: {}
+		;
 		if(properties){
 			var k, d;
 			for(k in properties){
@@ -48,7 +57,7 @@ module.exports = {
 			}
 			// Object.defineProperties(p, properties);
 		}
-		if(name && !(properties && properties[name])){
+		if(name && !(properties?.[name])){
 			Object.defineProperty(p, name, { value : constructor });
 		}
 		if(statics){
@@ -77,11 +86,16 @@ module.exports = {
 			}
 			// Object.defineProperties(constructor, statics);
 		}
-		if(name && !(statics && statics.toString)){
+		if(name){
+			Object.defineProperty(constructor, "name", {
+				value : name
+			});
+		}
+		if(undefined === statics?.toString){
 			Object.defineProperty(constructor, "toString", {
-				value : function(){
-					return "[class " + name + "]";
-				}
+				value : name === null || name === undefined
+					? FN_RETURN_STRING_CLASS
+					: FN_RETURN_STRING_THIS.bind("[class " + (name) + "]")
 			});
 		}
 		return constructor;

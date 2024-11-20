@@ -388,6 +388,26 @@ const Principal = module.exports = ae3.Class.create(
 				throw new Error("'sendUdp' of Principal is an abstract method and should be overriden!");
 			}
 		},
+		shortHostString : {
+			/** 
+			 * for toString and logging (including debug logging)
+			 */
+			get : function(){
+				return (this.keyHex.substr(0, 8) + "... ");
+			}
+		},
+		shortTypeString : {
+			/** 
+			 * for toString and logging (including debug logging)
+			 */
+			value : "Principal"
+		},
+		toString : {
+			value : function(){
+				return ["[", this.shortTypeString, " ", this.shortHostString, " ", Format.jsObject(this.address), "]"].join("");
+				return "[" + this.shortTypeString + " " + this.shortHostString + " " + Format.jsObject(this.address) + "]";
+			}
+		},
 		toString : {
 			value : function(/* locals: */t){
 				t = this.hostId;

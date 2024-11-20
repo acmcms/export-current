@@ -74,14 +74,6 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 				return FN_FORMAT_BINARY_AS_HEX(this.key);
 			}
 		},
-		/** 
-		 * for toString and logging (including debug logging)
-		 */
-		keyShortString : {
-			execute : "once", get : function(){
-				return "[RemoteServicePrincipal " + this.keyHex.substr(0, 8) + "... ";
-			}
-		},
 		checkRxqSerial : {
 			/** function get(serial) **/
 			execute : "once", get : function(){
@@ -230,11 +222,23 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 			 **/
 			value : 0x83
 		},
+		/** 
+		 * for toString and logging (including debug logging)
+		 */
+		shortHostString : {
+			execute : "once", get : function(){
+				return this.hostId ?? (this.keyHex.substr(0, 8) + "... ");
+			}
+		},
+		shortTypeString : {
+			get : function(){
+				return this.constructor.name ?? "RemoteServicePrincipal";
+			}
+		},
 		toString : {
 			value : function(){
-				return [this.keyShortString, Format.jsObject(this.hostId || this.address), "]"].join("");
-				return this.keyShortString + Format.jsObject(this.hostId || this.address) + "]";
-				return "[RemoteServicePrincipal " + this.keyHex + ", " + Format.jsObject(this.hostId || this.address) + "]";
+				return ["[", this.shortTypeString, " ", this.shortHostString, " ", Format.jsObject(this.address), "]"].join("");
+				return "[" + this.shortTypeString + " " + this.shortHostString + " " + Format.jsObject(this.address) + "]";
 			}
 		}
 	}
