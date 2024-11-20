@@ -75,7 +75,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 			}
 		},
 		/** 
-		 * for toString only
+		 * for toString and logging (including debug logging)
 		 */
 		keyShortString : {
 			execute : "once", get : function(){
