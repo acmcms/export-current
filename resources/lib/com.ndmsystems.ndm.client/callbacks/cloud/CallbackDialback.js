@@ -36,25 +36,25 @@ const CallbackDialback = module.exports = ae3.Class.create(
 					query = query.addAttribute('X-Forwarded-For', this.clientAddress);
 					query = query.addAttribute('X-Debug', "through ndm.client::uhp::dialback");
 				}
-				console.log("ndm.client:callback:dialback: web request: %s", Format.jsDescribe(query));
+				console.log("ndm.client::CallbackDialback:requestCallback: web request: %s", Format.jsDescribe(query));
 				return ae3.web.WebInterface.dispatch(query);
 			}
 		},
 		"replyCallback" : {
 			value : function(reply){
 				if(!reply){
-					console.log("ndm.client:callback:dialback: no reply");
+					console.log("ndm.client::CallbackDialback:replyCallback: no reply");
 					this.socket.close();
 					return;
 				}
 				switch(reply.code){
 				case 101: {
-					console.log("ndm.client:callback:dialback: switch protocol, reply: %s, %s", Format.jsDescribe(reply), this.socket);
+					console.log("ndm.client::CallbackDialback:replyCallback: switch protocol, reply: %s, %s", Format.jsDescribe(reply), this.socket);
 
 					switch(this.tunnelType % 100){
 					case 43:
 					case 83:
-						console.log("ndm.client:callback:dialback: wrap server socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
+						console.log("ndm.client::CallbackDialback:replyCallback: wrap server socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
 						this.socket = ae3.net.ssl.wrapServer(//
 							this.socket, //
 							ae3.net.ssl.getDomainStore(//
@@ -71,11 +71,11 @@ const CallbackDialback = module.exports = ae3.Class.create(
 							(this.tunnelType % 100) === 43 || (this.tunnelType % 100) === 83, //
 							HTTP_CONFIGURATION //
 					);
-					console.log("ndm.client:callback:dialback: http server connected, %s", this.server);
+					console.log("ndm.client::CallbackDialback:replyCallback: http server connected, %s", this.server);
 					return;
 				}
 				}
-				console.log("ndm.client:callback:dialback: reply: %s", Format.jsDescribe(reply));
+				console.log("ndm.client::CallbackDialback:replyCallback: reply: %s", Format.jsDescribe(reply));
 				this.socket.close();
 				return;
 			}
@@ -83,10 +83,10 @@ const CallbackDialback = module.exports = ae3.Class.create(
 		"connectCallback" : {
 			value : function(socket){
 				if(!socket){
-					console.log("ndm.client:callback:dialback: tcp connect failed: %s:%s", this.targetAddr, this.targetPort);
+					console.log("ndm.client::CallbackDialback:connectCallback: tcp connect failed: %s:%s", this.targetAddr, this.targetPort);
 					return;
 				}
-				console.log(">>>>>> ndm.client:callback:cloud/dialback: tcp connected, %s:%s %s", this.targetAddr, this.targetPort, this.tunnelType);
+				console.log("ndm.client::CallbackDialback:connectCallback: tcp connected, %s:%s %s", this.targetAddr, this.targetPort, this.tunnelType);
 
 				switch(this.tunnelType % 100){
 				case 0:
@@ -94,7 +94,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 				case 80:
 				case 81:
 				case 90:
-					console.log("ndm.client:callback:dialback: wrap client socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
+					console.log("ndm.client::CallbackDialback:connectCallback: wrap client socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
 					socket = ae3.net.ssl.wrapClient(socket, null, this.targetAddr, this.targetPort, null);
 				}
 
@@ -116,13 +116,13 @@ const CallbackDialback = module.exports = ae3.Class.create(
 				socket.target.absorbBuffer(ae3.Transfer.createBufferUtf8(output));
 				socket.target.force();
 				this.socket = socket;
-				console.log("ndm.client:callback:dialback: request sent: socket: %s, length: %s", socket, output.length + '');
+				console.log("ndm.client::CallbackDialback:connectCallback: request sent: socket: %s, length: %s", socket, output.length + '');
 				return;
 			}
 		},
 		"executeCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:cloud/dialback: connecting, %s", Format.jsObject(this));
+				console.log("ndm.client::CallbackDialback:executeCallback: connecting, %s", Format.jsObject(this));
 				ae3.net.tcp.connect(this.targetAddr, this.targetPort, this.connectCallback.bind(this), {
 					connectTimeout : 5000,
 					reuseTimeout : 5000,

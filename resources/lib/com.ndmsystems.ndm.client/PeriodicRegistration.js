@@ -5,14 +5,14 @@ Object.defineProperties(exports, {
 	},
 	run : {
 		value : function(){
-			console.sendMessage("ndm.client: periodic start.");
+			console.sendMessage("ndm.client::PeriodicRegistration:run: periodic start.");
 			const NdmCloudService = require('./NdmCloudService');
 			const clients = NdmCloudService.getClients();
 			for(let client of clients){
 				console.sendMessage("ndm.client: running: " + client.clientId);
 				client.run(console);
 			}
-			console.sendMessage("ndm.client: periodic done.");
+			console.sendMessage("ndm.client::PeriodicRegistration:run: periodic done.");
 			return true;
 		}
 	},

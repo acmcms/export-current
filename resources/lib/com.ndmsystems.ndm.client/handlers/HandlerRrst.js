@@ -24,17 +24,17 @@ const MakeRsstReplyFn = function(rrst){
 const HandlerRrst = module.exports = function(message, address, serial){
 	const rrst = message.rrst;
 	if(!rrst){
-		console.log(">>>>>> ndm.client:UdpCloudService::handlerRRST(%s, %s) => CERR: no rrst body", this, message);
+		console.log("ndm.client::cloud::HandlerRrst: %s: %s => CERR: no rrst body", this, message);
 		this.sendSingle(new UdpCloudService.MSG_RF_CERR(serial, 0x03 /* Invalid Arguments */), address);
 		return;
 	}
 	
-	// console.log(">>>>>> ndm.client:UdpCloudService::handlerRRST(%s, %s) => CERR, request", this, message);
+	// console.log("ndm.client::cloud::HandlerRrst: %s: %s => CERR, request", this, message);
 	// this.sendSingle(new UdpCloudService.MSG_RF_CERR(serial, 0x01 /* No Such Component */), address);
 	// return;
 
 	const rsst = MakeRsstReplyFn.call(this.client.stateDomain, rrst);
 
-	console.log(">>>>>> ndm.client:UdpCloudService::handlerRRST(%s, %s) => RSST: %s", this, message, rsst);
+	console.log("ndm.client::cloud::HandlerRrst: %s: %s => RSST: %s", this, message, rsst);
 	this.sendSingle(new UdpCloudService.MSG_RF_RSST(rsst, serial), address);
 };

@@ -57,22 +57,22 @@ const AbstractComponent = module.exports = ae3.Class.create(
 				try{
 					callback = require(href);
 				}catch(e){
-					console.log(">>>>>> ndm.client:component:%s:prepareCall: invalid callback: %s", this.componentName, name);
+					console.log("ndm.client::AbstractComponent:prepareCall: %s: invalid callback: %s", this.componentName, name);
 					return null;
 				}
 				
 				callback = new callback(args);
 				if(!callback){
-					console.log(">>>>>> ndm.client:component:%s:prepareCall: invalid arguments: %s", this.componentName, args);
+					console.log("ndm.client::AbstractComponent:prepareCall: %s: invalid arguments: %s", this.componentName, args);
 					return null;
 				}
 				
 				if(!callback.prepareCallback(this)){
-					console.log(">>>>>> ndm.client:component:%s:prepareCall: extra validation failed: %s", this.componentName, args);
+					console.log("ndm.client::AbstractComponent:prepareCall: %s: extra validation failed: %s", this.componentName, args);
 					return null;
 				}
 				
-				console.log(">>>>>> ndm.client:component:%s:prepareCall: ready: %s", this.componentName, callback);
+				console.log("ndm.client::AbstractComponent:prepareCall: %s: ready: %s", this.componentName, callback);
 				return callback.executeCallback.bind(callback, this, args);
 			}
 		}

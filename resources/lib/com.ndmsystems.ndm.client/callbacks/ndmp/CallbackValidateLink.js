@@ -13,7 +13,7 @@ const CallbackValidateLink = module.exports = ae3.Class.create(
 			value : function(component){
 				const pair = component.preparedMatingKeys;
 				if(!pair){
-					console.log(">>>>>> ndm.client:callback:ndmp/validateLink: refused: no mating keys prepared");
+					console.log("ndm.client::CallbackValidateLink:prepareCallback: refused: no mating keys prepared");
 					return false;
 				}
 				
@@ -24,7 +24,7 @@ const CallbackValidateLink = module.exports = ae3.Class.create(
 		},
 		"executeCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:ndmp/validateLink: %s + %s", this.deviceEcPublic, this.serviceEcPublic);
+				console.log("ndm.client::CallbackValidateLink:executeCallback: %s + %s", this.deviceEcPublic, this.serviceEcPublic);
 				
 				component.confirmMating(this.deviceEcPublic, this.serviceEcPublic);
 			}

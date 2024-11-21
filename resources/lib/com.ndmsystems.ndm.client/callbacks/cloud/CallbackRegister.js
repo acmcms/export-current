@@ -14,7 +14,7 @@ const CallbackRegister = module.exports = ae3.Class.create(
 	{
 		"executeCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:cloud/register: reason=%s", this.reason);
+				console.log("ndm.client::CallbackRegister:executeCallback: reason=%s", this.reason);
 				component.client.doRegister(this.reason);
 			}
 		},

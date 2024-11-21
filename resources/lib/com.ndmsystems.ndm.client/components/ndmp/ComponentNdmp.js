@@ -51,11 +51,11 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 				/**
 				 * generate
 				 */
-				console.log("ndm.client '%s': ndmp: generating new EC pair", this.client.clientId);
+				console.log("ndm.client::ComponentNdmp:prepareMatingKeys: '%s': generating new EC pair", this.client.clientId);
 
 				const pair = Secp256r1.generateKeyPair();
 
-				console.log("ndm.client '%s': ndmp: new EC pair's public: %s", this.client.clientId, pair.getPublic());
+				console.log("ndm.client::ComponentNdmp:prepareMatingKeys: '%s': new EC pair's public: %s", this.client.clientId, pair.getPublic());
 				
 				Object.defineProperty(this, "preparedMatingKeys", {
 					value : pair,
@@ -143,14 +143,14 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 					return null;
 				}
 				
-				console.log("ndm.client '%s': ndmp: using existing EC pair", this.client.clientId);
+				console.log("ndm.client::ComponentNdmp:confirmedMatingKeys: '%s': using existing EC pair", this.client.clientId);
 
 				const privateKey = Secp256r1.parsePrivateKeyFromBytesPKCS8(ndmpKeyPrivate.nextDirectArray());
 				const publicKey = Secp256r1.parsePublicKeyFromBytesCompressed(ndmpKeyPublic.nextDirectArray());
 				const serviceKey = Secp256r1.parsePublicKeyFromBytesCompressed(ndmpSvcPublic.nextDirectArray());
 				
-				console.log("ndm.client '%s': ndmp: existing deviceEcPublic: %s", this.client.clientId, publicKey);
-				console.log("ndm.client '%s': ndmp: existing serviceEcpublic: %s", this.client.clientId, serviceKey);
+				console.log("ndm.client::ComponentNdmp:confirmedMatingKeys: '%s': existing deviceEcPublic: %s", this.client.clientId, publicKey);
+				console.log("ndm.client::ComponentNdmp:confirmedMatingKeys: '%s': existing serviceEcpublic: %s", this.client.clientId, serviceKey);
 				
 				const KeyPair = require("java.class/java.security.KeyPair");
 				
@@ -182,7 +182,7 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 				const devicePublic = Secp256r1.parsePublicKeyFromHexCompressed(deviceEcPublic);
 				
 				if(pair.getPublic() != devicePublic){
-					console.log(">>>>>> ndm.client:ComponentNDMP: devicePublic mismatch %s != %s", pair.getPublic(), devicePublic);
+					console.log("ndm.client::ComponentNdmp:confirmMating: devicePublic mismatch %s != %s", pair.getPublic(), devicePublic);
 					return false;
 				}
 				
@@ -193,7 +193,7 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 				/**
 				 * store
 				 */
-				console.log("ndm.client '%s': ndmp: storing newly confirmed EC pair", this.client.clientId);
+				console.log("ndm.client::ComponentNdmp:confirmMating: '%s': ndmp: storing newly confirmed EC pair", this.client.clientId);
 	
 				/**
 				// this.client.vfs.setContentPublicTreeBinary("ndmpKeyPrivate", //

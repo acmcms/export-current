@@ -13,7 +13,7 @@ const CallbackSucceed = module.exports = ae3.Class.create(
 	{
 		"executeCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:cloud/succeed");
+				console.log("ndm.client::CallbackSucceed:executeCallback: success, no operation.");
 			}
 		},
 	}

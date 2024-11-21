@@ -5,7 +5,7 @@ const UdpCloudService = ae3.Class.create(
 	"UdpCloudService",
 	ae3.net.udp.UdpService,
 	function UdpCloudService(port){
-		console.log('>>>>>> ndm.client:service: starting udp listening service on port ' + (port || 4043) + '.');
+		console.log("ndm.client::UdpCloudService:init: starting udp listening service on port %s.", (port || 4043));
 		this.UdpService(port || 4043);
 		Object.defineProperties(this, {
 			clients : {
@@ -20,15 +20,15 @@ const UdpCloudService = ae3.Class.create(
 			/**
 			 * UdpCloudClient
 			 */
-			value : Concurrent.wrapSync(function(ucc){
-				console.log(">>>>>> ndm.client:service %s, registerClient: %s", this, ucc);
-				this.clients.put(ucc.key, ucc);
+			value : Concurrent.wrapSync(function(udpCloudClient){
+				console.log("ndm.client::UdpCloudService:registerClient: %s, %s", this, udpCloudClient);
+				this.clients.put(udpCloudClient.key, udpCloudClient);
 			})
 		},
 		"removeClient" : {
-			value : Concurrent.wrapSync(function(ucc){
-				console.log(">>>>>> ndm.client:service %s, removeClient: %s", this, udpCloudClient);
-				this.clients.remove(ucc.key);
+			value : Concurrent.wrapSync(function(udpCloudClient){
+				console.log("ndm.client::UdpCloudService:removeClient: %s, %s", this, udpCloudClient);
+				this.clients.remove(udpCloudClient.key);
 			})
 		},
 		"resolvePeer" : {

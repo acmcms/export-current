@@ -17,7 +17,7 @@ const CallbackTrustCookie = module.exports = ae3.Class.create(
 			value : function(component){
 				const keys = component.confirmedMatingKeys;
 				if(!keys){
-					console.log(">>>>>> ndm.client:callback:ndmp/trustCookie: refused: no service link established %s, %s", this.group, this.cookie);
+					console.log("ndm.client::CallbackTrustCookie:prepareCallback: refused: no service link established %s, %s", this.group, this.cookie);
 					return false;
 				}
 				
@@ -28,7 +28,7 @@ const CallbackTrustCookie = module.exports = ae3.Class.create(
 		},
 		"executeCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:ndmp/trustCookie: %s, %s", this.group, this.cookie);
+				console.log("ndm.client::CallbackTrustCookie:executeCallback: %s, %s", this.group, this.cookie);
 			}
 		},
 	}

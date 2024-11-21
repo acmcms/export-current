@@ -200,7 +200,7 @@ const Client = module.exports = ae3.Class.create(
 				if(n.alias && n.settings && n.settings.domain){
 					this.ndmpZone = n.settings.domain;
 					this.ndmpHost = n.alias.substring(0, 24) + '.' + this.ndmpZone;
-					console.log("ndm.client: '%s': 'ut1' notification handler, system name: %s", this.clientId, this.ndmpHost);
+					console.log("ndm.client::Client::onUpdateTokenXns: '%s': 'ut1' notification handler, system name: %s", this.clientId, this.ndmpHost);
 				}
 				if(id !== this.ndmpHost){
 					if(this.ndmpHost){
@@ -363,7 +363,7 @@ function internCheckStats(clientRequest){
 	}
 	var next = stats && stats.length > limit && stats[stats.length-1].id;
 
-	// console.log("ndm.client:intern-check-stats >>>>>>> " + Format.jsDescribe(stats));
+	// console.log("ndm.client::Client::internCheckStats: " + Format.jsDescribe(stats));
 	throw "CHECKPOINT";
 	
 	var data = {};
@@ -387,7 +387,7 @@ function internCheckStats(clientRequest){
 			this.vfs.setContentPublicTreePrimitive("lastExported", next);
 		}).bind(this),
 		onError	: (function(code, text){
-			console.error("ndm.client '%s': Stats dump is not supported by server, code=%s", this.clientId, code);
+			console.error("ndm.client::Client::internCheckStats: '%s': Stats dump is not supported by server, code=%s", this.clientId, code);
 		}).bind(this),
 	});
 	return true;
@@ -422,10 +422,10 @@ function internAppendRegister(clientRequest, reason){
 			// const address = map.address;
 			const notify = map.notify;
 			var notification, handlers, handler, id;
-			console.log("ndm.client '%s': registration result OK, got notifications: %s", this.clientId, (!!notify));
+			console.log("ndm.client::Client::register:onSuccess: '%s': registration OK, got notifications: %s", this.clientId, (!!notify));
 			if(notify){
 				for(notification of Array(notify)){
-					console.log("ndm.client '%s': got notification: %s", this.clientId, Format.jsObject(notification));
+					console.log("ndm.client::Client::register:onSuccess: '%s': notification: %s", this.clientId, Format.jsObject(notification));
 					id = notification.id;
 					handlers = this.notificationHandlers[id];
 					if(handlers){
@@ -439,7 +439,7 @@ function internAppendRegister(clientRequest, reason){
 			this.vfs.setContentPublicTreePrimitive("lastRegistered", new Date());
 		}).bind(this),
 		onError	: (function(code, text){
-			console.error("ndm.client '%s': Registration failed, code=%s", this.clientId, code);
+			console.error("ndm.client::Client::register:onError: '%s': Registration failed, code=%s", this.clientId, code);
 		}).bind(this),
 	});
 }

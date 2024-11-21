@@ -9,13 +9,13 @@ const CallbackAuthenticateLink = module.exports = ae3.Class.create(
 	{
 		"prepareCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:ndmp/authenticateLink: prepare: not implemented");
+				console.log("ndm.client::CallbackAuthenticateLink:prepareCallback: not implemented");
 				return true;
 			}
 		},
 		"executeCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:ndmp/authenticateLink: execute: not implemented");
+				console.log("ndm.client::CallbackAuthenticateLink:executeCallback: not implemented");
 			}
 		},
 	}

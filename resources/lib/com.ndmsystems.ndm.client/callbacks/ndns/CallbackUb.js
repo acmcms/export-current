@@ -15,7 +15,7 @@ const CallbackUb = module.exports = ae3.Class.create(
 	{
 		"executeCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:ndns/ub: delay=%s, reason=%s", this.delayS, this.reason);
+				console.log("ndm.client::CallbackUb:executeCallback: delay=%s, reason=%s", this.delayS, this.reason);
 				setTimeout( //
 					component.client.doRegister.bind(component.client, this.reason), 
 					1000 * (this.delayS|0)

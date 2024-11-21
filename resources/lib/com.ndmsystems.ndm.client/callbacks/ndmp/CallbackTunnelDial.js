@@ -15,13 +15,13 @@ const CallbackTunnelDial = module.exports = ae3.Class.create(
 	{
 		"prepareCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:ndmp/tunnelDial: refused: no service link established %s, %s", this.group, this.cookie);
+				console.log("ndm.client::CallbackTunnelDial:prepareCallback: refused: no service link established %s, %s", this.group, this.cookie);
 				return false;
 			}
 		},
 		"executeCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:ndmp/tunnelDial: %s, %s", this.group, this.cookie);
+				console.log("ndm.client::CallbackTunnelDial:executeCallback: %s, %s", this.group, this.cookie);
 			}
 		},
 	}

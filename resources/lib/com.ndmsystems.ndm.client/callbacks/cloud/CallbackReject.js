@@ -13,13 +13,13 @@ const CallbackReject = module.exports = ae3.Class.create(
 	{
 		"prepareCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:cloud/reject: refused (as desined)");
+				console.log("ndm.client::CallbackReject:executeCallback: rejected/refused (as desined)");
 				return false;
 			}
 		},
 		"executeCallback" : {
 			value : function(component){
-				console.log(">>>>>> ndm.client:callback:cloud/reject");
+				console.log("ndm.client::CallbackReject:executeCallback: rejected? (should not be here, actually)");
 			}
 		},
 	}
