@@ -127,10 +127,10 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 						 */
 						break;
 					}
-					console.log(">>>>>>> kl: " + start);
+					console.log("RuntimeStatsServiceObject::doDatabaseCleanup: kl: " + start);
 					for(content of contents){
 						if(!content.doUnlink()){
-							console.error(">>>>>>> error unlinking stats: %s", content.key);
+							console.error("RuntimeStatsServiceObject::doDatabaseCleanup: error unlinking stats: %s", content.key);
 						}
 					}
 				}
@@ -146,10 +146,10 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 						 */
 						break;
 					}
-					console.log(">>>>>>> kl: " + startOld);
+					console.log("RuntimeStatsServiceObject::doDatabaseCleanup: kl-old: " + startOld);
 					for(content of contents){
 						if(!content.doUnlink()){
-							console.error(">>>>>>> error unlinking stats: %s", content.key);
+							console.error("RuntimeStatsServiceObject::doDatabaseCleanup: error unlinking stats: %s", content.key);
 						}
 					}
 				}

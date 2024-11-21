@@ -37,7 +37,7 @@ const StatsService = Object.create(Object.prototype, {
 	},
 	"runPeriodicIdleTasks" : {
 		value : function(){
-			console.log(">>>>>>> stats start");
+			console.log("Stats::runPeriodicIdleTasks: start");
 			this.RuntimeStatsService.doDatabaseCleanup();
 		}
 	},

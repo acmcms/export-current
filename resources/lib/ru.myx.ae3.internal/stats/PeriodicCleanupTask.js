@@ -1,5 +1,5 @@
 exports.run = function task(){
-	console.log(">>>>>>> stats periodic cleanup");
+	console.log("PeriodicCleanupTask::run: stats periodic cleanup");
 	require('./Stats').runPeriodicIdleTasks();
 	return true;
 };
