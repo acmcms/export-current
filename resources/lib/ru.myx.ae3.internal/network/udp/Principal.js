@@ -305,7 +305,7 @@ const Principal = module.exports = ae3.Class.create(
 				 */
 				copyBytes(d.result, 0, b, 0, 16);
 				
-				if(false && (!m || false !== m.log)){
+				if(false && (!false !== m.log)){
 					m = Object.create(m);
 					for keys(k in m){
 						v = m[k];
@@ -325,16 +325,20 @@ const Principal = module.exports = ae3.Class.create(
 		},
 		/**
 		 * checks incoming query (outgoing reply) cache
+		 * function(serial)
+		 * return undefined or true
 		 */
-		checkRxqSerial : {
+		checkIncomingQuerySerial : {
 			value : function(serial){
 				return undefined;
 			}
 		},
 		/**
 		 * checks incoming reply (outgoing request) cache
+		 * function(serial)
+		 * return: undefined or true or ready reply message to repeat
 		 */
-		checkRxrSerial : {
+		checkIncomingReplySerial : {
 			value : function(serial){
 				return undefined;
 			}
@@ -366,11 +370,12 @@ const Principal = module.exports = ae3.Class.create(
 		/**
 		 * given outgoing query `task` is waiting for replies with given `serial`
 		 *
+		 * task - task object or false. (false to silently discard possible legit replies)
 		 */
-		serialTxqQueue : {
+		cacheWaitingTaskSerial : {
 			value : function(serial, task){
-				console.log("UDP::Principal:serialTxqQueue: %s: serialTxqQueue not implemented", this);
-				throw new Error("'serialTxqQueue' of Principal is an abstract method and should be overriden!");
+				console.log("UDP::Principal:cacheWaitingTaskSerial: %s: cacheWaitingTaskSerial not implemented", this);
+				throw new Error("'cacheWaitingTaskSerial' of Principal is an abstract method and should be overriden!");
 			}
 		},
 		/** ... 
@@ -386,10 +391,10 @@ const Principal = module.exports = ae3.Class.create(
 		 * case true, stage 1 - ignore message
 		 * case <Message>, stage 2 - return cached reply
 		 */
-		serialRxqCache : {
+		cacheIncomingQuerySerial : {
 			value : function(serial, result){
-				console.log("UDP::Principal:serialRxqCache: %s: serialRxqCache not implemented", this);
-				throw new Error("'serialRxqCache' of Principal is an abstract method and should be overriden!");
+				console.log("UDP::Principal:cacheIncomingQuerySerial: %s: cacheIncomingQuerySerial not implemented", this);
+				// throw new Error("'cacheIncomingQuerySerial' of Principal is an abstract method and should be overriden!");
 			}
 		},
 		/** ... 
@@ -400,10 +405,10 @@ const Principal = module.exports = ae3.Class.create(
 		 *
 		 * further reply messages with given serial are discarded.
 		 */
-		serialRxrCache : {
+		cacheIncomingReplySerial : {
 			value : function(serial){
-				console.log("UDP::Principal:serialRxrCache: %s: serialRxrCache not implemented", this);
-				throw new Error("'serialRxrCache' of Principal is an abstract method and should be overriden!");
+				console.log("UDP::Principal:cacheIncomingReplySerial: %s: cacheIncomingReplySerial not implemented", this);
+				// throw new Error("'cacheIncomingReplySerial' of Principal is an abstract method and should be overriden!");
 			}
 		},
 		/**

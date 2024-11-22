@@ -2,9 +2,13 @@ const ae3 = require('ae3');
 
 const FN_FORMAT_BINARY_AS_HEX = Format.binaryAsHex;
 
-
-const FN_ON_REPLY_ASYNC = function(task, message){
-	task.onReceive(message) === true || this.serialRxrCache(task.serial);
+/**
+ * unless task returns true, the following replies will be ignored
+ * 
+ * 'this' - is an instance of RemoteServicePrincipal
+ */
+const FN_TASK_ON_RECEIVE_ASYNC = function(serial, task, message){
+	task.onReceive(message) === true || this.cacheIncomingReplySerial(serial);
 };
 
 const Principal = require('./Principal');
@@ -16,6 +20,25 @@ const CoarseDelayCache = ae3.Concurrent.CoarseDelayCache;
 
 const UdpServiceHelper = require("java.class/ru.myx.ae3.internal.net.UdpServiceHelper");
 
+/**
+ * 'this' should be bint to RemoteServicePrincipal instanc
+ * 'task' - task or false.
+ */
+const expireWaitingTaskSerial = UdpServiceHelper?.expireWaitingTaskSerial ?? function(serial, task){
+	this.receiveReplySerialsCache.put(serial, true);
+	task.onDestroy?.();
+};
+
+/**
+ * 'this' should be bint to RemoteServicePrincipal instance
+ * 'x' true or message
+ */
+const expireReceiveCachedSerial = UdpServiceHelper?.expireReceiveCachedSerial ?? function(serial, x){
+	if(this.sRx < serial && this.sTx > serial && (serial > 16000000) === (this.sRx > 16000000)){
+		this.sRx = serial;
+	}
+};
+
 const RemoteServicePrincipal = module.exports = ae3.Class.create(
 	/* name */
 	"RemoteServicePrincipal",
@@ -26,34 +49,17 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 		this.Principal(key, dst, secret, serial);
 		
 		Object.defineProperties(this, {
-			"serialTxqQueueWindow" : {
+			"waitingTaskSerialsCache" : {
 				/** tasks awaiting replies cache **/
-				value : new CoarseDelayCache(3200, 5, (UdpServiceHelper.serialTxqQueueExpire || (
-					function(serial, task){
-						this.serialTxqCacheWindow.put(serial, task);
-						task.onDestroy();
-					}
-				)).bind(this))
+				value : new CoarseDelayCache(3100, 5, expireWaitingTaskSerial.bind(this))
 			},
-			"serialRxqCacheWindow" : {
-				/** fresh incoming requests for us to ignore */
-				value : new CoarseDelayCache(3800, 5, (UdpServiceHelper.serialAxqCacheExpire || (
-					function(serial, task){
-						if(this.sRx < serial && this.sTx > serial && (serial > 16000000) === (this.sRx > 16000000)){
-							this.sRx = serial;
-						}
-					}
-				)).bind(this))
+			"receiveQuerySerialsCache" : {
+				/** fresh incoming requests for us to ignore or repeat replies */
+				value : new CoarseDelayCache(3400, 5, expireReceiveCachedSerial.bind(this))
 			},
-			"serialTxqCacheWindow" : {
+			"receiveReplySerialsCache" : {
 				/** fresh incoming replies for us to ignore */
-				value : new CoarseDelayCache(3800, 5, (UdpServiceHelper.serialAxqCacheExpire || (
-					function(serial, task){
-						if(this.sRx < serial && this.sTx > serial && (serial > 16000000) === (this.sRx > 16000000)){
-							this.sRx = serial;
-						}
-					}
-				)).bind(this))
+				value : new CoarseDelayCache(3400, 5, expireReceiveCachedSerial.bind(this))
 			},
 		});
 		
@@ -74,45 +80,56 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 				return FN_FORMAT_BINARY_AS_HEX(this.key);
 			}
 		},
-		checkRxqSerial : {
-			/** function get(serial) **/
+		
+		/**
+		 * register incoming routed request duplicates filter, see Principal.
+		 */
+		cacheIncomingQuerySerial : {
+			/** function put(serial, result/true) **/
 			execute : "once", get : function(){
-				return this.serialRxqCacheWindow.readCheck.bind(this.serialRxqCacheWindow);
+				return this.receiveQuerySerialsCache.put.bind(this.receiveQuerySerialsCache);
 			}
 		},
-		checkRxrSerial : {
-			/** function get(serial) **/
-			execute : "once", get : function(){
-				return this.serialTxqCacheWindow.readCheck.bind(this.serialTxqCacheWindow);
+		/**
+		 * register incoming routed reply duplicates filter, see Principal.
+		 */
+		cacheIncomingReplySerial : {
+			/** function put(serial) **/
+			value : function(serial){
+				this.receiveReplySerialsCache.put(serial, true);
+				this.waitingTaskSerialsCache.remove(serial);
 			}
 		},
+
+		/**
+		 * check incoming routed request duplicates filter, see Principal.
+		 */
+		checkIncomingQuerySerial : {
+			/** function get(serial) **/
+			execute : "once", get : function(){
+				return this.receiveQuerySerialsCache.readCheck.bind(this.receiveQuerySerialsCache);
+			}
+		},
+		/**
+		 * check incoming routed reply duplicates filter, see Principal.
+		 */
+		checkIncomingReplySerial : {
+			/** function get(serial) **/
+			execute : "once", get : function(){
+				return this.receiveReplySerialsCache.readCheck.bind(this.receiveReplySerialsCache);
+			}
+		},
+		
 		/**
 		 * register pending outgoing request task, see Principal.
 		 */
-		serialTxqQueue : {
+		cacheWaitingTaskSerial : {
 			/** function put(serial, task) **/
 			execute : "once", get : function(){
-				return this.serialTxqQueueWindow.put.bind(this.serialTxqQueueWindow);
+				return this.waitingTaskSerialsCache.put.bind(this.waitingTaskSerialsCache);
 			}
 		},
-		/**
-		 * register incoming routed request filter, see Principal.
-		 */
-		serialRxqCache : {
-			/** function put(serial, result) **/
-			execute : "once", get : function(){
-				return this.serialRxqCacheWindow.put.bind(this.serialRxqCacheWindow);
-			}
-		},
-		/**
-		 * register incoming routed reply filter, see Principal.
-		 */
-		serialRxrCache : {
-			value : function(serial){
-				this.serialTxqCacheWindow.put(serial, true);
-				this.serialTxqQueueWindow.remove(serial);
-			}
-		},
+
 		puncher : {
 			/**
 			 * set the puncher object that will receive: 
@@ -165,7 +182,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 					if(message.isUHP_PUNCH){
 						console.log("UDP::UdpPrincipal:onReceive:UhpPunch: %s: %s, address: %s, serial: %s", this, message, address, serial);
 						/* ignore repeated messages with same serial */
-						this.serialRxqCache(serial, true);
+						this.cacheIncomingQuerySerial(serial, true);
 						/* check update local serial */
 						if(this.sTx < serial && (serial > 16000000) === (this.sTx > 16000000)){
 							this.sTx = serial;
@@ -192,11 +209,18 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 				
 				if(message.isReply){
 					/** check task that awaits **/
-					if( (task = this.serialTxqQueueWindow.readCheck(serial)) ){
+					if( (task = this.waitingTaskSerialsCache.readCheck(serial)) ){
 						console.log("UDP::UdpPrincipal:onReceive:ReplyTask: %s: %s, address: %s, serial: %s", this, message, address, serial);
-						setTimeout(FN_ON_REPLY_ASYNC.bind(this, task, message), 0);
+						/** start asynchronous processing **/
+						setTimeout(FN_TASK_ON_RECEIVE_ASYNC.bind(this, serial, task, message), 0);
 						return;
 					}
+					/** check serial explicitly ignored **/
+					if( false === task ){
+						// console.info("UDP::UdpPrincipal:onReceive:ReplyIgnore: %s: %s, address: %s, serial: %s", this, message, address, serial);
+						return;
+					}
+					/** reply without corresponting request still alive **/
 					console.log("UDP::UdpPrincipal:onReceive:ReplySkip: %s: %s, address: %s, serial: %s", this, message, address, serial);
 					return;
 				}
@@ -204,7 +228,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 				if(message.isRequest){
 					console.log("UDP::UdpPrincipal:onReceive:Request: %s: %s, address: %s, serial: %s", this, message, address, serial);
 					/** no repetitions for requests **/
-					this.serialRxqCache(serial, true);
+					this.cacheIncomingQuerySerial(serial, true);
 					return FN_ON_RECEIVE_PRINCIPAL.call(this, message, address, serial);
 				}
 

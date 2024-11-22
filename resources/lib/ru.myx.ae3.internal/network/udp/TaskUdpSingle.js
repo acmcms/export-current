@@ -64,7 +64,7 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 			throw 'TaskUdpSingle: serial should be known!';
 		}
 
-		peer.serialTxqQueue(this.serial, this);
+		peer.cacheWaitingTaskSerial(this.serial, this);
 
 		if( (this.retryDelay = /* message.retryDelay ?? */ this.defaultRetryDelay) > 100 ){
 			/** do retries **/
@@ -261,7 +261,12 @@ const TaskUdpSingle = module.exports = ae3.Class.create(
 	{
 		"sendOnce" : {
 			value : function(peer, message){
-				if(peer.sendSingle( message.serial ? message : Object.create(message) )){
+				if(peer.sendSingle( (message.serial ?? message) ?? (message = Object.create(message)) )){
+					if(message.isRequest){
+						peer.cacheWaitingTaskSerial(message.serial, false);
+						console.log("UDP::TaskUdpSingle:sendOnce: query, done, 1 messages sent, peers: 1, message: %s", message);
+						return 1;
+					}
 					console.log("UDP::TaskUdpSingle:sendOnce: done, 1 messages sent, peers: 1, message: %s", message);
 					return 1;
 				} 

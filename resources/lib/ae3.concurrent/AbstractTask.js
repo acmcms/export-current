@@ -25,7 +25,7 @@ const AbstractTask = module.exports = ae3.Class.create(
 	{
 		cancel : {
 			value : function(){
-				console.log(">>>>>> " + this + ", cancel");
+				console.log("Async::AbstractTask: " + this + ", cancel");
 			}
 		},
 		parent : {
@@ -74,7 +74,7 @@ const AbstractTask = module.exports = ae3.Class.create(
 			try{
 				import ru.myx.ae3.internal.tasks.TaskLog;
 				if('function' === typeof TaskLog.checkCreate){
-					console.log("TaskLog:checkCreate: java native implementation will be used.");
+					console.log("Async::AbstractTask:taskLogger: java native implementation will be used.");
 					return {
 						get : TaskLog.checkCreate
 					};
