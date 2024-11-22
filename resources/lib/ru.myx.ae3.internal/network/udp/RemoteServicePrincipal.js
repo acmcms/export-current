@@ -193,7 +193,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 				if(message.isReply){
 					/** check task that awaits **/
 					if( (task = this.serialTxqQueueWindow.readCheck(serial)) ){
-						console.log("UDP::UdpPrincipal:onReceive:ReplyTask: %s: %s, address: %s, serial: %s, task: %s", this, message, address, serial, task);
+						console.log("UDP::UdpPrincipal:onReceive:ReplyTask: %s: %s, address: %s, serial: %s", this, message, address, serial);
 						setTimeout(FN_ON_REPLY_ASYNC.bind(this, task, message), 0);
 						return;
 					}

@@ -96,7 +96,7 @@ const Puncher = module.exports = ae3.Class.create(
 		},
 		"onMeet" : {
 			value : function(meet, address){
-				console.log("UDP::Puncher:onMeet: %s: %s, address: %s", this, meet, address);
+				console.log("UDP::Puncher:onMeet: state: %s, %s: %s, address: %s", this.state, this.remote, meet, address);
 				this.puncherReset();
 				return false;
 			}
@@ -112,7 +112,7 @@ const Puncher = module.exports = ae3.Class.create(
 				if(!seen.parseMode(this)){
 					// mode is 0x00 - reset and exit
 					this.puncherReset();
-					console.log("UDP::Puncher:onSeen: %s: %s, address: %s, code 0x00, puncher reset into enabled state.", this, seen, address);
+					console.log("UDP::Puncher:onSeen: state: %s, %s: %s, address: %s, code 0x00, puncher reset into enabled state.", this.state, this.remote, seen, address);
 					return false;
 				}
 				this.since = 0;
@@ -122,10 +122,10 @@ const Puncher = module.exports = ae3.Class.create(
 						writable : true
 					});
 					this.state = 'active';
-					console.log("UDP::Puncher:onSeen: %s: %s, address: %s, puncher mode switched search->active", this, seen, address);
+					console.log("UDP::Puncher:onSeen: state: %s, %s: %s, address: %s, puncher mode switched search->active", this.state, this.remote, seen, address);
 					return true;
 				}
-				console.log("UDP::Puncher:onSeen: %s: %s, address: %s", this, seen, address);
+				console.log("UDP::Puncher:onSeen: state: %s, %s: %s, address: %s", this.state, this.remote, seen, address);
 				return true;
 			}
 		},
