@@ -43,6 +43,7 @@ const UdpCloudClient = module.exports = ae3.Class.create(
 		},
 		"toString" : {
 			value : function(){
+				return [ "[UdpCloudClient, ", this.client, ", target=", this.targetSpec, ", servicePort: ", UdpCloudService.port, "]" ].join("");
 				return [ "[UdpCloudClient, ", this.client, ", target=", this.targetSpec, ", ", UdpCloudService, "]" ].join("");
 				return "[UdpCloudClient, " + this.client + ", target=" + this.targetSpec + ", " + UdpCloudService + "]";
 			}

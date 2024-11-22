@@ -118,7 +118,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 			console.log("UDP::Read: skip-ignore: iface: %s, peer: %s, rejected by peer, request?: %s, serial: %s, addr: %s:%s", 
 				this, 
 				peer.shortHostString ?? peer,
-				m.isRequest,
+				m.prototype.isRequest,
 				ms, 
 				pkt.sourceAddress.address.hostAddress, 
 				pkt.sourceAddress.port

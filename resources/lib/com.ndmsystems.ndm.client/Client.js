@@ -248,7 +248,7 @@ const Client = module.exports = ae3.Class.create(
 		},
 		toString : {
 			value : function(){
-				return "[NdmcClient " + Format.jsString(this.licenseNumber) + "/" + Format.jsString(this.clientId)+"]";
+				return "[NdmClient " + this.licenseNumber + "/" + this.clientId+"]";
 			}
 		},
 		auth : {

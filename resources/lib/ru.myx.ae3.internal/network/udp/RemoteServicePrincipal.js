@@ -182,8 +182,12 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 						);
 					}
 
-					console.log("UDP::UdpPrincipal:onReceive:UhpOther: %s: %s, address: %s, serial: %s, puncher?: %s", this, message, address, serial, !!this.puncher);
-					return this.puncher?.onUHP(message, address, serial);
+					if(this.puncher){
+						return this.puncher.onUHP(message, address, serial);
+					}
+					
+					console.log("UDP::UdpPrincipal:onReceive:UhpOther: %s: %s, address: %s, serial: %s, no puncher object.", this, message, address, serial);
+					return undefined;
 				}
 				
 				if(message.isReply){
