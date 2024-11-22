@@ -115,7 +115,7 @@ const Principal = module.exports = ae3.Class.create(
 		 */
 		updateSecret : {
 			value : function(secret, serial){
-				console.log("UdpService::Principal:updateSecret: %s: secret?: %s, changed: %s, serial: %s", 
+				console.info("UDP::Principal:updateSecret: %s: secret?: %s, changed: %s, serial: %s", 
 					this, 
 					!!secret, 
 					(secret && secret != this.secret), 
@@ -201,7 +201,7 @@ const Principal = module.exports = ae3.Class.create(
 				c = message.code;
 				if( ((c^0) !== c) ){
 					/*
-					console.log("UdpService::Principal:onReceive: %s: invalid code: %s, address: %s, serial: %s", 
+					console.log("UDP::Principal:onReceive: %s: invalid code: %s, address: %s, serial: %s", 
 						this, 
 						message, 
 						address, 
@@ -213,7 +213,7 @@ const Principal = module.exports = ae3.Class.create(
 				h = this.handlers[c];
 				if(h){
 					/*
-					console.log("UdpService::Principal:onReceive: %s: type: %s, address: %s, serial: %s, type: %s", 
+					console.log("UDP::Principal:onReceive: %s: type: %s, address: %s, serial: %s, type: %s", 
 						this, 
 						message, 
 						address, 
@@ -228,7 +228,7 @@ const Principal = module.exports = ae3.Class.create(
 					return;
 				}
 				/*
-				console.log("UdpService::Principal:onReceive: %s: no handler: %s, address: %s, serial: %s", 
+				console.log("UDP::Principal:onReceive: %s: no handler: %s, address: %s, serial: %s", 
 					this, 
 					message, 
 					address, 
@@ -267,12 +267,12 @@ const Principal = module.exports = ae3.Class.create(
 			value : UdpServiceHelper.principalSendImpl || (function(b, d, m, a /* locals: */, key, s, len, pkt, k, v){
 				if( ! (a ||= this.dst) ){
 					if(false !== m.log){
-						console.log("UdpService::Principal:sendImpl: %s: udp-send-skip, no address, message: %s", this, m);
+						console.log("UDP::Principal:sendImpl: %s: udp-send-skip, no address, message: %s", this, m);
 					}
 					return 0;
 				}
 				if( ! (key = this.key || m.key) ){
-					console.log("UdpService::Principal:sendImpl: %s: udp-send-skip, no dst alias, message: %s", this, m);
+					console.log("UDP::Principal:sendImpl: %s: udp-send-skip, no dst alias, message: %s", this, m);
 					return 0;
 				}
 				
@@ -311,7 +311,7 @@ const Principal = module.exports = ae3.Class.create(
 						v = m[k];
 						isSocketAddress(v) && (m[k] = v.address + ':' + v.port);
 					}
-					console.log("UdpService::Principal:sendImpl: udp-send: -> %s @ %s:%s, ser: %s, len: %s, %s", 
+					console.log("UDP::Principal:sendImpl: udp-send: -> %s @ %s:%s, ser: %s, len: %s, %s", 
 						Format.jsObject(key.slice(0, 12)), 
 						a.address.hostAddress, 
 						a.port,
@@ -369,7 +369,7 @@ const Principal = module.exports = ae3.Class.create(
 		 */
 		serialTxqQueue : {
 			value : function(serial, task){
-				console.log("UdpService::Principal:serialTxqQueue: %s: serialTxqQueue not implemented", this);
+				console.log("UDP::Principal:serialTxqQueue: %s: serialTxqQueue not implemented", this);
 				throw new Error("'serialTxqQueue' of Principal is an abstract method and should be overriden!");
 			}
 		},
@@ -388,7 +388,7 @@ const Principal = module.exports = ae3.Class.create(
 		 */
 		serialRxqCache : {
 			value : function(serial, result){
-				console.log("UdpService::Principal:serialRxqCache: %s: serialRxqCache not implemented", this);
+				console.log("UDP::Principal:serialRxqCache: %s: serialRxqCache not implemented", this);
 				throw new Error("'serialRxqCache' of Principal is an abstract method and should be overriden!");
 			}
 		},
@@ -402,7 +402,7 @@ const Principal = module.exports = ae3.Class.create(
 		 */
 		serialRxrCache : {
 			value : function(serial){
-				console.log("UdpService::Principal:serialRxrCache: %s: serialRxrCache not implemented", this);
+				console.log("UDP::Principal:serialRxrCache: %s: serialRxrCache not implemented", this);
 				throw new Error("'serialRxrCache' of Principal is an abstract method and should be overriden!");
 			}
 		},
@@ -411,7 +411,7 @@ const Principal = module.exports = ae3.Class.create(
 		 */
 		sendUdp : {
 			value : function(payload, addr){
-				console.log("UdpService::Principal:sendUdp: %s: sendUdp not implemented", this);
+				console.log("UDP::Principal:sendUdp: %s: sendUdp not implemented", this);
 				throw new Error("'sendUdp' of Principal is an abstract method and should be overriden!");
 			}
 		},

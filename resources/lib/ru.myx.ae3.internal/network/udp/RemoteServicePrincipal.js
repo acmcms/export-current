@@ -163,7 +163,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 			value : function(message, address, serial /* locals: */, task){
 				if(message.isUHP){
 					if(message.isUHP_PUNCH){
-						console.log("UdpService::Principal:onReceive:UhpPunch: %s: %s, address: %s, serial: %s", this, message, address, serial);
+						console.log("UDP::UdpPrincipal:onReceive:UhpPunch: %s: %s, address: %s, serial: %s", this, message, address, serial);
 						/* ignore repeated messages with same serial */
 						this.serialRxqCache(serial, true);
 						/* check update local serial */
@@ -182,35 +182,35 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 						);
 					}
 
-					console.log("UdpService::Principal:onReceive:UhpOther: %s: %s, address: %s, serial: %s, puncher?: %s", this, message, address, serial, !!this.puncher);
+					console.log("UDP::UdpPrincipal:onReceive:UhpOther: %s: %s, address: %s, serial: %s, puncher?: %s", this, message, address, serial, !!this.puncher);
 					return this.puncher?.onUHP(message, address, serial);
 				}
 				
 				if(message.isReply){
 					/** check task that awaits **/
 					if( (task = this.serialTxqQueueWindow.readCheck(serial)) ){
-						console.log("UdpService::Principal:onReceive:ReplyTask: %s: %s, address: %s, serial: %s, task: %s", this, message, address, serial, task);
+						console.log("UDP::UdpPrincipal:onReceive:ReplyTask: %s: %s, address: %s, serial: %s, task: %s", this, message, address, serial, task);
 						setTimeout(FN_ON_REPLY_ASYNC.bind(this, task, message), 0);
 						return;
 					}
-					console.log("UdpService::Principal:onReceive:ReplySkip: %s: %s, address: %s, serial: %s", this, message, address, serial);
+					console.log("UDP::UdpPrincipal:onReceive:ReplySkip: %s: %s, address: %s, serial: %s", this, message, address, serial);
 					return;
 				}
 				
 				if(message.isRequest){
-					console.log("UdpService::Principal:onReceive:Request: %s: %s, address: %s, serial: %s", this, message, address, serial);
+					console.log("UDP::UdpPrincipal:onReceive:Request: %s: %s, address: %s, serial: %s", this, message, address, serial);
 					/** no repetitions for requests **/
 					this.serialRxqCache(serial, true);
 					return FN_ON_RECEIVE_PRINCIPAL.call(this, message, address, serial);
 				}
 
-				console.log("UdpService::Principal:onReceive:Skip: %s: %s, address: %s, serial: %s", this, message, address, serial);
+				console.log("UDP::UdpPrincipal:onReceive:Skip: %s: %s, address: %s, serial: %s", this, message, address, serial);
 				return;
 			}
 		},
 		updateSecret : {
 			value : function(secret, serial){
-				console.log("UdpService::Principal:updateSecret: %s: secret?: %s, serial: %s, puncher?: %s", this, !!secret, serial, this.puncher?.state);
+				console.log("UDP::UdpPrincipal:updateSecret: %s: secret?: %s, serial: %s, puncher?: %s", this, !!secret, serial, this.puncher?.state);
 				return FN_UPDATE_SECRET_PRINCIPAL.call(this, secret, serial);
 			}
 		},
