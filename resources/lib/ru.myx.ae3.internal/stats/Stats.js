@@ -143,7 +143,7 @@ function serviceLoop(){
 
 
 const makeTextStatsCached = ae3.Concurrent.wrapOnceWithExpiration(function(){
-	console.log(">>>>>>> tcp stats prepared.");
+	console.log("Stats::makeTextStatsCached: tcp stats prepared.");
 	var g, p, r, c;
 	var x = ''; $output(x){
 		for(g of StatsService.getGroups()){
@@ -174,8 +174,8 @@ const makeTextStatsCached = ae3.Concurrent.wrapOnceWithExpiration(function(){
 }, 10000);
 
 function callbackTcpStatsHandler(s){
-	// console.log(">>>>>>> tcp stats request.");
-	// console.log(">>>>>>> tcp stats request: " + Format.jsDescribe(s));
+	// console.log("Stats::callbackTcpStatsHandler: tcp stats request.");
+	// console.log("Stats::callbackTcpStatsHandler: tcp stats request: " + Format.jsDescribe(s));
 
 	try{ 
 		s.target.absorbBuffer(ae3.Transfer.createBufferUtf8(makeTextStatsCached()));

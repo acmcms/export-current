@@ -100,9 +100,9 @@ const UdpService = module.exports = ae3.Class.create(
 		 */
 		destroy : {
 			value : Concurrent.wrapSync(function(){
-				this.sock && this.sock.close();
+				this.sock?.close();
 				const receiveCallback = this.receiveCallback;
-				receiveCallback && (this.receiveCallback = null, receiveCallback.destroy && receiveCallback.destroy());
+				receiveCallback && (this.receiveCallback = null, receiveCallback.destroy?.());
 			})
 		},
 		/**

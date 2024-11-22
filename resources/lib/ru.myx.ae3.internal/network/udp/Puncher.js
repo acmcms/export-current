@@ -11,7 +11,7 @@ const TARGET_LIST_PROPERTY = {
 	set : function(x){
 		Object.defineProperty(this, "targetListArray", {
 			writable : true,
-			value : x && x.map 
+			value : x?.map 
 				? x.map(function(x){
 					return Object.create(x, {
 						host : {
@@ -91,6 +91,7 @@ const Puncher = module.exports = ae3.Class.create(
 					return this.onSeen(message, address, serial);
 				}
 				// }
+				console.log("UdpService::Puncher:onUHP: %s: %s, address: %s, unsupported message type!", this, meet, address);
 			}
 		},
 		"onMeet" : {

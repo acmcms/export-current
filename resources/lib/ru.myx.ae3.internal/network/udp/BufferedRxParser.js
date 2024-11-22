@@ -90,7 +90,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 
 		ms = ((b[1] & 0xFF) << 16) | ((b[2] & 0xFF) << 8) | (b[3] & 0xFF);
 		if(ms <= peer.sRx){
-			console.log("UdpService::Read: skip-serial: iface: %s, peer: %s, message serial: %s, peer serial: %s, addr: %s:%s",
+			console.log("UdpService::Read: skip-serial: iface: %s, peer: %s, message serial: %s, peer sRx: %s, addr: %s:%s",
 				this, 
 				peer.shortHostString ?? peer,
 				ms, 
@@ -113,11 +113,12 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 			continue;
 		}
 		
-		switch( (msg = (m.prototype.isRequest ? peer.checkRxqSerial(ms) : peer.checkRxrSerial(ms))) ){
-		case true:
-			console.log("UdpService::Read: skip-ignore: iface: %s, peer: %s, rejected by peer, serial: %s, addr: %s:%s", 
+		/** check ignore and, maybe, get cached reply msg */
+		if( true === (msg = (m.prototype.isRequest ? peer.checkRxqSerial(ms) : peer.checkRxrSerial(ms))) ){
+			console.log("UdpService::Read: skip-ignore: iface: %s, peer: %s, rejected by peer, request?: %s, serial: %s, addr: %s:%s", 
 				this, 
 				peer.shortHostString ?? peer,
+				m.isRequest,
 				ms, 
 				pkt.sourceAddress.address.hostAddress, 
 				pkt.sourceAddress.port

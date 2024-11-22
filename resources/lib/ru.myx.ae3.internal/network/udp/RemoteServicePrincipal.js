@@ -164,7 +164,9 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 				if(message.isUHP){
 					if(message.isUHP_PUNCH){
 						console.log("UdpService::Principal:onReceive:UhpPunch: %s: %s, address: %s, serial: %s", this, message, address, serial);
+						/* ignore repeated messages with same serial */
 						this.serialRxqCache(serial, true);
+						/* check update local serial */
 						if(this.sTx < serial && (serial > 16000000) === (this.sTx > 16000000)){
 							this.sTx = serial;
 						}
@@ -181,7 +183,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 					}
 
 					console.log("UdpService::Principal:onReceive:UhpOther: %s: %s, address: %s, serial: %s, puncher?: %s", this, message, address, serial, !!this.puncher);
-					return this.puncher && this.puncher.onUHP(message, address, serial);
+					return this.puncher?.onUHP(message, address, serial);
 				}
 				
 				if(message.isReply){
