@@ -328,14 +328,14 @@ const Puncher = module.exports = ae3.Class.create(
 					writable : true
 				});
 				this.state = 'stopped';
-				console.log("UDP::Puncher:destroy: %s: puncher destroyed", this.remote);
+				console.log("UDP::Puncher:destroy: %s: puncher destroyed", this);
 			}
 		},
 		
 		"toString" : {
 			value : function(){
-				return "[Puncher " + this.state + ", " + this.remote + "]";
-				return ["[Puncher ", this.state, ", ", this.remote, "]"].join("");
+				return "[Puncher " + this.state + " " + this.remote + "]";
+				return ["[Puncher ", this.state, " ", this.remote, "]"].join("");
 			}
 		}
 	}

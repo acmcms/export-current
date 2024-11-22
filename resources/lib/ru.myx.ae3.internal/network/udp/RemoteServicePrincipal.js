@@ -214,7 +214,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 		},
 		updateSecret : {
 			value : function(secret, serial){
-				console.log("UDP::UdpPrincipal:updateSecret: %s: secret?: %s, serial: %s, puncher?: %s", this, !!secret, serial, this.puncher?.state);
+				console.log("UDP::UdpPrincipal:updateSecret: %s: secret?: %s, serial: %s, puncher: %s", this, !!secret, serial, this.puncher?.state);
 				return FN_UPDATE_SECRET_PRINCIPAL.call(this, secret, serial);
 			}
 		},
