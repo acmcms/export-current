@@ -35,7 +35,7 @@ const UdpService = module.exports = ae3.Class.create(
 		);
 	
 		Object.defineProperty(this, "sock", {
-			value : ae3.net.udp.listen(port || 0, this.receiveCallback)
+			value : ae3.net.udp.listen(port ?? 0, this.receiveCallback)
 		});
 		
 		return this;
