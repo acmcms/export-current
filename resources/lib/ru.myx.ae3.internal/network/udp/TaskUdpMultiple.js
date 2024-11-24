@@ -127,7 +127,7 @@ const TaskUdpMultiple = module.exports = ae3.Class.create(
 				if(this.parent && 'function' === typeof (callback = this.parent.onChildTaskProgress)){
 					return callback.call(this.parent, this, single, result);
 				}
-				// this.logDebug("peer-done", single.peer, this.pending.size() + " left.");
+				// this.logDebug("peer-done", single.peer, this.pending?.size() + " left.");
 				return null;
 			}
 		},

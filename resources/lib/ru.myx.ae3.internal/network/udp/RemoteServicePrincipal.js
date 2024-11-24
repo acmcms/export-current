@@ -76,6 +76,7 @@ const RemoteServicePrincipal = module.exports = ae3.Class.create(
 		 * override Principal's getter to make it cached here
 		 */
 		keyHex : {
+			enumerable : true,
 			execute : "once", get : function(){
 				return FN_FORMAT_BINARY_AS_HEX(this.key);
 			}

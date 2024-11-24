@@ -25,11 +25,11 @@ const TaskUdpMultipleMapReplies = module.exports = ae3.Class.create(
 				}
 				this.result.put(single.peerName || single.peer.key, result);
 				if(result.isReplyContinue && !this.isStopOnContinue){
-					this.logDetail("peer-continue", single.peerName, this.pending.size() + " left.");
+					this.logDetail("peer-continue", single.peerName, this.pending?.size() + " left.");
 					return true;
 				}
 				{
-					this.logDetail("peer-reply", single.peerName, this.pending.size() + " left.");
+					this.logDetail("peer-reply", single.peerName, this.pending?.size() + " left.");
 					return null;
 				}
 			}

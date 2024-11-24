@@ -77,11 +77,10 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 			continue;
 		}
 		if(!peer){
-			console.log("UDP::Read: client-unknown: iface: %s, peerKey: %s, %s : sign: %s, addr: %s:%s", 
+			console.log("UDP::Read: client-unknown: iface: %s, peerKey: %s, %s : addr: %s:%s", 
 				this, 
 				FN_FORMAT_BINARY_AS_HEX(key), 
 				m.toString(), 
-				Format.jsObject(load.slice(0, 16)),
 				pkt.sourceAddress.address.hostAddress, 
 				pkt.sourceAddress.port
 			);

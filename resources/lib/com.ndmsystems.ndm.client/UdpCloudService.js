@@ -44,6 +44,17 @@ const UdpCloudService = ae3.Class.create(
 		},
 		"resolvePeer" : {
 			value : function(key){
+				console.log(
+					"ndm.client::UdpCloudService:resolvePeer: %s, key: %s", 
+					this, 
+					FN_FORMAT_BINARY_AS_HEX(key)
+				);
+				console.log(
+					"ndm.client::UdpCloudService:resolvePeer: %s, key: %s, keys: %s", 
+					this, 
+					FN_FORMAT_BINARY_AS_HEX(key),
+					Object.keys(this.clients).map(FN_FORMAT_BINARY_AS_HEX).join(":")
+				);
 				return this.clients.get(key);
 			}
 		},

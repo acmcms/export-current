@@ -17,6 +17,7 @@ const UdpCloudClient = module.exports = ae3.Class.create(
 		});
 		this.registerHandler(UdpCloudService.MSG_Q_CALL, require("./handlers/HandlerCall").bind(this));
 		this.registerHandler(UdpCloudService.MSG_Q_RRST, require("./handlers/HandlerRrst").bind(this));
+		console.log("ndm.client::UdpCloudClient:init: created %s", this);
 		return this;
 	},
 	{
@@ -33,17 +34,19 @@ const UdpCloudClient = module.exports = ae3.Class.create(
 			value : function(){
 				UdpCloudService.registerClient(this);
 				this.RemoteServicePrincipal.prototype.start.call(this);
+				console.log("ndm.client::UdpCloudClient:start: started %s", this);
 			}
 		},
 		"destroy" : {
 			value : function(){
 				UdpCloudService.removeClient(this);
 				this.RemoteServicePrincipal.prototype.destroy.call(this);
+				console.log("ndm.client::UdpCloudClient:destroy: destroyed %s", this);
 			}
 		},
 		"toString" : {
 			value : function(){
-				return [ "[UdpCloudClient, ", this.client, ", target=", this.targetSpec, ", servicePort: ", UdpCloudService.port, "]" ].join("");
+				return [ "[UdpCloudClient, ", this.client, ", target=", this.targetSpec, ", service: ", UdpCloudService.port, ", key: ", this.keyHex, "]" ].join("");
 				return [ "[UdpCloudClient, ", this.client, ", target=", this.targetSpec, ", ", UdpCloudService, "]" ].join("");
 				return "[UdpCloudClient, " + this.client + ", target=" + this.targetSpec + ", " + UdpCloudService + "]";
 			}
