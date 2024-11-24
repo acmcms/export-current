@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 
 /**
  * Only for nice looks in CLI
@@ -54,7 +54,7 @@ const Puncher = module.exports = ae3.Class.create(
 	/* instance methods */
 	{
 		"state" : {
-			value : 'enabled'
+			value : "init"
 		},
 		
 		"directAccess" : {
@@ -104,7 +104,7 @@ const Puncher = module.exports = ae3.Class.create(
 		
 		"onSeen" : {
 			value : function(seen, address, serial){
-				Object.defineProperty(this.remote, 'dst',{
+				Object.defineProperty(this.remote, "dst",{
 					writable : true,
 					value : address
 				});
@@ -116,12 +116,12 @@ const Puncher = module.exports = ae3.Class.create(
 					return false;
 				}
 				this.since = 0;
-				if(this.state === 'search'){
-					Object.defineProperty(this, 'timerTask', {
+				if(this.state === "search"){
+					Object.defineProperty(this, "timerTask", {
 						value : this.loopActive.bind(this),
 						writable : true
 					});
-					this.state = 'active';
+					this.state = "active";
 					console.log("UDP::Puncher:onSeen: state: %s, %s: %s, address: %s, puncher mode switched search->active", this.state, this.remote, seen, address);
 					return true;
 				}
@@ -133,7 +133,7 @@ const Puncher = module.exports = ae3.Class.create(
 		"puncherReset" : {
 			value : function(){
 				if(this.remote.targetSpec){
-					Object.defineProperty(this.remote, 'dst',{
+					Object.defineProperty(this.remote, "dst",{
 						writable : true,
 						value : null
 					});
@@ -144,27 +144,31 @@ const Puncher = module.exports = ae3.Class.create(
 				this.loopLimit = 5;
 				this.loopInterval = 2;
 				Object.defineProperties(this, {
-					'timerTask': {
+					"timerTask": {
 						value : this.loopEnabled.bind(this),
 						writable : true
 					},
-					'timerDate': {
+					"timerDate": {
 						value : 0,
 						writable : true
 					}
 				});
-				this.state = 'enabled';
+				if(this.state === "stopped"){
+					setTimeout(this.timerLoop, 1000);
+					console.log("UDP::Puncher:puncherReset: %s: puncher timer loop task restarted", this);
+				}
+				this.state = "enabled";
 			}
 		},
 		
 		"switchDisabled" : {
 			value : function(error){
-				this.error = 'prev: ' + this.state + ", error: " + error;
-				Object.defineProperty(this, 'timerTask', {
+				this.error = "prev: " + this.state + ", error: " + error;
+				Object.defineProperty(this, "timerTask", {
 					value : this.loopDisabled.bind(this),
 					writable : true
 				});
-				this.state = 'disabled';
+				this.state = "disabled";
 			}
 		},
 		
@@ -236,11 +240,11 @@ const Puncher = module.exports = ae3.Class.create(
 				this.directAccess = false;
 				this.loopLimit = 5;
 				this.loopInterval = 2;
-				Object.defineProperty(this, 'timerTask', {
+				Object.defineProperty(this, "timerTask", {
 					value : this.loopSearch.bind(this),
 					writable : true
 				});
-				this.state = 'search';
+				this.state = "search";
 				console.log("UDP::Puncher:loopEnabled: %s: puncher mode switched to 'search'", this.remote);
 			}
 		},
@@ -279,8 +283,8 @@ const Puncher = module.exports = ae3.Class.create(
 					this.since = 0;
 					this.loopLimit = 5;
 					this.loopInterval = 5;
-					this.state = 'search';
-					Object.defineProperty(this, 'timerTask', {
+					this.state = "search";
+					Object.defineProperty(this, "timerTask", {
 						value : this.loopSearch.bind(this),
 						writable : true
 					});
@@ -299,7 +303,13 @@ const Puncher = module.exports = ae3.Class.create(
 		
 		"timerLoop" : {
 			value : function(){
-				if(this.timerDate === -1 || this.remote.active === false){
+				if(this.state === "stopping..."){
+					this.state = "stopped";
+					Object.defineProperty(this, "timerDate", {
+						value : -1,
+						writable : true
+					});
+					console.log("UDP::Puncher:timeLoop: %s: puncher destroyed, task stopped", this);
 					// stop
 					return;
 				}
@@ -308,10 +318,15 @@ const Puncher = module.exports = ae3.Class.create(
 					setTimeout(this.timerLoop, 1000);
 					return;
 				}
+				if(this.remote.active === false){
+					console.log("UDP::Puncher:timerLoop: %s: remote inactive.", this);
+					setTimeout(this.timerLoop, 1000);
+					return;
+				}
 				try{
 					this.timerTask.call(this);
 				}finally{
-					Object.defineProperty(this, 'timerDate', {
+					Object.defineProperty(this, "timerDate", {
 						value : Date.now() + this.loopInterval * 1000,
 						writable : true
 					});
@@ -323,11 +338,7 @@ const Puncher = module.exports = ae3.Class.create(
 		
 		"destroy" : {
 			value : function(){
-				Object.defineProperty(this, 'timerDate', {
-					value : -1,
-					writable : true
-				});
-				this.state = 'stopped';
+				this.state = "stopping...";
 				console.log("UDP::Puncher:destroy: %s: puncher destroyed", this);
 			}
 		},
