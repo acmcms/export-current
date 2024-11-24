@@ -33,7 +33,6 @@ const Principal = module.exports = ae3.Class.create(
 		}
 		Object.defineProperties(this, {
 			'key' : {
-				enumerable : true,
 				writable : true, 
 				value : key || null
 			},
@@ -94,6 +93,7 @@ const Principal = module.exports = ae3.Class.create(
 		 * base16 representation of the key
 		 */
 		keyHex : {
+			enumerable : true,
 			get : function(){
 				return Format.binaryAsHex(this.key);
 			}
