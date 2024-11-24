@@ -304,22 +304,21 @@ const Puncher = module.exports = ae3.Class.create(
 		"timerLoop" : {
 			value : function(){
 				if(this.state === "stopping..."){
+					// stop
 					this.state = "stopped";
 					Object.defineProperty(this, "timerDate", {
 						value : -1,
 						writable : true
 					});
 					console.log("UDP::Puncher:timeLoop: %s: puncher destroyed, task stopped", this);
-					// stop
 					return;
 				}
-				var now = Date.now();
-				if(this.timerDate > now){
+				if(this.timerDate > Date.now()){
 					setTimeout(this.timerLoop, 1000);
 					return;
 				}
 				if(this.remote.active === false){
-					console.log("UDP::Puncher:timerLoop: %s: remote inactive.", this);
+					console.log("UDP::Puncher:timerLoop: %s: remote inactive...", this);
 					setTimeout(this.timerLoop, 1000);
 					return;
 				}
