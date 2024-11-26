@@ -15,8 +15,8 @@ const UdpCloudClient = module.exports = ae3.Class.create(
 				value : 'udp.' + client.ndssHost + ':4044'
 			}
 		});
-		this.registerHandler(UdpCloudService.MSG_Q_CALL, require("./handlers/HandlerCall").bind(this));
-		this.registerHandler(UdpCloudService.MSG_Q_RRST, require("./handlers/HandlerRrst").bind(this));
+		this.registerHandler(UdpCloudService.MSG_Q_CALL, require("./handlers/HandlerCall").bind(this, UdpCloudService));
+		this.registerHandler(UdpCloudService.MSG_Q_RRST, require("./handlers/HandlerRrst").bind(this, UdpCloudService));
 		console.log("ndm.client::UdpCloudClient:init: created %s", this);
 		return this;
 	},

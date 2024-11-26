@@ -1,5 +1,3 @@
-const UdpCloudService = require('./../UdpCloudService');
-
 /**
  * 'this' to be bint to stateDomain
  **/
@@ -9,7 +7,7 @@ const MakeRsstReplyFn = function(rrst){
 	var supported = this.allSupportedResponseCodes();
 	
 	for(queryItem of rrst){
-		console.log(">>>>>> ndm.client:UdpCloudService::iterateRRST: %s", queryItem.formatAsTextString());
+		console.log("ndm.client::cloud::HandlerRrst:iterateRRST: %s", queryItem.formatAsTextString());
 		// this.
 		// rsst.add(stateDomain);
 	}
@@ -19,22 +17,23 @@ const MakeRsstReplyFn = function(rrst){
 /**
  * 
  * 'this' must be bint to an UdpCloudClient instance
+ * 'iface' is UdpCloudService instance
  * 
 **/
-const HandlerRrst = module.exports = function(message, address, serial){
+const HandlerRrst = module.exports = function(iface, message, address, serial){
 	const rrst = message.rrst;
 	if(!rrst){
 		console.log("ndm.client::cloud::HandlerRrst: %s: %s => CERR: no rrst body", this, message);
-		this.sendSingle(new UdpCloudService.MSG_RF_CERR(serial, 0x03 /* Invalid Arguments */), address);
+		this.sendSingle(new iface.MSG_RF_CERR(serial, 0x03 /* Invalid Arguments */), address);
 		return;
 	}
 	
 	// console.log("ndm.client::cloud::HandlerRrst: %s: %s => CERR, request", this, message);
-	// this.sendSingle(new UdpCloudService.MSG_RF_CERR(serial, 0x01 /* No Such Component */), address);
+	// this.sendSingle(new iface.MSG_RF_CERR(serial, 0x01 /* No Such Component */), address);
 	// return;
 
 	const rsst = MakeRsstReplyFn.call(this.client.stateDomain, rrst);
 
 	console.log("ndm.client::cloud::HandlerRrst: %s: %s => RSST: %s", this, message, rsst);
-	this.sendSingle(new UdpCloudService.MSG_RF_RSST(rsst, serial), address);
+	this.sendSingle(new iface.MSG_RF_RSST(rsst, serial), address);
 };

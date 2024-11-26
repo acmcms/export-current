@@ -27,7 +27,7 @@ const ComponentNdns = module.exports = ae3.Class.create(
 		onXmlNotification : {
 			value : function(id, data){
 				switch(id){
-				case "ub1":
+					case "ubA":
 					return this.client.onUpdateBookingXns(id, data);
 				}
 				return;

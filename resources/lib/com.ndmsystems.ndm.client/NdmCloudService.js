@@ -20,15 +20,9 @@ const clientObjects = {};
 
 
 const f = {
-	reduceClientsToMap : function(result, clientKey){
-		result[clientKey] = clientObjects[clientKey];
-		return result;
-	},
-	reduceClientDescriptorsToMap : function(targetMap, file) {
-		targetMap[file.key] ||= new Client(file);
-		return targetMap;
-	},
 	checkClients : function(){
+		console.log("ndm.client::NdmCloudService:checkClients: starting...");
+
 		this.udpService || Object.defineProperty(this, "udpService", {
 			writable : true,
 			value : require('./UdpCloudService')
@@ -45,16 +39,22 @@ const f = {
 					throw "Client 'name' is expected!";
 				}
 				const service = description.service;
-				const file = clientsFolder.relativeFolder(name);
-				settings[name] = new Client(file, service.host, service.port, service.key, service.pass);
+				const folder = clientsFolder.relativeFolder(name);
+				settings[name] = new Client(folder, service.host, service.port, service.key, service.pass);
 				return settings;
 			})//
 			.get()
 		;
+
+		console.log("ndm.client::NdmCloudService:checkClients: file based configuration loaded, clients: [%s]", Object.keys(clients).join());
 		
-		clientsFolder.getContentCollection(null).filter(vfs.isContainer).reduce(f.reduceClientDescriptorsToMap, clients);
+		for(var folder of clientsFolder.getContentCollection(null).filter(vfs.isContainer)){
+			clients[folder.key] ||= new Client(folder);
+		}
+
+		console.log("ndm.client::NdmCloudService:checkClients: vfs persistent checked, clients folder: %s, clients: [%s]", clientsFolder, Object.keys(clients).join());
+
 		
-		console.log("ndm.client::NdmCloudService:checkClients: start, clients folder: ", clientsFolder);
 		for(var key of Object.keys(clients)){
 			if(!clientObjects[key]){
 				clientObjects[key] = clients[key];
@@ -67,7 +67,7 @@ const f = {
 				delete clientObjects[key];
 			}
 		}
-		console.log("ndm.client::NdmCloudService:checkClients: done");
+		console.log("ndm.client::NdmCloudService:checkClients: done. clients: [%s]", Object.keys(clientObjects).join());
 	}
 };
 
@@ -91,16 +91,16 @@ Object.defineProperties(exports, {
 	},
 	getClients : {
 		value : function(){
-			return Object.keys(clientObjects).reduce(f.reduceClientsToMap, {});
+			return Object.assign({}, clientObjects);
 		}
 	},
 	updateClient : {
 		value : function(clientId, ndssHost, ndssPort, licenseNumber, serviceKey){
+			const clientCurrent = clientObjects[clientId];
 			const clientFolder = clientsFolder.relativeFolderEnsure(clientId); // clientsFolder.relativeFolder(clientId);
 			if(!Client.storeRaw(clientFolder, clientId, ndssHost, ndssPort, licenseNumber, serviceKey)){
 				return false;
 			}
-			const clientCurrent = clientObjects[clientId];
 			const clientUpdated = new Client(clientFolder);
 			if(clientCurrent){
 				if(clientCurrent.equals(clientUpdated)){
@@ -134,7 +134,7 @@ Object.defineProperties(exports, {
 			stopped = true;
 			
 			if(this.udpService !== null){
-				this.udpService.destroy && this.udpService.destroy();
+				this.udpService.destroy?.();
 				Object.defineProperty(this, "udpService", {
 					writable : true,
 					value : null

@@ -12,7 +12,7 @@ const ComponentCloud = module.exports = ae3.Class.create(
 			value : "cloud"
 		},
 		acceptXmlNotifications : {
-			value : ['ubA','ut1']
+			value : ['ubA','ut3']
 		},
 		
 		requestXmlNotifications : {
@@ -27,7 +27,7 @@ const ComponentCloud = module.exports = ae3.Class.create(
 		onXmlNotification : {
 			value : function(id, data){
 				switch(id){
-				case "ut1":
+				case "ut3":
 					return this.client.onUpdateTokenXns(id, data);
 				}
 				return;

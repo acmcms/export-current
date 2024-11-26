@@ -9,9 +9,9 @@ const UdpCloudService = ae3.Class.create(
 		console.log("ndm.client::UdpCloudService:init: starting udp listening service on port %s.", (port || 4043));
 		this.UdpService(port || 4043);
 		Object.defineProperties(this, {
-			clients : {
+			"clients" : {
 				// all for quick access
-				value :  new Concurrent.HashMap()
+				value : new Concurrent.HashMap()
 			}
 		});
 		return this;
@@ -22,24 +22,25 @@ const UdpCloudService = ae3.Class.create(
 			 * UdpCloudClient
 			 */
 			value : Concurrent.wrapSync(function(udpCloudClient){
+				this.clients.put(udpCloudClient.key, udpCloudClient);
 				console.log(
-					"ndm.client::UdpCloudService:registerClient: %s, %s, key: %s", 
+					"ndm.client::UdpCloudService:registerClient: registered %s, %s, key: %s, valid: %s", 
 					this, 
 					udpCloudClient,
-					FN_FORMAT_BINARY_AS_HEX(udpCloudClient.key)
+					FN_FORMAT_BINARY_AS_HEX(udpCloudClient.key),
+					!!this.clients.get(udpCloudClient.key)
 				);
-				this.clients.put(udpCloudClient.key, udpCloudClient);
 			})
 		},
 		"removeClient" : {
 			value : Concurrent.wrapSync(function(udpCloudClient){
+				this.clients.remove(udpCloudClient.key);
 				console.log(
-					"ndm.client::UdpCloudService:removeClient: %s, %s, key: %s", 
+					"ndm.client::UdpCloudService:removeClient: deleted %s, %s, key: %s", 
 					this, 
 					udpCloudClient,
 					FN_FORMAT_BINARY_AS_HEX(udpCloudClient.key)
 				);
-				this.clients.remove(udpCloudClient.key);
 			})
 		},
 		"resolvePeer" : {
@@ -48,12 +49,6 @@ const UdpCloudService = ae3.Class.create(
 					"ndm.client::UdpCloudService:resolvePeer: %s, key: %s", 
 					this, 
 					FN_FORMAT_BINARY_AS_HEX(key)
-				);
-				console.log(
-					"ndm.client::UdpCloudService:resolvePeer: %s, key: %s, keys: %s", 
-					this, 
-					FN_FORMAT_BINARY_AS_HEX(key),
-					Object.keys(this.clients).map(FN_FORMAT_BINARY_AS_HEX).join(":")
 				);
 				return this.clients.get(key);
 			}

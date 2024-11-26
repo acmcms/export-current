@@ -45,19 +45,8 @@ const Principal = module.exports = ae3.Class.create(
 				configurable : true, 
 				value : secret || null
 			},
-			'sRx' : {
-				writable : true, 
-				enumerable : true, 
-				configurable : true, 
-				value : serial ?? 0
-			},
-			'sTx' : {
-				writable : true, 
-				enumerable : true, 
-				configurable : true, 
-				value : serial ?? 0
-			},
 		});
+		this.sRx = this.sTx = (serial ^ 0) || 0;
 		return this;
 	},
 	/* instance */
@@ -122,26 +111,15 @@ const Principal = module.exports = ae3.Class.create(
 					serial
 				);
 
-				serial = (serial ^ 0) || 0;
 				Object.defineProperties(this, {
 					'secret' : {
 						writable : true, 
 						configurable : true, 
 						value : secret ?? this.secret ?? null
-					},
-					'sRx' : {
-						writable : true, 
-						enumerable : true, 
-						configurable : true, 
-						value : serial
-					},
-					'sTx' : {
-						writable : true, 
-						enumerable : true, 
-						configurable : true, 
-						value : serial
-					},
+					}
 				});
+				
+				this.sRx = this.sTx = (serial ^ 0) || 0;
 			}
 		},
 		address : {

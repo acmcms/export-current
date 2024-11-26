@@ -32,7 +32,7 @@ const NATIVE_IMPL = (function(){
 const Client = module.exports = ae3.Class.create(
 	"Client",
 	undefined,
-	function Client(folder, ndssHost, ndssPort, license, serviceKey, ddnsHost){
+	function Client(folder, ndssHost, ndssPort, license, serviceKey){
 		if(!folder.isContainer()){
 			if(!ndssHost || !ndssPort || !license || !serviceKey){
 				throw "folder is not a container: "+folder;
@@ -78,20 +78,19 @@ const Client = module.exports = ae3.Class.create(
 		});
 		
 
-		this.ndssHost		= ndssHost || folder.getContentAsText("ndssHost", '');
-		this.ndssPort		= ndssPort || folder.getContentAsText("ndssPort", '');
-		this.licenseNumber	= license || folder.getContentAsText("license", '');
-		this.serviceKey		= serviceKey || folder.getContentAsText("serviceKey", '');
-		this.ddnsHost		= ddnsHost || folder.getContentAsText("ddnsHost", '');
+		this.ndssHost		= ndssHost || folder.getContentAsText("ndssHost", "");
+		this.ndssPort		= ndssPort || folder.getContentAsText("ndssPort", "");
+		this.licenseNumber	= license || folder.getContentAsText("license", "");
+		this.serviceKey		= serviceKey || folder.getContentAsText("serviceKey", "");
+		this.ndmpHost		= ""; // ddnsHost || folder.getContentAsText("ndmpHost", "");
+		this.ddnsHost		= ""; // ddnsHost || folder.getContentAsText("ddnsHost", "");
 		
 		if(!this.validateLicenseFormat(this.licenseNumber)){
 			throw "Client['" + this.clientId + "'] Invalid license number: " + this.licenseNumber;
 		}
 		
-		if(this.ddnsHost){
-			ae3.web.WebInterface.localNameUpsert(this.ddnsHost, "ndmc-ddns-" + this.clientId);
-		}
-		
+		console.log("ndm.client::Client::init: client object created, %s", this);
+
 		return this;
 	},
 	{
@@ -196,26 +195,45 @@ const Client = module.exports = ae3.Class.create(
 				this.ndnsAlias = Format.hexAsBinary(n.alias);
 				this.ndnsSecret = Format.hexAsBinary(n.secret);
 				this.ndnsSettings = n.settings;
-				id = this.ndmpHost;
-				if(n.alias && n.settings && n.settings.domain){
+				const ndmpHost = this.ndmpHost;
+				if(n.alias && n.settings?.domain){
 					this.ndmpZone = n.settings.domain;
 					this.ndmpHost = n.alias.substring(0, 24) + '.' + this.ndmpZone;
-					console.log("ndm.client::Client::onUpdateTokenXns: '%s': 'ut1' notification handler, system name: %s", this.clientId, this.ndmpHost);
+					console.log("ndm.client::Client::onUpdateTokenXns: '%s': '%s' notification handler, system name: %s", this.clientId, id, this.ndmpHost);
+				}else{
+					this.ndmpHost = null;
 				}
-				if(id !== this.ndmpHost){
+				if(ndmpHost !== this.ndmpHost){
 					if(this.ndmpHost){
+						
+						/** only for reference / logging, not loaded on init **/
 						this.vfs.setContentPublicTreePrimitive("ndmpHost", this.ndmpHost);
+						
+						/** register handler **/
 						ae3.web.WebInterface.localNameUpsert(this.ndmpHost, "ndmc-ndmp-" + this.clientId);
+						
+						console.log("ndm.client::Client::onUpdateTokenXns: '%s': '%s', name registered: %s", this.clientId, id, this.ndmpHost);
+						
 					}else{
+
+						/** only for reference / logging, not loaded on init **/
 						this.vfs.setContentUndefined("ndmpHost");
-						ae3.web.WebInterface.localNameRemove(id, "ndmc-ddns-" + this.clientId);
+						
+						/** un-register handler **/
+						ae3.web.WebInterface.localNameRemove(ndmpHost, "ndmc-ndmp-" + this.clientId);
+
+						console.log("ndm.client::Client::onUpdateTokenXns: '%s': '%s', name un-registered: %s", this.clientId, id, ndmpHost);
+						
 					}
 				}
+				
 				const uClient = this.udpCloudClient;
 				if(uClient){
 					if(uClient.secret != this.ndnsSecret){
 						uClient.destroy();
 						(this.udpCloudClient = new this.UdpCloudClient(this, this.ndnsAlias.slice(0, 12), this.ndnsSecret, 0)).start();
+					}else{
+						console.log("ndm.client::Client::onUpdateTokenXns: '%s': '%s', re-using udp cloud client: ", this.clientId, id, udpCloudClient);
 					}
 				}else{
 					(this.udpCloudClient = new this.UdpCloudClient(this, this.ndnsAlias.slice(0, 12), this.ndnsSecret, 0)).start();
@@ -227,21 +245,34 @@ const Client = module.exports = ae3.Class.create(
 				this.ddnsName = n.name;
 				this.ddnsZone = n.domain;
 				this.ddnsAddr = n.address;
-				id = this.ddnsHost;
+				const ddnsHost = this.ddnsHost;
 				if(this.ddnsName && this.ddnsZone){
 					this.ddnsHost = this.ddnsName + '.' + this.ddnsZone;
-					ae3.web.WebInterface.localNameUpsert(this.ddnsHost, "ndmc-ddns-" + this.clientId);
-					if(id !== this.ddnsHost){
-						this.vfs.setContentPublicTreePrimitive("ddnsHost", this.ddnsHost);
-						if(id){
-							ae3.web.WebInterface.localNameRemove(id, "ndmc-ddns-" + this.clientId);
-						}
-					}
+					console.log("ndm.client::Client::onUpdateBookingXns: '%s': '%s', booked name: %s", this.clientId, id, this.ddnsHost);
 				}else{
-					if(id){
-						this.ddnsHost = null;
+					this.ddnsHost = null;
+				}
+				if(ddnsHost !== this.ddnsHost){
+					if(this.ddnsHost){
+
+						/** only for reference / logging, not loaded on init **/
+						this.vfs.setContentPublicTreePrimitive("ddnsHost", this.ddnsHost);
+						
+						/** register handler **/
+						ae3.web.WebInterface.localNameUpsert(this.ddnsHost, "ndmc-ddns-" + this.clientId);
+						
+						console.log("ndm.client::Client::onUpdateBookingXns: '%s': '%s', name registered: %s", this.clientId, id, this.ddnsHost);
+						
+					}else{
+
+						/** only for reference / logging, not loaded on init **/
 						this.vfs.setContentUndefined("ddnsHost");
-						ae3.web.WebInterface.localNameRemove(id, "ndmc-ddns-" + this.clientId);
+						
+						/** un-register handler **/
+						ae3.web.WebInterface.localNameRemove(ddnsHost, "ndmc-ddns-" + this.clientId);
+						
+						console.log("ndm.client::Client::onUpdateBookingXns: '%s': '%s', name un-registered: %s", this.clientId, id, ddnsHost);
+						
 					}
 				}
 			}
