@@ -95,10 +95,10 @@ Object.defineProperties(exports, {
 		}
 	},
 	updateClient : {
-		value : function(clientId, ndssHost, ndssPort, licenseNumber, serviceKey){
+		value : function(clientId, licenseNumber, serviceKey){
 			const clientCurrent = clientObjects[clientId];
 			const clientFolder = clientsFolder.relativeFolderEnsure(clientId); // clientsFolder.relativeFolder(clientId);
-			if(!Client.storeRaw(clientFolder, clientId, ndssHost, ndssPort, licenseNumber, serviceKey)){
+			if(!Client.storeRaw(clientFolder, clientId, ndssHost, licenseNumber, serviceKey)){
 				return false;
 			}
 			const clientUpdated = new Client(clientFolder);

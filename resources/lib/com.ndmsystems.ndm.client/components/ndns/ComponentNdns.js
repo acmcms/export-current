@@ -1,5 +1,7 @@
 const ae3 = require("ae3");
 
+const CLIENT_ON_UPDATE_BOOKING_XNS_FN = require("./ClientOnUpdateBookingXnsFn");
+
 const ComponentNdns = module.exports = ae3.Class.create(
 	"ComponentNdns",
 	require("./../AbstractComponent"),
@@ -28,7 +30,7 @@ const ComponentNdns = module.exports = ae3.Class.create(
 			value : function(id, data){
 				switch(id){
 					case "ubA":
-					return this.client.onUpdateBookingXns(id, data);
+					return CLIENT_ON_UPDATE_BOOKING_XNS_FN.call(this.client, id, data);
 				}
 				return;
 			}

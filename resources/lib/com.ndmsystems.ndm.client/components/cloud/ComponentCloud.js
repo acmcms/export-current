@@ -1,5 +1,7 @@
 const ae3 = require("ae3");
 
+const CLIENT_ON_UPDATE_TOKEN_XNS_FN = require("./ClientOnUpdateTokenXnsFn");
+
 const ComponentCloud = module.exports = ae3.Class.create(
 	"ComponentCloud",
 	require("./../AbstractComponent"),
@@ -28,7 +30,7 @@ const ComponentCloud = module.exports = ae3.Class.create(
 			value : function(id, data){
 				switch(id){
 				case "ut3":
-					return this.client.onUpdateTokenXns(id, data);
+					return CLIENT_ON_UPDATE_TOKEN_XNS_FN.call(this.client, id, data);
 				}
 				return;
 			}

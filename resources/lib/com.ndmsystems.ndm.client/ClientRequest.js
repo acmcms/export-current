@@ -85,7 +85,8 @@ function internClientDoRequest(future, items, then){
 			return;
 		}
 	}
-	var keys = Object.keys(items);
+	
+	const keys = Object.keys(items);
 	if(keys.length == 0){
 		/**
 		 * Nothing pending
@@ -96,7 +97,7 @@ function internClientDoRequest(future, items, then){
 		return;
 	}
 	
-	var urlNdss = this.ndssUrl;
+	const urlNdss = this.ndssUrl;
 
 	if(keys.length == 1){
 		/**
@@ -114,7 +115,7 @@ function internClientDoRequest(future, items, then){
 			}
 			const url = {
 				host : client.ndssHost,
-				port : client.ndssPort,
+				port : 443,
 				path : request.path + "?" + Format.queryStringParameters(get),
 				headers : auth.headers,
 			};
@@ -133,9 +134,9 @@ function internClientDoRequest(future, items, then){
 	 * Make xml-request, with multiple commands
 	 */
 	{
-		var callback = internCallbackXmlMultiple.bind(this, future, items, then);
+		const callback = internCallbackXmlMultiple.bind(this, future, items, then);
 		
-		var path = "/xml-request.xml?___output=text/html&" + Format.queryStringParameters(auth.get);
+		const path = "/xml-request.xml?___output=text/html&" + Format.queryStringParameters(auth.get);
 		
 		console.log("ndm.client::ClientRequest: %s: multiple request: %s", this, urlNdss + path);
 
@@ -149,7 +150,7 @@ function internClientDoRequest(future, items, then){
 		
 		http.request({
 			host : client.ndssHost,
-			port : client.ndssPort,
+			port : 443,
 			method : 'POST',
 			path : path,
 			headers : headers,
@@ -166,10 +167,9 @@ function internCallbackHttpSimple(future, request, then, message){
 		return;
 	}
 	
-	message = message.toCharacter();
-	var body = message.text;
+	const code = message.code;
+	const body = message.toCharacter().text;
 
-	var code = message.code;
 	console.log("ndm.client::ClientRequest:CallbackHttpSimple: %s: single response: code=%s", this, code);
 	if(code != 200){
 		request.onError 
@@ -181,7 +181,7 @@ function internCallbackHttpSimple(future, request, then, message){
 	/**
 	 * body property of XML-multiple is actually a map/string/etc from XML
 	 */
-	var map = Xml.toBase("xml-response", body, null, null, null) || {};
+	const map = Xml.toBase("xml-response", body, null, null, null) || {};
 	request.onSuccess && request.onSuccess.call(request, map);
 	
 	then 
@@ -197,31 +197,31 @@ function internCallbackXmlMultiple(future, items, then, message){
 
 	var results;
 	{
-		var body = message.toCharacter().text;
+		const code = message.code;
+		const body = message.toCharacter().text;
 		
-		var code = message.code;
 		console.log("ndm.client::ClientRequest:CallbackHttpMultiple: %s: response: code=%s", this, code);
 		if(code != 200){
 			future.setError(new Error("Error executing client request: code=" + code + ", " + body));
 			return;
 		}
 		
-		var map = Xml.toBase("xml-response", body, null, null, null) || {};
+		const map = Xml.toBase("xml-response", body, null, null, null) || {};
 		// console.log("ndm.client::ClientRequest:CallbackHttpMultiple:item: %: response map: %", this, Format.jsDescribe(map));
 
 		results = Array(map['result']);
 	}
 	
 	for(var result of results){
-		var name = result.name;
-		var request = items[name];
+		const name = result.name;
+		const request = items[name];
 		if(!request){
 			throw new Error("Unknown result, name=" + name);
 		}
-		var code = result.code;
+		const code = result.code;
 		console.log("ndm.client::ClientRequest:CallbackHttpMultiple:item: %s: item['%s']: code=%s", this, name, code);
 		
-		var body = result.body;
+		const body = result.body;
 		if(code == 200){
 			request.onSuccess && request.onSuccess.call(request, body);
 		}else{

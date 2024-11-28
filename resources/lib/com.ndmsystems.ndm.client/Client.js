@@ -32,9 +32,9 @@ const NATIVE_IMPL = (function(){
 const Client = module.exports = ae3.Class.create(
 	"Client",
 	undefined,
-	function Client(folder, ndssHost, ndssPort, license, serviceKey){
+	function Client(folder, ndssHost, license, serviceKey){
 		if(!folder.isContainer()){
-			if(!ndssHost || !ndssPort || !license || !serviceKey){
+			if(!ndssHost || !license || !serviceKey){
 				throw "folder is not a container: "+folder;
 			}
 			if(!folder.doSetContainer()){
@@ -79,7 +79,6 @@ const Client = module.exports = ae3.Class.create(
 		
 
 		this.ndssHost		= ndssHost || folder.getContentAsText("ndssHost", "");
-		this.ndssPort		= ndssPort || folder.getContentAsText("ndssPort", "");
 		this.licenseNumber	= license || folder.getContentAsText("license", "");
 		this.serviceKey		= serviceKey || folder.getContentAsText("serviceKey", "");
 		this.ndmpHost		= ""; // ddnsHost || folder.getContentAsText("ndmpHost", "");
@@ -172,9 +171,6 @@ const Client = module.exports = ae3.Class.create(
 				if(this.ndssHost != that.ndssHost){
 					return false;
 				}
-				if(this.ndssPort != that.ndssPort){
-					return false;
-				}
 				if(this.licenseNumber != that.licenseNumber){
 					return false;
 				}
@@ -186,95 +182,7 @@ const Client = module.exports = ae3.Class.create(
 		},
 		ndssUrl : {
 			get : function(){
-				const port = Number(this.ndssPort);
-				return ((port == 80 || port == 8080 || port == 17080) ? "http://" : "https://") + this.ndssHost + ':' + (port || 443);
-			}
-		},
-		onUpdateTokenXns : {
-			value : function(id, n){
-				this.ndnsAlias = Format.hexAsBinary(n.alias);
-				this.ndnsSecret = Format.hexAsBinary(n.secret);
-				this.ndnsSettings = n.settings;
-				const ndmpHost = this.ndmpHost;
-				if(n.alias && n.settings?.domain){
-					this.ndmpZone = n.settings.domain;
-					this.ndmpHost = n.alias.substring(0, 24) + '.' + this.ndmpZone;
-					console.log("ndm.client::Client::onUpdateTokenXns: '%s': '%s' notification handler, system name: %s", this.clientId, id, this.ndmpHost);
-				}else{
-					this.ndmpHost = null;
-				}
-				if(ndmpHost !== this.ndmpHost){
-					if(this.ndmpHost){
-						
-						/** only for reference / logging, not loaded on init **/
-						this.vfs.setContentPublicTreePrimitive("ndmpHost", this.ndmpHost);
-						
-						/** register handler **/
-						ae3.web.WebInterface.localNameUpsert(this.ndmpHost, "ndmc-ndmp-" + this.clientId);
-						
-						console.log("ndm.client::Client::onUpdateTokenXns: '%s': '%s', name registered: %s", this.clientId, id, this.ndmpHost);
-						
-					}else{
-
-						/** only for reference / logging, not loaded on init **/
-						this.vfs.setContentUndefined("ndmpHost");
-						
-						/** un-register handler **/
-						ae3.web.WebInterface.localNameRemove(ndmpHost, "ndmc-ndmp-" + this.clientId);
-
-						console.log("ndm.client::Client::onUpdateTokenXns: '%s': '%s', name un-registered: %s", this.clientId, id, ndmpHost);
-						
-					}
-				}
-				
-				const uClient = this.udpCloudClient;
-				if(uClient){
-					if(uClient.secret != this.ndnsSecret){
-						uClient.destroy();
-						(this.udpCloudClient = new this.UdpCloudClient(this, this.ndnsAlias.slice(0, 12), this.ndnsSecret, 0)).start();
-					}else{
-						console.log("ndm.client::Client::onUpdateTokenXns: '%s': '%s', re-using udp cloud client: ", this.clientId, id, udpCloudClient);
-					}
-				}else{
-					(this.udpCloudClient = new this.UdpCloudClient(this, this.ndnsAlias.slice(0, 12), this.ndnsSecret, 0)).start();
-				}
-			}
-		},
-		onUpdateBookingXns : {
-			value : function(id, n){
-				this.ddnsName = n.name;
-				this.ddnsZone = n.domain;
-				this.ddnsAddr = n.address;
-				const ddnsHost = this.ddnsHost;
-				if(this.ddnsName && this.ddnsZone){
-					this.ddnsHost = this.ddnsName + '.' + this.ddnsZone;
-					console.log("ndm.client::Client::onUpdateBookingXns: '%s': '%s', booked name: %s", this.clientId, id, this.ddnsHost);
-				}else{
-					this.ddnsHost = null;
-				}
-				if(ddnsHost !== this.ddnsHost){
-					if(this.ddnsHost){
-
-						/** only for reference / logging, not loaded on init **/
-						this.vfs.setContentPublicTreePrimitive("ddnsHost", this.ddnsHost);
-						
-						/** register handler **/
-						ae3.web.WebInterface.localNameUpsert(this.ddnsHost, "ndmc-ddns-" + this.clientId);
-						
-						console.log("ndm.client::Client::onUpdateBookingXns: '%s': '%s', name registered: %s", this.clientId, id, this.ddnsHost);
-						
-					}else{
-
-						/** only for reference / logging, not loaded on init **/
-						this.vfs.setContentUndefined("ddnsHost");
-						
-						/** un-register handler **/
-						ae3.web.WebInterface.localNameRemove(ddnsHost, "ndmc-ddns-" + this.clientId);
-						
-						console.log("ndm.client::Client::onUpdateBookingXns: '%s': '%s', name un-registered: %s", this.clientId, id, ddnsHost);
-						
-					}
-				}
+				return "https://" + this.ndssHost;
 			}
 		},
 		toString : {
@@ -312,14 +220,11 @@ const Client = module.exports = ae3.Class.create(
 			}
 		},
 		storeRaw : {
-			value : function(vfsClient, clientId, ndssHost, ndssPort, licenseNumber, serviceKey){
+			value : function(vfsClient, clientId, ndssHost, licenseNumber, serviceKey){
 				const txn = vfs.createTransaction();
 				try{
 					if(ndssHost !== undefined){
 						vfsClient.setContentPublicTreePrimitive("ndssHost", String(ndssHost));
-					}
-					if(ndssPort !== undefined){
-						vfsClient.setContentPublicTreePrimitive("ndssPort", Number(ndssPort));
 					}
 					if(licenseNumber !== undefined){
 						vfsClient.setContentPublicTreePrimitive("license", String(licenseNumber));
@@ -337,22 +242,19 @@ const Client = module.exports = ae3.Class.create(
 			}
 		},
 		createRobotClientRequest : {
-			value : function(ndssHost, ndssPort, robotPass){
+			value : function(ndssHost, robotPass){
 				if(!ndssHost){
 					throw new Error("ndssHost in undefined!");
-				}
-				if(!ndssPort){
-					throw new Error("ndssPort in undefined!");
 				}
 				if(!robotPass){
 					throw new Error("robotPass in undefined!");
 				}
-				return new ClientRequest(new RobotClient(ndssHost, ndssPort, robotPass));
+				return new ClientRequest(new RobotClient(ndssHost, robotPass));
 			}
 		},
 		createDeviceClientRequest : {
-			value : function(ndssHost, ndssPort, licenseNumber, serviceKey){
-				return new ClientRequest(new DeviceClient(ndssHost, ndssPort, licenseNumber, serviceKey));
+			value : function(ndssHost, licenseNumber, serviceKey){
+				return new ClientRequest(new DeviceClient(ndssHost, licenseNumber, serviceKey));
 			}
 		}
 	}
@@ -365,21 +267,16 @@ const Client = module.exports = ae3.Class.create(
  * Use .call(client, ...)
  */
 function internPrepareRequest(){
-	var request = new ClientRequest(this);
-	internCheckRegister.call(this, request);
-	// internCheckStats.call(this, request);
-	return request;
-}
-
-/**
- * Use .call(client, ...)
- */
-function internCheckRegister(clientRequest){
+	const request = new ClientRequest(this);
+	
+	/** check pending registration **/
 	const prev = this.vfs.getContentPrimitive("lastRegistered", null);
 	if(!prev || prev.getTime() + 3550000 < Date.now()){
 		internAppendRegister.call(this, clientRequest);
 	}
-	return true;
+	
+	// internCheckStats.call(this, request);
+	return request;
 }
 
 /**
@@ -488,25 +385,12 @@ function internAppendRegister(clientRequest, reason){
  * ******************************************************************************
  */
 
-/**
- * function filterDescriptors(file) { return file.key.endsWith(".json"); }
- * 
- * function mapFileToDescriptor(file) { return JSON.parse(file); }
- * 
- * function reduceFilesToDescriptorMap(targetMap, file) {
- * targetMap[file.key.substring(0, file.key.length - 5)] = JSON.parse(file);
- * return targetMap; }
- * 
- * 
- */
-
 
 const RobotClient = ae3.Class.create(
 	"RobotClient",
 	undefined,
-	function(ndssHost, ndssPort, robotPass){
+	function(ndssHost, robotPass){
 		this.ndssHost = ndssHost;
-		this.ndssPort = ndssPort;
 		this.auth = {
 			get : {
 				__auth_type : "ndss-client"
@@ -523,18 +407,14 @@ const RobotClient = ae3.Class.create(
 const DeviceClient = ae3.Class.create(
 	"DeviceClient",
 	undefined,
-	function(ndssHost, ndssPort, licenseNumber, serviceKey){
+	function(ndssHost, licenseNumber, serviceKey){
 		if(!ndssHost){
 			throw new Error("ndssHost in undefined!");
-		}
-		if(!ndssPort){
-			throw new Error("ndssPort in undefined!");
 		}
 		if(!licenseNumber){
 			throw new Error("licenseNumber in undefined!");
 		}
 		this.ndssHost = ndssHost;
-		this.ndssPort = ndssPort;
 		this.auth = {
 			get : {
 				__auth_type : "e4",

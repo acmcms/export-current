@@ -100,14 +100,13 @@ var commands = {
 		}
 	},
 	setup : {
-		// ndm.client setup default ndss.myx.nz 443 997195123879923 0spmyvum9sq8727
-		// ndm.client setup local ndss.macmyxpro.local 8443 075771260069315 KWrNhOJV3263192
-		args : "<clientAlias> <ndssHost> <ndssHttpsPort> <licenseNumber> <serviceKey>",
+		// ndm.client setup default ndss.myx.nz 997195123879923 0spmyvum9sq8727
+		// ndm.client setup local ndss.macmyxpro.local 075771260069315 KWrNhOJV3263192
+		args : "<clientAlias> <ndssHost> <licenseNumber> <serviceKey>",
 		help : "configure NDSS Client",
 		run : function(args) {
 			const clientId = args.shift();
 			const ndssHost = args.shift();
-			const ndssPort = args.shift();
 			const licenseNumber = args.shift();
 			const serviceKey = args.shift() || '';
 			if(!licenseNumber){
@@ -115,7 +114,7 @@ var commands = {
 			}
 			const NdmCloudService = require('./NdmCloudService');
 			
-			return !!NdmCloudService.updateClient(clientId, ndssHost, ndssPort, licenseNumber, serviceKey);
+			return !!NdmCloudService.updateClient(clientId, ndssHost, licenseNumber, serviceKey);
 		}
 	},
 	drop : {
@@ -270,7 +269,7 @@ exports.run = function run() {
 	
 	/* var selfName = */ args.shift();
 	
-	for ( var options = {};;) {
+	for (var options = {};;) {
 		var commandName = args.shift();
 		if (commandName.startsWith("--")) {
 			options[commandName.substr(2)] = true;
