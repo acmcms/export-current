@@ -4,8 +4,12 @@ const CallbackValidateLink = module.exports = ae3.Class.create(
 	"CallbackValidateLink",
 	require("./../AbstractCallback"),
 	function(args){
-		this.deviceEcPublic = args[1];
-		this.serviceEcPublic = args[2];
+		this.intent = args[0];
+		this.serviceId = args[1];
+		this.deviceEcPublic = args[2];
+		this.serviceEcPublic = args[3];
+		this.timestampSeconds = args[4];
+		this.ecSignature = args[5];
 		return this;
 	},
 	{
