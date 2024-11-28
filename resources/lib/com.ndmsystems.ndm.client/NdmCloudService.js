@@ -40,7 +40,7 @@ const f = {
 				}
 				const service = description.service;
 				const folder = clientsFolder.relativeFolder(name);
-				settings[name] = new Client(folder, service.host, service.port, service.key, service.pass);
+				settings[name] = new Client(folder, service.host, service.key, service.pass);
 				return settings;
 			})//
 			.get()
