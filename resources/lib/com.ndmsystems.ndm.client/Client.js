@@ -267,7 +267,7 @@ const Client = module.exports = ae3.Class.create(
  * Use .call(client, ...)
  */
 function internPrepareRequest(){
-	const request = new ClientRequest(this);
+	const clientRequest = new ClientRequest(this);
 	
 	/** check pending registration **/
 	const prev = this.vfs.getContentPrimitive("lastRegistered", null);
@@ -275,8 +275,8 @@ function internPrepareRequest(){
 		internAppendRegister.call(this, clientRequest);
 	}
 	
-	// internCheckStats.call(this, request);
-	return request;
+	// internCheckStats.call(this, clientRequest);
+	return clientRequest;
 }
 
 /**
