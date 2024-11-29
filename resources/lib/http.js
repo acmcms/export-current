@@ -18,7 +18,7 @@ const ReplyParser = require('java.class/ru.myx.ae3.i3.web.http.client.ReplyParse
  */
 const Stats = require('java.class/ru.myx.ae3.i3.web.http.client.HttpClientStatusProvider');
 
-const URL = require('url');
+const UrlParseFn = URL.parse;
 
 /**
  * Future is sent as 'this' value
@@ -331,7 +331,7 @@ function internParametersForGet(urlStrOrMap){
 		throw new Error('string or object parameter is expected!');
 	}
 	if('string' === typeof urlStrOrMap){
-		return URL.parse(urlStrOrMap);
+		return UrlParseFn(urlStrOrMap);
 	}
 	if(!urlStrOrMap.path || !(urlStrOrMap.host || urlStrOrMap.hostname)){
 		throw new Error("Invalid 'url' object contents!");

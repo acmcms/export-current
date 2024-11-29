@@ -25,7 +25,7 @@ function runXmlSimpleRequest(context){
 	const console = new CollectConsole();
 	console.log("checking simple xml request");
 
-	const url = require('url').parse(query.urlBase + query.resourcePrefix + query.resourceIdentifier);
+	const url = URL.parse(query.urlBase + query.resourcePrefix + query.resourceIdentifier);
 	const host = url.host;
 	const path = url.path + "?test=true";
 	console.log("requesting: https://" + host + path);

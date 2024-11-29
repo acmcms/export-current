@@ -60,7 +60,7 @@ function runXmlMultipleRequest(context){
 	const console = new CollectConsole();
 	console.log("checking simple xml request");
 
-	const url = require('url').parse(query.urlBase + query.resourcePrefix + query.resourceIdentifier);
+	const url = URL.parse(query.urlBase + query.resourcePrefix + query.resourceIdentifier);
 	
 	const path = url.path.substring(0, url.path.lastIndexOf('/')) + "/xml-request.xml";
 	const host = url.host;

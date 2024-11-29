@@ -1,6 +1,6 @@
 const ae3 = require('ae3');
 
-const UrlParse = require("url").parse;
+const UrlParseFn = URL.parse;
 
 const SUPPORTED_PROTOCOL_SCHEMES = [
 		"ndms+http:",
@@ -43,7 +43,7 @@ const CallbackTunnelDial = module.exports = ae3.Class.create(
 
 				// TODO: check signature
 				
-				this.urlObject = UrlParse(this.tunnelType + this.targetUrl);
+				this.urlObject = UrlParseFn(this.tunnelType + this.targetUrl);
 				if(!urlObject){
 					console.log(
 						"ndm.client::CallbackTunnelDial:prepareCallback: refused: no or invalid url:, serviceId: %s", 

@@ -2,7 +2,7 @@
  * TODO: ready-support for "/resources/"
  */
 
-const UrlParseFn = require("url").parse;
+const UrlParseFn = URL.parse;
 
 function buildIndexMenuReply(context, client, admin){
 	const query = context.query;
@@ -169,7 +169,7 @@ const IndexPage = module.exports = require("ae3").Class.create(
 			}
 		},
 		"handle" : {
-			value : function(context){
+			value : function fnHandle(context){
 				const query = context.query;
 				const identifier = query.resourceIdentifier;
 				const parameters = query.parameters;
@@ -197,26 +197,24 @@ const IndexPage = module.exports = require("ae3").Class.create(
 				}
 
 				const share = context.share;
+				
 				const auth = this.auth || share.authenticationProvider;
-
-				if(!auth){
-					context.title = this.title;
-					return this.buildIndexMenuReply(
-						context, 
-						undefined, 
-						false
-					);
-				}
 
 				var client;
 				
 				switch(query.parameterString){
 				case "logout":{
+					if(!auth){
+						return this.makeNotFoundLayout("No auth set up!");
+					}
 					client = require("ae3.util/AuthMap").create(this.AbstractWebPage.AUTH_LOGOUT_MAP).authRequireQuery(query);
 					context.client = null;
 					return share.makeAuthenticationLogoutReply(context);
 				}
 				case "secure-login":{
+					if(!auth){
+						return this.makeNotFoundLayout("No auth set up!");
+					}
 					var redirection = query.toSecureChannel();
 					if(redirection){
 						return redirection;
@@ -227,6 +225,9 @@ const IndexPage = module.exports = require("ae3").Class.create(
 				 */
 				// break;
 				case "login":{
+					if(!auth){
+						return this.makeNotFoundLayout("No auth set up!");
+					}
 					context.title = this.titleUnauthenticated || context.title;
 					share.authRequireDefault(context);
 					return share.makeAuthenticationSuccessReply(context);
@@ -248,26 +249,30 @@ const IndexPage = module.exports = require("ae3").Class.create(
 				}
 				}
 					
-				context.title = this.titleUnauthenticated || context.title;
-				client = this.authRequired || identifier === "/index" || parameters.__auth === "force"
-						? share.authRequireDefault(context)
-						: share.authCheckDefault(context);
-						
-				/**
-				 * TODO: optional auth
-				 */
-				if(!client){
-					if( parameters.login ){
-						return share.makeAuthenticationFailedReply(context);
+				if(auth){
+					context.title = this.titleUnauthenticated || context.title;
+					client = this.authRequired || identifier === "/index" || parameters.__auth === "force"
+							? share.authRequireDefault(context)
+							: share.authCheckDefault(context);
+							
+					/**
+					 * TODO: optional auth
+					 */
+					if(!client){
+						if(auth){
+							if( parameters.login ){
+								return share.makeAuthenticationFailedReply(context);
+							}
+							if( this.authRequired ){
+								return share.makeAuthenticateReply(context);
+							}
+						}
+						return this.buildIndexMenuReply(
+							context, 
+							undefined, 
+							false
+						);
 					}
-					if( this.authRequired ){
-						return share.makeAuthenticateReply(context);
-					}
-					return this.buildIndexMenuReply(
-						context, 
-						undefined, 
-						false
-					);
 				}
 				
 				context.title = this.title;

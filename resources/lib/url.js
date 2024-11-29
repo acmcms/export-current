@@ -1,4 +1,7 @@
 /**
+ * This is legacy, use URL global object instead, same parse method and interface.
+ * 
+ * 
  * URL object, part of CommonJS standard de-facto.
  * see: http://nodejs.org/api/url.html
  */
