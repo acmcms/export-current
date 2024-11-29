@@ -53,23 +53,38 @@ const AbstractComponent = module.exports = ae3.Class.create(
 			value : function(args){
 				const name = args[0];
 				const href = './../callbacks/'+this.componentName+'/Callback' + (name[0].toUpperCase()) + (name.substr(1));
-				let callback;
+				var callback;
 				try{
 					callback = require(href);
 				}catch(e){
-					console.log("ndm.client::AbstractComponent:prepareCall: %s: invalid callback: %s", this.componentName, name);
-					return null;
+					console.log("ndm.client::AbstractComponent:prepareCall: %s: no such component: %s", this.componentName, name);
+					return 0x01;
 				}
 				
 				callback = new callback(args);
 				if(!callback){
+					/** ^^^ callback constructor failes to construct an object, CERR 0x03 - invalid arguments */
 					console.log("ndm.client::AbstractComponent:prepareCall: %s: invalid arguments: %s", this.componentName, args);
+					return 0x03;
+				}
+				
+				const prepareResult = callback.prepareCallback(this);
+				
+				// null, undefined, false, zero...
+				if(!prepareResult){
+					console.log("ndm.client::AbstractComponent:prepareCall: %s: extra validation failed: %s", this.componentName, args);
 					return null;
 				}
 				
-				if(!callback.prepareCallback(this)){
+				// byte
+				if(prepareResult === (prepareResult & 0xFF)){
+					console.log("ndm.client::AbstractComponent:prepareCall: %s: extra validation failed: code: 0x%04X, args: %s", this.componentName, prepareResult, args);
+					return prepareResult;
+				}
+				
+				if(true !== prepareResult){
 					console.log("ndm.client::AbstractComponent:prepareCall: %s: extra validation failed: %s", this.componentName, args);
-					return null;
+					return 0x03;
 				}
 				
 				console.log("ndm.client::AbstractComponent:prepareCall: %s: ready: %s", this.componentName, callback);

@@ -15,6 +15,14 @@ const CallbackCevtGlobs = module.exports = ae3.Class.create(
 	{
 		"prepareCallback" : {
 			value : function(component){
+				const keys = component.confirmedMatingKeys;
+				if(!keys){
+					console.log("ndm.client::CallbackCevtGlobs:prepareCallback: refused: no service link established %s", this.serviceId);
+					return false;
+				}
+
+				// TODO: check signature
+
 				console.log("ndm.client::CallbackCevtGlobs:prepareCallback: not implemented");
 				return true;
 			}

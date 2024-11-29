@@ -8,7 +8,7 @@ function urlToString(){
 }
 
 
-function urlParse(urlStr, parseQueryString, slashesDenoteHost){
+function urlParse(urlStr){
 	import java.net.URL;
 	var javaUrl;
 	try{
@@ -20,7 +20,6 @@ function urlParse(urlStr, parseQueryString, slashesDenoteHost){
 	var h = javaUrl.host;
 	var p = javaUrl.port;
 	var q = javaUrl.query;
-	var s = q ? '?' + q : null;
 	var r = javaUrl.ref;
 	
 	return {
@@ -31,7 +30,7 @@ function urlParse(urlStr, parseQueryString, slashesDenoteHost){
 		hostname : h,
 		port : p <= 0 ? null : p,
 		pathname : javaUrl.path,
-		search : s,
+		search : q ? '?' + q : null,
 		path : javaUrl.file,
 		query : q,
 		hash : r ? '#' + r : null,

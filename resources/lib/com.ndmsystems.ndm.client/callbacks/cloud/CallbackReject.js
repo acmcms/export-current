@@ -14,7 +14,7 @@ const CallbackReject = module.exports = ae3.Class.create(
 		"prepareCallback" : {
 			value : function(component){
 				console.log("ndm.client::CallbackReject:executeCallback: rejected/refused (as desined)");
-				return false;
+				return 0x03;
 			}
 		},
 		"executeCallback" : {

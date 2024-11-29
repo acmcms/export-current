@@ -21,7 +21,9 @@ const MakeRsstReplyFn = function(rrst){
  * 
 **/
 const HandlerRrst = module.exports = function(iface, message, address, serial){
+	
 	const rrst = message.rrst;
+	
 	if(!rrst){
 		console.log("ndm.client::cloud::HandlerRrst: %s: %s => CERR: no rrst body", this, message);
 		this.sendSingle(new iface.MSG_RF_CERR(serial, 0x03 /* Invalid Arguments */), address);
@@ -36,4 +38,5 @@ const HandlerRrst = module.exports = function(iface, message, address, serial){
 
 	console.log("ndm.client::cloud::HandlerRrst: %s: %s => RSST: %s", this, message, rsst);
 	this.sendSingle(new iface.MSG_RF_RSST(rsst, serial), address);
+	
 };

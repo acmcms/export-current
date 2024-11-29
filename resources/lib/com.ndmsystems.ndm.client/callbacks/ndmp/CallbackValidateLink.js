@@ -15,13 +15,13 @@ const CallbackValidateLink = module.exports = ae3.Class.create(
 	{
 		"prepareCallback" : {
 			value : function(component){
-				const pair = component.preparedMatingKeys;
-				if(!pair){
-					console.log("ndm.client::CallbackValidateLink:prepareCallback: refused: no mating keys prepared");
+				const keys = component.preparedMatingKeys;
+				if(!keys){
+					console.log("ndm.client::CallbackValidateLink:prepareCallback: refused: no service keys prepared %s", this.serviceId);
 					return false;
 				}
-				
-				// TODO: compare 
+
+				// TODO: check signature
 				
 				return true;
 			}

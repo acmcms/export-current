@@ -3,6 +3,10 @@ const ae3 = require('ae3');
 const Transfer = ae3.Transfer;
 const Concurrent = ae3.Concurrent;
 
+const TransferCreateBufferUtf8 = Transfer.createBufferUtf8;
+const TransferCreateCopierUtf8 = Transfer.createCopierUtf8;
+const TransferCreateCopierFromBinary = Transfer.createCopierFromBinary;
+
 const FutureSimpleObject = Concurrent.FutureSimpleUnknown;
 const FutureSimpleString = Concurrent.FutureSimpleString;
 const FutureSimpleBinary = Concurrent.FutureSimpleBinary;
@@ -230,12 +234,12 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 			/**
 			 * makes NULL copier
 			 */
-			body = Transfer.createCopierUtf8(null);
+			body = TransferCreateCopierUtf8(null);
 			break;
 		case 'string':
 		case 'number':
 		case 'boolean':
-			body = Transfer.createCopierUtf8(String(body));
+			body = TransferCreateCopierUtf8(String(body));
 			var cType = headers['Content-Type'];
 			if(!cType){
 				headers['Content-Type'] = 'text/plain; charset=utf-8';
@@ -250,7 +254,7 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 			continue;
 		// case 'object':
 		default:
-			body = Transfer.createCopierFromBinary(body);
+			body = TransferCreateCopierFromBinary(body);
 			break;
 		}
 		break;
@@ -295,7 +299,7 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 
 	if(parameters.callbackOnSent){
 		// console.log(">>> >>> $$$$$ callbackOnSent 1, socket=" + socket);
-		socket.target.absorbBuffer(Transfer.createBufferUtf8(output));
+		socket.target.absorbBuffer(TransferCreateBufferUtf8(output));
 		body.length() && socket.target.absorbBuffer(body.nextCopy());
 		socket.target.force();
 		// console.log(">>> >>> $$$$$ callbackOnSent 2, socket=" + socket);
@@ -316,7 +320,7 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 
 	socket.source.connectTarget(parser);
 	
-	socket.target.absorbBuffer(Transfer.createBufferUtf8(output));
+	socket.target.absorbBuffer(TransferCreateBufferUtf8(output));
 	body.length() && socket.target.absorbBuffer(body.nextCopy());
 	socket.target.force();
 	// console.log(">>> >>> $$$$$ socket=" + socket + ", query=" + Format.jsString(output) + ", body.length=" + body.nextCopy().remaining());

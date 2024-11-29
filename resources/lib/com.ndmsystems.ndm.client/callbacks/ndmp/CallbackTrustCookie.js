@@ -19,7 +19,7 @@ const CallbackTrustCookie = module.exports = ae3.Class.create(
 			value : function(component){
 				const keys = component.confirmedMatingKeys;
 				if(!keys){
-					console.log("ndm.client::CallbackTrustCookie:prepareCallback: refused: no service link established %s, %s", this.accessRole, this.cookieText);
+					console.log("ndm.client::CallbackTrustCookie:prepareCallback: refused: no service link established %s", this.serviceId);
 					return false;
 				}
 				
