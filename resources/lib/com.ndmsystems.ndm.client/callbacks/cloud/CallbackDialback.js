@@ -30,54 +30,16 @@ const CallbackDialback = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		"requestCallback" : {
-			value : function(query){
-				if(query && this.clientAddress) {
-					query = query.addAttribute('X-Forwarded-For', this.clientAddress);
-					query = query.addAttribute('X-Debug', "through ndm.client::uhp::dialback");
-				}
-				console.log("ndm.client::CallbackDialback:requestCallback: web request: %s", Format.jsDescribe(query));
-				return ae3.web.WebInterface.dispatch(query);
-			}
-		},
-		"replyCallback" : {
-			value : function(reply){
-				if(!reply){
-					console.log("ndm.client::CallbackDialback:replyCallback: no reply");
-					this.socket.close();
-					return;
-				}
-				switch(reply.code){
-				case 101: {
-					console.log("ndm.client::CallbackDialback:replyCallback: switch protocol, reply: %s, %s", Format.jsDescribe(reply), this.socket);
-
-					switch(this.tunnelType % 100){
-					case 43:
-					case 83:
-						console.log("ndm.client::CallbackDialback:replyCallback: wrap server socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
-						this.socket = ae3.net.ssl.wrapServer(//
-							this.socket, //
-							ae3.net.ssl.getDomainStore(//
-								this.anchorName + '.' + this.domainName, //
-								CallbackDialback.PROTOCOLS, //
-								CallbackDialback.CIPHERS//
-							)//
-						);
-					}
-
-					this.server = new ae3.web.HttpServerParser( //
-							this.socket, //
-							this.requestCallback.bind(this), //
-							(this.tunnelType % 100) === 43 || (this.tunnelType % 100) === 83, //
-							HTTP_CONFIGURATION //
-					);
-					console.log("ndm.client::CallbackDialback:replyCallback: http server connected, %s", this.server);
-					return;
-				}
-				}
-				console.log("ndm.client::CallbackDialback:replyCallback: reply: %s", Format.jsDescribe(reply));
-				this.socket.close();
-				return;
+		"executeCallback" : {
+			value : function(component){
+				console.log("ndm.client::CallbackDialback:executeCallback: connecting, %s", Format.jsObject(this));
+				ae3.net.tcp.connect(this.targetAddr, this.targetPort, this.connectCallback.bind(this), {
+					connectTimeout : 5000,
+					reuseTimeout : 5000,
+					reuseBuffer : 32,
+					optionFastRead : true,
+					optionClient : true
+				});
 			}
 		},
 		"connectCallback" : {
@@ -120,16 +82,54 @@ const CallbackDialback = module.exports = ae3.Class.create(
 				return;
 			}
 		},
-		"executeCallback" : {
-			value : function(component){
-				console.log("ndm.client::CallbackDialback:executeCallback: connecting, %s", Format.jsObject(this));
-				ae3.net.tcp.connect(this.targetAddr, this.targetPort, this.connectCallback.bind(this), {
-					connectTimeout : 5000,
-					reuseTimeout : 5000,
-					reuseBuffer : 32,
-					optionFastRead : true,
-					optionClient : true
-				});
+		"replyCallback" : {
+			value : function(reply){
+				if(!reply){
+					console.log("ndm.client::CallbackDialback:replyCallback: no reply");
+					this.socket.close();
+					return;
+				}
+				switch(reply.code){
+				case 101: {
+					console.log("ndm.client::CallbackDialback:replyCallback: switch protocol, reply: %s, %s", Format.jsDescribe(reply), this.socket);
+
+					switch(this.tunnelType % 100){
+					case 43:
+					case 83:
+						console.log("ndm.client::CallbackDialback:replyCallback: wrap server socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
+						this.socket = ae3.net.ssl.wrapServer(//
+							this.socket, //
+							ae3.net.ssl.getDomainStore(//
+								this.anchorName + '.' + this.domainName, //
+								CallbackDialback.PROTOCOLS, //
+								CallbackDialback.CIPHERS//
+							)//
+						);
+					}
+
+					this.server = new ae3.web.HttpServerParser( //
+							this.socket, //
+							this.requestCallback.bind(this), //
+							(this.tunnelType % 100) === 43 || (this.tunnelType % 100) === 83, //
+							HTTP_CONFIGURATION //
+					);
+					console.log("ndm.client::CallbackDialback:replyCallback: http server connected, %s", this.server);
+					return;
+				}
+				}
+				console.log("ndm.client::CallbackDialback:replyCallback: reply: %s", Format.jsDescribe(reply));
+				this.socket.close();
+				return;
+			}
+		},
+		"requestCallback" : {
+			value : function(query){
+				if(query && this.clientAddress) {
+					query = query.addAttribute('X-Forwarded-For', this.clientAddress);
+					query = query.addAttribute('X-Debug', "through ndm.client::uhp::dialback");
+				}
+				console.log("ndm.client::CallbackDialback:requestCallback: web request: %s", Format.jsDescribe(query));
+				return ae3.web.WebInterface.dispatch(query);
 			}
 		},
 	},
