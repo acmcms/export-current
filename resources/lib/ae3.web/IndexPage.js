@@ -318,7 +318,7 @@ const IndexPage = module.exports = require("ae3").Class.create(
 				const commands = props.commands;
 				if(commands){
 					page.commands = commands;
-					commands.index && (commands.index.run ||= page);
+					// commands.index && (commands.index.run ||= page);
 				}
 				
 				return page;
@@ -370,7 +370,15 @@ function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, a
 			
 			if(command.group){
 				extra && extra.startsWith(link) && extras.unshift(item);
-				indexPushAllHtmlJs(item.submenu = [], index.getCommandHandler(command, key), link, extra, extras, client, admin);
+				indexPushAllHtmlJs(
+					item.submenu = [], 
+					index.getCommandHandler(command, key) ?? (key === "index" && index), 
+					link, 
+					extra, 
+					extras, 
+					client, 
+					admin
+				);
 			}
 		}
 	}
@@ -488,7 +496,13 @@ function indexOutAllXml(index, prefix, client, admin, depth){
 			
 			if(command.group){
 				%><index layout="menu" <%= Format.xmlAttributes(item) %>><%
-					= indexOutAllXml(index.getCommandHandler(command, key), link, client, admin, depth + 1);
+					= indexOutAllXml(
+						index.getCommandHandler(command, key) ?? (key === "index" && index), 
+						link, 
+						client, 
+						admin, 
+						depth + 1
+					);
 				%></index><%
 			}else{
 				= Format.xmlElement("command", item);
