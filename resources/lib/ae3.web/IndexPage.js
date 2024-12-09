@@ -390,7 +390,12 @@ function internMakeLoginOptions(query, share, Index){
 	var xml = "";
 	$output(xml){
 		if(url.startsWith("http://") && query.toSecureChannel()){
-			var parsed = UrlParseFn(url);
+			const parsed = UrlParseFn(url);
+			false && console.log(
+				"Web::IndexPage:internMakeLoginOptions: insecure (with secure service available), %s, %s", 
+				Format.jsObject(query.settings),
+				Format.jsObject(share.settings)
+			);
 			= Format.xmlElement("command", {
 				icon : "lock_go",
 				title : "Switch to secure connection",
@@ -398,7 +403,7 @@ function internMakeLoginOptions(query, share, Index){
 					? "/?secure-login" 
 					: "https" + url.substring(4)
 			});
-			if((share.settings || {})["custom-root-ca-pki-location"]){
+			if(share.settings?.["custom-root-ca-pki-location"]){
 				= Format.xmlElement("command", {
 					icon : "accept",
 					title : "The certificate to be trusted for secure connection with this server",
@@ -415,6 +420,11 @@ function internMakeLoginOptions(query, share, Index){
 				});
 			}
 		}else{
+			false && console.log(
+				"Web::IndexPage:internMakeLoginOptions: secure (or no secure service available), %s, %s", 
+				Format.jsObject(query.settings),
+				Format.jsObject(share.settings)
+			);
 			= Format.xmlElement("command", {
 				key : "?login",
 				icon : "key_go",
