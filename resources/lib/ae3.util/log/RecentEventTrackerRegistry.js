@@ -35,7 +35,11 @@ const RecentEventTrackerRegistry = module.exports = ae3.Class.create(
 					try{
 						tracker.doCheckCleanup();
 					}catch(e){
-						console && console.error("event tracker check failed: tracker: %s, error: %s", tracker, e && e.message ? Format.throwableAsPlainText(e) : e);
+						console?.error(
+							"EventTrackRegistry:: event tracker check failed: tracker: %s, error: %s", 
+							tracker, 
+							e?.message ? Format.throwableAsPlainText(e) : e
+						);
 					}
 				}
 			}

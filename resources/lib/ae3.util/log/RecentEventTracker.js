@@ -1,6 +1,9 @@
 const ae3 = require('ae3');
 const vfs = ae3.vfs;
-const QueryString = require("querystring");
+
+const QueryStringParseFn = require("querystring").parse;
+const QueryStringStringifyFn = require("querystring").stringify;
+
 const EventIdentifier = require("java.class/ru.myx.ae3.report.EventIdentifier");
 
 const RecentEventTracker = module.exports = ae3.Class.create(
@@ -42,7 +45,7 @@ const RecentEventTracker = module.exports = ae3.Class.create(
 		default:
 			throw new Error("Invalid or unknown event storage type: " + storageType);
 		}
-		// console.log('ET: create: ' + this.toString() + ", " + this.vfs + ", " + this.mat + ", " + this.ser + ", oc=" + this.onCreate + ", oe=" + this.onExpire);
+		// console.log("EventTrack:: create: %s, %s, %s, %s, oc=%s, oe=%s", this, this.vfs, this.mat, this.ser, this.onCreate, this.onExpire);
 		return this;
 	},
 	/* instance */
@@ -116,7 +119,7 @@ const RecentEventTracker = module.exports = ae3.Class.create(
 					for(;;){
 						var lowest = cutOff.toISOString() + ';000000---';
 						contents = this.vfs.getContentRange('0000-00-00T00:00:00.000Z;000000---', lowest, 250, false, null);
-						if(!contents || !contents.length){
+						if(!contents?.length){
 							/**
 							 * all done
 							 */
@@ -125,34 +128,48 @@ const RecentEventTracker = module.exports = ae3.Class.create(
 						for(content of contents){
 							eid = EventIdentifier.parseKeyString(content.key);
 							if(eid){
-								console.log("ET: expire: type: %s, folder: %s, key: %s", this.name, this.vfs.key, content.key);
+								console.log("EventTrack:: expire: type: %s, folder: %s, key: %s", this.name, this.vfs.key, content.key);
 								if(this.onExpire(eid, content)){
 									!!content.doUnlink();
 								}
 							}else{
-								console.log("ET: invalid: type: %s, folder: %s, key: %s", this.name, this.vfs.key, content.key);
+								console.log("EventTrack:: invalid: type: %s, folder: %s, key: %s", this.name, this.vfs.key, content.key);
 							}
 						}
 					}
 				}
 				for(;;){
 					contents = this.vfs.getContentRange(EventIdentifier.KEY_LOWEST_2015, EventIdentifier.keyLowest(cutOff).keyString2015, 250, false, null);
-					if(!contents || !contents.length){
+					if(!contents?.length){
 						/**
 						 * all done
 						 */
 						break;
 					}
-					for(content of contents){
-						eid = EventIdentifier.parseKeyString(content.key);
-						if(eid){
-							console.log("ET: expire: type: %s, folder: %s, key: %s", this.name, this.vfs.key, content.key);
-							if(this.onExpire(eid, content)){
-								!!content.doUnlink();
+					try{
+						for(content of contents){
+							eid = EventIdentifier.parseKeyString(content.key);
+							if(eid){
+								console.log("EventTrack:: expire: type: %s, folder: %s, key: %s", this.name, this.vfs.key, content.key);
+								if(this.onExpire(eid, content)){
+									!!content.doUnlink();
+								}
+							}else{
+								console.log("EventTrack:: invalid: type: %s, folder: %s, key: %s", this.name, this.vfs.key, content.key);
 							}
-						}else{
-							console.log("ET: invalid: type: %s, folder: %s, key: %s", this.name, this.vfs.key, content.key);
 						}
+					}catch(e){
+						if(eid != EventIdentifier.parseKeyString(content.key)){
+							throw e;
+						}
+						console.error(
+							"EventTrack:: exception checking, deleting: type: %s, folder: %s, key: %s, error: %s", 
+							this.name, 
+							this.vfs.key, 
+							content.key, 
+							e?.message ? Format.throwableAsPlainText(e) : e
+						);
+						!!content.doUnlink();
 					}
 				}
 			}
@@ -445,13 +462,13 @@ const RecentEventTracker = module.exports = ae3.Class.create(
 			 * @returns {@G}
 			 */
 			value : function matURL(entry){
-				return QueryString.parse(entry.textContent);
+				return QueryStringParseFn(entry.textContent);
 			}
 		},
 		"serURL" : {
 			value : function serURL(key, map){
-				var file = this.vfs.relativeFile(key);
-				if(!file.doSetValue(QueryString.stringify(map))){
+				const file = this.vfs.relativeFile(key);
+				if(!file.doSetValue(QueryStringStringifyFn(map))){
 					return null;
 				}
 				return file;
@@ -464,7 +481,7 @@ const RecentEventTracker = module.exports = ae3.Class.create(
 		},
 		"serJSS" : {
 			value : function serJSS(key, map){
-				var file = this.vfs.relativeFile(key);
+				const file = this.vfs.relativeFile(key);
 				if(!file.doSetValue(Format.jsObject(map))){
 					return null;
 				}
