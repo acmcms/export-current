@@ -270,7 +270,8 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 	$output(output){
 		= method;
 		= path[0] === '/' ? ' ' : ' /';
-		= path || '';
+		= path ?? '';
+		= parameters.search ?? '';
 		if(parameters.protocolVariant){
 			= " "; 
 			= parameters.protocolVariant;
@@ -340,11 +341,11 @@ function internParametersForGet(urlStrOrMap){
 }
 
 function internParametersForPost(urlStrOrMap, postParameters){
-	var original = internParametersForGet(urlStrOrMap);
+	const original = internParametersForGet(urlStrOrMap);
 	if(!postParameters){
-		throw new Error("No postParameters argument value!");
+		return original;
 	}
-	var parameters = Object.create(original);
+	const parameters = Object.create(original);
 	parameters.method = "POST";
 	parameters.headers = original.headers ? Object.create(original.headers) : {};
 	parameters.headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8";
@@ -400,30 +401,24 @@ httpGet.asBinary = function httpGetReturnBinary(urlStrOrMap, callback){
  * @param callback
  */
 function httpPost(urlStrOrMap, postParameters, callback){
-	return postParameters
-		? httpRequest(
-			internParametersForPost(urlStrOrMap, postParameters), 
-			internCallback(urlStrOrMap, callback)
-		)
-		: httpGet(urlStrOrMap, callback);
+	return httpRequest(
+		internParametersForPost(urlStrOrMap, postParameters), 
+		internCallback(urlStrOrMap, callback)
+	);
 }
 
 httpPost.asString = function httpPostReturnString(urlStrOrMap, postParameters, callback){
-	return postParameters
-	? httpRequest.asString(
+	return httpRequest.asString(
 		internParametersForPost(urlStrOrMap, postParameters), 
 		internCallback(urlStrOrMap, callback)
-	)
-	: httpGet.asString(urlStrOrMap, callback);
+	);
 };
 
 httpPost.asBinary = function httpPostReturnBinary(urlStrOrMap, postParameters, callback){
-	return postParameters
-	? httpRequest.asBinary(
+	return httpRequest.asBinary(
 		internParametersForPost(urlStrOrMap, postParameters), 
 		internCallback(urlStrOrMap, callback)
-	)
-	: httpGet.asBinary(urlStrOrMap, callback);
+	);
 };
 
 /**
@@ -441,7 +436,7 @@ httpPost.asBinary = function httpPostReturnBinary(urlStrOrMap, postParameters, c
  */
 function httpRequest(parameters, callback){
 	if(!callback){
-		var future = new FutureSimpleObject();
+		const future = new FutureSimpleObject();
 		/*future.cancellable = */httpRequest(parameters, internCallbackSetFuture.bind(future, parameters));
 		return future;
 	}
@@ -477,7 +472,7 @@ function httpRequest(parameters, callback){
  */
 httpRequest.asString = function(parameters, callback){
 	if(!callback){
-		var future = new FutureSimpleString();
+		const future = new FutureSimpleString();
 		/*future.cancellable = */httpRequest.asString(parameters, internCallbackSetFuture.bind(future, parameters));
 		return future;
 	}
@@ -514,7 +509,6 @@ httpRequest.asBinary = function(parameters, callback){
 
 
 module.exports = {
-	ClientRequest : ClientRequest,
 	/**
 	 * get.
 	 * 
