@@ -59,8 +59,8 @@ module.exports = {
 			l0 : la[0] | 0,
 			l1 : la[1] | 0,
 			l2 : la[2] | 0,
-			hn : dt[1].trim() | 0,
-			un : dt[2].trim() | 0,
+			hn : dt[1].trim(),
+			un : dt[2].trim(),
 		};
 	},
 };
