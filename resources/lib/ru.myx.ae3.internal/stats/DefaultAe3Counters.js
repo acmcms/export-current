@@ -1,7 +1,7 @@
 /**
  * 
  */
-const ProcessHandle = require('java.class/java.lang.ProcessHandle');
+const DefaultCountersHelper = require('java.class/ru.myx.ae3.state.base.DefaultCountersHelper');
 
 module.exports = {
 	group : 'd',
@@ -24,10 +24,9 @@ module.exports = {
 		},
 	},
 	getValues : function getValues(/*previous*/){
-		const commandLine = ProcessHandle.current​().info()?.commandLine();
 		return {
-			pd : ProcessHandle.current​().pid​(),
-			pc : commandLine?.isPresent() && commandLine.get()
+			pd : DefaultCountersHelper.getPid(),
+			pc : DefaultCountersHelper.getCommandLine(),
 		};
 	},
 };
