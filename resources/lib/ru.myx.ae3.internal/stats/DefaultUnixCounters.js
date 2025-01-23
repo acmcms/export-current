@@ -1,3 +1,9 @@
+/**
+ * 
+ */
+
+
+
 module.exports = {
 	group : 'd',
 	name : 'du',
@@ -45,11 +51,8 @@ module.exports = {
 				"echo '%%'; " +
 				"hostname; " +
 				"echo '%%'; " +
-				"uname;"  +
+				"uname;" +
 				"echo '%%'; "
-				// "(netstat -an | grep tcp | grep LISTEN | wc -l) || echo -1; "
-				// "(netstat -n | grep tcp | grep ESTABLISHED | wc -l) || echo -1; " +
-				// "(netstat -n | grep tcp | egrep 'CLOSE_WAIT|TIME_WAIT|SYN_SENT' | wc -l) || echo -1; " +
 			).output.trim().split('%%');
 		const la = dt[0].trim().split(' ');
 		return {

@@ -1,0 +1,8 @@
+{
+	"type"  : "ae3.stats/Group",
+	"name"  : "ae3.tcp",
+	"group" : "ae3.base",
+	"title" : "TCP",
+	"keywords" : "monitoring",
+	"reference" : "ru.myx.ae3.internal/stats/DefaultTcpCounters"
+}
