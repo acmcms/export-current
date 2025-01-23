@@ -375,6 +375,7 @@ const TABLE_FILTER_FULL_FIELDS = [
 		name : "filter",
 		title : "Filter",
 		type : "string",
+		required : false
 	}
 ].concat(TABLE_FILTER_BASE_FIELDS);
 
