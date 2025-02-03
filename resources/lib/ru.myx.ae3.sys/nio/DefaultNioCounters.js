@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const NioStats = require('java.class/ru.myx.ae3.transfer.nio.NioStatusProvider');
 
 const DefaultNioCounters = {
@@ -51,11 +55,27 @@ const DefaultNioCounters = {
 				reference : 'r'
 			}
 		},
+		sB : {
+			name : "sB",
+			title : "Socket Tx Buffer (Write/Send)",
+			titleShort : "Tx Buf",
+			type : "number",
+			variant : "bytes",
+		},
+		rB : {
+			name : "rB",
+			title : "Socket Rx Buffer (Read/Receive)",
+			titleShort : "Rx Buf",
+			type : "number",
+			variant : "bytes",
+		},
 	},
 	getValues : function getValues(/*previous*/){
 		return {
 			s : NioStats.statsTotalBytesSent,
 			r : NioStats.statsTotalBytesReceived,
+			sB : NioStats.socketTxBuffer,
+			rB : NioStats.socketRxBuffer,
 		};
 	},
 };

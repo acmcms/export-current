@@ -1,6 +1,7 @@
 const Discovery = require('java.class/ru.myx.ae3.discovery.Discovery');
 const CollectConsole = require("ae3.util/CollectConsole");
-const Engine = require('java.class/ru.myx.ae3.Engine');
+
+const net = require('ae3/net');
 
 function Discover(lib, systemName, pathPrefix){
 	this.title = systemName + "::" + pathPrefix + "discover (Discover Now)";
@@ -48,7 +49,7 @@ function runDiscover(context){
 			}
 		},
 		content : {
-			host : Engine.HOST_NAME,
+			host : net.HOST_NAME,
 			output : {
 				layout : "sequence",
 				elementName : "div",
@@ -67,7 +68,7 @@ function runDiscover(context){
 				%><field name="host" title="Using Host" variant="FQDN"/><%
 				%><field name="output" title="Output" variant="sequence" elementName="div" />
 			%></fields><%
-			%><host><%= Engine.HOST_NAME %></host><%
+			%><host><%= net.HOST_NAME %></host><%
 			%><output layout="sequence"><%
 				for(var row of collected){
 					%><div class="hl-bn-<%= row.state != 'NORMAL' %>"><%

@@ -1,6 +1,7 @@
 const Discovery = require('java.class/ru.myx.ae3.discovery.Discovery');
 const CollectConsole = require("ae3.util/CollectConsole");
-const Engine = require('java.class/ru.myx.ae3.Engine');
+
+const net = require('ae3/net');
 
 function StatsXmlWithXsl(lib, systemName, pathPrefix){
 	this.title = systemName + "::" + pathPrefix + "stats (Discovery Stats)";
@@ -24,7 +25,7 @@ function runStatsXmlWithXsl(context){
 				%><field name="grp4" title="IPv4 Group" variant="string"/><%
 				%><field name="list" title="Known Peers" variant="list"/><%
 			%></fields><%
-			%><host><%= Engine.HOST_NAME %></host><%
+			%><host><%= net.HOST_NAME %></host><%
 			%><grp4><%= Discovery.MCAST_ADDRESS + ':' + Discovery.MCAST_PORT %></grp4><%
 			%><date><%= Format.date(Date.now()) %></date><%
 			%><list layout="list"><%
@@ -40,7 +41,7 @@ function runStatsXmlWithXsl(context){
 					if(!line.text.startsWith("peer: ")){
 						continue;
 					}
-					var obj = eval("(function(vfs,Engine,Discovery){return "+line.text.substring(6)+";})()");
+					var obj = eval("(function(vfs,Discovery){return "+line.text.substring(6)+";})()");
 					var avg = obj.spent / obj.replies;
 					%><item hl="<%= line.state != 'NORMAL' %>" id="<%= obj.identity %>" address="<%= obj.address %>" took="<%= obj.took %>" updated="<%= (new Date(obj.updated)).toISOString() %>" avg="<%= avg %>"/><%
 				}

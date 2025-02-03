@@ -1,4 +1,7 @@
-import ru.myx.ae3.Engine;
+/**
+ * 
+ */
+
 import java.net.NetworkInterface;
 
 import java.net.InetAddress;
@@ -19,7 +22,9 @@ const Net = module.exports = Object.create(Object.create(null, {
 	 * CONSTANTS
 	 */
 	HOST_NAME : {
-		value : Engine.HOST_NAME,
+		get : BaseNetHelper.getLocalHostName ?? function(){
+			return InetAddress.localHost.hostName;
+		},
 		enumerable : true
 	},
 	SHIFT_PORT : {

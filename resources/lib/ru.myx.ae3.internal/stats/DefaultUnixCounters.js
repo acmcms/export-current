@@ -1,13 +1,14 @@
 /**
  * 
  */
+const DefaultCountersHelper = require('java.class/ru.myx.ae3.internal.stats.DefaultCountersHelper');
 
-
+const SystemBean = DefaultCountersHelper.vmSystemBean;
 
 module.exports = {
 	group : 'd',
 	name : 'du',
-	title : 'Unix',
+	title : 'OS',
 	columns : {
 		hn : {
 			name : "hn",
@@ -15,52 +16,97 @@ module.exports = {
 			title : "Host Name",
 			titleShort : "Host",
 			type : "string",
+			chart : "none",
 		},
 		un : {
 			name : "un",
 			nameExport : "unixName",
-			title : "Unix Name",
-			titleShort : "Uname",
+			title : "OS Brand",
+			titleShort : "Brand",
 			type : "string",
+			chart : "none",
+		},
+		ua : {
+			name : "ua",
+			nameExport : "unixArch",
+			title : "OS Arch",
+			titleShort : "Arch",
+			type : "string",
+			chart : "none",
+		},
+		uv : {
+			name : "uv",
+			nameExport : "unixVersion",
+			title : "OS Version",
+			titleShort : "Version",
+			type : "string",
+			chart : "none",
+		},
+		um : {
+			name : "um",
+			title : "OS Memory Size, bytes",
+			titleShort : "RAM",
+			type : "number",
+			variant : "bytes",
+			scale : "1",
+			chart : "none",
+		},
+		pd : {
+			name : "pd",
+			nameExport : "PID",
+			title : "JVM Instance PID",
+			titleShort : "PID",
+			type : "number",
+			chart : "none",
+		},
+		pc : {
+			name : "pc",
+			nameExport : "commandLine",
+			title : "JVM Instance Command Line",
+			titleShort : "Command",
+			type : "string",
+			chart : "none",
 		},
 		l0 : {
 			name : "l0",
-			title : "Load Averages (in 1 minute)",
-			titleShort : "LA 1",
+			nameExport : "loadAverage",
+			title : "Load Average 0 (in 1 minute)",
+			titleShort : "LA0",
 			type : "number",
-		},
-		l1 : {
-			name : "l1",
-			nameExport : "LA5",
-			title : "Load Averages (in 5 minutes)",
-			titleShort : "LA 5",
-			type : "number",
+			variant : "decimal",
 			log : "normal",
 			chart : "value",
 		},
-		l2 : {
-			name : "l2",
-			title : "Load Averages (in 15 minutes)",
-			titleShort : "LA 15",
+		cc : {
+			name : "cc",
+			nameExport : "cpuCores",
+			title : "Processing Cores",
+			titleShort : "Cores",
 			type : "number",
+			variant : "integer",
+			scale : "1",
+			chart : "none",
 		},
 	},
 	getValues : function getValues(/*previous*/){
-		const dt = require('ae3.util/Shell').executeHost(
-				"uptime | grep -o 'load.*'  | cut -d ':' -f2- | sed s/,//g; " +
-				"echo '%%'; " +
-				"hostname; " +
-				"echo '%%'; " +
-				"uname;" +
-				"echo '%%'; "
-			).output.trim().split('%%');
-		const la = dt[0].trim().split(' ');
+		const l0 = DefaultCountersHelper.osCpuLA0;
+		const hn = DefaultCountersHelper.osHostName;
+		const dt = (l0 >= 0 && hn) || require('ae3.util/Shell').executeHost(
+			"uptime | grep -o 'load.*'  | cut -d ':' -f2- | sed s/,//g; " +
+			"echo '%%'; " +
+			"hostname; " +
+			"echo '%%'; "
+		).output.trim().split('%%');
 		return {
-			l0 : la[0] | 0,
-			l1 : la[1] | 0,
-			l2 : la[2] | 0,
-			hn : dt[1].trim(),
-			un : dt[2].trim(),
+			l0 : l0 >= 0 ? l0 : (+dt[0].trim().split(' ')[0]),
+			cc : SystemBean.availableProcessors,
+			hn : hn ?? dt[1].trim(),
+			un : SystemBean.name,
+			ua : SystemBean.arch,
+			uv : SystemBean.version,
+			um : SystemBean.totalMemorySize,
+			pd : DefaultCountersHelper.osPid,
+			pc : DefaultCountersHelper.osCommandLine,
 		};
 	},
 };

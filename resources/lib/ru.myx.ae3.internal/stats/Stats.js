@@ -152,7 +152,11 @@ const makeTextStatsCached = ae3.Concurrent.wrapOnceWithExpiration(function(){
 
 			for(c of r.columns){
 				if(!c.evaluate && (c.chart || c.log || c.nameExport)){
-					= p; = '.'; = c.nameExport || c.titleShort || c.title || c.name; = ': '; = r.values[c.name]; = '\n';
+					= p; = '.'; 
+					= c.nameExport ?? c.name; = '.'; 
+					= c.variant ?? c.type ?? 'unknown'; = '.'; 
+					= c.chart ?? 'total'; = ': '; 
+					= r.values[c.name]; = '\n';
 				}
 			}
 			
@@ -163,7 +167,11 @@ const makeTextStatsCached = ae3.Concurrent.wrapOnceWithExpiration(function(){
 
 					for(c of r.columns){
 						if(!c.evaluate && (c.chart || c.log || c.nameExport)){
-							= p; = '.'; = c.nameExport || c.titleShort || c.title || c.name; = ': '; = r.values[c.name]; = '\n';
+							= p; = '.'; 
+							= c.nameExport ?? c.name; = '.'; 
+							= c.variant ?? c.type ?? 'unknown'; = '.'; 
+							= c.chart ?? 'total'; = ': '; 
+							= r.values[c.name]; = '\n';
 						}
 					}
 				}
@@ -171,7 +179,7 @@ const makeTextStatsCached = ae3.Concurrent.wrapOnceWithExpiration(function(){
 		}
 	}
 	return x;
-}, 10000);
+}, 7000);
 
 function callbackTcpStatsHandler(s){
 	// console.log("Stats::callbackTcpStatsHandler: tcp stats request.");

@@ -1,12 +1,14 @@
-const Engine = require('java.class/ru.myx.ae3.Engine');
-const Act = require('java.class/ru.myx.ae3.act.ImplementAct');
-const Wte = require('java.class/ru.myx.ae3.common.WaitTimeoutExceptionStats');
-const Runtime = require('java.class/java.lang.Runtime');
+/**
+ * 
+ */
+const DefaultCountersHelper = require('java.class/ru.myx.ae3.internal.stats.DefaultCountersHelper');
 
+const RuntimeBean = DefaultCountersHelper.vmRuntimeBean;
+const ThreadBean = DefaultCountersHelper.vmThreadBean;
+const MemoryBean = DefaultCountersHelper.vmMemoryBean;
+const SystemBean = DefaultCountersHelper.vmSystemBean;
 
-
-const STARTED = (new Date(Engine.STARTED)).toISOString();
-const ROOT_GRP = (function ff(g){ return g.parent ? ff(g.parent) : g; })(require('java.class/java.lang.Thread').currentThread().threadGroup);
+const STARTED_STR = (new Date(RuntimeBean?.startTime ?? Date.now())).toISOString();
 
 module.exports = {
 	group : 'd',
@@ -19,9 +21,11 @@ module.exports = {
 			type : "date",
 			variant : "date",
 //			log : "detail",
+			chart : "none",
 		},
 		u : {
 			name : "u",
+			nameExport : "uptime",
 			title : "Uptime",
 			type : "number",
 			variant : "period",
@@ -37,78 +41,61 @@ module.exports = {
 			type : "number",
 			variant : "integer",
 			log : "normal",
-		},
-		d : {
-			name : "d",
-			nameExport : "threadsDetachedTotal",
-			title : "Detached Thread Count, Σ",
-			titleShort : "Σ(DT)",
-			type : "number",
-			variant : "integer",
-//			log : "detail",
-		},
-		D : {
-			name : "D",
-			title : "Detached Thread Count, Δ",
-			titleShort : "Δ(DT)",
-			type : "number",
-			variant : "integer",
-			log : "normal",
-			chart : "delta",
-			evaluate : {
-				type : 'delta',
-				reference : 'd'
-			}
-		},
-		w : {
-			name : "w",
-			nameExport : "threadsTimedOutWaitingTotal",
-			title : "WaitTimeout Exceptions, Σ",
-			titleShort : "Σ(WT)",
-			type : "number",
-			variant : "integer",
-//			log : "detail",
-		},
-		W : {
-			name : "W",
-			title : "WaitTimeout Exceptions, Δ",
-			titleShort : "Δ(WT)",
-			type : "number",
-			variant : "integer",
-			log : "normal",
-			chart : "delta",
-			evaluate : {
-				type : 'delta',
-				reference : 'w'
-			}
+			chart : "value",
 		},
 		m : {
 			name : "m",
-			title : "Memory Available, bytes",
-			titleShort : "RAM",
+			nameExport : "heapMemory",
+			title : "VM Heap Memory, bytes",
+			titleShort : "jvm-Heap",
 			type : "number",
 			variant : "bytes",
 			scale : "1",
+			chart : "none",
 		},
-		c : {
-			name : "c",
-			title : "Processing Cores",
-			titleShort : "Cores",
+		M : {
+			name : "M",
+			nameExport : "nonNeapMemory",
+			title : "VM Non-Heap Memory, bytes",
+			titleShort : "non-Heap",
 			type : "number",
-			variant : "integer",
+			variant : "bytes",
 			scale : "1",
+			chart : "none",
+		},
+		vN : {
+			name : "vN",
+			nameExport : "vmName",
+			title : "VM Name",
+			type : "string",
+			chart : "none",
+		},
+		vV : {
+			name : "vV",
+			nameExport : "vmVendor",
+			title : "VM Vendor",
+			type : "string",
+			chart : "none",
+		},
+		vv : {
+			name : "vv",
+			nameExport : "vmVersion",
+			title : "VM Version",
+			type : "string",
+			chart : "none",
 		},
 	},
 	getValues : function getValues(/*previous*/){
 		return {
-			s : STARTED,
+			s : STARTED_STR,
 			// to integer
-			u : Engine.getUptimeMillis(),
-			t : ROOT_GRP.activeCount(),
-			d : Act.stDetachedThreadCount,
-			m : Runtime.getRuntime().maxMemory(),
-			c : Runtime.getRuntime().availableProcessors(),
-			w : Wte.stWaitTimeoutExceptions,
+			u : RuntimeBean.uptime,
+			t : ThreadBean.threadCount,
+			m : DefaultCountersHelper.vmMaxHeapMemory,
+			M : DefaultCountersHelper.vmMaxNonHeapMemory,
+			vN : RuntimeBean.vmName,
+			vV : RuntimeBean.vmVendor,
+			vv : RuntimeBean.vmVersion,
 		};
 	},
 };
