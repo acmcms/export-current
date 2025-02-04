@@ -3,7 +3,7 @@
  */
 
 
-const WebInterface = require('ae3').web.WebInterface;
+const WebInterface = require("ae3").web.WebInterface;
 
 
 /**
@@ -15,7 +15,7 @@ const ClientOnUpdateBookingXnsFn = module.exports = function(xnsId, xnsData){
 	this.ddnsAddr = xnsData.address;
 	const ddnsHost = this.ddnsHost;
 	if(this.ddnsName && this.ddnsZone){
-		this.ddnsHost = this.ddnsName + '.' + this.ddnsZone;
+		this.ddnsHost = this.ddnsName + "." + this.ddnsZone;
 		console.log("ndm.client::Client::onUpdateBookingXns: '%s': '%s', booked name: %s", this.clientId, xnsId, this.ddnsHost);
 	}else{
 		this.ddnsHost = null;

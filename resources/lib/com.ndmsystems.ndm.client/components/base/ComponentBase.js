@@ -25,6 +25,19 @@ const ComponentBase = module.exports = ae3.Class.create(
 			}
 		},
 		
+		onXmlNotification : {
+			value : function(id, data){
+				switch(id){
+					case "nr1":
+						return;
+						return CLIENT_ON_UPDATE_RANDEZVOUS_XNS_FN.call(this.client, id, data);
+					case "cs2":
+						return;
+						return CLIENT_ON_UPDATE_SETTINGS_XNS_FN.call(this.client, id, data);
+				}
+				return;
+			}
+		},
 		
 		nextRendezvous : {
 			/**
