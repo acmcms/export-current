@@ -1,18 +1,21 @@
 0x30	00110000 0	BASE/HELO				request
 0x31	00110001 1	BASE/POKE				request
 0x32	00110010 2	BASE/POKE-DIRECT		request
+0x33	00110011 3	BASE/RRST				request
+0x34	00110100 4	BASE/RSST				reply-final
 0x35	00110101 5	BASE/CALL				request
 0x36	00110110 6	BASE/CERR				reply-final
 0x37	00110111 7	BASE/CACK				reply-final
 0x38	00111000 8	BASE/SEEN				reply-final
 
-0x33	00110011 3	BASE/RRST				request
-0x34	00110100 4	BASE/RSST				reply-final
-
+0x6С l
+0x62 b
 
 0x64	01100100 d	????/DONE				reply-continue
 0x66	01100110 f	????/FAIL				reply-final
 0x6D	01101101 m	????/MEET				request
+
+
 
 0x8?	1000????  	NDxS GENERIC-COMMANDS
 0xA?	1010????  	NDxS NAME-TO-ADDRESS
