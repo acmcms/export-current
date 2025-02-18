@@ -204,6 +204,9 @@ const UdpService = module.exports = ae3.Class.create(
 {
 	UdpService.commandByKey = UdpService.prototype.commandByKey;
 	
+	// TODO: remove this one after 2025-04-01
+	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_MEET_OLD'));  
+
 	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_FAIL'));
 	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_HELO'));
 	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_MEET'));

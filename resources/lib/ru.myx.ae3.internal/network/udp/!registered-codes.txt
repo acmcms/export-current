@@ -1,3 +1,5 @@
+
+
 0x30	00110000 0	BASE/HELO				request
 0x31	00110001 1	BASE/POKE				request
 0x32	00110010 2	BASE/POKE-DIRECT		request
@@ -7,9 +9,11 @@
 0x36	00110110 6	BASE/CERR				reply-final
 0x37	00110111 7	BASE/CACK				reply-final
 0x38	00111000 8	BASE/SEEN				reply-final
+0x39	00111001 9	????/MEET				request
+0x3a	00111010 :	BASE/BTCH				request-continue
+0x3b	00111011 ;	BASE/BBLK				request(-continue)
+0x3c	00111100 <	BASE/BRPT				reply(-continue)
 
-0x6С l
-0x62 b
 
 0x64	01100100 d	????/DONE				reply-continue
 0x66	01100110 f	????/FAIL				reply-final

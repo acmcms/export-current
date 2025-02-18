@@ -11,7 +11,7 @@ const MSG_Q_MEET = module.exports = require('ae3').Class.create(
 	/* instance */
 	{
 		code : {
-			value : 0x39 // '9'.charCodeAt(0)
+			value : 0x6D // 'm'.charCodeAt(0)
 		},
 		serial : {
 			value : 0x00FFFFF0
