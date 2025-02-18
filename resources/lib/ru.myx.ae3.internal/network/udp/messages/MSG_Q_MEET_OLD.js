@@ -1,6 +1,6 @@
-const MSG_Q_MEET = module.exports = require('ae3').Class.create(
+const MSG_Q_MEET_OLD = module.exports = require('ae3').Class.create(
 	/* name */
-	"MSG_Q_MEET",
+	"MSG_Q_MEET_OLD",
 	/* inherit */
 	require('./../Message').Request,
 	/* constructor */
@@ -32,7 +32,7 @@ const MSG_Q_MEET = module.exports = require('ae3').Class.create(
 		},
 		toString : {
 			value : function(){
-				return "[MEET]";
+				return "[MEET_OLD]";
 			}
 		}
 	},
@@ -40,12 +40,12 @@ const MSG_Q_MEET = module.exports = require('ae3').Class.create(
 	{
 		"parseBinaryMessage" : {
 			value : function(){
-				return new MSG_Q_MEET();
+				return new MSG_Q_MEET_OLD();
 			}
 		},
 		"toString" : {
 			value : function(){
-				return "MSG_Q_MEET";
+				return "MSG_Q_MEET_OLD";
 			}
 		}
 	}
