@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const CryptoApiHelper = require("java.class/ru.myx.ae3.internal.crypto.CryptoApiHelper");
 
 module.exports = Object.create(Object.prototype, {

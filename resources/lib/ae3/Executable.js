@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 function runNotDefined() {
 	console.sendMessage("run is not defined!");
 	return false;

@@ -46,6 +46,13 @@ module.exports = Object.create(Object.prototype, {
 		enumerable : true,
 		value : TlsPack.wrapServer/* function(socket, store){} */
 	},
+	/**
+	 * Un-Wraps SSL Socket, returns original plain socket
+	 */
+	unwrap : {
+		enumerable : true,
+		value : TlsPack.unwrap/* function(socket){} */
+	},
 	getDomainStore : {
 		enumerable : true,
 		value : TlsPack.getDomainStore/* function(fqdn, protocols, ciphers){} */

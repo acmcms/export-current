@@ -11,6 +11,11 @@ devel.json:
 		"key" : "839861479136193",
 		"pass" : "mn4hjy3y87fid33"
 	},
+	"override" : {
+		"allowPlainHandshake" : false,
+		"forcePlainHandshake" : false,
+		"-- pecularities" : "^^^"
+	},
 	"uhp" : {
 		"enable" : true
 	}

@@ -28,13 +28,12 @@ const NATIVE_IMPL = (function(){
 	}
 })();
 
-
 const Client = module.exports = ae3.Class.create(
 	"Client",
 	undefined,
-	function Client(folder, ndssHost, license, serviceKey){
+	function Client(folder, serviceSettings, overrideSettings){
 		if(!folder.isContainer()){
-			if(!ndssHost || !license || !serviceKey){
+			if(!serviceSettings){
 				throw "folder is not a container: "+folder;
 			}
 			if(!folder.doSetContainer()){
@@ -53,6 +52,12 @@ const Client = module.exports = ae3.Class.create(
 			stateDomain : {
 				value : MakeRsstDomainFn(null)
 			},
+			overrideSettings : {
+				value : overrideSettings || {}
+			}
+		});
+
+		Object.defineProperties(this, {
 			components : {
 				value : {
 					"base"  : require("./components/base/ComponentBase").newInstance(this),
@@ -62,8 +67,7 @@ const Client = module.exports = ae3.Class.create(
 				}
 			}
 		});
-		
-		
+
 		Object.defineProperties(this, {
 			notificationHandlers : {
 				value : Object.values(this.components).reduce(function(previousValue, currentValue){
@@ -78,9 +82,9 @@ const Client = module.exports = ae3.Class.create(
 		});
 		
 
-		this.ndssHost		= ndssHost || folder.getContentAsText("ndssHost", "");
-		this.licenseNumber	= license || folder.getContentAsText("license", "");
-		this.serviceKey		= serviceKey || folder.getContentAsText("serviceKey", "");
+		this.ndssHost		= serviceSettings?.host ?? serviceSettings?.ndssHost ?? folder.getContentAsText("ndssHost", "");
+		this.licenseNumber	= serviceSettings?.key ?? serviceSettings?.license ?? folder.getContentAsText("license", "");
+		this.serviceKey		= serviceSettings?.pass ?? serviceSettings?.serviceKey ?? folder.getContentAsText("serviceKey", "");
 		this.ndmpHost		= ""; // ddnsHost || folder.getContentAsText("ndmpHost", "");
 		this.ddnsHost		= ""; // ddnsHost || folder.getContentAsText("ddnsHost", "");
 		
@@ -88,7 +92,7 @@ const Client = module.exports = ae3.Class.create(
 			throw "Client['" + this.clientId + "'] Invalid license number: " + this.licenseNumber;
 		}
 		
-		console.log("ndm.client::Client::init: client object created, %s", this);
+		console.log("ndm.client::Client::init: client object created, %s, overrides: %s", this, Format.jsObject(this.overrideSettings));
 
 		return this;
 	},

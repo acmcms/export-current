@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const prototype = Object.create(Object.prototype, {
 	"Class" : {
 		get : function ae3Concurrent(){

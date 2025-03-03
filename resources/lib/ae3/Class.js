@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 
 /**
  * try java native implementation (faster, optional)

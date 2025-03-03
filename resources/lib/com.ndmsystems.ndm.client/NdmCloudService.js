@@ -16,7 +16,7 @@ const clientsFolder = ae3.vfs.ROOT.relativeFolderEnsure("storage/data/ndm.client
 /**
  * Client instances map
  */
-const clientObjects = {};
+const CLIENT_MAP = {};
 
 
 const f = {
@@ -38,36 +38,42 @@ const f = {
 				if(!name){
 					throw "Client 'name' is expected!";
 				}
-				const service = description.service;
 				const folder = clientsFolder.relativeFolder(name);
-				settings[name] = new Client(folder, service.host, service.key, service.pass);
+				settings[name] = new Client(
+					folder, 
+					description.service, 
+					description.override
+				);
 				return settings;
 			})//
 			.get()
 		;
 
-		console.log("ndm.client::NdmCloudService:checkClients: file based configuration loaded, clients: [%s]", Object.keys(clients).join());
+		for(var key of Object.keys(clients)){
+			if(!CLIENT_MAP[key]){
+				CLIENT_MAP[key] = clients[key];
+				CLIENT_MAP[key].start();
+			}
+		}
 		
+		console.log("ndm.client::NdmCloudService:checkClients: file based configuration loaded, clients: [%s]", Object.keys(clients).join());
+
+		/** do not auto-start */
 		for(var folder of clientsFolder.getContentCollection(null).filter(vfs.isContainer)){
-			clients[folder.key] ||= new Client(folder);
+			if(undefined === clients[folder.key]){
+				CLIENT_MAP[folder.key] = clients[folder.key] = new Client(folder);
+			}
 		}
 
 		console.log("ndm.client::NdmCloudService:checkClients: vfs persistent checked, clients folder: %s, clients: [%s]", clientsFolder, Object.keys(clients).join());
-
 		
-		for(var key of Object.keys(clients)){
-			if(!clientObjects[key]){
-				clientObjects[key] = clients[key];
-				clientObjects[key].start();
-			}
-		}
-		for(var key of Object.keys(clientObjects)){
+		for(var key of Object.keys(CLIENT_MAP)){
 			if(!clients[key]){
-				clientObjects[key].destroy();
-				delete clientObjects[key];
+				CLIENT_MAP[key].destroy();
+				delete CLIENT_MAP[key];
 			}
 		}
-		console.log("ndm.client::NdmCloudService:checkClients: done. clients: [%s]", Object.keys(clientObjects).join());
+		console.log("ndm.client::NdmCloudService:checkClients: done. clients: [%s]", Object.keys(CLIENT_MAP).join());
 	}
 };
 
@@ -86,29 +92,29 @@ Object.defineProperties(exports, {
 	
 	getClient : {
 		value : function(key){
-			return clientObjects[key];
+			return CLIENT_MAP[key];
 		}
 	},
 	getClients : {
 		value : function(){
-			return Object.assign({}, clientObjects);
+			return Object.assign({}, CLIENT_MAP);
 		}
 	},
 	updateClient : {
 		value : function(clientId, licenseNumber, serviceKey){
-			const clientCurrent = clientObjects[clientId];
-			const clientFolder = clientsFolder.relativeFolderEnsure(clientId); // clientsFolder.relativeFolder(clientId);
-			if(!Client.storeRaw(clientFolder, clientId, ndssHost, licenseNumber, serviceKey)){
+			const clientCurrent = CLIENT_MAP[clientId];
+			const folder = clientsFolder.relativeFolderEnsure(clientId); // clientsFolder.relativeFolder(clientId);
+			if(!Client.storeRaw(folder, clientId, ndssHost, licenseNumber, serviceKey)){
 				return false;
 			}
-			const clientUpdated = new Client(clientFolder);
+			const clientUpdated = new Client(folder);
 			if(clientCurrent){
 				if(clientCurrent.equals(clientUpdated)){
 					return clientCurrent;
 				}
 				clientCurrent.destroy();
 			}
-			clientObjects[clientId] = clientUpdated;
+			CLIENT_MAP[clientId] = clientUpdated;
 			clientUpdated.start();
 			return clientUpdated;
 		}
