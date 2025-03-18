@@ -21,13 +21,13 @@ const NdmcWebShare = module.exports = ae3.Class.create(
 		},
 		onDrill : {
 			value : function(context){
-				Object.defineProperty(context, 'ndmc', this.ndssPropertyDescriptor);
+				Object.defineProperty(context, 'ndmc', this.ndmcPropertyDescriptor);
 				return this.index;
 			}
 		},
 		onHandle : {
 			value : function(context){
-				Object.defineProperty(context, 'ndmc', this.ndssPropertyDescriptor);
+				Object.defineProperty(context, 'ndmc', this.ndmcPropertyDescriptor);
 				return this.index.handle(context);
 			}
 		}

@@ -71,6 +71,9 @@ const CallbackDialback = module.exports = ae3.Class.create(
 		"prepareCallback" : {
 			value : function(component){
 				const override = component.client.overrideSettings;
+				
+				this.doCloudWrap = !override.terminateOnClient;
+				
 				switch(TUNNEL_BY_SERVER_PORT[this.tunnelType]){
 				case "raw":
 					if(override.forcePlainHandshake || (!this.handshakeData && override.allowPlainHandshake)){
@@ -147,12 +150,14 @@ const CallbackDialback = module.exports = ae3.Class.create(
 					"Content-Length: 0\r\n" +
 					"X-Session-Host: %s.%s\r\n" +
 					"X-Session-Token: %s\r\n" +
+					"%s" +
 					"\r\n",
 					this.targetPath,
 					this.targetAddress,
 					this.anchorName,
 					this.domainName,
-					this.sessionToken
+					this.sessionToken,
+					this.doCloudWrap ? "X-Server-Tls: true\r\n" : ""
 				);
 
 				const parser = new HttpReplyParser();
@@ -161,7 +166,9 @@ const CallbackDialback = module.exports = ae3.Class.create(
 				
 				socket.target.absorbBuffer(TransferCreateBufferUtf8(output));
 				socket.target.force();
+				
 				this.socket = socket;
+				
 				console.log("ndm.client::CallbackDialback:connectCallback: request sent: socket: %s, length: %s", socket, output.length);
 				return;
 			}
@@ -175,26 +182,35 @@ const CallbackDialback = module.exports = ae3.Class.create(
 				}
 				switch(reply.code){
 				case 101:
-					console.log("ndm.client::CallbackDialback:replyCallback: switch protocol, reply: %s, %s", Format.jsDescribe(reply), this.socket);
 
-					if(this.doClientUnwrap){
-						console.log("ndm.client::CallbackDialback:replyCallback: unwrap client socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
-						this.socket = SslUnwrap(this.socket);
+					if(this.doCloudWrap && reply.attributes["X-Server-Tls"]){
+						
+						console.log("ndm.client::CallbackDialback:replyCallback: switch protocol, use cloud wrap, reply: %s, %s", Format.jsDescribe(reply), this.socket);
+						
+					}else{
+						
+						console.log("ndm.client::CallbackDialback:replyCallback: switch protocol, reply: %s, %s", Format.jsDescribe(reply), this.socket);
+						
+						if(this.doClientUnwrap){
+							console.log("ndm.client::CallbackDialback:replyCallback: unwrap client socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
+							this.socket = SslUnwrap(this.socket);
+						}
+						
+						if(this.doServerWrap){
+							console.log("ndm.client::CallbackDialback:replyCallback: wrap server socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
+							this.socket = SslWrapServer(//
+								this.socket, //
+								// todo: move to execute "once"?
+								ae3.net.ssl.getDomainStore(//
+									this.anchorName + "." + this.domainName, //
+									CallbackDialback.PROTOCOLS, //
+									CallbackDialback.CIPHERS//
+								)//
+							);
+						}
+						
 					}
 					
-					if(this.doServerWrap){
-						console.log("ndm.client::CallbackDialback:replyCallback: wrap server socket (TLS), tunnelType: %s, %s", this.tunnelType, this.socket);
-						this.socket = SslWrapServer(//
-							this.socket, //
-							// todo: move to execute "once"?
-							ae3.net.ssl.getDomainStore(//
-								this.anchorName + "." + this.domainName, //
-								CallbackDialback.PROTOCOLS, //
-								CallbackDialback.CIPHERS//
-							)//
-						);
-					}
-
 					this.server = new HttpServerParser( //
 							this.socket, //
 							this.requestCallback.bind(this), //

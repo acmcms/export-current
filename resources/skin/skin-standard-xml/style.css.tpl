@@ -318,9 +318,23 @@ DIV.idx-box-compact {
 	position: relative;
 }
 
-TABLE.items TD.cell-tp-number, TD.cell-tp-number{
+TD.cell-tp-number{
 	text-align: right;
 	white-space: nowrap;
+}
+
+TD.cell-tp-boolean > DIV.ui-cmd-text, TD.ui-type-boolean, TD.cell-tp-boolean[x-boolean]{
+	font-weight: 500;
+	color: #229;
+}
+
+TD.cell-tp-boolean > DIV.ui-cmd-text[x-boolean='true'], TD.ui-type-boolean[x-boolean='true'], TD.cell-tp-boolean[x-boolean='true']{
+	color: #171;
+}
+
+TD.cell-tp-boolean > DIV.ui-cmd-text[x-boolean='false'], TD.ui-type-boolean[x-boolean='false'], TD.cell-tp-boolean[x-boolean='false']{
+	color: #711;
+	opacity: .6;
 }
 
 INPUT[type=""]:invalid, 
@@ -1231,6 +1245,15 @@ INPUT.el-radio + LABEL.st-radio-sel:active::before {
 
 [data-type="numeric"] {
     white-space: nowrap;
+}
+
+
+.ui-cmd-icon-char {
+}
+
+.ui-icon-unknown:empty::before {
+	content: '⁇';
+	opacity: 37%;
 }
 
 

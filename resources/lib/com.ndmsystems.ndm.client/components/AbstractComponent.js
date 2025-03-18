@@ -53,17 +53,17 @@ const AbstractComponent = module.exports = ae3.Class.create(
 			value : function(args){
 				const name = args[0];
 				const href = './../callbacks/'+this.componentName+'/Callback' + (name[0].toUpperCase()) + (name.substr(1));
-				var callback;
+				var callbackClass;
 				try{
-					callback = require(href);
+					callbackClass = require(href);
 				}catch(e){
 					console.log("ndm.client::AbstractComponent:prepareCall: %s: no such component: %s", this.componentName, name);
 					return 0x01;
 				}
 				
-				callback = new callback(args);
+				const callback = new callbackClass(args);
 				if(!callback){
-					/** ^^^ callback constructor failes to construct an object, CERR 0x03 - invalid arguments */
+					/** ^^^ callback constructor fails to construct an object, CERR 0x03 - invalid arguments */
 					console.log("ndm.client::AbstractComponent:prepareCall: %s: invalid arguments: %s", this.componentName, args);
 					return 0x03;
 				}
@@ -87,7 +87,7 @@ const AbstractComponent = module.exports = ae3.Class.create(
 					return 0x03;
 				}
 				
-				console.log("ndm.client::AbstractComponent:prepareCall: %s: ready: %s", this.componentName, callback);
+				console.log("ndm.client::AbstractComponent:prepareCall: %s: ready: %s", this.componentName, callbackClass);
 				return callback.executeCallback.bind(callback, this, args);
 			}
 		}

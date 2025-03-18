@@ -40,6 +40,8 @@
 		</xsl:choose>
 	</xsl:variable>
 
+	<xsl:variable name="silk"><xsl:value-of select='$base'/>/__i/famfamfam.com/silk/</xsl:variable>
+
 	<xsl:template match="/">
 		<html class="zoom-{$zoom}-html" id="html">
 			<xsl:comment> zoom: <xsl:value-of select='$zoom'/> </xsl:comment>
@@ -257,13 +259,13 @@
 												<xsl:if test="@id or @icon or @command">
 													<table class="collapse">
 														<tr>
-															<td style="vertical-align: middle"><img src="{$base}/__i/famfamfam.com/silk/user.png" alt="user:" class="icon" style="padding-right: 2pt"/></td>
+															<td style="vertical-align: middle"><img src="{$silk}user.png" alt="user:" class="icon" style="padding-right: 2pt"/></td>
 															<td style="vertical-align: middle"><xsl:if test="@userId"><xsl:value-of select="@userId"/> as </xsl:if><xsl:value-of select="@id"/><xsl:if test="@admin='true'"> (admin)</xsl:if></td>
 															<xsl:if test="@geo">
 																<td style="vertical-align: middle"><img src="{$base}/__f/16x16/{@geo}" title="{@ip} @ {@geo}" class="geo-flag" style="padding-left: 2pt"/></td>
 															</xsl:if>
 															<xsl:if test="@command">
-																<td style="vertical-align: middle"><a class="command" href="{@command}"><img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/></a></td>
+																<td style="vertical-align: middle"><a class="command" href="{@command}"><img src="{$silk}{@icon}.png" class="icon"/></a></td>
 															</xsl:if>
 														</tr>
 													</table>
@@ -296,7 +298,7 @@
 															<a href="/index" class="ui-cmd-link">
 																<div class="hl hl-bn- hl-ui- hl-hd- idx-box-cell">
 																	<div class="ui-cmd-icon">
-																		<img src="{$base}/__i/famfamfam.com/silk/house.png" class="icon"/>
+																		<img src="{$silk}house.png" class="icon"/>
 																	</div>
 																	<div class="ui-cmd-text">
 																		Jump: Root Index
@@ -307,7 +309,7 @@
 													</div>
 												</xsl:if>
 												<div class="menu-element">
-													<img src="{$base}/__i/famfamfam.com/silk/house.png" />
+													<img src="{$silk}house.png" />
 													<span>&#x25BC;</span>
 												</div>
 											</noscript></button></a></div>
@@ -511,9 +513,11 @@
 			<xsl:when test="$format/@variant='boolean'">
 				<xsl:choose>
 					<xsl:when test="$value = '1' or $value = 'true' or $value = 'TRUE' or $value = 'yes' or $value = 'YES'">
+						<xsl:attribute name="x-boolean">true</xsl:attribute>
 						YES
 					</xsl:when>
 					<xsl:when test="$value = '0' or $value = 'false' or $value = 'FALSE' or $value = 'no' or $value = 'NO'">
+						<xsl:attribute name="x-boolean">false</xsl:attribute>
 						NO
 					</xsl:when>
 					<xsl:otherwise>
@@ -523,7 +527,7 @@
 			</xsl:when>
 			<xsl:when test="$format/@variant='username'">
 				<div class="ui-cmd-icon">
-					<img src="{$base}/__i/famfamfam.com/silk/user.png" class="icon"/>
+					<img src="{$silk}user.png" class="icon"/>
 				</div>
 				<div class="ui-cmd-text">
 					<xsl:value-of select='$value'/>
@@ -531,7 +535,7 @@
 			</xsl:when>
 			<xsl:when test="$format/@variant='groupname'">
 				<div class="ui-cmd-icon">
-					<img src="{$base}/__i/famfamfam.com/silk/group.png" class="icon"/>
+					<img src="{$silk}group.png" class="icon"/>
 				</div>
 				<div class="ui-cmd-text">
 					<xsl:value-of select='$value'/>
@@ -539,7 +543,7 @@
 			</xsl:when>
 			<xsl:when test="$format/@variant='email'">
 				<div class="ui-cmd-icon">
-					<img src="{$base}/__i/famfamfam.com/silk/email.png" class="icon"/>
+					<img src="{$silk}email.png" class="icon"/>
 				</div>
 				<div class="ui-cmd-text">
 					<xsl:value-of select='$value'/>
@@ -569,13 +573,22 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$format/@variant='select'">
+				<xsl:if test="not($format/option[@value = $value] | $format/options[@value = $value])">
+					<div class="ui-cmd-icon ui-cmd-icon-char ui-icon-unknown"></div>
+					<div class="ui-cmd-text">
+						<xsl:if test="$format/@type='boolean'">
+							<xsl:attribute name="x-{$format/@type}"><xsl:value-of select='$value'/></xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="$value"/>
+					</div>
+				</xsl:if>
 				<xsl:for-each select="$format/option[@value = $value] | $format/options[@value = $value]">
 					<xsl:if test="@titleShort and @title and ($zoom='column' or $zoom='cell' or $zoom='compact')">
 						<xsl:attribute name="title"><xsl:value-of select='@title'/></xsl:attribute>
 					</xsl:if>
-					<xsl:if test="@icon">
+					<xsl:if test="@icon or $format/@icon">
 						<div class="ui-cmd-icon">
-							<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+							<img src="{$silk}{@icon | $format/@icon[not(@icon)]}.png" class="icon"/>
 						</div>
 					</xsl:if>
 					<div class="ui-cmd-text">
@@ -590,6 +603,9 @@
 								<xsl:apply-templates select="title/*"/>
 							</xsl:when>
 							<xsl:otherwise>
+								<xsl:if test="$format/@type='boolean'">
+									<xsl:attribute name="x-{$format/@type}"><xsl:value-of select='$value'/></xsl:attribute>
+								</xsl:if>
 								<xsl:value-of select='@title | $value[not(@title)]'/>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -731,7 +747,7 @@
 							</iframe>
 							<div class="ui-secondary">
 								<div class="ui-cmd-icon">
-									<img src="{$base}/__i/famfamfam.com/silk/link_go.png" class="icon"/>
+									<img src="{$silk}link_go.png" class="icon"/>
 								</div>
 								<div class="ui-cmd-text">
 									<a target="_top" href="{$href}" class="ui-cmd-link">open...</a>
@@ -811,7 +827,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$format/@variant='icon'">
-				<img src="{$base}/__i/famfamfam.com/silk/{$format/@icon}.png" class="icon"/>
+				<img src="{$silk}{$format/@icon}.png" class="icon"/>
 			</xsl:when>
 			<xsl:when test="$format/@variant='link'">
 				<xsl:variable name="href">
@@ -834,7 +850,7 @@
 				<xsl:choose>
 					<xsl:when test="$format/@icon">
 						<div class="ui-cmd-icon">
-							<img src="{$base}/__i/famfamfam.com/silk/{$format/@icon}.png" class="icon"/>
+							<img src="{$silk}{$format/@icon}.png" class="icon"/>
 						</div>
 						<div class="ui-cmd-text">
 							<a href="{$format/@prefix}{$href}{$format/@suffix}">
@@ -974,7 +990,7 @@
 					<xsl:for-each select="$columns/command">
 						<th class="{@id}" rowspan="{$rowspanCount}" x-ui-debug="list/column {@id}">
 							<a class="command" title="{@title}">
-								<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+								<img src="{$silk}{@icon}.png" class="icon"/>
 							</a>
 						</th>
 					</xsl:for-each>
@@ -1028,7 +1044,7 @@
 							</xsl:variable>
 							<td class="{@icon}" rowspan="{$rowspanCount}">
 								<xsl:if test="$href and $href!=''">
-									<a class="command" target="_top" href="{@prefix}{$href}{$suffix}" title="{@title}"><img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/></a>
+									<a class="command" target="_top" href="{@prefix}{$href}{$suffix}" title="{@title}"><img src="{$silk}{@icon}.png" class="icon"/></a>
 								</xsl:if>
 							</td>
 						</xsl:for-each>
@@ -1469,7 +1485,7 @@
 							</xsl:call-template>
 						</div>
 					</xsl:if>
-					<div class="field-{$zoom} fldval">
+					<div class="field-{$zoom} fldval ui-type-{$format/@type}">
 						<xsl:call-template name="input">
 							<xsl:with-param name="format" select="$format"/>
 							<xsl:with-param name="value" select="$value"/>
@@ -1490,7 +1506,7 @@
 							</xsl:call-template>
 						</td>
 					</xsl:if>
-					<td class="field fldval" colspan="2">
+					<td class="field fldval ui-type-{$format/@type}" colspan="2">
 						<xsl:call-template name="input">
 							<xsl:with-param name="format" select="$format"/>
 							<xsl:with-param name="value" select="$value"/>
@@ -1679,10 +1695,10 @@
 					<div class="hl hl-bn-{@access} hl-hd-{@hidden} hl-ui-{@ui} idx-box-cell">
 						<div class="ui-cmd-icon">
 							<xsl:if test="@icon">
-								<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+								<img src="{$silk}{@icon}.png" class="icon"/>
 							</xsl:if>
 							<xsl:if test="not(@icon)">
-								<img src="{$base}/__i/famfamfam.com/silk/bullet_go.png" class="icon"/>
+								<img src="{$silk}bullet_go.png" class="icon"/>
 							</xsl:if>
 						</div>
 						<div class="ui-cmd-text">
@@ -1730,7 +1746,7 @@
 				<div style="clear:both">
 					<xsl:if test="$items[@hidden='true']">
 						<button id="{$unique}-btn" class="ui-menu-btn-ini no-print" style="opacity:0.35">
-							<div class="ui-cmd-icon"><img src="{$base}/__i/famfamfam.com/silk/cog_delete.png" class="icon"/></div>
+							<div class="ui-cmd-icon"><img src="{$silk}cog_delete.png" class="icon"/></div>
 							<div class="ui-cmd-text">Show all fields</div>
 						</button>
 						<script>
@@ -1765,7 +1781,7 @@
 								<xsl:with-param name="zoom" select="$itemZoom"/>
 							</xsl:call-template>
 						</td>
-						<td class="field fldval">
+						<td class="field fldval ui-type-{@type | @variant[not(@type)]} fldview">
 							<!-- div -->
 								<xsl:variable name="name"><xsl:value-of select="$field/@name"/></xsl:variable>
 								<!-- xsl:variable name="name" select="$field/@name"/ -->
@@ -1887,7 +1903,7 @@
 							</xsl:call-template>
 						</xsl:if>
 						<div class="menu-element">
-							<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" />
+							<img src="{$silk}{@icon}.png" />
 							<span>
 								<xsl:call-template name="formats-title">
 									<xsl:with-param name="format" select="."/>
@@ -1932,7 +1948,7 @@
 					<button class="ui-button" target="_top" type="submit" tabindex2="1000{position()}" name="{@name}" value="{@value}">
 						<xsl:if test="@icon">
 							<div class="ui-cmd-icon">
-									<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+									<img src="{$silk}{@icon}.png" class="icon"/>
 							</div>
 						</xsl:if>
 						<div class="ui-cmd-text">
@@ -1963,10 +1979,10 @@
 							</xsl:if>
 							<div class="ui-cmd-icon">
 								<xsl:if test="@icon">
-									<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+									<img src="{$silk}{@icon}.png" class="icon"/>
 								</xsl:if>
 								<xsl:if test="not(@icon)">
-									<img src="{$base}/__i/famfamfam.com/silk/bullet_go.png" class="icon"/>
+									<img src="{$silk}bullet_go.png" class="icon"/>
 								</xsl:if>
 							</div>
 							<div class="ui-cmd-text">
@@ -2023,10 +2039,10 @@
 		<xsl:variable name="iconWithTitle">
 			<div class="ui-cmd-icon">
 				<xsl:if test="@icon">
-					<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+					<img src="{$silk}{@icon}.png" class="icon"/>
 				</xsl:if>
 				<xsl:if test="not(@icon)">
-					<img src="{$base}/__i/famfamfam.com/silk/bullet_go.png" class="icon"/>
+					<img src="{$silk}bullet_go.png" class="icon"/>
 				</xsl:if>
 			</div>
 			<div class="ui-cmd-text">
@@ -2080,7 +2096,7 @@
 			<tr>
 				<td class="ui-message-west-{$zoom}">
 					<xsl:if test="@icon">
-						<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon ui-message-icon-{$zoom}"/>
+						<img src="{$silk}{@icon}.png" class="icon ui-message-icon-{$zoom}"/>
 					</xsl:if>
 				</td>
 				<td class="ui-message-east-{$zoom}">
@@ -2427,7 +2443,7 @@
 				<div style="clear:both">
 					<xsl:if test="$items[@hidden = 'true' and @key != 'index']">
 						<button id="{$unique}-btn" class="ui-menu-btn-ini no-print" style="opacity:0.35">
-							<div class="ui-cmd-icon"><img src="{$base}/__i/famfamfam.com/silk/cog_delete.png" class="icon"/></div>
+							<div class="ui-cmd-icon"><img src="{$silk}cog_delete.png" class="icon"/></div>
 							<div class="ui-cmd-text">Show all commands</div>
 						</button>
 						<script>
@@ -2454,10 +2470,10 @@
 					<xsl:variable name="iconWithTitle">
 						<div class="ui-cmd-icon">
 							<xsl:if test="@icon">
-								<img src="{$base}/__i/famfamfam.com/silk/{@icon}.png" class="icon"/>
+								<img src="{$silk}{@icon}.png" class="icon"/>
 							</xsl:if>
 							<xsl:if test="not(@icon)">
-								<img src="{$base}/__i/famfamfam.com/silk/bullet_go.png" class="icon"/>
+								<img src="{$silk}bullet_go.png" class="icon"/>
 							</xsl:if>
 						</div>
 						<div class="ui-cmd-text">
@@ -2514,7 +2530,7 @@
 		<a tabindex="-1" href="{@src}" target="_blank" style="padding:0;margin:1pt;border:0">
 			<button class="ui-button" type="button" onclick="return true" onclick2="window.open(&quot;{@src}&quot;);return false;" tabindex="99998">
 				<div class="ui-cmd-icon">
-					<img src="{$base}/__i/famfamfam.com/silk/help.png" alt="user:" class="icon"/>
+					<img src="{$silk}help.png" alt="user:" class="icon"/>
 				</div>
 				<div class="ui-cmd-text">
 					Documentation
