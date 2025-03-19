@@ -521,6 +521,7 @@
 						NO
 					</xsl:when>
 					<xsl:otherwise>
+						<xsl:attribute name="x-boolean"/>
 						<xsl:value-of select="$value"/>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -982,9 +983,21 @@
 					<th class="index" rowspan="{$rowspanCount}">#</th>
 					<xsl:for-each select="$line1">
 						<th class="{@id} {@extraClass}" colspan="{$colspanCount}">
-							<xsl:call-template name="formats-title">
-								<xsl:with-param name="format" select="."/>
-							</xsl:call-template>
+							<xsl:if test="@icon">
+								<div class="ui-cmd-icon">
+									<img src="{$silk}{@icon}.png" class="icon"/>
+								</div>
+								<div class="ui-cmd-text">
+									<xsl:call-template name="formats-title">
+										<xsl:with-param name="format" select="."/>
+									</xsl:call-template>
+								</div>
+							</xsl:if>
+							<xsl:if test="not(@icon)">
+								<xsl:call-template name="formats-title">
+									<xsl:with-param name="format" select="."/>
+								</xsl:call-template>
+							</xsl:if>
 						</th>
 					</xsl:for-each>
 					<xsl:for-each select="$columns/command">
@@ -1441,7 +1454,7 @@
 		<xsl:param name="format" />
 		<xsl:param name="value" />
 		<xsl:for-each select="$elements | $value/*[not($elements) and local-name() = $format/@elementName]">
-			<span class="{$format/@itemCssClass}">
+			<span x-ui-debug="sequence" class="{$format/@itemCssClass}">
 				<xsl:apply-templates select=".">
 					<xsl:with-param name="format" select="."/>
 					<xsl:with-param name="value" select="$value"/>
@@ -1474,7 +1487,7 @@
 				</xsl:if>
 			</xsl:when>
 			<xsl:when test="$zoom='compact'">
-				<span class="ui-fldbox-{$zoom} hl-bn-{$format/@hl} {$format/@cssClass}">
+				<span x-ui-debug="form-field/compact" class="ui-fldbox-{$zoom} hl-bn-{$format/@hl} {$format/@cssClass}">
 				<table style="width:100%" class="collapse"><tbody><tr><td>
 					<xsl:if test="$format/@title or $format/title">
 						<div class="field-{$zoom} fldkey">
@@ -2013,10 +2026,19 @@
 		<xsl:param name="format" />
 		<xsl:param name="suffix" />
 		<xsl:choose>
-			<xsl:when test="$format/@titleShort"><span title="{$format/@title}"><xsl:value-of select='$format/@titleShort'/><xsl:value-of select='$suffix'/></span></xsl:when>
-			<xsl:when test="$format/@title"><xsl:value-of select='$format/@title'/><xsl:value-of select='$suffix'/></xsl:when>
-			<xsl:when test="$format/title[@layout]"><xsl:apply-templates select='$format/title[@layout]'/><xsl:value-of select='$suffix'/></xsl:when>
-			<xsl:when test="$format/title"><xsl:apply-templates select='$format/title/node()'/><xsl:value-of select='$suffix'/></xsl:when>
+		
+			<xsl:when test="$format/@titleShort"
+				><span x-ui-debug="formats-title/titleShort" title="{$format/@title}"><xsl:value-of select='$format/@titleShort'/><xsl:value-of select='$suffix'/></span></xsl:when>
+				
+			<xsl:when test="$format/@title"
+				><xsl:value-of select='$format/@title'/><xsl:value-of select='$suffix'/></xsl:when>
+				
+			<xsl:when test="$format/title[@layout]"
+				><xsl:apply-templates select='$format/title[@layout]'/><xsl:value-of select='$suffix'/></xsl:when>
+				
+			<xsl:when test="$format/title"
+				><xsl:apply-templates select='$format/title/node()'/><xsl:value-of select='$suffix'/></xsl:when>
+				
 		</xsl:choose>
 	</xsl:template>
 
