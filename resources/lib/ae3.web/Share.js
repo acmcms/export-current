@@ -9,6 +9,8 @@ const ae3 = require('ae3');
  * 
  */
 
+const LAST_EXCEPTION = Object.create(null);
+
 
 const Share = module.exports = ae3.Class.create(
 	/* name */
@@ -18,14 +20,17 @@ const Share = module.exports = ae3.Class.create(
 	/* constructor */
 	function(settings){
 		this.AbstractWebPage();
-		Object.defineProperty(this, "dateStarted", {
-			value : new Date()
+		Object.defineProperties(this, {
+			dateStarted :{
+				value : new Date()
+			},
+			settings : {
+				value : settings || undefined
+			},
+			lastException : {
+				value : {}
+			}
 		});
-		if(settings){
-			Object.defineProperty(this, "settings", {
-				value : settings
-			});
-		}
 		return this;
 	},
 	/* inherit */
@@ -182,10 +187,10 @@ const Share = module.exports = ae3.Class.create(
 				const share = context.share;
 				const value = e.thrownValue;
 				if(value && value.layout){
-					return value;
+					return LAST_EXCEPTION.layout = value;
 				}
 				if(value || e.thrownDetail){
-					return {
+					return LAST_EXCEPTION.layout = {
 						layout : 'message',
 						code : Number((e.thrownValue && e.thrownValue.code) || 409),
 						reason : (e.thrownValue && e.message) || 'Request Error',
@@ -193,7 +198,7 @@ const Share = module.exports = ae3.Class.create(
 						detail : e.thrownDetail || undefined
 					};
 				}
-				return share.makeServerFailureLayout(e.message || e, Format.throwableAsPlainText(e));
+				return LAST_EXCEPTION.layout = share.makeServerFailureLayout(e.message || e, Format.throwableAsPlainText(e));
 			}
 		},
 		authCheckAccountMembership : {
@@ -409,5 +414,12 @@ const Share = module.exports = ae3.Class.create(
 				return result;
 			}
 		},
+	},
+	{
+		"getLastExceptionLayout" : {
+			value : function(){
+				return LAST_EXCEPTION.layout;
+			}
+		}
 	}
 );

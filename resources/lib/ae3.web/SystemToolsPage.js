@@ -18,6 +18,8 @@ function SystemToolsPage(props){
 	const WapiWatchLogsClass = require("ru.myx.ae3.internal/web/system-tools/CliBridge");
 	const WapiVfsBrowseClass = require("ru.myx.ae3.internal/web/system-tools/CliBridge");
 
+	const WapiLastErrorClass = require("ru.myx.ae3.internal/web/system-tools/LastWebException");
+
 	this.commands = {
 		/**
 		 * interface
@@ -55,6 +57,13 @@ function SystemToolsPage(props){
 			access : "admin",
 			ui : true,
 		},
+		"lastWebException" : {
+			icon : "exclamation",
+			title : "Last Web Exception",
+			run : new WapiLastErrorClass(this, this.systemName, this.link),
+			access : "admin",
+			ui : true,
+		}
 	};
 	this.run = this;
 

@@ -1,24 +1,19 @@
-function CliBridge(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "cliBridge (CLI Bridge)";
-	return this;
-}
+const ae3 = require("ae3");
+
+
 
 function runCliBridge(context){
 	const share = context.share;
 	const client = share.authRequireAccount(context, 'admin');
 	const query = context.query;
-	
-	var parameters = query.parameters;
-	
-	if( parameters.done ){
-		context.title = this.title;
-		return share.makeUpdateSuccessLayout();
-	}
 
-	var script = parameters.script;
-	var failOnError = parameters.mode === 'fail-on-error';
-	var detailOutput = parameters.detail === 'true';
+	context.title = this.title;
+	
+	const parameters = query.parameters;
+	
+	const script = parameters.script;
+	const failOnError = parameters.mode === 'fail-on-error';
+	const detailOutput = parameters.detail === 'true';
 
 	if( script && parameters.format === 'html-chunked' ){
 		var HtmlChunkedConsoleClass = require('ae3').Util.ConsoleHtmlChunked;
@@ -147,8 +142,21 @@ function runCliBridge(context){
 	};
 }
 
-CliBridge.prototype = {
-	handle : runCliBridge
-};
 
-module.exports = CliBridge;
+const CliBridge = module.exports = ae3.Class.create(
+	"CliBridge",
+	undefined,
+	function(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "cliBridge (CLI Bridge)";
+		return this;
+	},
+	{
+		authRequired : {
+			value : true
+		},
+		handle : {
+			value : runCliBridge
+		}
+	}
+);
