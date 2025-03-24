@@ -61,7 +61,7 @@ ae3.prototype = {
 	
 	display : function(){
 		with(this){
-			top.debug && top.debug("ae3.init2: start");
+			top.debug?.("ae3.init2: start");
 			
 			defaultIconBase && (require("Layouts.Icon").prototype.defaultIconBase = defaultIconBase);
 			

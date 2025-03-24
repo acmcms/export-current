@@ -95,7 +95,7 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 					folder.setContent(content);
 					(txn.commit(), txn = null);
 				}finally{
-					txn && txn.cancel();
+					txn?.cancel();
 				}
 
 				this.committed = now;
@@ -173,8 +173,8 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 			const title = (serviceName || share.serviceName || "Unknown") + "::" + (pathPrefix || share.pathPrefix || "administration/") + 
 				(baseOnly ? "runtimeMonitoringLog (System Monitoring)" : "runtimeStatsLog (Runtime System Stats)");
 			
-//			var serviceName = clientElementProperties && clientElementProperties.serviceName || "ND*S";
-//			var pathPrefix = clientElementProperties && clientElementProperties.pathPrefix || "administration/"
+//			var serviceName = clientElementProperties?.serviceName || "ND*S";
+//			var pathPrefix = clientElementProperties?.pathPrefix || "administration/"
 //			var title = serviceName + "::" + pathPrefix + "listRuntimeSystemStatsLog (Runtime System Stats)";
 
 			const parameters = query.parameters;

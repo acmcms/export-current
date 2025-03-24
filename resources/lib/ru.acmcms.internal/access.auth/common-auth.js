@@ -14,7 +14,7 @@ exports.getCurrentUser = function(networkId, networkUid){
 			'default', 
 			'SELECT UserID FROM umUserProfiles WHERE Scope=' + Format.sqlString(key)
 		);
-	var userId = selected && selected[0];
+	var userId = selected?.[0];
 	var user = userId && UserManager.getUser(userId, true) || User.getUser();
 
 	/**

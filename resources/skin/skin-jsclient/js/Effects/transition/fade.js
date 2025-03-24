@@ -13,6 +13,6 @@
 		rel.style.filter = "alpha(opacity=" + Math.round(value * 100) + ")";
 	},
 	destroy: function(rel, callback){
-		callback && callback();
+		callback?.();
 	}
 })

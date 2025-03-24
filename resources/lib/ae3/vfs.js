@@ -4,7 +4,7 @@ function internIterate(container, starting, ending, compare, console, callBackFn
 	var items = 0, index, records, length, record;
 	for(;;){
 		records = container.getContentRange(starting, ending, 1024, false, null);
-		length = records && records.length;
+		length = records?.length;
 		if(!length){
 			return items;
 		}

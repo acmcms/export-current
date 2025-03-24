@@ -135,7 +135,7 @@ function runTasks(entry) {
 	
 	// TODO: seems to be incomplete to be able to work
 	var collected = console.getCollected();
-	if (collected && collected.length) {
+	if (collected?.length) {
 		require("java.class/java.lang.System").out
 				.println("PERIODIC: console output: \n\t"
 						+ Format.jsObject(collected));
@@ -171,7 +171,7 @@ function cmdGroups(args){
 		var group = GROUPS[groupName];
 		var last = vfsData.relativeFile("last" + group.key);
 		var prev = last.isExist() && last.isPrimitive() && last.primitiveValue || new Date(0);
-		console.log("\t%s\t%s", groupName, prev && prev.time && prev.toISOString() || 'never-started' );
+		console.log("\t%s\t%s", groupName, prev?.toISOString?.() || 'never-started' );
 	}
 	return true;
 }

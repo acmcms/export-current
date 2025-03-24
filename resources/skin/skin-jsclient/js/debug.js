@@ -12,9 +12,9 @@ top.opener && (function(){try{window.debug = top.opener.top.debug}catch(e){}})()
 	//	-= MyX =-
 	//
 	// Usage like this:
-	//		window.debug && debug( <message> );
+	//		window.debug?.( <message> );
 	//	or
-	//		top.debug && top.debug( <message> );
+	//		top.debug?.( <message> );
 	//
 	
 	with(debug.state){
@@ -501,7 +501,7 @@ debug.state = {
 	
 	// standard routine
 	createCookie: function(name,value,days) {
-		top.debug && top.debug("cookie write: name=" + name + ", days=" + days + ", value=" + value);
+		top.debug?.("cookie write: name=" + name + ", days=" + days + ", value=" + value);
 		var expires;
 		if (days) {
 			var date = new Date();
@@ -515,7 +515,7 @@ debug.state = {
 
 	// standard routine
 	readCookie: function(name,defaultValue) {
-		top.debug && top.debug("cookie read: name=" + name);
+		top.debug?.("cookie read: name=" + name);
 		name += '=';
 		var ca = document.cookie.split(';');
 		for(var i=0;i < ca.length;++i) {
@@ -538,13 +538,13 @@ debug.state = {
 		var ffn = ((typeof fn == 'function') ? fn : new Function(fn));
 		if(obj.addEventListener){
 			obj.addEventListener( type, ffn, false );
-			top.debug && top.debug(this + ".addEvent('" + (obj.nodeName || obj) + "', '" + type + "'): DOM way!");
+			top.debug?.(this + ".addEvent('" + (obj.nodeName || obj) + "', '" + type + "'): DOM way!");
 		}else
 		if(obj.attachEvent){
 			obj.attachEvent("on"+type, function(e){
 				ffn.call( obj, e || window.event );
 			});
-			top.debug && top.debug(this + ".addEvent('" + (obj.nodeName || obj) + "', '" + type + "'): IE6 way!");
+			top.debug?.(this + ".addEvent('" + (obj.nodeName || obj) + "', '" + type + "'): IE6 way!");
 		}else{
 			var name = "on" + type;
 			if(!obj[name] || !obj[name].handlers){
@@ -558,7 +558,7 @@ debug.state = {
 				obj[name].handlers = save ? [save] : [];
 			}
 			obj[name].handlers.push(ffn);
-			top.debug && top.debug(this + ".addEvent('" + (obj.nodeName || obj) + "', '" + type + "'): Classic way!");
+			top.debug?.(this + ".addEvent('" + (obj.nodeName || obj) + "', '" + type + "'): Classic way!");
 		}
 	},
 

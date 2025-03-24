@@ -182,7 +182,7 @@ function internCallbackHttpSimple(future, request, then, message){
 	 * body property of XML-multiple is actually a map/string/etc from XML
 	 */
 	const map = Xml.toBase("xml-response", body, null, null, null) || {};
-	request.onSuccess && request.onSuccess.call(request, map);
+	request.onSuccess?.call(request, map);
 	
 	then 
 		? internClientDoRequest.call(this, future, then)
@@ -223,9 +223,9 @@ function internCallbackXmlMultiple(future, items, then, message){
 		
 		const body = result.body;
 		if(code == 200){
-			request.onSuccess && request.onSuccess.call(request, body);
+			request.onSuccess?.call(request, body);
 		}else{
-			request.onError && request.onError.call(request, code, body);
+			request.onError?.call(request, code, body);
 		}
 	}
 	

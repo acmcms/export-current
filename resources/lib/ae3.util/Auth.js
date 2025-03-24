@@ -101,7 +101,7 @@ var commands = {
 		args : "[--silent ]<username>",
 		help : "add user",
 		run : function(self, args, auth, options){
-			var silent = options && options.silent;
+			var silent = options?.silent;
 			var username;
 			for(var i of args){
 				if(i === '--silent'){
@@ -136,7 +136,7 @@ var commands = {
 		run : function(self, args, auth, options){
 			for(var username, login, hash, password;;){
 				var argument = args.shift();
-				if(argument && argument.startsWith("--")){
+				if(argument?.startsWith("--")){
 					if(argument == "--login"){
 						login = args.shift();
 						if(!login){
@@ -226,7 +226,7 @@ var commands = {
 		args : "<username>",
 		help : "remove user",
 		run : function(self, args, auth, options){
-			var silent = options && options.silent;
+			var silent = options?.silent;
 			var username;
 			for(var i of args){
 				if(i === '--silent'){
@@ -253,7 +253,7 @@ var commands = {
 		args : "[--silent ]<groupname>",
 		help : "add group",
 		run : function(self, args, auth, options){
-			var silent = options && options.silent;
+			var silent = options?.silent;
 			var groupname;
 			for(var i of args){
 				if(i === '--silent'){

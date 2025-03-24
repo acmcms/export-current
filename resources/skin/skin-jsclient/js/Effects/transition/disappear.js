@@ -36,6 +36,6 @@
 		}
 	},
 	destroy: function(rel, callback){
-		callback && callback();
+		callback?.();
 	}
 })

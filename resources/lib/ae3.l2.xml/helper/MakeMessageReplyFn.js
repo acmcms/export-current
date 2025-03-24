@@ -121,7 +121,7 @@ function makeMessageReply(context, layout){
 			if(context.share){
 				= formatXmlElement("client", context.share.clientElementProperties(context));
 			}
-			if(filters && filters.fields){
+			if(filters?.fields){
 				= formatXmlElement("prefix", new FiltersFormLayout(filters));
 			}
 			%><reason><%= formatXmlNodeValue(reason ? (reason.title || reason) : "Unclassified message.") %></reason><%
@@ -140,8 +140,8 @@ function makeMessageReply(context, layout){
 					= this.internOutputValue("detail", detail);
 				}
 			}
-			if((layout.help || message && message.help) && context.query.parameters.format !== "clean"){
-				%><help src="<%= formatXmlAttributeFragment(layout.help || message.help) %>"/><%
+			if((layout.help || message?.help) && context.query.parameters.format !== "clean"){
+				%><help src="<%= formatXmlAttributeFragment(layout.help || message?.help) %>"/><%
 			}
 		%></<%= element; %>><%
 	}

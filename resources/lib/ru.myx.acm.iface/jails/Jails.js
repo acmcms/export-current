@@ -38,7 +38,7 @@ function executeQueryOnJail(context, title, jailName, sql, types, params){
 	}
 	
 	const columns = [];
-	if(stats && stats.length){
+	if(stats?.length){
 		var example = stats[0];
 		for each(var key in Object.keys(example)){
 			if(key == Number(key)){
@@ -47,8 +47,8 @@ function executeQueryOnJail(context, title, jailName, sql, types, params){
 			columns.push({
 				id : key,
 				title : key,
-				variant : types && types[key],
-				prefix : params && params[key]
+				variant : types?.[key],
+				prefix : params?.[key]
 			});
 		}
 	}

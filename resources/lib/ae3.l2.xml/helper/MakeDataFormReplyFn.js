@@ -70,7 +70,7 @@ function makeDataFormReply(context, layout){
 			if(layout.prefix){
 				= this.internOutputValue("prefix", layout.prefix);
 			}
-			if(filters && filters.fields){
+			if(filters?.fields){
 				= formatXmlElement("prefix", new FiltersFormLayout(filters));
 			}
 			%><fields><%
@@ -86,7 +86,7 @@ function makeDataFormReply(context, layout){
 					= formatXmlElement("command", {
 						title : "Download as XLS",
 						icon : "disk",
-						url : "?___output=xls&" + formatQueryStringParameters(filters && filters.values)
+						url : "?___output=xls&" + formatQueryStringParameters(filters?.values)
 					});
 				}
 				if(layout.help && (!query || query.parameters.format !== "clean")){

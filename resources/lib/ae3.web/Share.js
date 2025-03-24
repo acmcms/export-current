@@ -186,7 +186,7 @@ const Share = module.exports = ae3.Class.create(
 			value : function onException(context, e){
 				const share = context.share;
 				const value = e.thrownValue;
-				if(value && value.layout){
+				if(value?.layout){
 					return LAST_EXCEPTION.layout = value;
 				}
 				if(value || e.thrownDetail){

@@ -15,7 +15,7 @@ function buildIndexMenuReply(context, client, admin){
 					parameters.ref.substring(query.resourcePrefix.length) || undefined;
 		var extras = extra && [];
 		indexPushAllHtmlJs(index, this, "/", extra, extras, client, admin);
-		if(extras && extras.length){
+		if(extras?.length){
 			extras.push({
 				"icon" : this.icon || "house",
 				"title" : "Root Menu",
@@ -369,7 +369,7 @@ function indexPushAllHtmlJs(targetArray, index, prefix, extra, extras, client, a
 			(x = command.preview) && (item.preview = x);
 			
 			if(command.group){
-				extra && extra.startsWith(link) && extras.unshift(item);
+				extra?.startsWith(link) && extras.unshift(item);
 				indexPushAllHtmlJs(
 					item.submenu = [], 
 					index.getCommandHandler(command, key) ?? (key === "index" && index), 

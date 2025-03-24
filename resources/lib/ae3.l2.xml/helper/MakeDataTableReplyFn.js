@@ -76,7 +76,7 @@ function makeDataTableReply(context, layout){
 			if(layout.prefix){
 				= this.internOutputValue("prefix", layout.prefix);
 			}
-			if(filters && filters.fields){
+			if(filters?.fields){
 				= formatXmlElement("prefix", new FiltersFormLayout(filters));
 			}
 			%><columns><%
@@ -186,7 +186,7 @@ function makeDataTableReply(context, layout){
 			if(layout.suffix){
 				= this.internOutputValue("suffix", layout.suffix);
 			}
-			if(layout.next && layout.next.uri){
+			if(layout.next?.uri){
 				= formatXmlElement("next", layout.next);
 			}
 		%></<%= element; %>><%

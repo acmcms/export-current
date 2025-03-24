@@ -43,7 +43,7 @@ Effects.Transition = function(type, target, callback){
 		var active = this.target.transitionActive;
 		(active && active.abs) && (active.stepStart = 0, active.step()); // should stop
 		//
-		callback && callback();
+		callback?.();
 		return this;
 	}
 	

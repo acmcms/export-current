@@ -42,7 +42,7 @@ function internCheckReload(cacheKey, folder, callback, cache, cached){
 
 	var array = folder.getContentCollection(null).filter(filterDescriptors);
 	var checkSum = array.reduce(reduceCheckSum, "");
-	if (cached && checkSum === cached.checkSum) {
+	if (cached?.checkSum === checkSum) {
 		cached.timestamp = Date.now();
 		console.log(">>>>>> settings check async, not changed, path: %s", cacheKey);
 		return;
@@ -102,7 +102,7 @@ module.exports = Object.create(Object.prototype, {
 			
 			var cache = callback.cache ||= {};
 			var cached = cache[cacheKey];
-			if(cached && callback === cached.callback) {
+			if(cached?callback === callback) {
 				const age = Date.now() - cached.timestamp;
 				if(age < 6000) {
 					if(age > 4000) {
@@ -117,7 +117,7 @@ module.exports = Object.create(Object.prototype, {
 
 			var array = folder.getContentCollection(null).filter(filterDescriptors);
 			var checkSum = array.reduce(reduceCheckSum, "");
-			if (cached && checkSum === cached.checkSum) {
+			if (cached?.checkSum === checkSum) {
 				cached.timestamp = Date.now();
 				return cached.settings;
 			}

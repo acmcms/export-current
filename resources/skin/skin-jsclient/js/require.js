@@ -83,7 +83,7 @@ window.require || (
 
 require = document.require = function(className, cb){
 	var t = arguments.callee.impl;
-	top.debug && top.debug(t + ": require: " + className);
+	top.debug?.(t + ": require: " + className);
 	/**
 	 * 	return eval("window." + className) || ...;
 	 * 	no need - eventually does the same thing
@@ -110,7 +110,7 @@ require = document.require = function(className, cb){
 				/* search in parent */
 				(parent && parent != target && parent[name]) ||
 				/* create empty package */
-				(top.debug && top.debug(t + ": createPackage for: " + script), r.createPackage())
+				(top.debug?.(t + ": createPackage for: " + script), r.createPackage())
 			)
 		);
 		target = target[name];
@@ -119,25 +119,25 @@ require = document.require = function(className, cb){
 },
 /* TODO: remove 'requireSource' */
 requireSource = function(name, dynamic){
-	top.debug && top.debug(require.impl + ": requireSource: " + name + ", dynamic=" + dynamic);
+	top.debug?.(require.impl + ": requireSource: " + name + ", dynamic=" + dynamic);
 	return require.impl.requireSourceSync(name, dynamic);
 },
 /* TODO: remove 'requireScript' */
 requireScript = function(name, dynamic){
-	top.debug && top.debug(require.impl + ": requireScript: " + name + ", dynamic=" + dynamic);
+	top.debug?.(require.impl + ": requireScript: " + name + ", dynamic=" + dynamic);
 	return require.impl.requireScriptSync(name, dynamic);
 },
 require.source = document.require.source = function(name, cb){
-	top.debug && top.debug(require.impl + ": require.source: " + name + ", cb=" + cb);
+	top.debug?.(require.impl + ": require.source: " + name + ", cb=" + cb);
 	return require.impl.requireSource(name, cb);
 },
 require.script = document.require.script = function(name, cb){
-	top.debug && top.debug(require.impl + ": require.script: " + name + ", cb=" + cb);
+	top.debug?.(require.impl + ": require.script: " + name + ", cb=" + cb);
 	if(name.push){
 		var i = 0, c = name.length, l = c, r = [], f = function(i, v){
 			r[i] = v;
 			if(--l) return;
-			cb && cb(r);
+			cb?.(r);
 		};
 		for(; i < c; ++i){
 			require.impl.requireScript(name[i], f.bind(null,i));
@@ -148,7 +148,7 @@ require.script = document.require.script = function(name, cb){
 },
 /* TODO: remove 'requireStyle' */
 requireStyle = require.style = document.require.style = function(name, cb){
-	top.debug && top.debug(require.impl + ": require.style: " + name + ", cb=" + cb);
+	top.debug?.(require.impl + ": require.style: " + name + ", cb=" + cb);
 	return require.impl.requireStyle(name, cb);
 },
 require.impl = {
@@ -174,7 +174,7 @@ require.impl = {
 			for(var i = 0; i < scripts.length; ++i){
 				var src = scripts[i].getAttribute("src");
 				var path = src && src.match(/^(.*?\/?)require.js/);
-				if(path && path[1]){
+				if(path?.[1]){
 					return path[1];
 				}
 			}
@@ -224,19 +224,19 @@ require.impl = {
 					a(r); 
 					b(r);
 				}).bind(null, e, cb);
-				top.debug && top.debug(t + ": pending: " + u);
+				top.debug?.(t + ": pending: " + u);
 				return;
 			}
 			p[u] = cb;
 			l.onreadystatechange = function(){
 				if(!l || l.readyState !== 4) return;
-				top.debug && top.debug(t + ": loaded: " + u + ", status=" + l.status);
+				top.debug?.(t + ": loaded: " + u + ", status=" + l.status);
 				p[u](t.loadResult(u, l));
 				delete p[u];
 				l = 0;
 			};
 		}
-		top.debug && top.debug(t + ": loading: " + u);
+		top.debug?.(t + ": loading: " + u);
 		try{ // FF produces exceptions on 404 errors %<
 			l.open("GET", u + (t.rnd ? (u.indexOf("?") == -1 ? "?" : "&") + t.rnd : ""), !!cb);
 			/**
@@ -247,7 +247,7 @@ require.impl = {
 			l.overrideMimeType && l.overrideMimeType("text/plain;charset=utf-8");
 			l.send(null);
 		}catch(e){
-			top.debug && top.debug(t + ": error loading (looks like FF): " + u + ", error=" + e);
+			top.debug?.(t + ": error loading (looks like FF): " + u + ", error=" + e);
 		}
 		return !cb && t.loadResult(u, l);
 	},
@@ -297,7 +297,7 @@ require.impl = {
 		}
 		var code = t.requireSourceSync(name);
 		if(!code){
-			top.debug && top.debug(t + ": not found: " + name);
+			top.debug?.(t + ": not found: " + name);
 			return null;
 		}
 		try{
@@ -311,12 +311,12 @@ require.impl = {
 	requireScript : function(name, cb){
 		var t = this, c = t.scriptResult, r = c[name];
 		if(r){
-			return cb && cb(r.value);
+			return cb?.(r.value);
 		}
 		return t.requireSource(name, function(s){
 			if(!s){
-				top.debug && top.debug(t + ": not found: " + name);
-				return cb && cb(null);
+				top.debug?.(t + ": not found: " + name);
+				return cb?.(null);
 			}
 			try{
 				r = (c[name] = { 
@@ -325,7 +325,7 @@ require.impl = {
 			}catch(e){
 				throw new Error(t + ":\nerror running: " + name + ":\n" + (e.name || e) + " #" + (e.lineNumber || '?') + ": " + (e.message || e.description) + "\r\n" + (e.stack || '-- no stack --') + "\r\n\r\n" + s);
 			}
-			return cb && cb(r);
+			return cb?.(r);
 		});
 	},
 	requireSource : function(name, cb){
@@ -336,18 +336,18 @@ require.impl = {
 		// @</debug>
 		var t = this, c = t.scriptSource, r = c[name];
 		if(r){
-			return cb && cb(r);
+			return cb?.(r);
 		}
 		if((r = t.delegate()) !== t){
 			return r.requireSource(name, function(s){
 				c[name] = s;
-				return cb && cb(s);
+				return cb?.(s);
 			});
 		}
 		var u = name.charAt(0) === '/' ? t.base + name : name.lastIndexOf('://',10) !== -1 ? name : t.getScriptPath() + name;
 		return t.load(u, function(s){
 			c[name] = s;
-			return cb && cb(s);
+			return cb?.(s);
 		});
 	},
 	applyStyle : function(name, source){
@@ -370,7 +370,7 @@ require.impl = {
 			style : style,
 			release : function(){
 				var left = --this.style.refLeft;
-				top.debug && top.debug("style[" + this.name + "], release, refs left: " + left);
+				top.debug?.("style[" + this.name + "], release, refs left: " + left);
 				// "> 0" yes, want to get errors from excessive release() calls
 				left > 0 || this.destroy();
 			},
@@ -381,7 +381,7 @@ require.impl = {
 					s.removeRule();
 				}
 				s.cssRules && (s.cssRules = []);
-				s.parentNode && s.parentNode.removeChild(s);
+				s.parentNode?.removeChild(s);
 				this.style = null;
 				this.destroy = function(){
 					throw new Error("[" + this.name + "] The style is already destroyed!");
@@ -391,28 +391,28 @@ require.impl = {
 	},
 	loadStyle : function(name, cb){
 		var t = this, c = t.styleSource, r = c[name];
-		if(r) return cb && cb(r);
+		if(r) return cb?.(r);
 		if((r = t.delegate()) !== t){
 			return r.loadStyle(name, function(s){
 				c[name] = s;
-				return cb && cb(s);
+				return cb?.(s);
 			});
 		}
 		return t.load(name.charAt(0) === '/' ? t.base + name : name.lastIndexOf('://',10) !== -1 ? name : t.getStylePath() + name, function(s){
 			c[name] = s;
-			return cb && cb(s);
+			return cb?.(s);
 		})
 	},
 	requireStyle : function(name, cb, s){
 		var t = this, c = t.styleActive, s = c[name];
-		if(s) return cb && cb(s);
+		if(s) return cb?.(s);
 		return t.loadStyle(name, function(s, p){
 			s = t.applyStyle(name, s);
 			/* reduce race */
 			p = c[name];
 			p && (s.destroy(), s = p);
 			c[name] = s;
-			return cb && cb(s);
+			return cb?.(s);
 		});
 	},
 	toString : function(){
@@ -421,6 +421,6 @@ require.impl = {
 	},
 	fake : undefined
 },
-top.debug && top.debug( require.impl + ": initialized" ),
+top.debug?.( require.impl + ": initialized" ),
 // we still have to return a class we just defined, implemented and initialized 8-)
 require) // <%/FORMAT%>

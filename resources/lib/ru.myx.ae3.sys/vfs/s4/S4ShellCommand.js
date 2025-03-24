@@ -71,7 +71,7 @@ var commands = {
 				return console.fail("Instance '" + instanceKey + "' is unknown!");
 			}
 			
-			const checkContext = instance.createCheckContext && instance.createCheckContext(context);
+			const checkContext = instance.createCheckContext?.(context);
 			if(!checkContext){
 				return console.fail("Instance '" + instanceKey + "' doesn't support checking!");
 			}

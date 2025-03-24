@@ -158,7 +158,7 @@ function stopService(name) {
 		if (reference) {
 			console.log("ae3.service: stopping service, type: require, reference: %s", reference);
 			var service = require(reference);
-			service.stop && service.stop();
+			service.stop?.();
 		}
 		delete started[name];
 		state[name] = "stopped";

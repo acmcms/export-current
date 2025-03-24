@@ -241,7 +241,7 @@ const Client = module.exports = ae3.Class.create(
 					txn && (txn.cancel(), txn = null);
 					throw e;
 				}finally{
-					txn && txn.commit();
+					txn?.commit();
 				}
 			}
 		},

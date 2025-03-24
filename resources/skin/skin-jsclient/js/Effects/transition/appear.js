@@ -8,7 +8,7 @@
 		rel.style.opacity = 0;
 		rel.style.filter = "alpha(opacity=0)";
 		//
-		callback && callback();
+		callback?.();
 	},
 	resize : function(width, height){
 	},

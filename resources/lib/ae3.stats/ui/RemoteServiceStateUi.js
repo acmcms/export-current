@@ -168,7 +168,7 @@ const RRST_PRESETS = {
 		p = RRST_PRESETS[k];
 		for(c of p.value){
 			t = SUPPORTED_RRST[c];
-			t && t.preset.push(k);
+			t?.preset.push(k);
 		}
 	}
 }

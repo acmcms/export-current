@@ -1,7 +1,7 @@
 const ae3 = require('ae3');
 
 function wrapBody(layout, body){
-	var html = '', title = layout.title || layout.attributes && layout.attributes.title || undefined;
+	var html = '', title = layout.title || layout.attributes?.title || undefined;
 	$output(html){
 		%><html><%
 			%><head><%
@@ -64,7 +64,7 @@ function makeDataTableText(layout){
 
 	const formats = [];
 
-	var html = '', title = layout.title || layout.attributes && layout.attributes.title || undefined;
+	var html = '', title = layout.title || layout.attributes?.title || undefined;
 	$output(html){
 		%><html><%
 			%><head><%

@@ -51,7 +51,7 @@ var executeCallback = exports.executeCallback = function executeCallback(poolNam
 		try {
 			return callbackFn.call(thisObject || null, conn);
 		} finally {
-			conn && conn.close();
+			conn?.close();
 		}
 	}
 	default: {

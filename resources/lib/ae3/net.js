@@ -277,7 +277,7 @@ const Net = module.exports = Object.create(Object.create(null, {
 			if(Array.isArray(spec)){
 				return spec.reduce((function(result, spec, t){
 					t = this.socketAddressArray(spec);
-					t && t.forEach(result.push, result);
+					t?.forEach(result.push, result);
 					return result;
 				}).bind(Net), []);
 			}

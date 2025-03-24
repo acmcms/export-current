@@ -26,7 +26,7 @@ function parseResponse(response){
 	data.lastname = dataRaw.last_name;
 	data.gender = dataRaw.gender;
 	data.email = dataRaw.email;
-	data.city = (dataRaw.hometown && dataRaw.hometown.name) || (dataRaw.location && dataRaw.location.name);
+	data.city = (dataRaw.hometown?.name) || (dataRaw.location?.name);
 	var bdate = dataRaw.birthday;
 	if(bdate){
 		var splited = bdate.split('/');

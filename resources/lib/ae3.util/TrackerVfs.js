@@ -197,7 +197,7 @@ function groupClean(vfsSubject, command, properties, byUser, byAddress, byGeo){
 		
 		return result;
 	}finally{
-		txn && txn.cancel();
+		txn?.cancel();
 	}
 }
 
@@ -226,7 +226,7 @@ function groupTrackRoot(key, date, command, properties, byUser, byAddress, byGeo
 		
 		return result;
 	}finally{
-		txn && txn.cancel();
+		txn?.cancel();
 	}
 }
 
@@ -266,7 +266,7 @@ function groupTrack(vfsSubject, command, properties, byUser, byAddress, byGeo){
 		
 		return result;
 	}finally{
-		txn && txn.cancel();
+		txn?.cancel();
 	}
 }
 
@@ -439,7 +439,7 @@ function trackClean(vfsSubject, command, properties, byUser, byAddress, byGeo){
 		
 		return result;
 	}finally{
-		txn && txn.cancel();
+		txn?.cancel();
 	}
 }
 
@@ -509,7 +509,7 @@ function trackTrack(vfsSubject, command, properties, byUser, byAddress, byGeo){
 		txn && (txn.cancel(), txn = null);
 		throw e;
 	}finally{
-		txn && txn.commit();
+		txn?.commit();
 	}
 }
 

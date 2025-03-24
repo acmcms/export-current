@@ -61,12 +61,12 @@ const AbstractTask = module.exports = ae3.Class.create(
 		},
 		errorCount : {
 			get : function(){
-				return (this.taskLog && this.taskLog.errorCount) || 0;
+				return this.taskLog?.errorCount ?? 0;
 			}
 		},
 		warningCount : {
 			get : function(){
-				return (this.taskLog && this.taskLog.alertCount) || 0;
+				return this.taskLog?.alertCount ?? 0;
 			}
 		},
 		/** redirection logger (task or ) */
@@ -187,7 +187,7 @@ const AbstractTask = module.exports = ae3.Class.create(
 		/** redirection logger */
 		exportLogger : {
 			get : function(){
-				return this.parent && this.parent.exportLogger;
+				return this.parent?.exportLogger;
 			}
 		},
 		logExport : {
@@ -285,7 +285,7 @@ const AbstractTask = module.exports = ae3.Class.create(
 		cancelAll : {
 			value : function(tasks, task){
 				for(task of tasks){
-					task?.cancel && task.cancel();
+					task?.cancel?.();
 				}
 			}
 		},

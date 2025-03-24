@@ -96,7 +96,7 @@ const StatsService = Object.create(Object.prototype, {
 	"getGroup" : {
 		value : function getGroup(name){
 			const group = (this.getGroupDescriptors().groups || {})[name.name || name];
-			return group && group.descriptor ? group : undefined;
+			return group?.descriptor ? group : undefined;
 		}
 	},
 	"getGroups" : {
@@ -110,7 +110,7 @@ const StatsService = Object.create(Object.prototype, {
 			var key, group, groups = settings.groups;
 			for(key of Object.keys(groups)){
 				group = groups[key];
-				if(group && group.descriptor){
+				if(group?.descriptor){
 					result.push(group);
 				}
 			}

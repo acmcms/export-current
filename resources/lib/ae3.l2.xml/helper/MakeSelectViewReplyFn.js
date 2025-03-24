@@ -71,7 +71,7 @@ function makeSelectViewReply(context, layout){
 			if(layout.prefix){
 				= this.internOutputValue("prefix", layout.prefix);
 			}
-			if(filters && filters.fields){
+			if(filters?.fields){
 				= formatXmlElement("prefix", new FiltersFormLayout(filters));
 			}
 			for(var item of layout.options){

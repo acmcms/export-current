@@ -47,7 +47,7 @@ const cacheVfs = Class.forName('ru.myx.ae3.util.base.MapperBuilder')//
 		if(server){
 			entry = server.requireResolveVfsModule(moduleName);
 		}else//
-		if(ApplicationAPI && /* 'function' === typeof */ApplicationAPI.requireResolveVfsModule){
+		if(ApplicationAPI?.requireResolveVfsModule){
 			entry = ApplicationAPI.requireResolveVfsModule(moduleName);
 		}else{
 			entry = Storage.UNION_LIB.relative(moduleName + ".js", null);

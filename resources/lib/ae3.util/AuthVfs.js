@@ -246,7 +246,7 @@ const AuthVfs = module.exports = ae3.Class.create(
 		"addUser" : { 
 			value : function authAddUser(username, silent){
 				var vfsAccount = this.vfsAccounts.relativeFolder(username);
-				if(vfsAccount && vfsAccount.isExist()){
+				if(vfsAccount?.isExist()){
 					if(silent){
 						return false;
 					}
@@ -289,7 +289,7 @@ const AuthVfs = module.exports = ae3.Class.create(
 		"addGroup" : { 
 			value : function authAddGroup(groupname, silent){
 				var vfsGroup = this.vfsGroups.relativeFolder(groupname);
-				if(vfsGroup && vfsGroup.isExist()){
+				if(vfsGroup?.isExist()){
 					if(silent){
 						return false;
 					}
@@ -357,7 +357,7 @@ const AuthVfs = module.exports = ae3.Class.create(
 		"checkMembership" : { 
 			value : function authCheckMembership(username, groupname) {
 				var vfsMembership = this.vfsAccounts.relative(username + "/membership/" + groupname, null);
-				return vfsMembership && vfsMembership.isExist() || false;
+				return vfsMembership?.isExist() || false;
 			}
 		},
 		"addMembership" : { 

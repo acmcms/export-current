@@ -13,7 +13,7 @@ function internReplaceField(values, edit, field){
 		values[key] = [ val ];
 	}
 	if(field.type === "set" || field.type === "select"){
-		if(edit && field.list && field.list.columns && field.list.columns.map){
+		if(edit && field.list?.columns?.map){
 			const list = field.list
 			const input = field.type === "set" ? "checkbox" : "radio";
 			const required = input === "checkbox" ? false : undefined;
@@ -45,7 +45,7 @@ function internReplaceField(values, edit, field){
 				option : { 
 					enumerable : true, 
 					value : Array(field.options).map(function(option){
-						if(option.fields && option.fields.map){
+						if(option.fields?.map){
 							return Object.create(option, {
 								fields : {
 									enumerable : true, 
@@ -79,7 +79,7 @@ function internReplaceField(values, edit, field){
 				option : { 
 					enumerable : true, 
 					value : Array(field.options).map(function(option){
-						if(option.fields && option.fields.map){
+						if(option.fields?.map){
 							return Object.create(option, {
 								fields : {
 									enumerable : true,
@@ -108,7 +108,7 @@ function internReplaceField(values, edit, field){
 		}else//
 		if(values){
 			var idx, ext, rep, nxt;
-			if(val && val.layout){
+			if(val?.layout){
 				rep = this.internReplaceValue(val);
 				if(rep !== undefined && rep !== null && "object" !== typeof rep){
 					rep = [ rep ];

@@ -87,7 +87,7 @@ function runReadAccount(context){
 				%><email><%= Format.xmlNodeValue( account.email || '' ) %></email><%
 				%><admin><%= account.admin %></admin><%
 				%><lastAddress><%= account.lastAddress || '' %></lastAddress><%
-				%><lastLogged><%= account.lastLogged && account.lastLogged.toISOString() || '' %></lastLogged><%
+				%><lastLogged><%= account.lastLogged?.toISOString() || '' %></lastLogged><%
 				%><logins><%
 					for(var login of logins){
 						%><login><%= Format.xmlNodeValue( login ) %></login><%

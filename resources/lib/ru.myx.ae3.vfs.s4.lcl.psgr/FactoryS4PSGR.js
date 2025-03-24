@@ -11,7 +11,7 @@ exports.create = function create(args){
 	if(args && args.length > 1){
 		return console.fail("extra arguments: " + Format.jsObject(args));
 	}
-	var properties = args && args.length ? QueryString.parse(args) : {};
+	var properties = args?.length ? QueryString.parse(args) : {};
 	var driver = new Driver();
 	properties.host		&& (driver.host		= properties.host);
 	properties.port		&& (driver.port		= properties.port);

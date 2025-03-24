@@ -105,7 +105,7 @@ const UiBasic = module.exports = require("ae3").Class.create(
 				return {
 					layout : "message",
 					rootName : (message || "").rootName || "denied",
-					code : detail && detail.code || 403,
+					code : detail?.code || 403,
 					message : message,
 					detail : detail
 				};

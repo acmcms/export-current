@@ -204,8 +204,8 @@ function handleOperations(context){
 				op : operation.toString(), 
 				dt : String(operation.execDetachableResult && operation.execDetachableResult() !== operation && operation.execDetachableResult() || "") || undefined, 
 				nt : String(operation.execNativeResult && operation.execNativeResult() !== operation && operation.execNativeResult() || "") || undefined,
-				ia : operation.isRelativeAddressInConstant && operation.isRelativeAddressInConstant(),
-				ic : operation.isConstantForArguments && operation.isConstantForArguments(),
+				ia : operation.isRelativeAddressInConstant?.(),
+				ic : operation.isConstantForArguments?.(),
 				rt : String(operation.resultType || "") || undefined,
 				bt : btf(group, operation)
 			});
