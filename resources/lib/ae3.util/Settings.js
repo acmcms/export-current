@@ -102,7 +102,7 @@ module.exports = Object.create(Object.prototype, {
 			
 			var cache = callback.cache ||= {};
 			var cached = cache[cacheKey];
-			if(cached?callback === callback) {
+			if(cached?.callback === callback) {
 				const age = Date.now() - cached.timestamp;
 				if(age < 6000) {
 					if(age > 4000) {
