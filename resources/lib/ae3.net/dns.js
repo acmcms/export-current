@@ -1,6 +1,6 @@
 import java.net.InetAddress;
 
-const Concurrent = require('ae3').Concurrent;
+const Concurrent = require("ae3").Concurrent;
 
 module.exports = Object.create(Object.prototype, {
 	/**

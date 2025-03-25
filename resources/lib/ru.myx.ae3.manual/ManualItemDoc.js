@@ -1,4 +1,4 @@
-var ae3 = require('ae3');
+var ae3 = require("ae3");
 var vfs = ae3.vfs;
 var Dom = ae3.Util.Dom;
 

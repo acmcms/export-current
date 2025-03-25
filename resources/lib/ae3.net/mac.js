@@ -40,35 +40,35 @@ module.exports = Object.create(Object.prototype, {
 	},
 	
 	/**
-	 * require('ae3').net.mac.NULL_ADDRESS == ''
+	 * require("ae3").net.mac.NULL_ADDRESS == ''
 	 * 
-	 * require('ae3').net.mac.NULL_ADDRESS.longString == '00:00:00:00:00:00/0'
+	 * require("ae3").net.mac.NULL_ADDRESS.longString == '00:00:00:00:00:00/0'
 	 * 
-	 * require('ae3').net.mac.NULL_ADDRESS.compactString == ''
+	 * require("ae3").net.mac.NULL_ADDRESS.compactString == ''
 	 * 
-	 * require('ae3').net.mac.NULL_ADDRESS.macCount == 0
+	 * require("ae3").net.mac.NULL_ADDRESS.macCount == 0
 	 */
 	NULL_ADDRESS : {
 		enumerable : true,
 		value : MacAddress.NULL_ADDRESS
 	},
 	/**
-	 * require('ae3').net.mac.EXAMPLE_RANGE.longString == '00:53:00:00:00:00-00:53:ff:ff:ff:fe'
+	 * require("ae3").net.mac.EXAMPLE_RANGE.longString == '00:53:00:00:00:00-00:53:ff:ff:ff:fe'
 	 * 
-	 * require('ae3').net.mac.EXAMPLE_RANGE.compactString == '005300000000/4294967295'
+	 * require("ae3").net.mac.EXAMPLE_RANGE.compactString == '005300000000/4294967295'
 	 * 
-	 * require('ae3').net.mac.EXAMPLE_RANGE.macCount == 4294967295
+	 * require("ae3").net.mac.EXAMPLE_RANGE.macCount == 4294967295
 	 */
 	EXAMPLE_RANGE : {
 		enumerable : true,
 		value : MacAddress.EXAMPLE_RANGE
 	},
 	/**
-	 * require('ae3').net.mac.EXAMPLE_RANGES.longString == '00:53:00:00:00:00-00:53:ff:ff:ff:fe + 90:10:00:00:00:00-90:10:ff:ff:ff:f'
+	 * require("ae3").net.mac.EXAMPLE_RANGES.longString == '00:53:00:00:00:00-00:53:ff:ff:ff:fe + 90:10:00:00:00:00-90:10:ff:ff:ff:f'
 	 * 
-	 * require('ae3').net.mac.EXAMPLE_RANGES.compactString == '005300000000/4294967295+901000000000/4294967295'
+	 * require("ae3").net.mac.EXAMPLE_RANGES.compactString == '005300000000/4294967295+901000000000/4294967295'
 	 * 
-	 * require('ae3').net.mac.EXAMPLE_RANGES.macCount == 4294967295
+	 * require("ae3").net.mac.EXAMPLE_RANGES.macCount == 4294967295
 	 * 
 	 */
 	EXAMPLE_RANGES : {
@@ -83,7 +83,7 @@ module.exports = Object.create(Object.prototype, {
 	parse : {
 		enumerable : true,
 		/**
-		 * mac = require('ae3').net.mac
+		 * mac = require("ae3").net.mac
 		 * 
 		 * mac.parse('00:12:AA:12:45:01')
 		 * 
@@ -104,7 +104,7 @@ module.exports = Object.create(Object.prototype, {
 	parseRange : {
 		enumerable : true,
 		/**
-		 * mac = require('ae3').net.mac
+		 * mac = require("ae3").net.mac
 		 * 
 		 * mac.parseRange('00:12:AA:12:45:01')
 		 * mac.parseRange('00:12:AA:12:45:01').macCount
@@ -137,7 +137,7 @@ module.exports = Object.create(Object.prototype, {
 	parseRanges : {
 		enumerable : true,
 		/**
-		 * mac = require('ae3').net.mac
+		 * mac = require("ae3").net.mac
 		 * 
 		 * mac.parseRanges('00:12:AA:12:45:01')
 		 * mac.parseRanges('00:12:AA:12:45:01').macCount

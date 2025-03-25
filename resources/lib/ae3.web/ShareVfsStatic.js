@@ -3,7 +3,7 @@ function ShareVfsStatic(settings){
 	this.index = settings.index || 'index.htm';
 	
 	this.path = settings.path;
-	this.root = require('ae3').vfs.ROOT.relativeFolder(this.path);
+	this.root = require("ae3").vfs.ROOT.relativeFolder(this.path);
 	
 	this.Share();
 	return this;

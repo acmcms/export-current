@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 
 const Cluster = module.exports = ae3.Class.create(
 	/* name */

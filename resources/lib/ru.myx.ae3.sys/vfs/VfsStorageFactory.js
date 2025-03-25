@@ -8,7 +8,7 @@ module.exports.create = function(spec){
 		throw "Invalid VFS filesystem spec: " + spec;
 	}
 
-	const vfs = require('ae3/vfs');
+	const vfs = require("ae3/vfs");
 	const dsc = vfs.UNION.relativeFile("settings/system/vfs/type/" + fs + ".json");
 
 	if(!dsc.isExist()){

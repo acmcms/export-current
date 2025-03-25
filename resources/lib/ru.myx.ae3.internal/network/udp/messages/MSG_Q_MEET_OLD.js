@@ -1,4 +1,4 @@
-const MSG_Q_MEET_OLD = module.exports = require('ae3').Class.create(
+const MSG_Q_MEET_OLD = module.exports = require("ae3").Class.create(
 	/* name */
 	"MSG_Q_MEET_OLD",
 	/* inherit */

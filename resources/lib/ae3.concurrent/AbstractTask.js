@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 
 /**
  * The Task is the local temporary memory record that is waiting for asynchronous

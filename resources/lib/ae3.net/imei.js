@@ -61,7 +61,7 @@ module.exports = Object.create(Object.prototype, {
 	parse : {
 		enumerable : true,
 		/**
-		 * imei = require('ae3').net.imei
+		 * imei = require("ae3").net.imei
 		 * 
 		 * imei.parse('49-015420-323751-8')
 		 * imei.parse('49-015420-323751')
@@ -88,7 +88,7 @@ module.exports = Object.create(Object.prototype, {
 	parseRange : {
 		enumerable : true,
 		/**
-		 * imei = require('ae3').net.imei
+		 * imei = require("ae3").net.imei
 		 * 
 		 * imei.parseRange('49-015420-323751-8')
 		 * imei.parseRange('49-015420-323751')
@@ -124,7 +124,7 @@ module.exports = Object.create(Object.prototype, {
 	parseRanges : {
 		enumerable : true,
 		/**
-		 * imei = require('ae3').net.imei
+		 * imei = require("ae3").net.imei
 		 * 
 		 * imei.parseRanges('49015420323751')
 		 * imei.parseRanges('49015420323751').imeiCount == 1

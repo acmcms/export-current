@@ -7,7 +7,7 @@ function removePackage(packageName){
 
 exports.run = function run(){
 	var args = arguments;
-	if(!args || !args.length){
+	if(!args?.length){
 		console.sendMessage(
 			"remove command syntax:\n" +
 			"\tremove <package_name> ..."

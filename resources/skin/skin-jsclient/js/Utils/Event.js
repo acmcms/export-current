@@ -86,7 +86,7 @@ Utils.Event.prototype = {
 			var k = "on" + type,
 				func = obj[k],
 				save;
-			if(!func || !func.handlers){
+			if(!func?.handlers){
 				save = func;
 				func = obj[k] = function(e){
 					e || (e = window.event);

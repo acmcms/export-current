@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 
 const vfs = ae3.vfs;
 
@@ -39,7 +39,7 @@ var commands = {
 			}
 			
 			var target = vfs.getRelative(path, null);
-			if(!target || !target.isExist()){
+			if(!target?.isExist()){
 				return console.fail("target vfs folder doesn't exist!");
 			}
 			if(!target.isContainer()){
@@ -68,16 +68,16 @@ var commands = {
 		args : "<path>",
 		help : "destroy VFS mount",
 		run : function runUnmount(args) {
-			var path = args.shift();
+			const path = args.shift();
 			if(!path){
 				return console.fail("'path' argument is required");
 			}
 
-			var target = vfs.getRelative(path, null);
-			if(!target || !target.isExist()){
-				return console.fail("target vfs folder doesn't exist!");
-			}
-			if(!target.isContainer()){
+			const target = vfs.getRelative(path, null);
+			if(!target?.isContainer()){
+				if(!target?.isExist()){
+					return console.fail("target vfs folder doesn't exist!");
+				}
 				return console.fail("target vfs entry is not a container!");
 			}
 			
@@ -88,8 +88,7 @@ var commands = {
 		args : "",
 		help : "list VFS filesystem types",
 		run : function runTypes(args) {
-			var FilesystemTypes = require('./FilesystemTypes');
-			console.sendMessage(Format.jsObjectReadable(FilesystemTypes.listFilesystemTypes()));
+			console.sendMessage(Format.jsObjectReadable(require("./FilesystemTypes").listFilesystemTypes()));
 			return true;
 		}
 	},

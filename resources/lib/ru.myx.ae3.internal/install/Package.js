@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 
 const vfs = ae3.vfs;
 
@@ -202,7 +202,7 @@ function removePackage(pkgName){
 	var vfsDestinationTarget = vfs.ROOT.relativeFolderEnsure("private");
 
 	var vfsPackageRoot = vfsInstalledPackages.relativeFolder(pkgName);
-	if(!vfsPackageRoot || !vfsPackageRoot.isExist()){
+	if(!vfsPackageRoot?.isExist()){
 		console.error("Package %s removal failed, package is not installed", pkgName);
 		return false;
 	}
@@ -215,7 +215,7 @@ function removePackage(pkgName){
 		return true;
 	}
 	var vfsPackageCache = vfsPackageRoot.relativeFolder("cache");
-	if(!vfsPackageCache || !vfsPackageCache.isExist()){
+	if(!vfsPackageCache?.isExist()){
 		console.error("Package %s removal failed, package cache is not available", pkgName);
 		return false;
 	}

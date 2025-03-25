@@ -1,4 +1,4 @@
-const MSG_RF_FAIL = module.exports = require('ae3').Class.create(
+const MSG_RF_FAIL = module.exports = require("ae3").Class.create(
 	/* name */
 	"MSG_RF_FAIL",
 	/* inherit */

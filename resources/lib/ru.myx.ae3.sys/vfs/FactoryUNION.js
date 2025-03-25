@@ -1,4 +1,4 @@
-const vfs = require('ae3').vfs;
+const vfs = require("ae3").vfs;
 
 function mapEntryForPath(x){
 	if("string" === typeof x){

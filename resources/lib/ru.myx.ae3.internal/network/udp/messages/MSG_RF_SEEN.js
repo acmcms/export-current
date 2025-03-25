@@ -1,6 +1,6 @@
 const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
 
-const MSG_RF_SEEN = module.exports = require('ae3').Class.create(
+const MSG_RF_SEEN = module.exports = require("ae3").Class.create(
 	/* name */
 	"MSG_RF_SEEN",
 	/* inherit */

@@ -1,12 +1,12 @@
 const title = "AE3::developer/exampleResponse (Example Responses)";
 
-const vfs = require('ae3/vfs');
+const vfs = require("ae3/vfs");
 
 const VFS_RESOURCE_PATH = "resources/lib/ru.myx.ae3.web.iface/wapi/developer/example";
 
 const vfsResource = vfs.UNION.relativeFolder(VFS_RESOURCE_PATH);
 
-if(!vfsResource || !vfsResource.isExist()){
+if(!vfsResource?.isExist()){
 	throw "does not exist: union/" + VFS_RESOURCE_PATH;
 }
 

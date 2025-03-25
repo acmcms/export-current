@@ -547,7 +547,7 @@ debug.state = {
 			top.debug?.(this + ".addEvent('" + (obj.nodeName || obj) + "', '" + type + "'): IE6 way!");
 		}else{
 			var name = "on" + type;
-			if(!obj[name] || !obj[name].handlers){
+			if(!obj[name]?.handlers){
 				var save = obj[name];
 				var func = obj[name] = function(e){
 					e || (e = window.event);

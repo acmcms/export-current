@@ -121,7 +121,7 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 			for(folder of [this.vfs]) {
 				for(;;){
 					contents = folder.getContentRange(null, start, 250, false, null);
-					if(!contents || !contents.length){
+					if(!contents?.length){
 						/**
 						 * all done
 						 */
@@ -140,7 +140,7 @@ Object.defineProperties(RuntimeStatsServiceObject.prototype, {
 			for(folder of [this.vfs]) {
 				for(;;){
 					contents = folder.getContentRange("3333-12-31T23:59:59.999Z;-00000000", startOld, 250, false, null);
-					if(!contents || !contents.length){
+					if(!contents?.length){
 						/**
 						 * all done
 						 */

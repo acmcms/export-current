@@ -1,10 +1,10 @@
-var vfs = require('ae3/vfs');
+const vfs = require("ae3/vfs");
 
-var VFS_RESOURCE_PATH = "resources/lib/ru.myx.acm.iface/resource";
+const VFS_RESOURCE_PATH = "resources/lib/ru.myx.acm.iface/resource";
 
 var vfsResource = vfs.UNION.relativeFolder(VFS_RESOURCE_PATH);
 
-if(!vfsResource || !vfsResource.isExist()){
+if(!vfsResource?.isExist()){
 	throw "does not exist: union/" + VFS_RESOURCE_PATH;
 }
 

@@ -57,7 +57,7 @@ function runDropAccountLogin(context){
 				}
 				
 				var logins = auth.authListUserLogins(accountId);
-				if(!logins || !logins.length){
+				if(!logins?.length){
 					return share.makeClientFailureLayout("Account '" + accountId + "' have no logins!");
 				}
 

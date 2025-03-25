@@ -21,7 +21,7 @@ ShareRedirectAddWww.prototype = Object.create(require('./Share').prototype, {
 				};
 			}
 
-			const Reply = require('ae3').Reply;
+			const Reply = require("ae3").Reply;
 			return Reply.redirect('skin-land-prepend-www', query, true, 'http://www.' + target);
 		}
 	},

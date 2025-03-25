@@ -9,7 +9,7 @@
 
 
 const http = require("http");
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 const vfs = ae3.vfs;
 
 const MakeRsstDomainFn = require("java.class/ru.myx.ae3.state.RemoteServiceStateSAPI").makeRemoteServiceStateDomain;
@@ -290,7 +290,7 @@ function internCheckStats(clientRequest){
 	const Stats = require('ae3.stats/Stats');
 	var start = Stats.validateOrCreateStartKey(this.vfs.getContentPrimitive("lastExported"), false);
 	var stats = Stats.listRuntimeSystemStats(start, 1000 + 1, false);
-	if(!stats || !stats.length){
+	if(!stats?.length){
 		return false;
 	}
 	var next = stats && stats.length > limit && stats[stats.length-1].id;

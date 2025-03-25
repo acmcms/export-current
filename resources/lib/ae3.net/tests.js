@@ -421,7 +421,7 @@ module.exports = function(){
 			L("setting up 'ramfs' configuration...");
 			
 			const vfsTestPool = (function(){
-				const vfs = require('ae3').vfs;
+				const vfs = require("ae3").vfs;
 				import ru.myx.ae3.vfs.ram.StorageImplMemory;
 				const ramfsRoot = vfs.createRoot( StorageImplMemory.create('tests-mac-ramfs') ).toContainer();
 				return ramfsRoot.relativeFolder('range1');

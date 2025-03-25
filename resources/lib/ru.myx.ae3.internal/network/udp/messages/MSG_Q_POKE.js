@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 
 const UdpServiceHelper = (function(){ try{ return require('java.class/ru.myx.ae3.internal.net.UdpServiceHelper'); }catch(e){ return {}; } })();
 

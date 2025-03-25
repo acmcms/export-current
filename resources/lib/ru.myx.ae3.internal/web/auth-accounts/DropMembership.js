@@ -56,7 +56,7 @@ function runDropMembership(context){
 				}
 				
 				var groups = auth.authListUserGroups(accountId);
-				if(!groups || !groups.length){
+				if(!groups?.length){
 					return share.makeClientFailureLayout("Account '" + accountId + "' is not a member of any group!");
 				}
 

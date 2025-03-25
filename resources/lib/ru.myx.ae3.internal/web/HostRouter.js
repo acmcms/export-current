@@ -1,5 +1,5 @@
 const os = require('os');
-const Reply = require('ae3').Reply;
+const Reply = require("ae3").Reply;
 
 import ru.myx.ae3.skinner.SkinScanner;
 import ru.myx.ae3.i3.web.WebInterface;

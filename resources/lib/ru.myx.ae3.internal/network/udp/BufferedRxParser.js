@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 const Transfer = ae3.Transfer;
 const FN_FORMAT_BINARY_AS_HEX = Format.binaryAsHex;
 

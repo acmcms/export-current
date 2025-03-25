@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 
 /**
  * https://ndss.ndmsystems.com/documentation#cloud-callbacks

@@ -60,7 +60,7 @@ function runSetMembership(context){
 					? internRemoveAll(allGroups, userGroups)
 					: allGroups
 				: null;
-			if(!groups || !groups.length){
+			if(!groups?.length){
 				return share.makeClientFailureLayout("Account '" + accountId + "' is a member of any group available!");
 			}
 

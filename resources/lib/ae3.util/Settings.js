@@ -95,7 +95,7 @@ module.exports = Object.create(Object.prototype, {
 				cacheKey = vfs.getAbsolutePath(folder);
 			}
 			
-			if(!folder || !folder.isContainer()){
+			if(!folder?.isContainer()){
 				/** an empty settings */
 				return {};
 			}

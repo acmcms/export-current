@@ -22,11 +22,11 @@ function runHostCommand() {
 		return false;
 	}
 
-	const result = (require('ae3').net.dns.resolveAll(hostname) || []).map(function(x){
+	const result = (require("ae3").net.dns.resolveAll(hostname) || []).map(function(x){
 		console.log("%s: %s", hostname, x.hostAddress);
 		return x.hostAddress;
 	});
-	if(!result || !result.length){
+	if(!result?.length){
 		return console.fail("can not resolve: %s", hostname);
 	}
 	return result;

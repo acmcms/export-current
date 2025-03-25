@@ -8,7 +8,7 @@
  */
 
 
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 const Concurrent = ae3.Concurrent;
 
 const UdpService = module.exports = ae3.Class.create(

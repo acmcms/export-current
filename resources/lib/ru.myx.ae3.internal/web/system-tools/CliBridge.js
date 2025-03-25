@@ -16,7 +16,7 @@ function runCliBridge(context){
 	const detailOutput = parameters.detail === 'true';
 
 	if( script && parameters.format === 'html-chunked' ){
-		var HtmlChunkedConsoleClass = require('ae3').Util.ConsoleHtmlChunked;
+		var HtmlChunkedConsoleClass = require("ae3").Util.ConsoleHtmlChunked;
 		var console = new HtmlChunkedConsoleClass(query);
 		console.enqueueTask((function(script){
 			// TODO

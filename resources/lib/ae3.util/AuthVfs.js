@@ -43,7 +43,7 @@ const AuthVfs = module.exports = ae3.Class.create(
 	Auth,
 	/* constructor */
 	function(folder) {
-		if(!folder || !folder.isExist()){
+		if(!folder?.isExist()){
 			throw "vfs folder is required for data storage!";
 		}
 		
@@ -71,7 +71,7 @@ const AuthVfs = module.exports = ae3.Class.create(
 		"checkLoginPassword" : { 
 			value : function authCheckLoginPassword(login, password) {
 				var passwd = this.vfsPass.relativeFolder(login);
-				if(!passwd || !passwd.isExist()){
+				if(!passwd?.isExist()){
 					return false;
 				}
 				var hash = passwd.getContentPrimitive("hash", null);
@@ -94,7 +94,7 @@ const AuthVfs = module.exports = ae3.Class.create(
 				 * update address and date
 				 */
 				var vfsAccount = this.vfsAccounts.relativeFolder(username);
-				if(!vfsAccount || !vfsAccount.isExist()){
+				if(!vfsAccount?.isExist()){
 					throw "Account '"+username+"' is unknown!";
 				}
 				{
@@ -112,7 +112,7 @@ const AuthVfs = module.exports = ae3.Class.create(
 		"getUserLoginHash" : { 
 			value : function authGetUserLoginHash(username, login) {
 				var passwd = this.vfsPass.relativeFolder(login);
-				if(!passwd || !passwd.isExist()){
+				if(!passwd?.isExist()){
 					return false;
 				}
 				return passwd.getContentPrimitive("hash", null);
@@ -324,11 +324,11 @@ const AuthVfs = module.exports = ae3.Class.create(
 		"listUserLogins" : { 
 			value : function authListUserLogins(username) {
 				var vfsAccount = this.vfsAccounts.relativeFolder(username);
-				if(!vfsAccount || !vfsAccount.isExist()){
+				if(!vfsAccount?.isExist()){
 					throw "Account '"+username+"' is unknown!";
 				}
 				var vfsLogins = vfsAccount.relativeFolder("logins");
-				if(!vfsLogins || !vfsLogins.isExist()){
+				if(!vfsLogins?.isExist()){
 					return null;
 				}
 				var array = vfsLogins.getContentCollection(null);
@@ -340,11 +340,11 @@ const AuthVfs = module.exports = ae3.Class.create(
 		"listUserGroups" : { 
 			value : function authListUserGroups(username){
 				var vfsAccount = this.vfsAccounts.relativeFolder(username);
-				if(!vfsAccount || !vfsAccount.isExist()){
+				if(!vfsAccount?.isExist()){
 					throw "Account '"+username+"' is unknown!";
 				}
 				var vfsLogins = vfsAccount.relativeFolder("membership");
-				if(!vfsLogins || !vfsLogins.isExist()){
+				if(!vfsLogins?.isExist()){
 					return [];
 				}
 				var array = vfsLogins.getContentCollection(null);
@@ -356,8 +356,7 @@ const AuthVfs = module.exports = ae3.Class.create(
 		
 		"checkMembership" : { 
 			value : function authCheckMembership(username, groupname) {
-				var vfsMembership = this.vfsAccounts.relative(username + "/membership/" + groupname, null);
-				return vfsMembership?.isExist() || false;
+				return this.vfsAccounts.relative(username + "/membership/" + groupname, null)?.isExist() ?? false;
 			}
 		},
 		"addMembership" : { 

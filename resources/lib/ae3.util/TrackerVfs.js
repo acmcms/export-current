@@ -116,7 +116,7 @@ TrackObject.keys = [ //
  * constructor
  */
 function GroupTracker(parentTracker, vfsGroup, prefix){
-	if(!vfsGroup || !vfsGroup.isExist()){
+	if(!vfsGroup?.isExist()){
 		throw "vfs folder is required for data storage!";
 	}
 	this.parent = parentTracker;
@@ -173,7 +173,7 @@ function groupCleanCallback(vfsTrackReference){
 
 
 function groupClean(vfsSubject, command, properties, byUser, byAddress, byGeo){
-	if(!vfsSubject || !vfsSubject.doSetBinary){
+	if(!vfsSubject?.doSetBinary){
 		throw new Error("'vfsSubject' is required and must be a vfs entry instance");
 	}
 	const vfsSubjectTrack = vfsSubject.relativeFolder(".track");
@@ -312,7 +312,7 @@ var lastCode = 0;
 
 
 function TrackerVfs(vfsTrackerJournalRoot) {
-	if(!vfsTrackerJournalRoot || !vfsTrackerJournalRoot.isExist()){
+	if(!vfsTrackerJournalRoot?.isExist()){
 		throw "vfs folder is required for data storage!";
 	}
 	this.vfsJournal = vfsTrackerJournalRoot;
@@ -415,7 +415,7 @@ function trackCleanCallback(vfsTrackReference){
 
 
 function trackClean(vfsSubject, command, properties, byUser, byAddress, byGeo){
-	if(!vfsSubject || !vfsSubject.doSetBinary){
+	if(!vfsSubject?.doSetBinary){
 		throw new Error("'vfsSubject' is required and must be a vfs entry instance");
 	}
 	const vfsSubjectTrack = vfsSubject.relativeFolder(".track");

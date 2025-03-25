@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 
 function wrapBody(layout, body){
 	var html = '', title = layout.title || layout.attributes?.title || undefined;

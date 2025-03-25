@@ -104,7 +104,7 @@ const prototype = Object.create(Object.prototype, {
 	},
 	"vfs" : {
 		get : function ae3Vfs(){
-			const result = require('ae3/vfs');
+			const result = require("ae3/vfs");
 			Object.defineProperty(this, "vfs", {
 				value : result
 			});

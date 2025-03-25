@@ -1,4 +1,4 @@
-const vfs = require('ae3').vfs;
+const vfs = require("ae3").vfs;
 
 module.exports.create = function create(args){
 	const path = args.shift();
@@ -7,7 +7,7 @@ module.exports.create = function create(args){
 	}
 	
 	const entry = vfs.getRelative(path, null);
-	if(!entry || !entry.isBinary()){
+	if(!entry?.isBinary()){
 		throw new Error("Can't find zip: " + path);
 	}
 

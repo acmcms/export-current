@@ -7,7 +7,7 @@ function startService(serviceName){
 
 exports.run = function run(){
 	var args = arguments;
-	if(!args || !args.length){
+	if(!args?.length){
 		console.sendMessage(
 			"start command syntax:\n" +
 			"\tstart <service_name> ..."

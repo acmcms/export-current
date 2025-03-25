@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 const vfs = ae3.vfs;
 
 const QueryStringParseFn = require("querystring").parse;
@@ -387,11 +387,11 @@ const RecentEventTracker = module.exports = ae3.Class.create(
 			} 
 		},
 		"getRelatedEvents" : { 
-			value : function(relatedObject, eventTypeNames, limie){
-				if(!relatedObject || !relatedObject.vfs || !relatedObject.vfs.isContainer){
+			value : function(relatedObject, eventTypeNames, limit){
+				if(!relatedObject?.vfs?.isContainer){
 					throw new Error("Invalid relatedObject: " + Format.jsDescribe(relatedObject));
 				}
-				var folder = relatedObject.trackVfs || (
+				const folder = relatedObject.trackVfs || (
 						relatedObject.trackVfs = relatedObject.relativeFolder("recent")
 				);
 				if(!folder.isContainer()){
@@ -404,7 +404,7 @@ const RecentEventTracker = module.exports = ae3.Class.create(
 			value : function(eventId){
 				var entry = this.vfs.relative(eventId, null);
 				// var entry = this.vfs.getContentElement(eventId, null);
-				if(!entry || !entry.isExist()){
+				if(!entry?.isExist()){
 					return undefined;
 				}
 				return this.materializeEntry(entry);

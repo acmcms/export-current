@@ -1,4 +1,4 @@
-const ae3 = require('ae3');
+const ae3 = require("ae3");
 
 const MessageReplyFinal = module.exports = ae3.Class.create(
 	/* name */

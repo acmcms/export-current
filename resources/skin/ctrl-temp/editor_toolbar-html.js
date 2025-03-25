@@ -26,7 +26,7 @@ function htmlRule() {htmlInsertText(this.parent.editorObject,'<HR>');}
 
 function htmlLink(){
 	var result = showModalDialog( "editor_link.control",false,"dialogWidth:600px; dialogHeight:160px; scroll:no; status:no; resizable:yes; help:no");
-	if(!result || !result.path) {
+	if(!result?.path) {
 		try{
 			this.parent.editorObject.SetFocus();
 		}catch(Error){

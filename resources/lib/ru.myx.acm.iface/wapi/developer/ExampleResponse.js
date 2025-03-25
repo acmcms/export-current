@@ -1,12 +1,12 @@
-var title = "ACM::developer/exampleResponse (Example Responses)";
+const title = "ACM::developer/exampleResponse (Example Responses)";
 
-var vfs = require('ae3/vfs');
+const vfs = require("ae3/vfs");
 
-var VFS_RESOURCE_PATH = "resources/lib/ae3.example/wapi/developer/example";
+const VFS_RESOURCE_PATH = "resources/lib/ae3.example/wapi/developer/example";
 
-var vfsResource = vfs.UNION.relativeFolder(VFS_RESOURCE_PATH);
+const vfsResource = vfs.UNION.relativeFolder(VFS_RESOURCE_PATH);
 
-if(!vfsResource || !vfsResource.isExist()){
+if(!vfsResource?.isExist()){
 	throw "does not exist: union/" + VFS_RESOURCE_PATH;
 }
 

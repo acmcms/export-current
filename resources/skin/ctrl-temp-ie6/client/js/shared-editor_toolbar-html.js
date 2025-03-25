@@ -65,7 +65,7 @@ function htmlLink() {
 			"linkchooser-modal/",
 			false,
 			"dialogWidth:600px; dialogHeight:160px; scroll:no; status:no; resizable:yes; help:no");
-	if (!result || !result['path']) {
+	if (!result?.['path']) {
 		try {
 			this.parent.editorObject.setFocus();
 		} catch (Error) {

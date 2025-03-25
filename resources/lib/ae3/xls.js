@@ -3,7 +3,7 @@ import ru.myx.util.xls.ExcelSAPI;
 
 var object = Object.create(ExcelSAPI);
 
-var ae3 = require('ae3');
+var ae3 = require("ae3");
 
 
 function createBinaryFromLayout(layout){

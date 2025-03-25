@@ -3,7 +3,7 @@
  */
 
 
-const WebInterface = require('ae3').web.WebInterface;
+const WebInterface = require("ae3").web.WebInterface;
 
 
 /**

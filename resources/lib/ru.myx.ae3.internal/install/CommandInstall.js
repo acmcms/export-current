@@ -7,7 +7,7 @@ function installPackage(packageName){
 
 exports.run = function run(){
 	var args = arguments;
-	if(!args || !args.length){
+	if(!args?.length){
 		console.sendMessage(
 			"install command syntax:\n" +
 			"\tinstall <package_name> ..."

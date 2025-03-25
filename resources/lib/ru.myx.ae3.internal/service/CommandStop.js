@@ -7,7 +7,7 @@ function stopService(serviceName){
 
 exports.run = function run(){
 	var args = arguments;
-	if(!args || !args.length){
+	if(!args?.length){
 		console.sendMessage(
 			"stop command syntax:\n" +
 			"\tstop <service_name> ..."

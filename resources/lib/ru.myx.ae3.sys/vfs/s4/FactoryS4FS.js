@@ -1,6 +1,6 @@
 
 module.exports.create = function create(args){
-	const vfs = require('ae3').vfs;
+	const vfs = require("ae3").vfs;
 	const storageTypeName = args.shift();
 	if(!storageTypeName){
 		throw new Error("'storageType' argument required!");

@@ -272,7 +272,7 @@ app.Listing.setupListingFrame = function(window, path, data){
 		};
 		
 		window.setPreviousValue = function(){
-			if(!listing.target || !listing.target.returnValue){
+			if(!listing.target?.returnValue){
 				return;
 			}
 			var arr = listing.target.returnValue;
