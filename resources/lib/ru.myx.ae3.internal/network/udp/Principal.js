@@ -142,6 +142,11 @@ const Principal = module.exports = ae3.Class.create(
 			]
 		},
 		registerHandler : {
+			/**
+			 * registers / overrides handler callback for an incoming message type
+			 * 
+			 * this.handlers should be re-initialized from default array before calling.
+			 */
 			value : function(messageClass, messageCallback, thisArg){
 				if(this.handlers === Principal.prototype.handlers){
 					throw this + ": registerHandler: the 'handlers' array must be overriden!";
@@ -162,11 +167,10 @@ const Principal = module.exports = ae3.Class.create(
 				if(c > 255){
 					throw new Error("'code' must be overriden with integer value in [0..255] range: " + messageClass + ", code: " + c);
 				}
-				(this.handlers[c] ||= []).push(
-					thisArg
-						? Function.prototype.call.bind(messageCallback, thisArg || null)
-						: messageCallback
-				);
+				this.handlers[c] = thisArg
+					? Function.prototype.call.bind(messageCallback, thisArg || null)
+					: messageCallback
+				;
 			}
 		},
 		
@@ -199,20 +203,18 @@ const Principal = module.exports = ae3.Class.create(
 						Format.jsDescribe(h)
 					);
 					*/
-					for(c of h){
-						setTimeout(c.bind(this, message, address, serial), 0);
-						// c(message, address, serial);
-					}
+					setTimeout(h.bind(this, message, address, serial), 0);
+					// h(message, address, serial);
 					return;
 				}
-				/*
-				console.log("UDP::Principal:onReceive: %s: no handler: %s, address: %s, serial: %s", 
+
+				console.debug("UDP::Principal:onReceive: %s: no handler: %s, address: %s, serial: %s", 
 					this, 
 					message, 
 					address, 
 					serial
 				);
-				*/
+
 				return;
 			})
 		},
