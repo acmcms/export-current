@@ -274,6 +274,20 @@ const Principal = module.exports = ae3.Class.create(
 					return 0;
 				}
 				
+				if(m.isReply){
+					if( "number" !== typeof (s = m.serial) ){
+						console.log(
+							"UDP::Principal:sendImpl: %s: udp-send-skip, reply without numeric serial, message: %s", 
+							this, 
+							m
+						);
+						return 0;
+					}
+					this.cacheIncomingQuerySerial(s, m);
+				}else{
+					s = m.serial ||= (this.sTx = 1 + Math.max(this.sTx, this.sRx));
+				}
+
 				s = m.serial ||= (this.sTx = 1 + Math.max(this.sTx, this.sRx));
 				
 				b[16 + 12 + 1] = (s >> 16) & 0xFF;
@@ -318,6 +332,7 @@ const Principal = module.exports = ae3.Class.create(
 						m
 					);
 				}
+				
 				return this.sendUdp(pkt, a);
 			})
 		},

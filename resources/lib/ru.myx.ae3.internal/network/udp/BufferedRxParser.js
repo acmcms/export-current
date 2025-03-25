@@ -121,10 +121,10 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 				) //
 			) //
 		){
-			console.log("UDP::Read: skip-ignore: iface: %s, peer: %s, rejected by peer, request?: %s, serial: %s, addr: %s:%s", 
+			console.log("UDP::Read: skip-ignore: iface: %s, peer: %s, rejected by peer, class: %s, serial: %s, addr: %s:%s", 
 				this, 
 				peer.shortHostString ?? peer,
-				m.prototype.isRequest,
+				m.toString(),
 				ms, 
 				pkt.sourceAddress.address.hostAddress, 
 				pkt.sourceAddress.port
@@ -153,7 +153,6 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 		if(msg){
 			/** message from incoming serial cache **/
 			if(msg.isReply /** m.prototype.isRequest */){
-				/** TODO: send pre-cached replies using peer.sendUdp */
 				console.log("UDP::Read: send-repeat: iface: %s, peer: %s, reply re-sent by peer, serial: %s, addr: %s:%s", 
 					this, 
 					peer.shortHostString ?? peer,
@@ -161,6 +160,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 					pkt.sourceAddress.address.hostAddress, 
 					pkt.sourceAddress.port
 				);
+				peer.sendImpl(b, d, msg, pkt.sourceAddress);
 				++ this.stRxSkip;
 				continue;
 			}
