@@ -287,8 +287,6 @@ const Principal = module.exports = ae3.Class.create(
 				}else{
 					s = m.serial ||= (this.sTx = 1 + Math.max(this.sTx, this.sRx));
 				}
-
-				s = m.serial ||= (this.sTx = 1 + Math.max(this.sTx, this.sRx));
 				
 				b[16 + 12 + 1] = (s >> 16) & 0xFF;
 				b[16 + 12 + 2] = (s >> 8) & 0xFF;
