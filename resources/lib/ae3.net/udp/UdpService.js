@@ -218,6 +218,6 @@ const UdpService = module.exports = ae3.Class.create(
 		"ru.myx.ae3.internal/network/udp/messages/MSG_RF_CERR",
 		"ru.myx.ae3.internal/network/udp/messages/MSG_Q_RRST",
 		"ru.myx.ae3.internal/network/udp/messages/MSG_RF_RSST",
-	].map(require).forEach(UdpService.registerMessageClass, UdpService);
+	].map(require).forEach(UdpService.registerMessageClass.bind(null, UdpService));
 
 }
