@@ -202,17 +202,22 @@ const UdpService = module.exports = ae3.Class.create(
 
 
 {
+	/** **/
 	UdpService.commandByKey = UdpService.prototype.commandByKey;
 
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_FAIL'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_HELO'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_MEET'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_POKE'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_POKD'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_SEEN'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_CALL'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_CACK'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_CERR'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_Q_RRST'));
-	UdpService.registerMessageClass(UdpService, require('ru.myx.ae3.internal/network/udp/messages/MSG_RF_RSST'));
+	/** register all basic message classes **/
+	[
+		"ru.myx.ae3.internal/network/udp/messages/MSG_RF_FAIL",
+		"ru.myx.ae3.internal/network/udp/messages/MSG_Q_HELO",
+		"ru.myx.ae3.internal/network/udp/messages/MSG_Q_MEET",
+		"ru.myx.ae3.internal/network/udp/messages/MSG_Q_POKE",
+		"ru.myx.ae3.internal/network/udp/messages/MSG_Q_POKD",
+		"ru.myx.ae3.internal/network/udp/messages/MSG_RF_SEEN",
+		"ru.myx.ae3.internal/network/udp/messages/MSG_Q_CALL",
+		"ru.myx.ae3.internal/network/udp/messages/MSG_RF_CACK",
+		"ru.myx.ae3.internal/network/udp/messages/MSG_RF_CERR",
+		"ru.myx.ae3.internal/network/udp/messages/MSG_Q_RRST",
+		"ru.myx.ae3.internal/network/udp/messages/MSG_RF_RSST",
+	].map(require).forEach(UdpService.registerMessageClass, UdpService);
+
 }
