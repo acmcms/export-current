@@ -1,14 +1,9 @@
-const ae3 = require("ae3");
+/**
+ * 
+ */
 
-const TaskEvent = (function(){
-	try{
-		import ru.myx.ae3.internal.tasks.TaskEvent;
-		console.log("TaskLogger:TaskEvent: java native implementation will be used.");
-		return TaskEvent;
-	}catch(e){
-	}
-	return require("./TaskEvent");
-})();
+const ae3 = require("ae3");
+const TaskEvent = require("./TaskEvent");
 
 const TaskLogger = module.exports = ae3.Class.create(
 	"TaskLogger",
@@ -152,6 +147,7 @@ const TaskLogger = module.exports = ae3.Class.create(
 		},
 	},
 	{
+		/** getter like method, no cache in object  */
 		checkCreateInstance : {
 			value : function(){
 				switch(this.log){
@@ -160,24 +156,27 @@ const TaskLogger = module.exports = ae3.Class.create(
 				case "normal":
 				case "more":
 				case "full":
-					return this.taskLog = new TaskLogger(this, this.log);
+					return new TaskLogger(this, this.log);
 				default:
 				}
+				
 				if(!this.parent){
-					return this.taskLog = new TaskLogger(this, "normal");
+					return new TaskLogger(this, "normal");
 				}
+				
 				switch(this.parent.childrenLog){
 				case "none":
 				case "less":
 				case "normal":
 				case "more":
 				case "full":
-					return this.taskLog = new TaskLogger(this, this.parent.childrenLog);
+					return new TaskLogger(this, this.parent.childrenLog);
 				default:
 				}
-				return this.taskLog = this.parent.taskLogger;
+				return this.parent.taskLogger;
 			}
 		},
+		/** creates and returns proper TaskLogger object */
 		checkCreate : {
 			value : function(task){
 				return TaskLogger.checkCreateInstance.call(task);

@@ -1,3 +1,16 @@
+/**
+ * 
+ */
+
+/** try native implementation first */
+try{
+	const TaskEvent = require("java.class/ru.myx.ae3.internal.tasks.TaskEvent");
+	console.log("TaskLogger:TaskEvent: java native implementation will be used.");
+	return module.exports = TaskEvent;
+}catch(e){
+	console.log("TaskLogger:TaskEvent: javascript implementation will be used.");
+}
+
 const ae3 = require("ae3");
 
 const TaskEvent = module.exports = ae3.Class.create(
