@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const layoutTemplate = {
 	layout : "data-table",
 	name : "date",
@@ -29,7 +33,7 @@ const layoutTemplate = {
 	]
 };
 
-function runDate(context){
+module.exports = function(context){
 	const date = new Date();
 	
 	return Object.create(layoutTemplate, {
@@ -48,6 +52,4 @@ function runDate(context){
 			]
 		}
 	});
-}
-
-module.exports = runDate;
+};

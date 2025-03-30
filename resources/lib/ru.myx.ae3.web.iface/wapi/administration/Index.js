@@ -1,4 +1,11 @@
-const commands = {
+/**
+ * 
+ */
+
+/**
+ * first index menu INDEX, more INDEX added later in this script.
+ */
+const INDEX = {
 	/**
 	 * interface
 	 */
@@ -15,19 +22,22 @@ const commands = {
 	},
 };
 
+/**
+ * Bind all accounts INDEX to administration root index 
+ */
 {
-	var auth = require('ae3.web/AuthAccountsPage').create({ 
+	const auth = require('ae3.web/AuthAccountsPage').create({ 
 		systemName : "AE3", 
 		pathPrefix : "administration/", 
 	});
 	
-	for(var i of auth.commandKeys()){
-		commands[i] ||= auth.getCommand(i);
+	for(let i of auth.commandKeys()){
+		INDEX[i] ??= auth.getCommand(i);
 	}
 }
 
 /*
-commands['listActions'] = {
+INDEX['listActions'] = {
 	icon : "book_edit",
 	title : "List Tracked Actions",
 	run : [ require, './ListActions' ],
@@ -36,7 +46,7 @@ commands['listActions'] = {
 };
 */
 /*
-commands['readAction'] = {
+INDEX['readAction'] = {
 	title : "Read Tracked Action",
 	run : [ require, './ReadAction' ],
 	access : "user",
@@ -46,7 +56,7 @@ commands['readAction'] = {
 */
 
 /*
-commands['setupStats'] = {
+INDEX['setupStats'] = {
 	icon : "lock_edit",
 	title : "Setup Stats",
 	run : [ require, './SetupStats' ],
@@ -56,14 +66,14 @@ commands['setupStats'] = {
 
 */
 
-commands['tools'] = require('ae3.web/SystemToolsPage').create({ 
+INDEX['tools'] = require('ae3.web/SystemToolsPage').create({ 
 	systemName : "AE3", 
 	pathPrefix : "administration/tools/", 
 	access : "admin",
 });
 
 
-commands['../resource/documentation.xml'] = {
+INDEX['../resource/documentation.xml'] = {
 	icon : "help",
 	title : "Documentation",
 	access : "user",
@@ -73,6 +83,6 @@ commands['../resource/documentation.xml'] = {
 
 module.exports = require('ae3.web/IndexPage').create({
 	title : "AE3::administration/index (System Administration)", 
-	commands : commands,
+	commands : INDEX,
 	authRequired : true
 });

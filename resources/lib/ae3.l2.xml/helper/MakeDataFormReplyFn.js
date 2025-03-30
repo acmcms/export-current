@@ -50,16 +50,19 @@ function makeDataFormReply(context, layout){
 	const attributes = layout.attributes ? Object.create(layout.attributes) : {};
 	attributes.layout = "form";
 	
-	const filters = layout.filters;
+	const filters = layout.filters ?? context.layoutFilters;
 	
 	const element = layout.rootName || "form";
 
+	const formatFull = query && query.parameters.format !== "clean" && !layout.clean && context.client?.uiFormat !== "clean";
+
 	var xml = "";
 	$output(xml){
+		
 		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
-			if(query){
+			if(context.share){
 				= formatXmlElement("client", context.share.clientElementProperties(context));
-				if(context.rawHtmlHeadData){
+				if(formatFull && context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
 							= context.rawHtmlHeadData;
@@ -67,13 +70,21 @@ function makeDataFormReply(context, layout){
 					%></rawHeadData><%
 				}
 			}
-			if(layout.prefix){
-				= this.internOutputValue("prefix", layout.prefix);
+			
+			if(formatFull){
+				
+				if(layout.prefix){
+					= this.internOutputValue("prefix", layout.prefix);
+				}
+				
+				if(filters?.fields){
+					= formatXmlElement("prefix", new FiltersFormLayout(filters));
+				}
+				
 			}
-			if(filters?.fields){
-				= formatXmlElement("prefix", new FiltersFormLayout(filters));
-			}
+			
 			%><fields><%
+			
 				for(var field of layout.fields){
 					= formatXmlElement("field", this.internReplaceField(layout.values, true, field));
 				}
@@ -89,21 +100,36 @@ function makeDataFormReply(context, layout){
 						url : "?___output=xls&" + formatQueryStringParameters(filters?.values)
 					});
 				}
-				if(layout.help && (!query || query.parameters.format !== "clean")){
-					= formatXmlElement("help", { src : layout.help });
+				
+				if(formatFull){
+					
+					if(layout.help && (!query || query.parameters.format !== "clean")){
+						= formatXmlElement("help", { src : layout.help });
+					}
+				
 				}
+				
 			%></fields><%
 			%><values><%
+			
 				if("object" === typeof layout.values){
 					for(var valueKey in layout.values){
 						= this.internOutputValue(valueKey, layout.values[valueKey]);
 					}
 				}
+				
 			%></values><%
-			if(layout.suffix){
-				= this.internOutputValue("suffix", layout.suffix);
+			
+			if(formatFull){
+				
+				if(layout.suffix){
+					= this.internOutputValue("suffix", layout.suffix);
+				}
+				
 			}
+			
 		%></<%= element; %>><%
+		
 	}
 	return {
 		layout	: "xml",

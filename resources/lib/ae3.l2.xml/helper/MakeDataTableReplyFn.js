@@ -8,6 +8,26 @@ const formatXmlElement = Format.xmlElement;
 const formatXmlElements = Format.xmlElements;
 const formatQueryStringParameters = Format.queryStringParameters;
 
+
+
+const FMT_DATE = function(v/*, column, row*/){
+	return v.toISOString();
+};
+
+const FMT_IDENTITY = function(v/*, column, row*/){
+	return v;
+};
+
+/** bind to XmlSkinHelper instance */
+const FMT_INTERN_REPLACE_VALUE = function(v){
+	return this.internReplaceValue(v);
+};
+
+/** bind to XmlSkinHelper instance */
+const FMT_ITEM_INTERN_REPLACE_VALUE = function(name, item){
+	return item[name] = this.internReplaceValue(item[name]);
+};
+
 /**
  * <code>
  * layout = {
@@ -56,16 +76,19 @@ function makeDataTableReply(context, layout){
 	
 	const formats = [];
 
-	const filters = layout.filters;
+	const filters = layout.filters ?? context.layoutFilters;
 	
 	const element = layout.rootName || "list";
+	
+	const formatFull = query && query.parameters.format !== "clean" && !layout.clean && context.client?.uiFormat !== "clean";
 
-	var xml = "", c, column, cn, r, row, item = {}, /* more, */format;
+	var xml = "", c, column, cn, r, row, item;
 	$output(xml){
+		
 		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
-			if(query){
+			if(context.share){
 				= formatXmlElement("client", context.share.clientElementProperties(context));
-				if(context.rawHtmlHeadData){
+				if(formatFull && context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
 							= context.rawHtmlHeadData;
@@ -73,71 +96,79 @@ function makeDataTableReply(context, layout){
 					%></rawHeadData><%
 				}
 			}
-			if(layout.prefix){
-				= this.internOutputValue("prefix", layout.prefix);
+			
+			if(formatFull){
+				
+				if(layout.prefix){
+					= this.internOutputValue("prefix", layout.prefix);
+				}
+				
+				if(filters?.fields){
+					= formatXmlElement("prefix", new FiltersFormLayout(filters));
+				}
+				
 			}
-			if(filters?.fields){
-				= formatXmlElement("prefix", new FiltersFormLayout(filters));
-			}
+			
 			%><columns><%
+			
 				for(c = 0; c < columnCount; ++c){
 					column = columns[c];
 					= formatXmlElement("column", this.internReplaceField(null, false, column));
-					// item[column.id] = true;
-					switch(column.variant){
+					switch(column.variant ?? column.type){
 					case "list":
-						formats[c] = formatterPlain;
+						// formats.push(FMT_IDENTITY.bind(column.id));
 						break;
 					case "view":
-						formats[c] = formatterPlain;
+						// formats.push(FMT_IDENTITY.bind(column.id));
 						break;
 					case "select":
-						formats[c] = formatterPlain;
+						// formats.push(FMT_IDENTITY.bind(column.id));
 						break;
 					case "date":
-						formats[c] = formatterDate;
+						// formats.push(FMT_DATE.bind(column.id));
+						break;
+					case "layout":
+						formats.push(FMT_ITEM_INTERN_REPLACE_VALUE.bind(this, column.id));
 						break;
 					default:
-						formats[c] = formatterPlain;
+						// formats.push(FMT_IDENTITY.bind(column.id));
 					}
 				}
 				
-				/**
-				 * commands and extra fields for commands
-				 */
-				for(c in layout.rowCommands){
-					/**
-					 * 
-					cn = c.field;
-					if(!item[cn]){
-						(more ||= []).push(cn);
-					}
-					 */
+				// commands and extra fields for commands
+				for(c of layout.rowCommands){
 					= formatXmlElement("command", c);
 				}
+				
 			%></columns><%
 			
-			for(r = 0; r < rowCount; ++r){
-				= formatXmlElement("item", rows[r]);
-				/**
-				 * all columns required for commands and links
-				 * 
-				row = rows[r];
-				for(c = 0; c < columnCount; ++c){
-					column = columns[c];
-					cn = column.id;
-					item[cn] = formats[c](row[cn], column, row);
+			if(formats.length){
+				for(r = 0; r < rowCount; ++r){
+					item = Object.create(rows[r]);
+					for(cn of formats){
+						cn(item);
+					}
+					
+					/**
+					row = rows[r];
+					for(c = 0; c < columnCount; ++c){
+						column = columns[c];
+						cn = column.id;
+						item[cn] = formats[c](row[cn], column, row);
+					}
+					*/
+					= formatXmlElement("item", item);
 				}
-				for(cn in more){
-					item[cn] = row[cn];
+			}else{
+				for(r = 0; r < rowCount; ++r){
+					= formatXmlElement("item", rows[r]);
 				}
-				= formatXmlElement("item", item);
-				*/
 			}
 			
 			if(layout.commands){
 				= formatXmlElements("command", layout.commands);
 			}
+			
 			if(query && !query.parameters.___output){
 				const suffix = formatQueryStringParameters(filters && "object" === typeof filters.values && filters.values || query.parameters, { format : undefined });
 				const commands = [
@@ -162,7 +193,7 @@ function makeDataTableReply(context, layout){
 						url : "?___output=csv&" + suffix
 					}
 				];
-				if(query.parameters.format === "clean" || query.verb !== "POST"){
+				if(!formatFull || query.verb !== "POST"){
 					commands.push({
 						title : "Open as Listing Page",
 						icon : "world_link",
@@ -180,30 +211,31 @@ function makeDataTableReply(context, layout){
 					}
 				});
 			}
-			if(layout.help && (!query || query.parameters.format !== "clean")){
-				= formatXmlElement("help", { src : layout.help });
+			
+			if(formatFull){
+				
+				if(layout.help){
+					= formatXmlElement("help", { src : layout.help });
+				}
+
+				if(layout.suffix){
+					= this.internOutputValue("suffix", layout.suffix);
+				}
+				
 			}
-			if(layout.suffix){
-				= this.internOutputValue("suffix", layout.suffix);
-			}
+			
 			if(layout.next?.uri){
 				= formatXmlElement("next", layout.next);
 			}
+			
 		%></<%= element; %>><%
+		
 	}
 	return {
 		layout	: "xml",
 		xsl	: "/!/skin/skin-standard-xml/show.xsl",
 		content	: xml
 	};
-}
-
-function formatterDate(v/*, column, row*/){
-	return v.toISOString();
-}
-
-function formatterPlain(v/*, column, row*/){
-	return v;
 }
 
 module.exports = makeDataTableReply;

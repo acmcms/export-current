@@ -160,7 +160,7 @@ StatsObject.storeMap = function storeMap(vfsStats, date, map){
 	
 	const folder = vfsStats.relativeFolderEnsure(key);
 	const content = {};
-	for keys(key in map){
+	for(key in map){
 		content[key] = {
 			"field" : false,
 			"index" : false,

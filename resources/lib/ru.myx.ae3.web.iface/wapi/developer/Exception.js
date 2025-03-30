@@ -4,6 +4,8 @@ var title = "AE3::developer/exception (Exception)";
 function runError(context){
 	const query = context.query;
 	const client = context.share.authCheckQuery(query);
+	
+	context.title = title;
 
 	{
 		var aa = { key1 : 'aaa'.substring(1), key2 : 'bbb'.substring(1) };

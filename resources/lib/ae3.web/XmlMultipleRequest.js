@@ -7,7 +7,7 @@ function xmrMakeRequestXmlBody(xmlParameters){
 	var xml = '';
 	$output(xml){
 		%><request><%
-			for keys(var parameter in xmlParameters){
+			for(var parameter in xmlParameters){
 				= Format.xmlElement(parameter, { "class" : "string" }, String(xmlParameters[parameter]));
 			}
 			for(var request of this.items){

@@ -22,7 +22,7 @@ module.exports = {
 				a3X : require('java.class/ru.myx.ae3.exec.OperationsA3X'),
 			};
 			
-			for keys(var k in map){
+			for(var k in map){
 				var enum = map[k];
 				console.sendMessage("%s: %s", k, enum);
 			}

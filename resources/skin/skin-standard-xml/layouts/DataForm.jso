@@ -6,8 +6,9 @@
 		switch(context.zoom) {
 		case null:
 		case undefined :
-		case 'document':
-			return require('ae3.l2.xml/helper').makeDataFormReply(context, layout);
+		case "document":
+			context.rawHtmlHeadData = context.share.htmlFormHeadRaw;
+			return require('ae3.l2.xml/XmlSkinHelperSingleton').makeDataFormReply(context, layout);
 		}
 		/**
 		 * pass to upper layout group

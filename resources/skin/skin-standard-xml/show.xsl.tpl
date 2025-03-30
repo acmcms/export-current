@@ -2122,12 +2122,13 @@
 					</xsl:if>
 				</td>
 				<td class="ui-message-east-{$zoom}">
-					<xsl:if test="reason or title or @title">
+					<xsl:if test="reason or title or @title or @message">
 						<h3>
 							<xsl:choose>
 								<xsl:when test="reason"><xsl:apply-templates select="reason"/></xsl:when>
 								<xsl:when test="title"><xsl:apply-templates select="title"/></xsl:when>
 								<xsl:when test="@title"><xsl:apply-templates select="@title"/></xsl:when>
+								<xsl:when test="@message"><xsl:apply-templates select="@message"/></xsl:when>
 							</xsl:choose>
 						</h3>
 					</xsl:if>

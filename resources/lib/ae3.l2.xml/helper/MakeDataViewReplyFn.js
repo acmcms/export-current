@@ -40,7 +40,7 @@ function makeDataViewReply(context, layout){
 	
 	const attributes = layout.attributes ? Object.create(layout.attributes) : {};
 	attributes.layout = "view";
-	const filters = layout.filters;
+	const filters = layout.filters ?? context.layoutFilters;
 	const element = layout.rootName || "view";
 	return {
 		layout	: "xml",
@@ -72,36 +72,59 @@ function makeDataViewFragment(query, layout, extraCommands){
 	}
 
 	const filters = layout.filters;
+
+	const formatFull = query && query.parameters.format !== "clean";
 	
 	var xml = "";
 	$output(xml){
-		if(layout.prefix){
-			= this.internOutputValue("prefix", layout.prefix);
+		
+		if(formatFull){
+			
+			if(layout.prefix){
+				= this.internOutputValue("prefix", layout.prefix);
+			}
+			if(filters?.fields){
+				= formatXmlElement("prefix", new FiltersFormLayout(filters));
+			}
+			
 		}
-		if(filters?.fields){
-			= formatXmlElement("prefix", new FiltersFormLayout(filters));
-		}
+		
 		%><fields><%
+		
 			for(var field of layout.fields){
 				= formatXmlElement("field", this.internReplaceField(layout.values, false, field));
 			}
+			
 			if(extraCommands){
 				= extraCommands;
 			}
+			
 			if(layout.commands){
 				= formatXmlElements("command", layout.commands);
 			}
-			if(layout.help && (!query || query.parameters.format !== "clean")){
-				= formatXmlElement("help", { src : layout.help });
+			
+			if(formatFull){
+				
+				if(layout.help && (!query || query.parameters.format !== "clean")){
+					= formatXmlElement("help", { src : layout.help });
+				}
+			
 			}
+			
 		%></fields><%
+		
 		if("object" === typeof layout.values){
 			for(var valueKey in layout.values){
 				= this.internOutputValue(valueKey, layout.values[valueKey]);
 			}
 		}
-		if(layout.suffix){
-			= this.internOutputValue("suffix", layout.suffix);
+		
+		if(formatFull){
+			
+			if(layout.suffix){
+				= this.internOutputValue("suffix", layout.suffix);
+			}
+			
 		}
 	}
 	return xml;

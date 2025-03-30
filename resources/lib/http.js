@@ -280,7 +280,7 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 			= " HTTP/1.1\r\n";
 		}
 		
-		for keys(key in headers){
+		for(key in headers){
 			= key;
 			= ": ";
 			= headers[key];

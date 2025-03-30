@@ -33,7 +33,7 @@ const AbstractWebPage = module.exports = ae3.Class.create(
 		 * lib reference
 		 */
 		lib : {
-			value : 'ae3.l2.xml/helper'
+			value : 'ae3.l2.xml/XmlSkinHelperSingleton'
 		},
 		/**
 		 * actual index commands

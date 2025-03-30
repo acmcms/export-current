@@ -8,7 +8,7 @@ const internReduce = function(result, current){
 	T = result.values;
 	S = current.values;
 
-	for keys(k in s){
+	for(k in s){
 		t[k] = s[k];
 		T[k] = S[k];
 	}

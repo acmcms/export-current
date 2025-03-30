@@ -7,7 +7,7 @@
 		case null:
 		case undefined :
 		case 'document':
-			return require('ae3.l2.xml/helper').makeMessageReply(context, layout);
+			return require('ae3.l2.xml/XmlSkinHelperSingleton').makeMessageReply(context, layout);
 		}
 		/**
 		 * pass to upper layout group

@@ -61,7 +61,7 @@ function internReplaceField(values, edit, field){
 			});
 		}
 	}
-	switch(field.variant){
+	switch(field.variant ?? field.type){
 	case "sequence":{
 		var enm = field.elementName || "item";
 		var arr = val?.[enm];
@@ -70,6 +70,20 @@ function internReplaceField(values, edit, field){
 		}
 		key === "." || (val = values[key] = Object.create(val));
 		val[enm] = Array(arr).map(this.internReplaceValue, this);
+		return field;
+	}
+	case "layout":{
+		if(values){
+			var idx, ext, rep, nxt;
+			if(val?.layout){
+				rep = this.internReplaceValue(val);
+				if(rep !== undefined && rep !== null && "object" !== typeof rep){
+					rep = [ rep ];
+				}
+				values[key] = rep;
+				return field;
+			}
+		}
 		return field;
 	}
 	case "select":

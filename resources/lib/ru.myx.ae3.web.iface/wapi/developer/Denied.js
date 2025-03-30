@@ -1,10 +1,16 @@
+/**
+ * 
+ */
+
 const title = "AE3::developer/denied (Access Denied)";
 
-function runDenied(context){
+module.exports = function runDenied(context){
+	
+	context.title = title;
+	
 	const share = context.share;
 	share.authRequireAccount(context);
 	
 	return share.makeAccessDeniedLayout(title);
-}
-
-module.exports = runDenied;
+	
+};

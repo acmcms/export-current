@@ -48,16 +48,20 @@ function makeSelectViewReply(context, layout){
 	const attributes = layout.attributes ? Object.create(layout.attributes) : {};
 	attributes.layout = "select-view";
 	
-	const filters = layout.filters;
+	const filters = layout.filters ?? context.layoutFilters;
 	
 	const element = layout.rootName || "sequence";
+
+	const formatFull = query && query.parameters.format !== "clean" && !layout.clean && context.client?.uiFormat !== "clean";
 	
 	var xml = "";
 	$output(xml){
+		
 		%><<%= element; %><%= formatXmlAttributes(attributes); %>><%
-			if(query){
+		
+			if(context.share){
 				= formatXmlElement("client", context.share.clientElementProperties(context));
-				if(context.rawHtmlHeadData){
+				if(formatFull && context.rawHtmlHeadData){
 					%><rawHeadData><%
 						%><![CDATA[<%
 							= context.rawHtmlHeadData;
@@ -65,28 +69,47 @@ function makeSelectViewReply(context, layout){
 					%></rawHeadData><%
 				}
 			}
+			
 			if(layout.value){
 				%><value><% = formatXmlNodeValue(layout.value); %></value><%
 			}
-			if(layout.prefix){
-				= this.internOutputValue("prefix", layout.prefix);
+
+			if(formatFull){
+				
+				if(layout.prefix){
+					= this.internOutputValue("prefix", layout.prefix);
+				}
+				
+				if(filters?.fields){
+					= formatXmlElement("prefix", new FiltersFormLayout(filters));
+				}
+				
 			}
-			if(filters?.fields){
-				= formatXmlElement("prefix", new FiltersFormLayout(filters));
-			}
+
 			for(var item of layout.options){
 				= this.internOutputValue("option", item);
 			}
+			
 			if(layout.commands){
 				= formatXmlElements("command", layout.commands);
-			}else//
-			if(layout.help && (!query || query.parameters.format !== "clean")){
-				= formatXmlElement("help", { src : layout.help });
 			}
-			if(layout.suffix){
-				= this.internOutputValue("suffix", layout.suffix);
+			
+
+			if(formatFull){
+				
+				if(layout.help){
+					= formatXmlElement("help", { src : layout.help });
+				}
+
+				if(layout.suffix){
+					= this.internOutputValue("suffix", layout.suffix);
+				}
+				
 			}
+
+			
 		%></<%= element; %>><%
+		
 	}
 	return {
 		layout	: "xml",

@@ -11,7 +11,6 @@ const ae3 = require("ae3");
 
 const LAST_EXCEPTION = Object.create(null);
 
-
 const Share = module.exports = ae3.Class.create(
 	/* name */
 	"Share",
@@ -39,7 +38,7 @@ const Share = module.exports = ae3.Class.create(
 			value : undefined
 		},
 		helper : {
-			value : require('ae3.l2.xml/helper')
+			value : require('ae3.l2.xml/XmlSkinHelperSingleton')
 		},
 		/**
 		 * actual index commands
@@ -417,9 +416,33 @@ const Share = module.exports = ae3.Class.create(
 	},
 	{
 		"getLastExceptionLayout" : {
-			value : function(){
+			value : function(reset){
+				if(reset){
+					try{
+						return Share.getLastExceptionLayout();
+					}finally{
+						LAST_EXCEPTION.layout = null;
+					}
+				}
 				return LAST_EXCEPTION.layout;
 			}
+		},
+		"getLastExceptionLayoutOrOk" : {
+			value : function(reset){
+				if(reset){
+					try{
+						return Share.getLastExceptionLayoutOrOk();
+					}finally{
+						LAST_EXCEPTION.layout = null;
+					}
+				}
+				return LAST_EXCEPTION.layout ??  {
+					code : 200,
+					layout : "message",
+					message : "No exception recorded since boot/reset."
+				};
+			}
 		}
+		
 	}
 );

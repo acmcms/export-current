@@ -1,14 +1,22 @@
 {
 	onLayoutExecute : function(context, layout) {
+	
+		if(undefined === layout.hl && !layout.icon){
+			layout = Object.create(layout);
+			layout.hl = false;
+			layout.icon ??= "email_open";
+		}
+		
 		/**
 		 * TODO: unfinished / unused
 		 */
 		switch(context.zoom) {
 		case null:
 		case undefined :
-		case 'document':
-			return require('ae3.l2.xml/helper').makeMessageReply(context, layout);
+		case "document":
+			return require('ae3.l2.xml/XmlSkinHelperSingleton').makeMessageReply(context, layout);
 		}
+		
 		/**
 		 * pass to upper layout group
 		 */

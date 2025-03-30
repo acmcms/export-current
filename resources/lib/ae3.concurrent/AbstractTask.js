@@ -73,7 +73,7 @@ const AbstractTask = module.exports = ae3.Class.create(
 		taskLogger : (function(){
 			try{
 				import ru.myx.ae3.internal.tasks.TaskLog;
-				if('function' === typeof TaskLog.checkCreate){
+				if("function" === typeof TaskLog.checkCreate){
 					console.log("Async::AbstractTask:taskLogger: java native implementation will be used.");
 					return {
 						get : TaskLog.checkCreate
@@ -158,7 +158,7 @@ const AbstractTask = module.exports = ae3.Class.create(
 					return undefined;
 				}
 				return {
-					layout : 'data-list',
+					layout : "data-list",
 					columns : [
 						{
 							id : "type",
@@ -174,8 +174,8 @@ const AbstractTask = module.exports = ae3.Class.create(
 						},
 						{
 							id : "elapsed",
-							title : 'Time',
-							variant : 'period',
+							title : "Time",
+							variant : "period",
 							scale : 1
 						}
 					],
@@ -192,7 +192,7 @@ const AbstractTask = module.exports = ae3.Class.create(
 		},
 		logExport : {
 			value : function(eventType, eventColumns){
-				if('function' === typeof this.exportLogger){
+				if("function" === typeof this.exportLogger){
 					return this.exportLogger(eventType, eventColumns);
 				}
 			}

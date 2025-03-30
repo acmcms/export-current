@@ -1,10 +1,14 @@
+/**
+ * 
+ */
+
 function FiltersFormLayout(filters){
 	this.fields	= { 
 		field	: filters.fields, 
 		submit	: this.submit
 	};
 	var key, value;
-	for keys(key in filters.values){
+	for(key in filters.values){
 		value = filters.values[key];
 		if(value && !this[key]){
 			this[key] = [ value ];
