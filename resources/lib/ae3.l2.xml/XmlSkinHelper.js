@@ -1,5 +1,8 @@
+/**
+ * 
+ */
+
 const formatXmlElement = Format.xmlElement;
-const formatXmlElements = Format.xmlElements;
 
 
 
@@ -37,51 +40,68 @@ const XmlSkinHelper = module.exports = require("ae3").Class.create(
 		},
 		/** makeMessageReply(context, layout) **/
 		"makeMessageReply" : {
-			value : require("./helper/MakeMessageReplyFn")
+			execute : "once", get : require.bind(null, "./helper/MakeMessageReplyFn")
+			// value : require("./helper/MakeMessageReplyFn")
 		},
 		/** makeDataViewReply(context, layout) **/
 		"makeDataViewReply" : {
-			value : require("./helper/MakeDataViewReplyFn")
+			execute : "once", get : require.bind(null, "./helper/MakeDataViewReplyFn")
+			// value : require("./helper/MakeDataViewReplyFn")
 		},
 		"makeDataFormReply" : {
-			value : require("./helper/MakeDataFormReplyFn")
+			execute : "once", get : require.bind(null, "./helper/MakeDataFormReplyFn")
+			// value : require("./helper/MakeDataFormReplyFn")
 		},
 		"makeDataTableReply" : {
-			value : require("./helper/MakeDataTableReplyFn")
+			execute : "once", get : require.bind(null, "./helper/MakeDataTableReplyFn")
+			// value : require("./helper/MakeDataTableReplyFn")
 		},
 		"makeDocumentationReply" : {
-			value : require("./helper/MakeDocumentationReplyFn")
+			execute : "once", get : require.bind(null, "./helper/MakeDocumentationReplyFn")
+			// value : require("./helper/MakeDocumentationReplyFn")
 		},
 		"makeSequenceReply" : {
-			value : require("./helper/MakeSequenceReplyFn")
+			execute : "once", get : require.bind(null, "./helper/MakeSequenceReplyFn")
+			// value : require("./helper/MakeSequenceReplyFn")
 		},
 		"makeSelectViewReply" : {
-			value : require("./helper/MakeSelectViewReplyFn")
+			execute : "once", get : require.bind(null, "./helper/MakeSelectViewReplyFn")
+			// value : require("./helper/MakeSelectViewReplyFn")
 		},
 
 		"buildAuthenticationFailedReply" : { 
-			value : require("./helper/AuthenticationFailedReplyFn")
+			execute : "once", get : require.bind(null, "./helper/AuthenticationFailedReplyFn")
+			// value : require("./helper/AuthenticationFailedReplyFn")
 		},
 		"buildAuthenticationSuccessReply" : {
-			value : require("./helper/AuthenticationSuccessReplyFn")
+			execute : "once", get : require.bind(null, "./helper/AuthenticationSuccessReplyFn")
+			// value : require("./helper/AuthenticationSuccessReplyFn")
 		},
 		"buildAuthenticationLogoutReply" : {
-			value : require("./helper/AuthenticationLogoutReplyFn")
+			execute : "once", get : require.bind(null, "./helper/AuthenticationLogoutReplyFn")
+			// value : require("./helper/AuthenticationLogoutReplyFn")
 		},
 		"buildAuthenticateReply" : {
-			value : require("./helper/AuthenticateReplyFn")
+			execute : "once", get : require.bind(null, "./helper/AuthenticateReplyFn")
+			// value : require("./helper/AuthenticateReplyFn")
 		},
 
+		"internUiMessageEnrich" : {
+			execute : "once", get : require.bind(null, "./helper/InternUiMessageEnrichFn")
+			// value : require("./helper/InternUiMessageEnrichFn")
+		},
+		
 		"internReplaceField" : {
-			value : require("./helper/InternReplaceFieldFn")
+			execute : "once", get : require.bind(null, "./helper/InternReplaceFieldFn")
+			// value : require("./helper/InternReplaceFieldFn")
 		},
 		"internReplaceValue" : {
-			value : require("./helper/InternReplaceValueFn")
+			execute : "once", get : require.bind(null, "./helper/InternReplaceValueFn")
+			// value : require("./helper/InternReplaceValueFn")
 		},
 		"internOutputValue" : {
-			value : function internOutputValue(key, value){
-				return formatXmlElements(key, this.internReplaceValue(value));
-			}
+			execute : "once", get : require.bind(null, "./helper/internOutputValueFn")
+			// value : require("./helper/internOutputValueFn")
 		},
 	},
 	/** STATIC **/

@@ -70,22 +70,29 @@ const AbstractTask = module.exports = ae3.Class.create(
 			}
 		},
 		/** redirection logger (task or ) */
-		taskLogger : (function(){
-			try{
-				import ru.myx.ae3.internal.tasks.TaskLog;
-				if("function" === typeof TaskLog.checkCreate){
-					console.log("Async::AbstractTask:taskLogger: java native implementation will be used.");
-					return {
-						get : TaskLog.checkCreate
-					};
+		taskLogger : (
+			function(){
+				try{
+					import ru.myx.ae3.internal.tasks.TaskLog;
+					if("function" === typeof TaskLog.checkCreate){
+						console.log("Async::AbstractTask:taskLogger: java native implementation will be used.");
+
+						/** native implementation will cache 'taskLogger' instance in 'taskLog' field of this **/
+						return {
+							get : TaskLog.checkCreate
+						};
+					}
+				}catch(e){
+					// ignore exception, fall-through
 				}
-			}catch(e){
+				
+				/** base implementation will create 'taskLogger' instance, so using 'once' **/
+				return {
+					execute : "once", 
+					get : require("ru.myx.ae3.internal/concurrent/TaskLogger").checkCreateInstance
+				};
 			}
-			return {
-				execute : "once", 
-				get : require("ru.myx.ae3.internal/concurrent/TaskLogger").checkCreateInstance
-			};
-		})(),
+		)(),
 		/**
 		 * 
 		 */

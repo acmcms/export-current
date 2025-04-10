@@ -1,6 +1,73 @@
-const Reply = require("ae3").Reply;
+/**
+ * 
+ */
 
-const UiBasic = module.exports = require("ae3").Class.create(
+const ae3 = require("ae3");
+const ReplyObject = ae3.Reply.object;
+const ReplyException = ae3.Reply.exception;
+const FormatXmlElement = Format.xmlElement;
+const FormatQueryStringParameters = Format.queryStringParameters;
+
+/**
+ * bind first three arguments to constants to create different kinds of messages
+ */
+const PREPARE_MESSAGE = function(codeDefault, messageDefault, message, detail /* locals: */, result){
+	message ??= messageDefault;
+	
+	if("string" === typeof message){
+		return {
+			layout : "message",
+			code : (detail || "").code ?? codeDefault,
+			reason : (detail || "").reason ?? (messageDefault != message && messageDefault) ?? undefined,
+			message : message,
+			detail : detail,
+			"x-ui-debug" : "UiBasic-string"
+		};
+	}
+	
+	if(message.layout === "message"){
+		return Object.assign(Object.create(message), {
+			layout : "message",
+			code : message.code ?? (detail || "").code ?? codeDefault,
+			/** prevent self-recursion **/
+			reason : message.reason ?? (detail || "").reason ?? messageDefault,
+			message : message.message ?? message.content ?? message.value ?? message.title ?? (message.reason && messageDefault) ?? undefined,
+			detail : detail,
+			"x-ui-debug" : "UiBasic-message"
+		});
+	}
+	
+	if(message.layout){
+		return Object.assign(Object.create(message.attributes ?? null), {
+			layout : "message",
+			code : message.code ?? (detail || "").code ?? codeDefault,
+			/** prevent self-recursion **/
+			reason : message.reason ?? (detail || "").reason ?? message.title ?? messageDefault,
+			message : "string" === message.layout ? message : message.layout,
+			detail : detail,
+			cache : message.cache ?? message.attributes?.cache ?? undefined,
+			delay : message.delay ?? message.attributes?.delay ?? undefined,
+			"x-ui-debug" : "UiBasic-layout"
+		});
+	}
+	
+	return Object.assign(Object.create(message.attributes ?? message ?? null), {
+		layout : "message",
+		code : message.code ?? (detail || "").code ?? codeDefault,
+		/** prevent self-recursion **/
+		reason : message.reason ?? (detail || "").reason ?? messageDefault,
+		message : message.message ?? message.content ?? message.value ?? message.title ?? (message.reason && messageDefault) ?? undefined,
+		detail : detail,
+		cache : message.cache ?? message.attributes?.cache ?? undefined,
+		delay : message.delay ?? message.attributes?.delay ?? undefined,
+		"x-ui-debug" : "UiBasic-object"
+	});
+};
+
+/**
+ * 
+ */
+const UiBasic = module.exports = ae3.Class.create(
 	/* name */
 	"UiBasic",
 	/* inherit */
@@ -53,7 +120,7 @@ const UiBasic = module.exports = require("ae3").Class.create(
 			 */
 			value : function clientElement(client, admin, query){
 				if(!client){
-					return Format.xmlElement("client", {
+					return FormatXmlElement("client", {
 						geo : query.attributes["Geo-Mean"],
 						ip : query.sourceAddress,
 					});
@@ -65,10 +132,10 @@ const UiBasic = module.exports = require("ae3").Class.create(
 					import ru.myx.ae3.help.QueryString;
 					var params = QueryString.parseQueryString(query.parameterString, "utf-8");
 					delete params.authUserId;
-					command = "?" + Format.queryStringParameters(params);
+					command = "?" + FormatQueryStringParameters(params);
 					icon = "cross";
 				}
-				return Format.xmlElement("client", {
+				return FormatXmlElement("client", {
 					id : String(client.id || ("string" === typeof client ? client : "")),
 					admin : admin || client.admin,
 					geo : query.attributes["Geo-Mean"],
@@ -88,71 +155,46 @@ const UiBasic = module.exports = require("ae3").Class.create(
 		},
 		layoutUnmaskable : {
 			value : function(query, layout){
-				return Reply.exception(
-					Reply.object( "unmaskable", query, layout)
+				return ReplyException(
+					ReplyObject( "unmaskable", query, layout)
 				);
 			}
 		},
 		layoutAccessDeniedUnmaskable : {
 			value : function(query, message, detail){
-				return Reply.exception(
-					Reply.object( "unmaskable", query, this.makeAccessDeniedLayout(message, detail) )
+				return ReplyException(
+					ReplyObject( "unmaskable", query, this.makeAccessDeniedLayout(message, detail) )
 				);
 			}
 		},
 		makeAccessDeniedLayout : {
-			value : function(message, detail){
-				return {
-					layout : "message",
-					rootName : (message || "").rootName || "denied",
-					code : detail?.code || 403,
-					message : message,
-					detail : detail
-				};
+			execute : "once",
+			get : function(){
+				return PREPARE_MESSAGE.bind(this, 403, "Access Denied");
 			}
 		},
 		makeUpdateSuccessLayout : {
-			value : function(message, detail){
-				return {
-					layout : "message",
-					rootName : (message || "").rootName || "success",
-					code : (message || detail || "").code || 200,
-					message : message,
-					detail : detail
-				};
+			execute : "once",
+			get : function(){
+				return PREPARE_MESSAGE.bind(this, 200, "Success");
 			}
 		},
 		makeClientFailureLayout : {
-			value : function(message, detail){
-				return {
-					layout : "message",
-					rootName : (message || "").rootName || "failed",
-					code : (message || detail || "").code || 400,
-					message : message,
-					detail : detail
-				};
+			execute : "once",
+			get : function(){
+				return PREPARE_MESSAGE.bind(this, 400, "Client Error");
 			}
 		},
 		makeNotFoundLayout : {
-			value : function(message, detail){
-				return {
-					layout : "message",
-					rootName : (message || "").rootName || "unknown",
-					code : (message || detail || "").code || 404,
-					message : message,
-					detail : detail
-				};
+			execute : "once",
+			get : function(){
+				return PREPARE_MESSAGE.bind(this, 404, "Unavailable");
 			}
 		},
 		makeServerFailureLayout : {
-			value : function(message, detail){
-				return {
-					layout : "message",
-					rootName : (message || "").rootName || "error",
-					code : (message || detail || "").code || 500,
-					message : message,
-					detail : detail
-				};
+			execute : "once",
+			get : function(){
+				return PREPARE_MESSAGE.bind(this, 500, "Server Error");
 			}
 		}
 	}

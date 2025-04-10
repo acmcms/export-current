@@ -176,10 +176,10 @@ const TaskLogger = module.exports = ae3.Class.create(
 				return this.parent.taskLogger;
 			}
 		},
-		/** creates and returns proper TaskLogger object */
+		/** creates, caches and returns proper TaskLogger object */
 		checkCreate : {
 			value : function(task){
-				return TaskLogger.checkCreateInstance.call(task);
+				return (task.taskLog = TaskLogger.checkCreateInstance.call(task));
 			}
 		},
 	}

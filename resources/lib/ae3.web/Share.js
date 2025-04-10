@@ -191,9 +191,10 @@ const Share = module.exports = ae3.Class.create(
 				if(value || e.thrownDetail){
 					return LAST_EXCEPTION.layout = {
 						layout : 'message',
-						code : Number((e.thrownValue && e.thrownValue.code) || 409),
-						reason : (e.thrownValue && e.message) || 'Request Error',
-						message : e.thrownValue || e.message || e,
+						origin : "ae3.web/Share:: onException",
+						code : Number(value?.code || 409),
+						reason : (value && e.message) || 'Request Error',
+						message : value || e.message || e,
 						detail : e.thrownDetail || undefined
 					};
 				}

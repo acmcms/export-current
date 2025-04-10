@@ -1,12 +1,6 @@
 {
 	onLayoutExecute : function(context, layout) {
 	
-		if(undefined === layout.hl && !layout.icon){
-			layout = Object.create(layout);
-			layout.hl = false;
-			layout.icon ??= "email_open";
-		}
-		
 		/**
 		 * TODO: unfinished / unused
 		 */

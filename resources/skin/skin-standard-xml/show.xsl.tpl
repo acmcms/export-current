@@ -551,7 +551,7 @@
 				</div>
 			</xsl:when>
 			<xsl:when test="$format/@variant='code'">
-				<div class="code">
+				<div class="code {$format/@cssClass}">
 					<xsl:value-of select='$value'/>
 				</div>
 			</xsl:when>
@@ -2122,10 +2122,11 @@
 					</xsl:if>
 				</td>
 				<td class="ui-message-east-{$zoom}">
-					<xsl:if test="reason or title or @title or @message">
-						<h3>
+					<xsl:if test="reason or @reason or title or @title or @message">
+						<h3 class="ui-wg-message-title">
 							<xsl:choose>
 								<xsl:when test="reason"><xsl:apply-templates select="reason"/></xsl:when>
+								<xsl:when test="@reason"><xsl:apply-templates select="@reason"/></xsl:when>
 								<xsl:when test="title"><xsl:apply-templates select="title"/></xsl:when>
 								<xsl:when test="@title"><xsl:apply-templates select="@title"/></xsl:when>
 								<xsl:when test="@message"><xsl:apply-templates select="@message"/></xsl:when>
@@ -2133,16 +2134,16 @@
 						</h3>
 					</xsl:if>
 					<xsl:if test="@code">
-						<p>Code: <b><xsl:value-of select="@code" /></b></p>
+						<p>Code: <b class="ui-wg-message-code"><xsl:value-of select="@code" /></b></p>
 					</xsl:if>
 					<xsl:if test="message">
-						<p><xsl:apply-templates select="message"/></p>
+						<p class="ui-wg-message-text"><xsl:apply-templates select="message"/></p>
 					</xsl:if>
-					<xsl:if test="detail">
+					<xsl:if test="detail or @detail">
 						<div style="margin-top: -1em; font-size:80%">
 							<label for="{generate-id(.)}" class="ui-chk-label">show detail</label>
 							<input class="ui-chk-master" id="{generate-id(.)}" type="checkbox"/>
-							<div class="ui-clear"></div><div style="margin-top: 0.2em" class="ui-chk-slave"><xsl:apply-templates select="detail"/></div>
+							<div class="ui-clear"></div><div style="margin-top: 0.2em" class="ui-chk-slave"><div class="ui-wg-message-detail"><xsl:apply-templates select="detail | @detail"/></div></div>
 						</div>
 					</xsl:if>
 				</td>

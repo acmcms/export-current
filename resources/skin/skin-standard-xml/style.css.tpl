@@ -688,6 +688,16 @@ SPAN.ui-fldbox-compact:hover, SPAN.ui-fldbox-compact:focus {
 	text-align: center;
 }
 
+ .ui-wg-message-title{
+ }
+ .ui-wg-message-code{
+ }
+ .ui-wg-message-text{
+ }
+ .ui-wg-message-detail{
+ }
+
+
 .icon.ui-message-icon-document, .icon.ui-message-icon-window {
 	width: 4em;
 	height: 4em;
@@ -941,6 +951,9 @@ A.ui-button, A.ui-button:focus, A.ui-button:active, A.ui-button:hover, A.ui-butt
 	background-color: #ffd;
 }
 
+.hl-MAYBE {
+	opacity: .5;
+}
 
 DIV.hl-hd-true, TR.hl-hd-true {
 	opacity: 0.6;
