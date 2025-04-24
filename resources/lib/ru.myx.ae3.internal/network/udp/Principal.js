@@ -1,11 +1,14 @@
+/**
+ * 
+ */
+
 const ae3 = require("ae3");
-const Transfer = ae3.Transfer;
 const UdpServiceHelper = require("java.class/ru.myx.ae3.internal.net.UdpServiceHelper");
 
-const wrapCopier = Transfer.wrapCopier;
-const copyBytes = Transfer.copyBytes;
-const xorBytes = Transfer.xorBytes;
-const updateMessageDigest = Transfer.updateMessageDigest;
+const wrapCopier = ae3.Transfer.wrapCopier;
+const copyBytes = ae3.Transfer.copyBytes;
+const xorBytes = ae3.Transfer.xorBytes;
+const updateMessageDigest = ae3.Transfer.updateMessageDigest;
 const isSocketAddress = ae3.net.isSocketAddress;
 const socketAddress = ae3.net.socketAddress;
 
@@ -257,8 +260,7 @@ const Principal = module.exports = ae3.Class.create(
 			){
 				if( ! (a ||= this.dst) ){
 					if(false !== m.log){
-						console.log(
-							"UDP::Principal:sendImpl: %s: udp-send-skip, no address, message: %s", 
+						console.log("UDP::Principal:sendImpl: %s: udp-send-skip, no address, message: %s", 
 							this, 
 							m
 						);
@@ -266,8 +268,7 @@ const Principal = module.exports = ae3.Class.create(
 					return 0;
 				}
 				if( ! (key = (this.key ?? m.key)) ){
-					console.log(
-						"UDP::Principal:sendImpl: %s: udp-send-skip, no dst alias, message: %s", 
+					console.log("UDP::Principal:sendImpl: %s: udp-send-skip, no dst alias, message: %s", 
 						this, 
 						m
 					);
@@ -276,8 +277,7 @@ const Principal = module.exports = ae3.Class.create(
 				
 				if(m.isReply){
 					if( "number" !== typeof (s = m.serial) ){
-						console.log(
-							"UDP::Principal:sendImpl: %s: udp-send-skip, reply without numeric serial, message: %s", 
+						console.log("UDP::Principal:sendImpl: %s: udp-send-skip, reply without numeric serial, message: %s", 
 							this, 
 							m
 						);

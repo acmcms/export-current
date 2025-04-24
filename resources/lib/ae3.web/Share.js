@@ -9,6 +9,8 @@ const ae3 = require("ae3");
  * 
  */
 
+const QueryStringParseFn = require("querystring").parse;
+
 const LAST_EXCEPTION = Object.create(null);
 
 const Share = module.exports = ae3.Class.create(
@@ -396,8 +398,7 @@ const Share = module.exports = ae3.Class.create(
 				
 				admin === undefined && (admin = client.admin);
 				if(client.userId){
-					import ru.myx.ae3.help.QueryString;
-					var command = QueryString.parseQueryString(query.parameterString, 'utf-8');
+					var command = QueryStringParseFn(query.parameterString);
 					delete command.authUserId;
 					command = '?' + Format.queryStringParameters(command);
 					icon = "cross";

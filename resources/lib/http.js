@@ -1,31 +1,35 @@
+/**
+ * 
+ */
+
 const ae3 = require("ae3");
 
-const Transfer = ae3.Transfer;
-const Concurrent = ae3.Concurrent;
+const TransferCreateBufferUtf8 = ae3.Transfer.createBufferUtf8;
+const TransferCreateCopierUtf8 = ae3.Transfer.createCopierUtf8;
+const TransferCreateCopierFromBinary = ae3.Transfer.createCopierFromBinary;
 
-const TransferCreateBufferUtf8 = Transfer.createBufferUtf8;
-const TransferCreateCopierUtf8 = Transfer.createCopierUtf8;
-const TransferCreateCopierFromBinary = Transfer.createCopierFromBinary;
+const FutureSimpleObject = ae3.Concurrent.FutureSimpleUnknown;
+const FutureSimpleString = ae3.Concurrent.FutureSimpleString;
+const FutureSimpleBinary = ae3.Concurrent.FutureSimpleBinary;
 
-const FutureSimpleObject = Concurrent.FutureSimpleUnknown;
-const FutureSimpleString = Concurrent.FutureSimpleString;
-const FutureSimpleBinary = Concurrent.FutureSimpleBinary;
+const TcpConnect = ae3.net.tcp.connect;
+const SslWrapClient = ae3.net.ssl.wrapClient;
 
-const ReplyParser = require('java.class/ru.myx.ae3.i3.web.http.client.ReplyParser');
+const ReplyParser = require("java.class/ru.myx.ae3.i3.web.http.client.ReplyParser");
 
 /**
  * to increment connection counters
  */
-const Stats = require('java.class/ru.myx.ae3.i3.web.http.client.HttpClientStatusProvider');
+const Stats = require("java.class/ru.myx.ae3.i3.web.http.client.HttpClientStatusProvider");
 
 // const UrlParseFn = URL.parse; // currently need to throw error
 
 /**
- * Future is sent as 'this' value
+ * Future is sent as "this" value
  * 
  * 
  * 
- * @param parameters fixed at 'bind'
+ * @param parameters fixed at "bind"
  * @param message
  * @param error
  */
@@ -45,9 +49,9 @@ function internCallbackSetFuture(parameters, message, code, error){
 }
 
 /**
- * callback sent as 'this' value
+ * callback sent as "this" value
  * 
- * @param parameters fixed at 'bind'
+ * @param parameters fixed at "bind"
  */
 function internRequestCallbackMessageToString(parameters, message, code, error){
 	if(!message){
@@ -69,13 +73,13 @@ function internRequestCallbackMessageToString(parameters, message, code, error){
 	}
 	// try{throw new Error("CHECKPOINT2: " + Format.jsDescribe({code:code, body:body, message:message, error:error}));}catch(e){body = e;}
 	// console.log(">>> >>>> " + Format.jsDescribe((body = new Error("CHECKPOINT2!"))));
-	this(null, code, body || (code + ' ' + message.title));
+	this(null, code, body || (code + " " + message.title));
 }
 
 /**
- * callback sent as 'this' value
+ * callback sent as "this" value
  * 
- * @param parameters fixed at 'bind'
+ * @param parameters fixed at "bind"
  */
 function internRequestCallbackMessageToBinary(parameters, message, code, error){
 	if(!message){
@@ -96,14 +100,14 @@ function internRequestCallbackMessageToBinary(parameters, message, code, error){
 		return;
 	}
 	body = message.toCharacter().text;
-	this(null, code, body || (code + ' ' + message.title));
+	this(null, code, body || (code + " " + message.title));
 }
 
 
 
 
 /**
- * stacked callback passed as 'this' value
+ * stacked callback passed as "this" value
  * 
  * @param parameters
  */
@@ -145,7 +149,7 @@ function internRequestCallbackMessageWithRedirects(parameters, message, code, er
 	 * make async GET
 	 */
 	// console.log(">>> >>> $$$$$$ callbackWithRedirects: check, location=" + location + ", params=" + Format.jsDescribe(parameters));
-	if(location.includes('://')){
+	if(location.includes("://")){
 		parameters = internParametersForGet(location);
 	}else{
 		parameters = Object.create(parameters);
@@ -164,7 +168,7 @@ function internRequestCallbackMessageWithRedirects(parameters, message, code, er
 
 
 /**
- * callback sent as 'this' value
+ * callback sent as "this" value
  * 
  * @param parameters
  */
@@ -177,7 +181,7 @@ function internConnectThenRequestCallbackMessage(parameters){
 	
 	// console.log(">>> >>> callbackConnect: start: " + protocol + ", " + hostname + ", " + port + ", " + host);
 	
-	var dividerPos = host ? host.indexOf(':') : -1;
+	var dividerPos = host ? host.indexOf(":") : -1;
 	
 	if(hostname){
 		//
@@ -189,17 +193,17 @@ function internConnectThenRequestCallbackMessage(parameters){
 	}
 	
 	if(port){
-		ssl = 'https:' === (protocol || (port === 443 || String(port).endsWith('443') ? 'https:' : 'http:'));
+		ssl = "https:" === (protocol || (port === 443 || String(port).endsWith("443") ? "https:" : "http:"));
 	}else//
 	if(dividerPos !== -1){
-		port = Number(host.substring(dividerPos + 1)) || ('http:' === protocol ? 80 : 443);
-		ssl = 'https:' === (protocol || (port === 443 || String(port).endsWith('443') ? 'https:' : 'http:'));
+		port = Number(host.substring(dividerPos + 1)) || ("http:" === protocol ? 80 : 443);
+		ssl = "https:" === (protocol || (port === 443 || String(port).endsWith("443") ? "https:" : "http:"));
 	}else{
-		ssl = 'http:' !== protocol;
+		ssl = "http:" !== protocol;
 		port = ssl ? 443 : 80;
 	}
 
-	ae3.net.tcp.connect(hostname, port, internRequestCallbackMessage.bind(this, parameters, hostname, port, ssl), {
+	TcpConnect(hostname, port, internRequestCallbackMessage.bind(this, parameters, hostname, port, ssl), {
 		connectTimeout : parameters.connectTimeout || 5000,
 		reuseTimeout : 5000,
 		reuseBuffer : 32,
@@ -209,7 +213,7 @@ function internConnectThenRequestCallbackMessage(parameters){
 }
 
 /**
- * callback sent as 'this' value
+ * callback sent as "this" value
  * 
  * @param parameters
  */
@@ -222,37 +226,37 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 
 	// console.log(">>> >>> $$$$$$ callbackMessage, start");
 
-	var method = parameters.method || 'GET';
-	var path = parameters.path || parameters.file || '';
+	var method = parameters.method || "GET";
+	var path = parameters.path || parameters.file || "";
 	var headers = parameters.headers ? Object.create(parameters.headers) : {};
 	var body = parameters.body;
 
 	for(;;){
 		switch(typeof body){
-		case 'undefined':
-		case 'null':
+		case "undefined":
+		case "null":
 			/**
 			 * makes NULL copier
 			 */
 			body = TransferCreateCopierUtf8(null);
 			break;
-		case 'string':
-		case 'number':
-		case 'boolean':
+		case "string":
+		case "number":
+		case "boolean":
 			body = TransferCreateCopierUtf8(String(body));
-			var cType = headers['Content-Type'];
+			var cType = headers["Content-Type"];
 			if(!cType){
-				headers['Content-Type'] = 'text/plain; charset=utf-8';
+				headers["Content-Type"] = "text/plain; charset=utf-8";
 			}else //
 			if(cType.startsWith("text/")){
-				var pos = cType.indexOf(';');
-				headers['Content-Type'] = (pos == -1 ? cType : cType.substr(0, pos)) + '; charset=utf-8';
+				var pos = cType.indexOf(";");
+				headers["Content-Type"] = (pos == -1 ? cType : cType.substr(0, pos)) + "; charset=utf-8";
 			}
 			break;
-		case 'function':
+		case "function":
 			body = body.call(parameters);
 			continue;
-		// case 'object':
+		// case "object":
 		default:
 			body = TransferCreateCopierFromBinary(body);
 			break;
@@ -260,18 +264,30 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 		break;
 	}
 
-	headers['User-Agent'] ??= (https ? "ae3.http secure client" : "ae3.http client");
-	headers['Content-Length'] = body.length();
-	headers['Host'] = parameters.host || (hostname + ':' + port);
-	headers['Connection'] = "close";
+	headers["User-Agent"] ??= (https ? "ae3.http secure client" : "ae3.http client");
+	headers["Content-Length"] = body.length();
+	headers["Host"] = parameters.host || (hostname + ":" + port);
+	headers["Connection"] = "close";
 
+	/** <code>
+	const outputCollector = Transfer.createCollector();
+	outputCollector.printFormatUtf8("%s %s%s%s %s\r\n", //
+		method,
+		path[0] === "/" ? " " : " /",
+		path ?? "",
+		parameters.search ?? "",
+		parameters.protocolVariant || "HTTP/1.1"
+	);
+	...
+
+	 * </code> */
 	// TODO: get TransferSocket. Send bytes; Or make $output work with TransferSocket as an argument
-	var output = '', key;
+	var output = "", key;
 	$output(output){
 		= method;
-		= path[0] === '/' ? ' ' : ' /';
-		= path ?? '';
-		= parameters.search ?? '';
+		= path[0] === "/" ? " " : " /";
+		= path ?? "";
+		= parameters.search ?? "";
 		if(parameters.protocolVariant){
 			= " "; 
 			= parameters.protocolVariant;
@@ -292,7 +308,7 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 	}
 	
 	if(https){
-		socket = ae3.net.ssl.wrapClient(socket, null, hostname || parameters.host, port, parameters.trustCA || null);
+		socket = SslWrapClient(socket, null, hostname || parameters.host, port, parameters.trustCA || null);
 		Stats.incrementConnectionsHttps();
 	}else{
 		Stats.incrementConnectionsHttp();
@@ -329,9 +345,9 @@ function internRequestCallbackMessage(parameters, hostname, port, https, socket)
 
 function internParametersForGet(urlStrOrMap){
 	if(!urlStrOrMap){
-		throw new Error('string or object parameter is expected!');
+		throw new Error("string or object parameter is expected!");
 	}
-	if('string' === typeof urlStrOrMap){
+	if("string" === typeof urlStrOrMap){
 		return new URL(urlStrOrMap);
 		// return UrlParseFn(urlStrOrMap) ?? (new Error("Invalid URL spec: " + urlStrOrMap)).throw();
 	}
@@ -355,8 +371,8 @@ function internParametersForPost(urlStrOrMap, postParameters){
 }
 
 function internCallback(urlStrOrMap, callback){
-	callback || (callback === undefined && 'string' !== typeof urlStrOrMap && (callback = urlStrOrMap.callback));
-	if(callback && ('function' !== typeof callback)){
+	callback || (callback === undefined && "string" !== typeof urlStrOrMap && (callback = urlStrOrMap.callback));
+	if(callback && ("function" !== typeof callback)){
 		throw new TypeError("callback present, but not a function, typeof: " + typeof callback);
 	}
 	return callback;
@@ -371,7 +387,7 @@ function internCallback(urlStrOrMap, callback){
  * see: http://nodejs.org/api/http.html
  * 
  * @param urlStrOrMap
- * @param callback when no explicit callback specified 'map.callback' will be checked.
+ * @param callback when no explicit callback specified "map.callback" will be checked.
  * @returns
  */
 function httpGet(urlStrOrMap, callback){
@@ -425,10 +441,10 @@ httpPost.asBinary = function httpPostReturnBinary(urlStrOrMap, postParameters, c
 /**
  * 
  * @param parameters {
- * 		hostname : defaults to 'localhost',
- * 		port : port, defaults to '80',
+ * 		hostname : defaults to "localhost",
+ * 		port : port, defaults to "80",
  * 		method : method name, defaults to "GET",
- * 		path : request path, defaults to '/',
+ * 		path : request path, defaults to "/",
  * 		headers : an object containing request headers,
  * 		body : an object (string or binary) representing the request body,
  * 		trustCA : optional, Root CA certificate (x509 string) to check trust against (TLS/SSL only)
@@ -441,7 +457,7 @@ function httpRequest(parameters, callback){
 		/*future.cancellable = */httpRequest(parameters, internCallbackSetFuture.bind(future, parameters));
 		return future;
 	}
-	if('function' !== typeof callback){
+	if("function" !== typeof callback){
 		throw new TypeError("callback present, but not a function, typeof: " + typeof callback);
 	}
 	/**
@@ -477,7 +493,7 @@ httpRequest.asString = function(parameters, callback){
 		/*future.cancellable = */httpRequest.asString(parameters, internCallbackSetFuture.bind(future, parameters));
 		return future;
 	}
-	if('function' !== typeof callback){
+	if("function" !== typeof callback){
 		throw new TypeError("callback present, but not a function, typeof: " + typeof callback);
 	}
 	callback = internRequestCallbackMessageToString.bind(callback, parameters);
@@ -499,7 +515,7 @@ httpRequest.asBinary = function(parameters, callback){
 		/*future.cancellable = */httpRequest.asBinary(parameters, internCallbackSetFuture.bind(future, parameters));
 		return future;
 	}
-	if('function' !== typeof callback){
+	if("function" !== typeof callback){
 		throw new TypeError("callback present, but not a function, typeof: " + typeof callback);
 	}
 	callback = internRequestCallbackMessageToBinary.bind(callback, parameters);
@@ -514,26 +530,26 @@ module.exports = {
 	 * get.
 	 * 
 	 * <code>
-	 * require('http').get('http://myx.co.nz/info')
-	 * require('http').get('http://myx.co.nz/info/')
+	 * require("http").get("http://myx.co.nz/info")
+	 * require("http").get("http://myx.co.nz/info/")
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').get.asString('http://myx.co.nz/info')
-	 * require('http').get.asString('http://myx.co.nz/info/')
+	 * require("http").get.asString("http://myx.co.nz/info")
+	 * require("http").get.asString("http://myx.co.nz/info/")
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').get.asString('https://myx.co.nz/info/')
-	 * require('http').get.asBinary('https://myx.co.nz/info/')
-	 * require('http').get.asString('https://ndls.ndm.myx.co.nz/administration/listAccounts')
-	 * require('http').get('https://ndls.ndm.myx.co.nz/administration/listAccounts')
+	 * require("http").get.asString("https://myx.co.nz/info/")
+	 * require("http").get.asBinary("https://myx.co.nz/info/")
+	 * require("http").get.asString("https://ndls.ndm.myx.co.nz/administration/listAccounts")
+	 * require("http").get("https://ndls.ndm.myx.co.nz/administration/listAccounts")
 	 * </code>
 	 * 
 	 * <ul>callback is:
-	 * <li>for 'get': function(message)</li>
-	 * <li>for 'get.asString': function(textBody[, resultCode, textError])</li>
-	 * <li>for 'get.asBinary': function(binaryBody[, resultCode, textError])</li>
+	 * <li>for "get": function(message)</li>
+	 * <li>for "get.asString": function(textBody[, resultCode, textError])</li>
+	 * <li>for "get.asBinary": function(binaryBody[, resultCode, textError])</li>
 	 * </ul>
 	 */
 	get : httpGet,
@@ -541,21 +557,21 @@ module.exports = {
 	 * post.
 	 * 
 	 * <code>
-	 * require('http').post('http://myx.co.nz/info/', { var1 : 1, var2 : '22222' })
+	 * require("http").post("http://myx.co.nz/info/", { var1 : 1, var2 : "22222" })
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').post.asString('http://myx.co.nz/info/', { var1 : 1, var2 : '22222' })
+	 * require("http").post.asString("http://myx.co.nz/info/", { var1 : 1, var2 : "22222" })
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').post.asBinary('http://myx.co.nz/info/', { var1 : 1, var2 : '22222' })
+	 * require("http").post.asBinary("http://myx.co.nz/info/", { var1 : 1, var2 : "22222" })
 	 * </code>
 	 * 
 	 * <ul>callback is:
-	 * <li>for 'post': function(message)</li>
-	 * <li>for 'post.asString': function(textBody[, resultCode, textError])</li>
-	 * <li>for 'post.asBinary': function(binaryBody[, resultCode, textError])</li>
+	 * <li>for "post": function(message)</li>
+	 * <li>for "post.asString": function(textBody[, resultCode, textError])</li>
+	 * <li>for "post.asBinary": function(binaryBody[, resultCode, textError])</li>
 	 * </ul>
 	 */
 	post : httpPost,
@@ -564,21 +580,21 @@ module.exports = {
 	 * request.
 	 * 
 	 * <code>
-	 * require('http').request({hostname:'myx.co.nz', port:80, method:'GET',path:'/info/', headers : { a : 5 }, body : ''})
+	 * require("http").request({hostname:"myx.co.nz", port:80, method:"GET",path:"/info/", headers : { a : 5 }, body : ""})
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').request.asString({hostname:'myx.co.nz', port:80, method:'GET', path:'/info/', headers : { a : 5 }, body : ''})
+	 * require("http").request.asString({hostname:"myx.co.nz", port:80, method:"GET", path:"/info/", headers : { a : 5 }, body : ""})
 	 * </code>
 	 * 
 	 * <code>
-	 * require('http').request.asBinary({hostname:'myx.co.nz', port:80, method:'GET', path:'/info/', headers : { a : 5 }, body : ''})
+	 * require("http").request.asBinary({hostname:"myx.co.nz", port:80, method:"GET", path:"/info/", headers : { a : 5 }, body : ""})
 	 * </code>
 	 * 
 	 * <ul>callback is:
-	 * <li>for 'request': function(message)</li>
-	 * <li>for 'request.asString': function(textBody[, resultCode, textError])</li>
-	 * <li>for 'request.asBinary': function(binaryBody[, resultCode, textError])</li>
+	 * <li>for "request": function(message)</li>
+	 * <li>for "request.asString": function(textBody[, resultCode, textError])</li>
+	 * <li>for "request.asBinary": function(binaryBody[, resultCode, textError])</li>
 	 * </ul>
 	 */
 	request : httpRequest,

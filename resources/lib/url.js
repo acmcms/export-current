@@ -5,6 +5,7 @@
  * URL object, part of CommonJS standard de-facto.
  * see: http://nodejs.org/api/url.html
  */
+import java.net.URL;
 
 function urlToString(){
 	return this.href;
@@ -12,7 +13,6 @@ function urlToString(){
 
 
 function urlParse(urlStr){
-	import java.net.URL;
 	var javaUrl;
 	try{
 		javaUrl = new URL(urlStr);

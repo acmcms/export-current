@@ -1,5 +1,11 @@
+/**
+ * 
+ */
+
 const ae3 = require("ae3");
-const Transfer = ae3.Transfer;
+
+const wrapCopier = ae3.Transfer.wrapCopier;
+
 const FN_FORMAT_BINARY_AS_HEX = Format.binaryAsHex;
 
 /**
@@ -136,7 +142,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 		crc = d.clone();
 		load.slice(16, load.length() - 16).updateMessageDigest(crc);
 		peer.secret.updateMessageDigest(crc);
-		crc = Transfer.wrapCopier(crc.result, 0, 16);
+		crc = wrapCopier(crc.result, 0, 16);
 		
 		if(load.slice(0, 16) != crc){
 			console.log("UDP::Read: crc-fail: iface: %s, peer: %s, crc mismatch, %s : %s != %s",
@@ -155,7 +161,7 @@ const onReceiveBufferImpl = module.exports = function(b, d, q /* locals: */, pkt
 			if(msg.isReply /** m.prototype.isRequest */){
 				console.log("UDP::Read: send-repeat: iface: %s, peer: %s, reply re-sent by peer, serial: %s, addr: %s:%s", 
 					this, 
-					peer.shortHostString ?? peer,
+					peer.shortHostString ?? peer, 
 					ms, 
 					pkt.sourceAddress.address.hostAddress, 
 					pkt.sourceAddress.port

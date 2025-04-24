@@ -7,6 +7,7 @@ const ReplyObject = ae3.Reply.object;
 const ReplyException = ae3.Reply.exception;
 const FormatXmlElement = Format.xmlElement;
 const FormatQueryStringParameters = Format.queryStringParameters;
+const QueryStringParseFn = require("querystring").parse;
 
 /**
  * bind first three arguments to constants to create different kinds of messages
@@ -129,8 +130,7 @@ const UiBasic = module.exports = ae3.Class.create(
 				admin === undefined && (admin = client.admin);
 				var command, icon;
 				if(client.userId){
-					import ru.myx.ae3.help.QueryString;
-					var params = QueryString.parseQueryString(query.parameterString, "utf-8");
+					var params = QueryStringParseFn(query.parameterString);
 					delete params.authUserId;
 					command = "?" + FormatQueryStringParameters(params);
 					icon = "cross";

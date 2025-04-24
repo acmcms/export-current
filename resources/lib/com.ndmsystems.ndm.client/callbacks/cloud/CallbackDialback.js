@@ -45,6 +45,13 @@ const HTTP_CONFIGURATION = {
 	ifModifiedSince : "before"
 };
 
+const HTTPS_CONFIGURATION = {
+	factory : "HTTPS",
+	ignoreTargetPort : true,
+	reverseProxied : true,
+	ifModifiedSince : "before"
+};
+
 
 
 
@@ -215,7 +222,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 							this.socket, //
 							this.requestCallback.bind(this), //
 							this.doServerWrap, //
-							HTTP_CONFIGURATION //
+							this.doServerWrap ? HTTPS_CONFIGURATION : HTTP_CONFIGURATION //
 					);
 					console.log("ndm.client::CallbackDialback:replyCallback: http server connected, %s", this.server);
 					return;
