@@ -71,7 +71,7 @@ function makeDataViewFragment(query, layout, extraCommands){
 		throw new Error("Field definition is empty!");
 	}
 
-	const filters = layout.filters;
+	const filters = layout.filters ?? context.layoutFilters;
 
 	const formatFull = query && query.parameters.format !== "clean";
 	
