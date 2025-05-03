@@ -297,7 +297,7 @@ samp, .samp{
 	text-overflow: ellipsis;
 }
 
-.hl {
+.ui-cell {
 	margin: 2pt;
 	padding: 2pt;
 	text-align: left;
@@ -427,7 +427,9 @@ DIV.user TD{
 	margin: 0;
 	padding: 0 1pt;
 }
-TD.hint, TH.hint, DIV.hint{
+
+ui-hint, DIV.ui-hint{
+	display: block;
 	font-size: 75%;
 	border: 1pt solid #7ff;
 	border-radius: 0 0 4pt 4pt;
@@ -436,25 +438,15 @@ TD.hint, TH.hint, DIV.hint{
 	margin: 0 0 1pt 0;
 	padding: 0;
 }
-.list-item{
-	font-size: 0.9em;
-	float: left;
-	border: 1pt solid #ddd;
-	border-radius: 0.5em;
-	background-color: #eee;
-	color: #00A;
-	padding: 0.025em 0.15em;
-	margin: 0.1em;
-}
-.ui-clear{
-	clear: both;
-	overflow: hidden;
-	height: 0;
-	border: 0;
-	padding: 0;
-	margin: 0;
+
+ui-sequence, DIV.ui-sequence {
+	display: block;
 }
 
+ui-sequence-item, SPAN.ui-sequence-item-compact {
+	display: inline-block;
+	float: left;
+}
 
 
 .ui-menu-btn-ini{
@@ -1051,14 +1043,16 @@ DIV.ui-illustration-central{
 
 
 .ui-label{
-	font-size: 9pt;
+	font-size: 0.9em;
+	display: inline-block;
 	border: 1pt solid #ddd;
-	border-radius: 1em;
+	border-radius: 0.5em;
 	background-color: #eee;
 	color: #00A;
-	padding: 0.1em 0.5em;
-	margin: 0.08em;
+	padding: 0.025em 0.15em;
+	margin: 0.1em;
 	max-width: 17em;
+	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
 }
@@ -1071,6 +1065,14 @@ DIV.ui-illustration-central{
 	float: right;
 }
 
+.ui-clear{
+	clear: both;
+	overflow: hidden;
+	height: 0;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
 
 .ui-pagebreak{
 	margin-bottom: 15em;

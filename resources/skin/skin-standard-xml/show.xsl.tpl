@@ -294,7 +294,7 @@
 													<div class="ui-menu-noscript count-1">
 														<div class="ui-menu-ns-scrn" alt="" title=""><table class="collapse" style="min-width: 100%; white-space: nowrap;"><tr><td>
 															<a href="/index" class="ui-cmd-link">
-																<div class="hl hl-bn- hl-ui- hl-hd- idx-box-cell">
+																<div class="ui-cell hl-bn- hl-ui- hl-hd- idx-box-cell">
 																	<div class="ui-cmd-icon">
 																		<img src="{$silk}house.png" class="icon"/>
 																	</div>
@@ -433,9 +433,9 @@
 				<xsl:variable name="head" select="substring-before(concat($values, $separator), $separator)" />
 				<xsl:variable name="tail" select="substring-after($values, $separator)" />
 	
-				<div class="list-item {$format/@itemCssClass}">
+				<span class="ui-sequence-item-compact ui-label ui-left {$format/@itemCssClass}">
 					<xsl:value-of select="$head"/>
-				</div>
+				</span>
 	
 				<xsl:call-template name="split-list">
 					<xsl:with-param name="format" select="$format" />
@@ -989,7 +989,7 @@
 				</xsl:attribute>
 			</xsl:if>
 			<thead>
-				<tr class="hl hl-bn-none">
+				<tr class="ui-cell hl-bn-none">
 					<th class="index" rowspan="{$rowspanCount}">#</th>
 					<xsl:for-each select="$line1">
 						<th class="{@id} {@extraClass}" colspan="{$colspanCount}">
@@ -1019,7 +1019,7 @@
 					</xsl:for-each>
 				</tr>
 				<xsl:if test="count($line2) &gt; 0">
-					<tr class="hl hl-bn-none" x-ui-debug="list/head/line2">
+					<tr class="ui-cell hl-bn-none" x-ui-debug="list/head/line2">
 						<xsl:for-each select="$line2">
 							<th class="{@id} {@extraClass}" x-ui-debug="list/line2/column {@id}">
 								<xsl:call-template name="formats-title">
@@ -1033,7 +1033,7 @@
 			<tbody class="table-list-tbody">
 				<xsl:for-each select="$rows">
 					<xsl:variable name="row" select="."/>
-					<tr class="hl hl-bn-{@hl}">
+					<tr class="ui-cell hl-bn-{@hl}">
 						<td class="index" rowspan="{$rowspanCount}">
 							<xsl:value-of select="position()"/>
 						</td>
@@ -1073,7 +1073,7 @@
 						</xsl:for-each>
 					</tr>
 					<xsl:if test="$line2">
-						<tr class="hl hl-bn-{@hl}">
+						<tr class="ui-cell hl-bn-{@hl}">
 							<xsl:for-each select="$line2">
 								<td class="{@id} {@extraClass} cell-tp-{@type}">
 									<xsl:variable name="cellColumn" select="."/>
@@ -1391,7 +1391,7 @@
 			<div class="table ui-edit-table-{$zoom} ui-select-view">
 				<xsl:variable name="id" select="generate-id($format)"/>
 				<xsl:for-each select="$format/option">
-					<div class="hl hl-bn-user hl-hd-false hl-ui-true idx-box-cell">
+					<div class="ui-cell hl-bn-user hl-hd-false hl-ui-true idx-box-cell">
 						<xsl:variable name="ido" select="generate-id(.)"/>
 						<input id="m{$id}-{$ido}" type="radio" name="{$id}" value="{$ido}" class="el-radio st-radio-sel">
 							<xsl:if test="$values/value = @value">
@@ -1463,14 +1463,16 @@
 		<xsl:param name="elements" />
 		<xsl:param name="format" />
 		<xsl:param name="value" />
+		<ui-sequence class="zoom-{$zoom}">
 		<xsl:for-each select="$elements | $value/*[not($elements) and local-name() = $format/@elementName]">
-			<span x-ui-debug="sequence" class="{$format/@itemCssClass}">
+			<ui-sequence-item class="{$format/@itemCssClass} zoom-{$zoom}">
 				<xsl:apply-templates select=".">
 					<xsl:with-param name="format" select="."/>
 					<xsl:with-param name="value" select="$value"/>
 				</xsl:apply-templates>
-			</span>
+			</ui-sequence-item>
 		</xsl:for-each>
+		</ui-sequence>
 	</xsl:template>
 
 	<xsl:template match="sequence | *[@layout='sequence']">
@@ -1519,7 +1521,7 @@
 				</span>
 			</xsl:when>
 			<xsl:otherwise>
-				<tr class="hl hl-bn-{$format/@hl} {$format/@cssClass}">
+				<tr class="ui-cell hl-bn-{$format/@hl} {$format/@cssClass}">
 					<xsl:if test="$format/@title or $format/title">
 						<td class="field fldkey">
 							<xsl:call-template name="formats-title">
@@ -1715,7 +1717,7 @@
 			</xsl:if>
 			<xsl:for-each select="$items">
 				<a href="{@key}{@url}" class="ui-cmd-link">
-					<div class="hl hl-bn-{@access} hl-hd-{@hidden} hl-ui-{@ui} idx-box-cell">
+					<div class="ui-cell hl-bn-{@access} hl-hd-{@hidden} hl-ui-{@ui} idx-box-cell">
 						<div class="ui-cmd-icon">
 							<xsl:if test="@icon">
 								<img src="{$silk}{@icon}.png" class="icon"/>
@@ -1796,7 +1798,7 @@
 			<table class="table ui-view-table-{$zoom} {$format/@cssClass}">
 				<xsl:for-each select="$items">
 					<xsl:variable name="field" select="."/>
-					<tr class="hl hl-bn-{@hl} hl-hd-{@hidden} {@cssClass}">
+					<tr class="ui-cell hl-bn-{@hl} hl-hd-{@hidden} {@cssClass}">
 						<td class="field fldkey">
 							<xsl:call-template name="formats-title">
 								<xsl:with-param name="format" select="."/>
@@ -2055,10 +2057,10 @@
 	<xsl:template name="hint">
 		<xsl:choose>
 			<xsl:when test="@hint">
-				<div class="hint"><xsl:value-of disable-output-escaping="yes" select="@hint"/></div>
+				<div class="ui-hint"><xsl:value-of disable-output-escaping="yes" select="@hint"/></div>
 			</xsl:when>
 			<xsl:when test="hint">
-				<div class="hint"><xsl:apply-templates select="hint/node()"/></div>
+				<div class="ui-hint"><xsl:apply-templates select="hint/node()"/></div>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
@@ -2105,7 +2107,7 @@
 				</a>
 			<!-- /xsl:when /-->
 			<!-- xsl:otherwise /-->
-				<!-- div class="hint">22222</div /-->
+				<!-- div class="ui-hint">22222</div /-->
 			<!-- /xsl:otherwise /-->
 		<!-- /xsl:choose /-->
 	</xsl:template>
@@ -2465,7 +2467,7 @@
 			<div style="clear:both; margin-bottom: 9pt">
 				<div class="tbar-up" style="display: inline-block; opacity: 0.5">Message:</div>
 				<div id="{$unique}-msg" class="ui-menu-{$zoom}">
-					<div class="hl hl-bn-error idx-box-cell">
+					<div class="ui-cell hl-bn-error idx-box-cell">
 						<xsl:apply-templates select="message | @message[not(message)]"/>
 					</div>
 				</div>
@@ -2522,7 +2524,7 @@
 						</xsl:when>
 						<xsl:when test="local-name()='command'">
 							<a href="{@key}" class="ui-cmd-link">
-								<div class="hl hl-bn-{@access} hl-hd-{@hidden} hl-ui-{@ui} idx-box-cell">
+								<div class="ui-cell hl-bn-{@access} hl-hd-{@hidden} hl-ui-{@ui} idx-box-cell">
 									<xsl:copy-of select="$iconWithTitle"/>
 									<xsl:if test="$itemZoom != 'compact'">
 										<xsl:for-each select="preview">
@@ -2542,7 +2544,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<a href="{@key}" class="ui-cmd-link">
-								<div class="hl hl-bn-{@access} hl-hd-{@hidden} hl-ui-{@ui} idx-grp-cell">
+								<div class="ui-cell hl-bn-{@access} hl-hd-{@hidden} hl-ui-{@ui} idx-grp-cell">
 									<xsl:copy-of select="$iconWithTitle"/>
 									<xsl:if test="not(@depthLimit) or (@depthLimit &gt; $depth)">
 										<xsl:apply-templates select=".">
