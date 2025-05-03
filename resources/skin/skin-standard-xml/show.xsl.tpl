@@ -58,9 +58,7 @@
 						</xsl:if>
 					</title>
 					<xsl:if test="@baseURI">
-						<base>
-							<xsl:attribute name="href"><xsl:value-of select='@baseURI'/></xsl:attribute>
-						</base>
+						<base href="{@baseURI}"/>
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="client/@develRoot">
@@ -854,13 +852,25 @@
 							<img src="{$silk}{$format/@icon}.png" class="icon"/>
 						</div>
 						<div class="ui-cmd-text">
-							<a href="{$format/@prefix}{$href}{$format/@suffix}">
+							<a>
+								<xsl:if test="not($format/@field) or $href != ''">
+									<xsl:attribute name="href"><xsl:value-of select="$format/@prefix"/><xsl:value-of select="$href"/><xsl:value-of select="$format/@suffix"/></xsl:attribute>
+								</xsl:if>
+								<xsl:if test="$format/@anchor">
+									<xsl:attribute name="name"><xsl:value-of select="$format/@anchor"/></xsl:attribute>
+								</xsl:if>
 								<xsl:apply-templates select="$value"/>
 							</a>
 						</div>
 					</xsl:when>
 					<xsl:otherwise>
-						<a href="{$format/@prefix}{$href}{$format/@suffix}">
+						<a>
+							<xsl:if test="not($format/@field) or $href">
+								<xsl:attribute name="href"><xsl:value-of select="$format/@prefix"/><xsl:value-of select="$href"/><xsl:value-of select="$format/@suffix"/></xsl:attribute>
+							</xsl:if>
+							<xsl:if test="$format/@anchor">
+								<xsl:attribute name="name"><xsl:value-of select="$format/@anchor"/></xsl:attribute>
+							</xsl:if>
 							<xsl:apply-templates select="$value"/>
 						</a>
 					</xsl:otherwise>
