@@ -1,4 +1,4 @@
 {
-	type		: "ae3.web/Share",
-	reference	: "ru.myx.ae3.example/HelloWorldWebShare"
+	"type"		: "ae3.web/Share",
+	"reference"	: "ru.myx.ae3.example/HelloWorldWebShare"
 }

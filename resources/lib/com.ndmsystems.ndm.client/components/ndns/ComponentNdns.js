@@ -42,8 +42,52 @@ const ComponentNdns = module.exports = ae3.Class.create(
 			 */
 			value : null
 		},
+
+		cliNdnsCheck : {
+			value : function(name, domain){
+				const clientRequest = this.client.createClientRequest();
+				ComponentNdns.RequestNdnsCheck.append.call(this.client, clientRequest, name, domain);
+				return !!clientRequest.launch();
+			}
+		},
+
+		cliNdnsBook : {
+			value : function(name, domain, address4, access4, address6, access6, transfer){
+				const clientRequest = this.client.createClientRequest();
+				ComponentNdns.RequestNdnsBook.append.call(this.client, clientRequest, name, domain, address4, access4, address6, access6, transfer);
+				return !!clientRequest.launch();
+			}
+		},
+		
+		cliNdnsUpdate : {
+			value : function(address4, access4, address6, access6){
+				const clientRequest = this.client.createClientRequest();
+				ComponentNdns.RequestNdnsUpdate.append.call(this.client, clientRequest, address4, access4, address6, access6);
+				return !!clientRequest.launch();
+			}
+		},
+
+		cliNdnsDrop : {
+			value : function(name, domain){
+				const clientRequest = this.client.createClientRequest();
+				ComponentNdns.RequestNdnsDrop.append.call(this.client, clientRequest, name, domain);
+				return !!clientRequest.launch();
+			}
+		},
 	},
 	{
+		RequestNdnsCheck : {
+			value : require("./RequestNdnsCheck")
+		},
+		RequestNdnsBook : {
+			value : require("./RequestNdnsBook")
+		},
+		RequestNdnsUpdate : {
+			value : require("./RequestNdnsUpdate")
+		},
+		RequestNdnsDrop : {
+			value : require("./RequestNdnsDrop")
+		},
 		newInstance : {
 			value : function(client){
 				return new ComponentNdns(client);

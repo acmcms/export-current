@@ -1,14 +1,11 @@
-var ae3 = require("ae3");
-var vfs = ae3.vfs;
-
-var Settings = ae3.Util.Settings;
+const ae3 = require("ae3");
 
 var started = {};
 var starting = {};
 var stopping = {};
 var state = {};
 
-const getSettings = Settings.SettingsBuilder.builderCachedLazy()//
+const getSettings = ae3.Util.Settings.SettingsBuilder.builderCachedLazy()//
 	.setInputFolderPath("settings/service")//
 	.setDescriptorReducer(function(settings, description){
 		if (description.type != "ae3.Service") {
@@ -253,10 +250,13 @@ var commands = {
  */
 exports.run = function run() {
 	if (arguments.length < 2) {
-		console.sendMessage("service command syntax:\r\n"
-				+ "\tservice list\r\n" + "\tservice active\r\n"
-				+ "\tservice start <service_name>\r\n"
-				+ "\tservice stop <service_name>\r\n" + "");
+		console.sendMessage(//
+			"service command syntax:\r\n" + //
+			"\tservice list\r\n" + "\tservice active\r\n" + //
+			"\tservice start <service_name>\r\n" + //
+			"\tservice stop <service_name>\r\n" + //
+			"\tservice start-all\r\n" + //
+			"");
 		return false;
 	}
 	// clone/create as a normal array

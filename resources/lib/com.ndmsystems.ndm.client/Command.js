@@ -4,6 +4,8 @@ const ae3 = require("ae3");
  * NDMC shell command-line interface
  */
 
+
+
 var commands = {
 	help : {
 		args : "",
@@ -22,8 +24,28 @@ var commands = {
 		help : "list clients",
 		run : function(args) {
 			const NdmCloudService = require('./NdmCloudService');
+			const clients = NdmCloudService.getClients();
 			console.sendMessage(
-				Format.jsObjectReadable(NdmCloudService.getClients())
+				Format.jsObjectReadable(Object.keys(clients).map(function(key){ return clients[key].toString(); }))
+			);
+			return true;
+		}
+	},
+	show : {
+		args : "<clientAlias>",
+		help : "show client detailed status information and settings",
+		run : function(args) {
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
+			}
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
+			console.sendMessage(
+				Format.jsObjectReadable(client)
 			);
 			return true;
 		}
@@ -34,26 +56,14 @@ var commands = {
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("ndm.client: Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
 			}
-			const NdmCloudService = require('./NdmCloudService');
-			const client = NdmCloudService.getClient(clientId);
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
 			const future = client.run(console);
-			return !!future;
-		}
-	},
-	register : {
-		args : "<clientAlias> [<reason>]",
-		help : "perform registration",
-		run : function(args) {
-			const clientId = args.shift();
-			if(!clientId){
-				return console.fail("ndm.client: Not enough arguments!");
-			}
-			const reason = args.shift() || 'manual';
-			const NdmCloudService = require('./NdmCloudService');
-			const client = NdmCloudService.getClient(clientId);
-			const future = client.doRegister(reason);
 			return !!future;
 		}
 	},
@@ -63,10 +73,13 @@ var commands = {
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("ndm.client: Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
 			}
-			const NdmCloudService = require('./NdmCloudService');
-			const client = NdmCloudService.getClient(clientId);
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
 			console.sendMessage(client.next());
 			return true;
 		}
@@ -77,117 +90,106 @@ var commands = {
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("ndm.client: Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
 			}
-			const NdmCloudService = require('./NdmCloudService');
-			const client = NdmCloudService.getClient(clientId);
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
 			console.sendMessage(Math.max(0, client.next() - Date.now()));
 			return true;
 		}
 	},
 	print : {
 		args : "<clientAlias>",
-		help : "print general client information and settings",
+		help : "print general client description",
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("ndm.client: Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
 			}
-			const NdmCloudService = require('./NdmCloudService');
-			const client = NdmCloudService.getClient(clientId);
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
 			console.sendMessage("client: " + client.toString());
 			return true;
 		}
 	},
-	setup : {
-		// ndm.client setup default ndss.myx.nz 997195123879923 0spmyvum9sq8727
-		// ndm.client setup local ndss.macmyxpro.local 075771260069315 KWrNhOJV3263192
-		args : "<clientAlias> <ndssHost> <licenseNumber> <serviceKey>",
-		help : "configure NDSS Client",
-		run : function(args) {
-			const clientId = args.shift();
-			const ndssHost = args.shift();
-			const licenseNumber = args.shift();
-			const serviceKey = args.shift() || '';
-			if(!licenseNumber){
-				return console.fail("ndm.client: Not enough arguments!");
-			}
-			const NdmCloudService = require('./NdmCloudService');
-			
-			return !!NdmCloudService.updateClient(clientId, ndssHost, licenseNumber, serviceKey);
-		}
-	},
-	drop : {
-		args : "<clientAlias> <licenseNumber> <serviceKey>",
-		help : "removes NDSS Client",
-		run : function(args) {
-			var clientId = args.shift();
-			var licenseNumber = args.shift();
-			var serviceKey = args.shift();
-			throw "Not yet!";
-			return true;
-		}
-	},
-	"ndmp/link" : {
-		/* ndm.client ndmp/link default ndss.local */
-		args : "<clientAlias> [--force-new]",
-		help : "Creates a link with NDMP service",
+	"base/register" : {
+		args : "<clientAlias> [<reason>]",
+		help : "perform registration",
 		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("ndm.client: Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
 			}
-			const forceNew = args.shift();
-			if(forceNew && forceNew !== "--force-new"){
-				return console.fail("ndm.client: '--force-new' it the only allowed value!");
-			}
-			const NdmCloudService = require('./NdmCloudService');
-			const client = NdmCloudService.getClient(clientId);
+			const client = require('./NdmCloudService').getClient(clientId);
 			if(!client){
 				return console.fail("ndm.client: Client is unknown: " + clientId);
 			}
 
-			const link = client.components.ndmp.prepareMatingLink(forceNew);
-			if(link){
-				console.log("ndm.client: ndmp link url is: " + link);
-				return true;
-			}
-			return console.fail("ndm.client: ndmp link is not available!");
+			const base = client.components.base;
+			
+			const reason = args.shift() || 'manual';
+			
+			return base.cliBaseRegister(reason);
 		}
 	},
-	"ndmp/unlink" : {
-		/* ndm.client ndmp/link default ndss.local */
-		args : [
-			"--all",
-			"<clientAlias>",
-		],
-		run : function(args){
+	"base/versions" : {
+		args : "<clientAlias>",
+		help : "list firmware versions",
+		run : function(args) {
 			const clientId = args.shift();
 			if(!clientId){
-				return console.fail("ndm.client: Not enough arguments!");
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
 			}
-
-			const NdmCloudService = require('./NdmCloudService');
-			if(clientId === '--all'){
-				for(let client of NdmCloudService.getClients()){
-					if(!client.components.ndmp.invalidateMatingKeys(true)){
-						return console.fail("ndm.client: ndmp unlink is not available!, client: %s", Format.jsObjectReadable(client));
-					}
-					console.sendMessage("client: " + client.clientId + ", ndmp link data clean");
-				}
-				return true;
-			}
-			
-			const client = NdmCloudService.getClient(clientId);
+			const client = require('./NdmCloudService').getClient(clientId);
 			if(!client){
 				return console.fail("ndm.client: Client is unknown: " + clientId);
 			}
 
-			const result = client.components.ndmp.invalidateMatingKeys(true);
-			if(result){
-				return true;
+			const base = client.components.base;
+
+			return base.cliBaseVersions();
+		}
+	},
+	"base/components" : {
+		args : "<clientAlias> <channel>",
+		help : "list firmware components",
+		run : function(args) {
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
 			}
-			return console.fail("ndm.client: ndmp unlink is not available!");
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
+			const base = client.components.base;
+
+			const channel = args.shift() || "draft";
+
+			return base.cliBaseComponents(channel);
+		}
+	},
+	"base/firmware" : {
+		args : "<clientAlias> [<channel>]",
+		help : "download firmware",
+		run : function(args) {
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
+			}
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
+			return console.fail("unsupported");
 		}
 	},
 	"ndmp/status" : {
@@ -199,8 +201,7 @@ var commands = {
 			if(!clientId){
 				return console.fail("ndm.client: Not enough arguments!");
 			}
-			const NdmCloudService = require('./NdmCloudService');
-			const client = NdmCloudService.getClient(clientId);
+			const client = require('./NdmCloudService').getClient(clientId);
 			if(!client){
 				return console.fail("ndm.client: Client is unknown: " + clientId);
 			}
@@ -215,37 +216,184 @@ var commands = {
 			return console.fail("ndm.client: ndmp service is not linked!");
 		}
 	},
+	"ndmp/services" : {
+		args : "<clientAlias> [<service1> [<service2> ...]]",
+		help : "Updates and displays name booking information",
+		run : function(args) {
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("ndm.client: Not enough arguments!");
+			}
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
+			const ndmp = client.components.ndmp;
+
+			return ndmp.cliNdmpServices(args);
+		}
+	},
+	"ndmp/link" : {
+		/* ndm.client ndmp/link default ndss.local */
+		args : "<clientAlias> <serviceId> [--force-new]",
+		help : "Creates a link with NDMP service",
+		run : function(args) {
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
+			}
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
+			const serviceId = args.shift();
+			if(!serviceId){
+				return console.fail("ndm.client: Not enough arguments: serviceId argument expected!");
+			}
+			const forceNew = args.shift();
+			if(forceNew && forceNew !== "--force-new"){
+				return console.fail("ndm.client: '--force-new' it the only allowed value!");
+			}
+			
+			const link = client.components.ndmp.prepareMatingLink(forceNew);
+			if(link){
+				console.log("ndm.client: ndmp link url is: " + link);
+				return true;
+			}
+			return console.fail("ndm.client: ndmp link is not available!");
+		}
+	},
+	"ndmp/unlink" : {
+		/* ndm.client ndmp/link default ndss.local */
+		args : [
+			"<clientAlias> <serviceId>",
+			"<clientAlias> [--all]",
+		],
+		run : function(args){
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("ndm.client: Not enough arguments: clientAlias argument expected!");
+			}
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
+			const serviceId = args.shift();
+			if(!serviceId){
+				return console.fail("ndm.client: Not enough arguments: serviceId argument expected!");
+			}
+
+			const NdmCloudService = require('./NdmCloudService');
+			if(serviceId === '--all'){
+				for(let client of NdmCloudService.getClients()){
+					if(!client.components.ndmp.invalidateMatingKeys(true)){
+						return console.fail("ndm.client: ndmp unlink is not available!, client: %s", Format.jsObjectReadable(client));
+					}
+					console.sendMessage("client: " + client.clientId + ", ndmp link data clean");
+				}
+				return true;
+			}
+
+			const result = client.components.ndmp.invalidateMatingKeys(true);
+			if(result){
+				return true;
+			}
+			return console.fail("ndm.client: ndmp unlink is not available!");
+		}
+	},
+	"ndns/check" : {
+		args : "<clientAlias> [<hostName> [<domainName>]]",
+		help : "Check available NDNS names/domains",
+		run : function(args) {
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("ndm.client: Not enough arguments!");
+			}
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
+			const ndns = client.components.ndns;
+
+			const name = args.shift() || undefined;
+			const domain = args.shift() || undefined;
+
+			return ndns.cliNdnsCheck(name, domain);
+		}
+	},
+	"ndns/book" : {
+		args : "<clientAlias> <hostName> <domainName> [<address4> <access4> <address6> <access6> [<transfer>]]",
+		help : "Book NDNS domain name",
+		run : function(args) {
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("ndm.client: Not enough arguments!");
+			}
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
+			const ndns = client.components.ndns;
+
+			const name = args.shift() || undefined;
+			const domain = args.shift() || undefined;
+			const address4 = args.shift() || undefined;
+			const access4 = args.shift() || undefined;
+			const address6 = args.shift() || undefined;
+			const access6 = args.shift() || undefined;
+			const transfer = args.shift() || undefined;
+
+			return ndns.cliNdnsBook(name, domain, address4, access4, address6, access6, transfer);
+		}
+	},
 	"ndns/update" : {
 		args : "<clientAlias> [<wanAddress> [<accessMode>]]",
 		help : "Updates and displays name booking information",
 		run : function(args) {
-			var clientId = args.shift();
-			var licenseNumber = args.shift();
-			var serviceKey = args.shift();
-			throw "Not yet!";
-			return true;
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("ndm.client: Not enough arguments!");
+			}
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
+			const ndns = client.components.ndns;
+	
+			const address4 = args.shift() || undefined;
+			const access4 = args.shift() || undefined;
+			const address6 = args.shift() || undefined;
+			const access6 = args.shift() || undefined;
+	
+			return ndns.cliNdnsUpdate(address4, access4, address6, access6);
 		}
 	},
-	"ndns/book" : {
+	"ndns/drop" : {
+		/** TODO: maybe display as suggestions in ndns/check */
 		args : "<clientAlias> <hostName> <domainName>",
-		help : "removes NDSS Client",
+		help : "Drop NDNS booking",
 		run : function(args) {
-			var clientId = args.shift();
-			var licenseNumber = args.shift();
-			var serviceKey = args.shift();
-			throw "Not yet!";
-			return true;
-		}
-	},
-	"ndns/check" : {
-		args : "<clientAlias> <hostName> [<domainName>]",
-		help : "removes NDSS Client",
-		run : function(args) {
-			var clientId = args.shift();
-			var licenseNumber = args.shift();
-			var serviceKey = args.shift();
-			throw "Not yet!";
-			return true;
+			const clientId = args.shift();
+			if(!clientId){
+				return console.fail("ndm.client: Not enough arguments!");
+			}
+			const client = require('./NdmCloudService').getClient(clientId);
+			if(!client){
+				return console.fail("ndm.client: Client is unknown: " + clientId);
+			}
+
+			const ndns = client.components.ndns;
+
+			const name = args.shift() || undefined;
+			const domain = args.shift() || undefined;
+
+			return ndns.cliNdnsDrop(name, domain);
 		}
 	},
 };

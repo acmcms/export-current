@@ -12,6 +12,30 @@ const SslUnwrap = ae3.net.ssl.unwrap;
 const SslWrapServer = ae3.net.ssl.wrapServer;
 const HttpServerParser = ae3.web.HttpServerParser;
 
+const BackendTargetAbsorbFn = (function(){
+	const WebInterface = ae3.web.WebInterface;
+	const Produce = require("java.class/ru.myx.ae3.produce.Produce");
+	
+	const targetBackend = Produce.targetLeast("DIALBACK-BACKEND", new WebInterface(), //
+		// filter array
+		[ //
+			{ //
+				factory : "GEO"
+			}, //
+			{ //
+				factory : "FASTREPLY"
+			}, //
+		] //
+	);
+	
+	console.log("ndm.client::CallbackDialback: backend: %s", targetBackend);
+
+	return targetBackend?.absorb.bind(targetBackend) ?? (function(query){
+		console.error("ndm.client::CallbackDialback:requestCallback: backend is not available.");
+		return this.dispatch(query);
+	}).bind(WebInterface);
+})();
+
 const TUNNEL_BY_SERVER_PORT = {}; {
 	/** tunnel is raw, tunnel data is tls **/
 	[443,5083,5443,8083,8443,65083]
@@ -39,19 +63,12 @@ const CONNECT_CONFIGURATION = {
 };
 
 const HTTP_CONFIGURATION = {
-	factory : "HTTP",
 	ignoreTargetPort : true,
+	ignoreGzip : false,
+	ignoreKeepAlive : false,
 	reverseProxied : true,
 	ifModifiedSince : "before"
 };
-
-const HTTPS_CONFIGURATION = {
-	factory : "HTTPS",
-	ignoreTargetPort : true,
-	reverseProxied : true,
-	ifModifiedSince : "before"
-};
-
 
 
 
@@ -87,6 +104,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 						this.doClientWrap = false;
 						this.doClientUnwrap = false;
 						this.doServerWrap = true;
+						this.isSecure = true;
 						return true;
 					}
 					if(!this.handshakeData && override.forceCertificateValidation){
@@ -100,6 +118,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 					this.doClientWrap = true;
 					this.doClientUnwrap = true;
 					this.doServerWrap = true;
+					this.isSecure = true;
 					return true;
 				case "tls":
 					if(!this.handshakeData && override.forceCertificateValidation){
@@ -113,6 +132,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 					this.doClientWrap = true;
 					this.doClientUnwrap = false;
 					this.doServerWrap = false;
+					this.isSecure = false;
 					return true;
 				}
 				console.log(
@@ -222,7 +242,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 							this.socket, //
 							this.requestCallback.bind(this), //
 							this.doServerWrap, //
-							this.doServerWrap ? HTTPS_CONFIGURATION : HTTP_CONFIGURATION //
+							HTTP_CONFIGURATION //
 					);
 					console.log("ndm.client::CallbackDialback:replyCallback: http server connected, %s", this.server);
 					return;
@@ -235,11 +255,17 @@ const CallbackDialback = module.exports = ae3.Class.create(
 		"requestCallback" : {
 			value : function(query){
 				if(query && this.clientAddress) {
-					query = query.addAttribute("X-Forwarded-For", this.clientAddress);
-					query = query.addAttribute("X-Debug", "through ndm.client::uhp::dialback");
+					query = query//
+						.setSourceAddressExact(this.socket.remoteAddress) //
+						.setSourceAddress(this.clientAddress) //
+						.addAttribute("Secure", this.isSecure) //
+						.addAttribute("X-Debug", "through ndm.client::uhp::dialback") //
+						.addAttribute("X-Real-IP", this.clientAddress) //
+						.addAttribute("X-Forwarded-For", this.clientAddress + "," + this.socket.remoteAddress) //
+					;
 				}
 				console.log("ndm.client::CallbackDialback:requestCallback: web request: %s", Format.jsDescribe(query));
-				return ae3.web.WebInterface.dispatch(query);
+				return BackendTargetAbsorbFn(query);
 			}
 		},
 	},

@@ -14,7 +14,7 @@ const ComponentCloud = module.exports = ae3.Class.create(
 			value : "cloud"
 		},
 		acceptXmlNotifications : {
-			value : ['ubA','ut3']
+			value : ["ut3"]
 		},
 		
 		requestXmlNotifications : {
@@ -42,8 +42,19 @@ const ComponentCloud = module.exports = ae3.Class.create(
 			 */
 			value : null
 		},
+
+		cliNrpcUpdate : {
+			value : function(){
+				const clientRequest = this.client.createClientRequest();
+				ComponentNrpc.RequestNrpcUpdate.append.call(this.client, clientRequest);
+				return !!clientRequest.launch();
+			}
+		},
 	},
 	{
+		RequestNrpcUpdate : {
+			value : require("./RequestNrpcUpdate")
+		},
 		newInstance : {
 			value : function(client){
 				return new ComponentCloud(client);

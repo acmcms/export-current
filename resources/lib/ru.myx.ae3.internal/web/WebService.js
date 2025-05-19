@@ -1,7 +1,13 @@
+/**
+ * 
+ */
+
 import ru.myx.ae3.produce.Produce;
 import ru.myx.ae3.flow.ObjectTarget;
 
 function requireHTTPD(){
+	
+	console.log("WEB-SERVICE: initialize HTTPd");
 	
 	require("java.class/ru.myx.ae3.i3.web.http.Main").main( null );
 	require("java.class/ru.myx.ae3.i3.web.telnet.Main").main( null );
@@ -17,8 +23,10 @@ function requireHTTPD(){
 }
 
 function startWeb(){
+	console.log("WEB-SERVICE: starting WEB...");
+
 	import ru.myx.ae3.i3.web.WebInterface;
-	var target = new WebInterface();
+	const target = new WebInterface();
 	return target && //
 	Produce.connectLeast("HTTP", target, //
 		// filter array
@@ -53,36 +61,36 @@ function startWeb(){
 		} //
 	) && //
 	Produce.connectLeast("HTTP", target, //
-			// filter array
-			[ //
-				{
-					factory	: "POOL",
-					limit	: 32,
-					queue	: 256,
-					timeout	: "10s"
-				},
-				{ //
-					factory : "GEO"
-				}, //
-				{ //
-					factory : "FASTREPLY"
-				}, //
-				{ //
-					factory : "HTTP",
-					ignoreTargetPort : true,
-					ignoreGzip : false,
-					ignoreKeepAlive : false,
-					reverseProxied : true,
-					ifModifiedSince : "before"
-				} //
-			], //
-			"ACCEPT",
-			// source attributes
+		// filter array
+		[ //
+			{
+				factory	: "POOL",
+				limit	: 32,
+				queue	: 256,
+				timeout	: "10s"
+			},
 			{ //
-				host : "*", //
-				port : 81 //
+				factory : "GEO"
+			}, //
+			{ //
+				factory : "FASTREPLY"
+			}, //
+			{ //
+				factory : "HTTP",
+				ignoreTargetPort : true,
+				ignoreGzip : false,
+				ignoreKeepAlive : false,
+				reverseProxied : true,
+				ifModifiedSince : "before"
 			} //
-		) && //
+		], //
+		"ACCEPT",
+		// source attributes
+		{ //
+			host : "*", //
+			port : 81 //
+		} //
+	) && //
 	Produce.connectLeast("HTTPS", target,
 		// filter array
 		[ //
@@ -174,7 +182,9 @@ function startWeb(){
 }
 
 function startTelnet(){
-	var target = Produce.object(ObjectTarget, "TELNET", null, null);
+	console.log("WEB-SERVICE: starting TELNET...");
+
+	const target = Produce.object(ObjectTarget, "TELNET", null, null);
 	return target && //
 	Produce.connectLeast("TELNET", target, //
 		// filter array
@@ -190,7 +200,9 @@ function startTelnet(){
 }
 
 function startSsh(){
-	var target = Produce.object(ObjectTarget, "SSH", null, null);
+	console.log("WEB-SERVICE: starting SSH...");
+
+	const target = Produce.object(ObjectTarget, "SSH", null, null);
 	return target && //
 	Produce.connectLeast("SSH", target, //
 		// filter array
@@ -206,7 +218,9 @@ function startSsh(){
 }
 
 function startDmesg(){
-	var target = Produce.object(ObjectTarget, "DMESG", null, null);
+	console.log("WEB-SERVICE: starting DMESG...");
+
+	const target = Produce.object(ObjectTarget, "DMESG", null, null);
 	return target && //
 	Produce.connectLeast("DMESG", target, //
 		// filter array
@@ -233,5 +247,8 @@ exports.start = function start() {
 	if(startWeb() && startTelnet() && startSsh() && startDmesg()){
 		return true; 
 	}
-	throw "fuck";
+
+	console.error("WEB-SERVICE: Cannot start!");
+
+	throw "WEB-SERVICE: Cannot start!";
 };

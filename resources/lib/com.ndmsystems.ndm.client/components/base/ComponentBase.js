@@ -53,8 +53,51 @@ const ComponentBase = module.exports = ae3.Class.create(
 			 */
 			value : null
 		},
+		
+		
+		cliBaseRegister : {
+			value : function(reason){
+				const clientRequest = this.client.createClientRequest();
+				ComponentBase.RequestBaseRegister.append.call(this.client, clientRequest, reason);
+				return !!clientRequest.launch();
+			}
+		},
+		
+		cliBaseVersions : {
+			value : function(){
+				const clientRequest = this.client.createClientRequest();
+				ComponentBase.RequestBaseVersions.append.call(this.client, clientRequest);
+				return !!clientRequest.launch();
+			}
+		},
+		
+		cliBaseComponents : {
+			value : function(channel){
+				const clientRequest = this.client.createClientRequest();
+				ComponentBase.RequestBaseComponents.append.call(this.client, clientRequest, channel);
+				return !!clientRequest.launch();
+			}
+		},
+		
+		cliBaseFirmware : {
+			value : function(channel, components){
+				const clientRequest = this.client.createClientRequest();
+				ComponentBase.RequestBaseFirmware.append.call(this.client, clientRequest, channel, components);
+				return !!clientRequest.launch();
+			}
+		},
+	
 	},
 	{
+		RequestBaseRegister : {
+			value : require("./RequestBaseRegister")
+		},
+		RequestBaseVersions : {
+			value : require("./RequestBaseVersions")
+		},
+		RequestBaseComponents : {
+			value : require("./RequestBaseComponents")
+		},
 		newInstance : {
 			value : function(client){
 				return new ComponentBase(client);

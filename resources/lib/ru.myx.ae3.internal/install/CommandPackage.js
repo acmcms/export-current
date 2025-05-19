@@ -6,6 +6,8 @@ const Codecs = ae3.Util.Codecs;
 
 const Counter = ae3.Util.Counter;
 
+const httpGet = require('http').get;
+
 /**
  * example commands:
  * 
@@ -18,7 +20,7 @@ const Counter = ae3.Util.Counter;
  */
 
 
-var BASE_SRC_URL = "https://myx.co.nz/distro/ae3/";
+const BASE_SRC_URL = "https://myx.co.nz/distro/ae3/";
 
 
 /**
@@ -41,13 +43,13 @@ function installPackage(pkgName, repoUrl, pkgUrl, context){
 	var binary;
 	if(pkgUrl){
 		console.log('Requesting binary package at ' + pkgUrl);
-		binary = require('http').get.asBinary(pkgUrl);
+		binary = httpGet.asBinary(pkgUrl);
 	}else //
 	if(repoUrl){
 		pkgUrl = repoUrl + pkgName + ".tar.gz";
 		console.log('Requesting binary package at ' + pkgUrl);
 		try{
-			binary = require('http').get.asBinary(pkgUrl);
+			binary = httpGet.asBinary(pkgUrl);
 		}catch(e){
 			console.log('Binary package request at ' + pkgUrl + ' failed: ' + Format.jsDescibe(e));
 		}
@@ -55,7 +57,7 @@ function installPackage(pkgName, repoUrl, pkgUrl, context){
 	if(!binary){
 		pkgUrl = BASE_SRC_URL + pkgName + ".tar.gz";
 		console.log('Requesting binary package at ' + pkgUrl);
-		binary = require('http').get.asBinary(pkgUrl);
+		binary = httpGet.asBinary(pkgUrl);
 	}
 	console.log('Package received, length: ' + binary.length());
 	var contents = Codecs.untargzToMap(binary);
@@ -394,7 +396,7 @@ var commands = {
 			}
 			
 			console.log('Requesting package list at ' + BASE_SRC_URL);
-			var string = require('http').get.asString(BASE_SRC_URL);
+			var string = httpGet.asString(BASE_SRC_URL);
 			console.log('List received, length: ' + string.length());
 
 			console.log('RESPONSE: ' + string);

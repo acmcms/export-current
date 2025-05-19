@@ -7,14 +7,13 @@
  */
 
 
-
-const http = require("http");
 const ae3 = require("ae3");
 const vfs = ae3.vfs;
 
 const MakeRsstDomainFn = require("java.class/ru.myx.ae3.state.RemoteServiceStateSAPI").makeRemoteServiceStateDomain;
 
-const ClientRequest = require('./ClientRequest');
+const ClientRequest = require("./ClientRequest");
+const RequestBaseRegister = require("./components/base/RequestBaseRegister");
 
 
 const DIGITS_ONLY_REGEXP = /\D/g;
@@ -62,8 +61,8 @@ const Client = module.exports = ae3.Class.create(
 				value : {
 					"base"  : require("./components/base/ComponentBase").newInstance(this),
 					"cloud" : require("./components/cloud/ComponentCloud").newInstance(this),
-					"ndmp"  : require("./components/ndmp/ComponentNdmp").newInstance(this),
 					"ndns"  : require("./components/ndns/ComponentNdns").newInstance(this),
+					"ndmp"  : require("./components/ndmp/ComponentNdmp").newInstance(this),
 				}
 			}
 		});
@@ -85,8 +84,28 @@ const Client = module.exports = ae3.Class.create(
 		this.ndssHost		= serviceSettings?.host ?? serviceSettings?.ndssHost ?? folder.getContentAsText("ndssHost", "");
 		this.licenseNumber	= serviceSettings?.key ?? serviceSettings?.license ?? folder.getContentAsText("license", "");
 		this.serviceKey		= serviceSettings?.pass ?? serviceSettings?.serviceKey ?? folder.getContentAsText("serviceKey", "");
+		this.hardwareId		= serviceSettings?.pass ?? serviceSettings?.serviceKey ?? folder.getContentAsText("hardwareId", "") ?? "ae3ndmc";
 		this.ndmpHost		= ""; // ddnsHost || folder.getContentAsText("ndmpHost", "");
 		this.ddnsHost		= ""; // ddnsHost || folder.getContentAsText("ddnsHost", "");
+		
+		if(this.serviceKey && this.licenseNumber && this.ndssHost){
+			Object.defineProperty(this, "auth", {
+				value : {
+					"get" : {
+						__auth_type : this.serviceKey ? "e4" : undefined,
+						license : this.licenseNumber,
+						version: ___ECMA_IMPL_VERSION_STRING___,
+						fw: this.clientId + "@" + ___ECMA_IMPL_VERSION_STRING___,
+						sn: ___ECMA_IMPL_HOST_NAME___,
+					},
+					"headers" : {
+						"Authorization" : "NDSS4 " + ae3.Transfer.createCopierUtf8(this.serviceKey).toStringBase64()
+					},
+					"post" : {
+					}
+				}
+			});
+		}
 		
 		if(!this.validateLicenseFormat(this.licenseNumber)){
 			throw "Client['" + this.clientId + "'] Invalid license number: " + this.licenseNumber;
@@ -98,7 +117,7 @@ const Client = module.exports = ae3.Class.create(
 	},
 	{
 		UdpCloudClient : {
-			value : require('./UdpCloudClient')
+			value : require("./UdpCloudClient")
 		},
 		validateLicenseFormat : {
 			value : NATIVE_IMPL.validateLicenseFormat || function(licenseNumber){
@@ -127,16 +146,21 @@ const Client = module.exports = ae3.Class.create(
 				return request.launch();
 			}
 		},
+		createClientRequest : {
+			value : function(){
+				return internPrepareRequest.call(this);
+			}
+		},
 		doRegister : {
 			value : function(reason){
 				if(this.started !== true){
 					return;
 				}
-				var request = internPrepareRequest.call(this);
+				const request = internPrepareRequest.call(this);
 				/**
 				 * will overwrite 'register' if pending
 				 */
-				internAppendRegister.call(this, request, reason);
+				RequestBaseRegister.append.call(this, request, reason);
 				return request.launch();
 			}
 		},
@@ -153,7 +177,7 @@ const Client = module.exports = ae3.Class.create(
 				}
 
 				setTimeout((function(){
-					this.doRegister('boot');
+					this.doRegister("boot");
 				}).bind(this), 100);
 			}
 		},
@@ -195,26 +219,10 @@ const Client = module.exports = ae3.Class.create(
 			}
 		},
 		auth : {
-			get : function(){
-				return this.serviceKey
-					?	{
-						get : {
-							__auth_type : "e4",
-							license : this.licenseNumber
-						},
-						headers : {
-							"Authorization" : "NDSS4 " + ae3.Transfer.createCopierUtf8(this.serviceKey).toStringBase64()
-						},
-						post : {
-						}
-					}
-					:	{
-						get : {
-							license : this.licenseNumber
-						}
-					}
-				;
-			}
+			/**
+			 * should be reset with actual map upon constructor return
+			 */
+			value : null
 		}
 	},
 	{
@@ -271,16 +279,16 @@ const Client = module.exports = ae3.Class.create(
  * Use .call(client, ...)
  */
 function internPrepareRequest(){
-	const clientRequest = new ClientRequest(this);
+	const request = new ClientRequest(this);
 	
 	/** check pending registration **/
 	const prev = this.vfs.getContentPrimitive("lastRegistered", null);
 	if(!prev || prev.getTime() + 3550000 < Date.now()){
-		internAppendRegister.call(this, clientRequest);
+		RequestBaseRegister.append.call(this, request);
 	}
 	
 	// internCheckStats.call(this, clientRequest);
-	return clientRequest;
+	return request;
 }
 
 /**
@@ -325,56 +333,6 @@ function internCheckStats(clientRequest){
 	return true;
 }
 
-/**
- * Use .call(client, ...)
- */
-function internAppendRegister(clientRequest, reason){
-	clientRequest.append({
-		name		: "register",
-		path		: "/register",
-		get			: {
-			license		: this.licenseNumber,
-			origin		: 'device',
-			reason		: reason || 'periodic',
-			version		: ___ECMA_IMPL_VERSION_STRING___,
-			fw			: ___ECMA_IMPL_VERSION_STRING___,
-			sn			: ___ECMA_IMPL_HOST_NAME___,
-			v			: 2,
-			address		: ae3.net.localAddress,
-			xns			: Object.keys(Object.values(this.components).reduce(function(previousValue, currentValue){
-				if(currentValue){
-					for(let xns of (currentValue.requestXmlNotifications || [])){
-						previousValue[xns] = true;
-					}
-				}
-				return previousValue;
-			}, {}))
-		},
-		onSuccess	: (function(map){
-			// const address = map.address;
-			const notify = map.notify;
-			var notification, handlers, handler, id;
-			console.log("ndm.client::Client::register:onSuccess: '%s': registration OK, got notifications: %s", this.clientId, (!!notify));
-			if(notify){
-				for(notification of Array(notify)){
-					console.log("ndm.client::Client::register:onSuccess: '%s': notification: %s", this.clientId, Format.jsObject(notification));
-					id = notification.id;
-					handlers = this.notificationHandlers[id];
-					if(handlers){
-						for(handler of Array(handlers)){
-							handler.onXmlNotification(id, notification);
-						}
-					}
-				}
-			}
-			
-			this.vfs.setContentPublicTreePrimitive("lastRegistered", new Date());
-		}).bind(this),
-		onError	: (function(code, text){
-			console.error("ndm.client::Client::register:onError: '%s': Registration failed, code=%s", this.clientId, code);
-		}).bind(this),
-	});
-}
 
 
 

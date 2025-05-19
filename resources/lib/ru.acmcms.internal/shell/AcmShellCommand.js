@@ -1,4 +1,6 @@
-var vfs = require("ae3/vfs");
+const vfs = require("ae3/vfs");
+
+const ServerManager = require('java.class/ru.myx.ae1.handle.Handle');
 
 
 /**
@@ -7,12 +9,21 @@ var vfs = require("ae3/vfs");
 
 
 var commands = {
-	shell : function domainCalc(args) {
+	domains : function(){
+		const result = ServerManager.knownDomainNames();
+		console.sendMessage(Format.jsDescribe(result));
+		return true;
+	},
+	servers : function(){
+		const result = ServerManager.knownServerNames();
+		console.sendMessage(Format.jsDescribe(result));
+		return true;
+	},
+	shell : function(args) {
 		if (!args.length) {
 			return console.fail("'domainId/fqdn' argument is required");
 		}
 		var domainId = args.shift();
-		var ServerManager = require('java.class/ru.myx.ae1.handle.Handle');
 		var server = ServerManager.getServer(domainId);
 		if (!server) {
 			return console.fail("server is unknown, 'domainId/fqdn' argument is: " + domainId);
@@ -22,7 +33,6 @@ var commands = {
 		}
 		
 		var Shell = require('ae3.util/Shell');
-		import ru.myx.ae3.console.shell.Shell;
 		Shell.exec();
 		var expression = args.shift(); // args.join(' ');
 		var implementation = 'new Function("return (' + Format.jsString(expression) + ') )';
@@ -33,12 +43,11 @@ var commands = {
 		console.sendMessage(Format.jsDescribe(result));
 		return true;
 	},
-	calc : function domainCalc(args) {
+	calc : function(args) {
 		if (!args.length) {
 			return console.fail("'domainId/fqdn' argument is required");
 		}
 		var domainId = args.shift();
-		var ServerManager = require('java.class/ru.myx.ae1.handle.Handle');
 		var server = ServerManager.getServer(domainId);
 		if (!server) {
 			return console.fail("server is unknown, 'domainId/fqdn' argument is: " + domainId);
@@ -67,7 +76,10 @@ var commands = {
 exports.run = function run() {
 	if (arguments.length < 2) {
 		console.sendMessage("acm command syntax:\r\n"
+				+ "\tacm domains\r\n"
+				+ "\tacm servers\r\n"
 				+ "\tacm shell <domainId/fqdn>\r\n"
+				+ "\tacm calc <domainId/fqdn>\r\n"
 				+ "");
 		return false;
 	}

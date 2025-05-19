@@ -14,6 +14,7 @@ exports.run = function run(){
 		);
 		return false;
 	}
+	args.shift(); // command name
 	args.forEach(stopService, this);
 	return true;
 };

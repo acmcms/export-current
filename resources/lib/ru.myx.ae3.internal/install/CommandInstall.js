@@ -14,6 +14,7 @@ exports.run = function run(){
 		);
 		return false;
 	}
+	args.shift();
 	args.forEach(installPackage);
 	return true;
 };
