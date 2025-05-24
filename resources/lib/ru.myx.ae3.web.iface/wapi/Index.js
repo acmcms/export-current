@@ -103,9 +103,9 @@ commands.putAll({
 	},
 });
 
-const DiscoveryWebServiceClass;
 try{
-	DiscoveryWebServiceClass = require('ru.myx.ae3.internal/discovery/DiscoveryWebService');
+	// TODO: services should be managed regardless of web subsystem
+	require('ru.myx.ae3.internal/discovery/DiscoveryWebService');
 }catch(e){
 	// ignore
 }

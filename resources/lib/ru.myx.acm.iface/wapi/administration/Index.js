@@ -1,4 +1,4 @@
-const commands = {
+const INDEX = {
 	/**
 	 * interface
 	 */
@@ -20,13 +20,13 @@ const commands = {
 		pathPrefix : "/administration/", 
 	});
 	
-	for each(var i in auth.commandKeys()){
-		commands[i] || (commands[i] = auth.getCommand(i));
+	for(let i of auth.commandKeys()){
+		INDEX[i] ??= auth.getCommand(i);
 	}
 }
 
 /*
-commands['listActions'] = {
+INDEX['listActions'] = {
 	icon : "book_edit",
 	title : "List Tracked Actions",
 	run : [ require, './ListActions' ],
@@ -35,7 +35,7 @@ commands['listActions'] = {
 };
 */
 /*
-commands['readAction'] = {
+INDEX['readAction'] = {
 	title : "Read Tracked Action",
 	run : [ require, './ReadAction' ],
 	access : "user",
@@ -45,7 +45,7 @@ commands['readAction'] = {
 */
 
 /*
-commands['setupStats'] = {
+INDEX['setupStats'] = {
 	icon : "lock_edit",
 	title : "Setup Stats",
 	run : [ require, './SetupStats' ],
@@ -55,8 +55,14 @@ commands['setupStats'] = {
 
 */
 
+INDEX['tools'] = require('ae3.web/SystemToolsPage').create({ 
+	systemName : "AE3", 
+	pathPrefix : "administration/tools/", 
+	access : "admin",
+});
 
-commands['../resource/documentation.xml'] = {
+
+INDEX['../resource/documentation.xml'] = {
 	icon : "help",
 	title : "Documentation",
 	access : "user",
@@ -66,5 +72,5 @@ commands['../resource/documentation.xml'] = {
 
 module.exports = require('ae3.web/IndexPage').create({
 	title : "ACM::administration/index (System Administration)", 
-	commands : commands
+	commands : INDEX
 });
