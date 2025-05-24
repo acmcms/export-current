@@ -84,9 +84,9 @@ const Client = module.exports = ae3.Class.create(
 		this.ndssHost		= serviceSettings?.host ?? serviceSettings?.ndssHost ?? folder.getContentAsText("ndssHost", "");
 		this.licenseNumber	= serviceSettings?.key ?? serviceSettings?.license ?? folder.getContentAsText("license", "");
 		this.serviceKey		= serviceSettings?.pass ?? serviceSettings?.serviceKey ?? folder.getContentAsText("serviceKey", "");
-		this.hardwareId		= serviceSettings?.pass ?? serviceSettings?.serviceKey ?? folder.getContentAsText("hardwareId", "") ?? "ae3ndmc";
-		this.ndmpHost		= ""; // ddnsHost || folder.getContentAsText("ndmpHost", "");
-		this.ddnsHost		= ""; // ddnsHost || folder.getContentAsText("ddnsHost", "");
+		this.hardwareId		= serviceSettings?.hwid ?? serviceSettings?.hardwareId ?? folder.getContentAsText("hardwareId", "ae3ndmc");
+		this.ndmpHost		= ""; // ?? cache ?? // ddnsHost || folder.getContentAsText("ndmpHost", "");
+		this.ddnsHost		= ""; // ?? cache ?? // ddnsHost || folder.getContentAsText("ddnsHost", "");
 		
 		if(this.serviceKey && this.licenseNumber && this.ndssHost){
 			Object.defineProperty(this, "auth", {
@@ -96,6 +96,7 @@ const Client = module.exports = ae3.Class.create(
 						license : this.licenseNumber,
 						version: ___ECMA_IMPL_VERSION_STRING___,
 						fw: this.clientId + "@" + ___ECMA_IMPL_VERSION_STRING___,
+						hw: this.hardwareId,
 						sn: ___ECMA_IMPL_HOST_NAME___,
 					},
 					"headers" : {
