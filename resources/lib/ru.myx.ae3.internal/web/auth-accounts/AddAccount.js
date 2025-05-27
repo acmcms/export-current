@@ -96,6 +96,8 @@ const AddAccount = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runAddAccount
+		handle : {
+			value : runAddAccount
+		}
 	}
 );

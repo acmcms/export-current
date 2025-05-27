@@ -73,6 +73,8 @@ const AddGroup = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runAddGroup
+		handle : {
+			value : runAddGroup
+		}
 	}
 );

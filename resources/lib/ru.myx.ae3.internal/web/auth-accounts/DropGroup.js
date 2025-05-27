@@ -91,6 +91,8 @@ const DropGroup = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runDropGroup
+		handle : {
+			value : runDropGroup
+		}
 	}
 );

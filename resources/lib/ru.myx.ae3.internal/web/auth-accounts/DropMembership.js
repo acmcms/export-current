@@ -110,6 +110,8 @@ const DropMembership = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runDropMembership
+		handle : {
+			value : runDropMembership
+		}
 	}
 );

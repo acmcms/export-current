@@ -143,6 +143,8 @@ const ReadAccount = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runReadAccount
+		handle : {
+			value : runReadAccount
+		}
 	}
 );

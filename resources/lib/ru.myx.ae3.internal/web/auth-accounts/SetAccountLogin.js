@@ -76,6 +76,8 @@ const SetAccountLogin = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runSetAccountLogin
+		handle : {
+			value : runSetAccountLogin
+		}
 	}
 );

@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 function XmlMultipleRequest(){
 	this.items = {};
 	return this;

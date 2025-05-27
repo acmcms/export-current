@@ -75,6 +75,8 @@ const ListGroups = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runListGroups
+		handle : {
+			value : runListGroups
+		}
 	}
 );

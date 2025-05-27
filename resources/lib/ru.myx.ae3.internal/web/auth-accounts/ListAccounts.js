@@ -89,6 +89,7 @@ function runListAccounts(context){
 	};
 }
 
+
 const ae3 = require("ae3");
 
 const ListAccounts = module.exports = ae3.Class.create(
@@ -100,6 +101,8 @@ const ListAccounts = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runListAccounts
+		handle : {
+			value : runListAccounts
+		}
 	}
 );

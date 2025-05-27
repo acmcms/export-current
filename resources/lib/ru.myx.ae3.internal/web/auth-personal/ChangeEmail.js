@@ -79,6 +79,8 @@ const ChangeEmail = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runChangeEmail
+		handle : {
+			value : runChangeEmail
+		}
 	}
 );

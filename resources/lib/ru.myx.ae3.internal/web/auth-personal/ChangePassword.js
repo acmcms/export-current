@@ -85,6 +85,8 @@ const ChangePassword = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runChangePassword
+		handle : {
+			value : runChangePassword
+		}
 	}
 );

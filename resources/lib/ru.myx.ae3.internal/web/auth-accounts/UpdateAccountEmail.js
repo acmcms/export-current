@@ -97,6 +97,8 @@ const UpdateAccountEmail = module.exports = ae3.Class.create(
 		return this;
 	},
 	{
-		handle : runUpdateAccountEmail
+		handle : {
+			value : runUpdateAccountEmail
+		}
 	}
 );
