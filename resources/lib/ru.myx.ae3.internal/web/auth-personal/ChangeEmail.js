@@ -1,7 +1,6 @@
-function ChangeEmail(systemName, pathPrefix){
-	this.title = systemName + "::" + pathPrefix + "changeEmail (Update Your Email)";
-	return this;
-}
+/**
+ * 
+ */
 
 function runChangeEmail(context){
 	const auth = context.share.authenticationProvider;
@@ -70,8 +69,16 @@ function runChangeEmail(context){
 	};
 }
 
-ChangeEmail.prototype = {
-	handle : runChangeEmail
-};
+const ae3 = require("ae3");
 
-module.exports = ChangeEmail;
+const ChangeEmail = module.exports = ae3.Class.create(
+	"ChangeEmail",
+	undefined,
+	function ChangeEmail(systemName, pathPrefix){
+		this.title = systemName + "::" + pathPrefix + "changeEmail (Update Your Email)";
+		return this;
+	},
+	{
+		handle : runChangeEmail
+	}
+);

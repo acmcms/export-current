@@ -1,12 +1,13 @@
-function AddAccount(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "addAccount (Account Creation)";
-}
+/**
+ * 
+ */
 
 function runAddAccount(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
+	
+	share.authRequireAccount(context, this.index.accessGroup || 'admin');
 	context.title = this.title;
+	
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
@@ -55,7 +56,7 @@ function runAddAccount(context){
 		%><?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?><%
 		%><form<%= Format.xmlAttribute('title', this.title) %>><%
 			= Format.xmlElement('client', share.clientElementProperties(context));
-			%><field name="clientId" title="Client ID" type="hidden" value="<%= client %>"/><%
+			%><field name="clientId" title="Client ID" type="hidden" value="<%= clientId %>"/><%
 			%><field name="accountId" title="Account ID" type="string" /><%
 			%><field name="accountLogin" title="Login" type="string" variant="username" /><%
 			%><field name="accountPassword" title="Password" type="password" /><%
@@ -84,8 +85,17 @@ function runAddAccount(context){
 	};
 }
 
-const PROTOTYPE = AddAccount.prototype = {
-	handle : runAddAccount
-};
+const ae3 = require("ae3");
 
-module.exports = AddAccount;
+const AddAccount = module.exports = ae3.Class.create(
+	"AddAccount",
+	undefined,
+	function AddAccount(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "addAccount (Account Creation)";
+		return this;
+	},
+	{
+		handle : runAddAccount
+	}
+);

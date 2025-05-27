@@ -1,12 +1,13 @@
-function AddGroup(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "addGroup (Group Creation)";
-}
+/**
+ * 
+ */
 
 function runAddGroup(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
+	
+	share.authRequireAccount(context, this.index.accessGroup || 'admin');
 	context.title = this.title;
+	
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
@@ -39,7 +40,7 @@ function runAddGroup(context){
 		%><?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?><%
 		%><form<%= Format.xmlAttribute('title', this.title) %>><%
 			= Format.xmlElement('client', share.clientElementProperties(context));
-			%><field name="clientId" title="Client ID" type="hidden" value="<%= client %>"/><%
+			%><field name="clientId" title="Client ID" type="hidden" value="<%= clientId %>"/><%
 			%><field name="groupId" title="Group ID" type="text" /><%
 			
 			if(parameters.back){
@@ -61,8 +62,17 @@ function runAddGroup(context){
 	};
 }
 
-const PROTOTYPE = AddGroup.prototype = {
-	handle : runAddGroup
-};
+const ae3 = require("ae3");
 
-module.exports = AddGroup;
+const AddGroup = module.exports = ae3.Class.create(
+	"AddGroup",
+	undefined,
+	function AddGroup(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "addGroup (Group Creation)";
+		return this;
+	},
+	{
+		handle : runAddGroup
+	}
+);

@@ -1,12 +1,13 @@
-function DropGroup(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "dropGroup (Drop Group)";
-}
+/**
+ * 
+ */
 
 function runDropGroup(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
+	
+	share.authRequireAccount(context, this.index.accessGroup || 'admin');
 	context.title = this.title;
+	
 	const query = context.query;
 	const parameters = query.parameters;
 	
@@ -79,8 +80,17 @@ function runDropGroup(context){
 	};
 }
 
-const PROTOTYPE = DropGroup.prototype = {
-	handle : runDropGroup
-};
+const ae3 = require("ae3");
 
-module.exports = DropGroup;
+const DropGroup = module.exports = ae3.Class.create(
+	"DropGroup",
+	undefined,
+	function DropGroup(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "dropGroup (Drop Group)";
+		return this;
+	},
+	{
+		handle : runDropGroup
+	}
+);

@@ -1,7 +1,7 @@
-function SetMembership(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "setMembership (Add/Update Account's Group Membership)";
-}
+/**
+ * 
+ */
+
 
 function internPutElementToKeys(map, element){
 	map[element] = 1;
@@ -19,8 +19,10 @@ function internRemoveAll(all, remove){
 
 function runSetMembership(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
+	
+	share.authRequireAccount(context, this.index.accessGroup || 'admin');
 	context.title = this.title;
+	
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
@@ -85,8 +87,17 @@ function runSetMembership(context){
 	};
 }
 
-const PROTOTYPE = SetMembership.prototype = {
-	handle : runSetMembership
-};
+const ae3 = require("ae3");
 
-module.exports = SetMembership;
+const SetMembership = module.exports = ae3.Class.create(
+	"SetMembership",
+	undefined,
+	function SetMembership(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "setMembership (Add/Update Account's Group Membership)";
+		return this;
+	},
+	{
+		handle : runSetMembership
+	}
+);

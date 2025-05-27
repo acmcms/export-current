@@ -1,12 +1,13 @@
-function UpdateAccountEmail(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "updateAccountEmail (Update Account's Email)";
-}
+/**
+ * 
+ */
 
 function runUpdateAccountEmail(context){
 	const share = context.share;
+	
 	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
 	context.title = this.title;
+	
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
@@ -85,8 +86,17 @@ function runUpdateAccountEmail(context){
 	};
 }
 
-const PROTOTYPE = UpdateAccountEmail.prototype = {
-	handle : runUpdateAccountEmail
-};
+const ae3 = require("ae3");
 
-module.exports = UpdateAccountEmail;
+const UpdateAccountEmail = module.exports = ae3.Class.create(
+	"UpdateAccountEmail",
+	undefined,
+	function UpdateAccountEmail(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "updateAccountEmail (Update Account's Email)";
+		return this;
+	},
+	{
+		handle : runUpdateAccountEmail
+	}
+);

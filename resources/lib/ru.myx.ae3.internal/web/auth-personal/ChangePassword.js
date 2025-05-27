@@ -1,7 +1,6 @@
-function ChangePassword(systemName, pathPrefix){
-	this.title = systemName + "::" + pathPrefix + "changePassword (Update Your Password)";
-	return this;
-}
+/**
+ * 
+ */
 
 function runChangePassword(context){
 	const auth = context.share.authenticationProvider;
@@ -76,8 +75,16 @@ function runChangePassword(context){
 	};
 }
 
-ChangePassword.prototype = {
-	handle : runChangePassword
-};
+const ae3 = require("ae3");
 
-module.exports = ChangePassword;
+const ChangePassword = module.exports = ae3.Class.create(
+	"ChangePassword",
+	undefined,
+	function ChangePassword(systemName, pathPrefix){
+		this.title = systemName + "::" + pathPrefix + "changePassword (Update Your Password)";
+		return this;
+	},
+	{
+		handle : runChangePassword
+	}
+);

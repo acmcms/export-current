@@ -1,28 +1,31 @@
-function ReadAccount(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "readAccount (Read Account)";
-}
+/**
+ * 
+ */
 
 function runReadAccount(context){
 	const share = context.share;
+	
 	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
 	context.title = this.title;
+	
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
 	var xml;
 	
 	var parameters = query.parameters;
-	$output(xml){
-		%><?xml version="1.0" encoding="UTF-8"?><%
-		if( parameters.key ){
-			var accountId = parameters.key;
-			
-			var account = auth.authGetUserInfo(accountId);
-			if(!account){
-				return share.makeClientFailureLayout('Account not found');
-			}
-			var logins = auth.authListUserLogins(accountId);
+	if( parameters.key ){
+		
+		var accountId = parameters.key;
+
+		var account = auth.authGetUserInfo(accountId);
+		if(!account){
+			return share.makeClientFailureLayout('Account not found');
+		}
+		var logins = auth.authListUserLogins(accountId);
+		
+		$output(xml){
+			%><?xml version="1.0" encoding="UTF-8"?><%
 			%><?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?><%
 			%><account<%= Format.xmlAttribute('title', this.title) %> jumpUrl="listAccounts" jumpTitle="account list..." layout="view"><%
 				= Format.xmlElement('client', share.clientElementProperties(context));
@@ -99,20 +102,28 @@ function runReadAccount(context){
 					}
 				%></groups><%
 			%></account><%
-		}else{
-			%><?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?><%
-			%><form<%= Format.xmlAttribute('title', this.title) %> jumpUrl="listAccounts" jumpTitle="account list..."><%
-				= Format.xmlElement('client', share.clientElementProperties(context));
-				%><field name="key" title="Account" type="select" value="<%= client %>"><%
-					for(var account of auth.authListAccounts()){
-						var user = auth.authGetUserInfo(account);
-						%><option value="<%= account %>" title="<%= account + ', ' + user.email %>"/><%
-					}
-				%></field><%
-				%><help src="/resource/documentation.xml#administration/readAccount" /><%
-				%><submit title="Select Account..." /><%
-			%></form><%
 		}
+		return {
+			layout	: "final",
+			type	: "text/xml",
+			content	: xml
+		};
+	}
+	
+	$output(xml){
+		%><?xml version="1.0" encoding="UTF-8"?><%
+		%><?xml-stylesheet type="text/xsl" href="/!/skin/skin-standard-xml/show.xsl"?><%
+		%><form<%= Format.xmlAttribute('title', this.title) %> jumpUrl="listAccounts" jumpTitle="account list..."><%
+			= Format.xmlElement('client', share.clientElementProperties(context));
+			%><field name="key" title="Account" type="select" value="<%= client %>"><%
+				for(var account of auth.authListAccounts()){
+					var user = auth.authGetUserInfo(account);
+					%><option value="<%= account %>" title="<%= account + ', ' + user.email %>"/><%
+				}
+			%></field><%
+			%><help src="/resource/documentation.xml#administration/readAccount" /><%
+			%><submit title="Select Account..." /><%
+		%></form><%
 	}
 	return {
 		layout	: "final",
@@ -121,8 +132,17 @@ function runReadAccount(context){
 	};
 }
 
-const PROTOTYPE = ReadAccount.prototype = {
-	handle : runReadAccount
-};
+const ae3 = require("ae3");
 
-module.exports = ReadAccount;
+const ReadAccount = module.exports = ae3.Class.create(
+	"ReadAccount",
+	undefined,
+	function ReadAccount(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "readAccount (Read Account)";
+		return this;
+	},
+	{
+		handle : runReadAccount
+	}
+);

@@ -1,12 +1,13 @@
-function DropMembership(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "dropMembership (Drop One Of Account's Group Memberships)";
-}
+/**
+ * 
+ */
 
 function runDropMembership(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
+	
+	share.authRequireAccount(context, this.index.accessGroup || 'admin');
 	context.title = this.title;
+	
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
@@ -98,8 +99,17 @@ function runDropMembership(context){
 	};
 }
 
-const PROTOTYPE = DropMembership.prototype = {
-	handle : runDropMembership
-};
+const ae3 = require("ae3");
 
-module.exports = DropMembership;
+const DropMembership = module.exports = ae3.Class.create(
+	"DropMembership",
+	undefined,
+	function DropMembership(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "dropMembership (Drop One Of Account's Group Memberships)";
+		return this;
+	},
+	{
+		handle : runDropMembership
+	}
+);

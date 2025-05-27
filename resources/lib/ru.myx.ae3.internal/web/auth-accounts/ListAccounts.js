@@ -1,13 +1,13 @@
-function ListAccounts(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "listAccounts (List User Accounts)";
-	return this;
-}
+/**
+ * 
+ */
 
 function runListAccounts(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, this.index.accessGroup || "admin");
-	const query = context.query;
+	
+	share.authRequireAccount(context, this.index.accessGroup || "admin");
+	context.title = this.title;
+	
 	const auth = this.index.auth || share.authenticationProvider;
 
 	const rows = [];
@@ -89,8 +89,17 @@ function runListAccounts(context){
 	};
 }
 
-const PROTOTYPE = ListAccounts.prototype = {
-	handle : runListAccounts
-};
+const ae3 = require("ae3");
 
-module.exports = ListAccounts;
+const ListAccounts = module.exports = ae3.Class.create(
+	"ListAccounts",
+	undefined,
+	function ListAccounts(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "listAccounts (List User Accounts)";
+		return this;
+	},
+	{
+		handle : runListAccounts
+	}
+);

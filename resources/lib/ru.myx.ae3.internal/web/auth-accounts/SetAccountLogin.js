@@ -1,12 +1,13 @@
-function SetAccountLogin(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "setAccountLogin (Add/Update Account's Login)";
-}
+/**
+ * 
+ */
 
 function runSetAccountLogin(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
+	
+	share.authRequireAccount(context, this.index.accessGroup || 'admin');
 	context.title = this.title;
+	
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
@@ -64,8 +65,17 @@ function runSetAccountLogin(context){
 	};
 }
 
-const PROTOTYPE = SetAccountLogin.prototype = {
-	handle : runSetAccountLogin
-};
+const ae3 = require("ae3");
 
-module.exports = SetAccountLogin;
+const SetAccountLogin = module.exports = ae3.Class.create(
+	"SetAccountLogin",
+	undefined,
+	function SetAccountLogin(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "setAccountLogin (Add/Update Account's Login)";
+		return this;
+	},
+	{
+		handle : runSetAccountLogin
+	}
+);

@@ -1,13 +1,13 @@
-function ListGroups(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "listGroups (List User Groups)";
-	return this;
-}
-
+/**
+ * 
+ */
 
 function runListGroups(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, this.index.accessGroup || "admin");
+	
+	share.authRequireAccount(context, this.index.accessGroup || "admin");
+	context.title = this.title;
+	
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
@@ -64,8 +64,17 @@ function runListGroups(context){
 	};
 }
 
-const PROTOTYPE = ListGroups.prototype = {
-	handle : runListGroups
-};
+const ae3 = require("ae3");
 
-module.exports = ListGroups;
+const ListGroups = module.exports = ae3.Class.create(
+	"ListGroups",
+	undefined,
+	function ListGroups(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "listGroups (List User Groups)";
+		return this;
+	},
+	{
+		handle : runListGroups
+	}
+);

@@ -1,12 +1,13 @@
-function UpdateAccount(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "updateAccount (Edit Account)";
-}
+/**
+ * 
+ */
 
 function runUpdateAccount(context){
 	const share = context.share;
+	
 	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
 	context.title = this.title;
+	
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
@@ -83,7 +84,7 @@ function runUpdateAccount(context){
 			xsl = "/!/skin/skin-standard-xml/show.xsl";
 			%><form<%= Format.xmlAttribute('title', this.title) %> jumpUrl="listAccounts" jumpTitle="account list..."><%
 				= Format.xmlElement('client', share.clientElementProperties(context));
-				%><field name="key" title="Account" type="select" value="<%= client %>"><%
+				%><field name="key" title="Account" type="select" value="<%= clientId %>"><%
 					for(var account of auth.authListAccounts()){
 						var user = auth.authGetUserInfo(account);
 						%><option value="<%= account %>" title="<%= account + ', ' + user.email %>"/><%
@@ -101,8 +102,17 @@ function runUpdateAccount(context){
 	};
 }
 
-const PROTOTYPE = UpdateAccount.prototype = {
-	handle : runUpdateAccount
-};
+const ae3 = require("ae3");
 
-module.exports = UpdateAccount;
+const UpdateAccount = module.exports = ae3.Class.create(
+	"UpdateAccount",
+	undefined,
+	function UpdateAccount(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "updateAccount (Edit Account)";
+		return this;
+	},
+	{
+		handle : runUpdateAccount
+	}
+);

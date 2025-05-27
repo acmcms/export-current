@@ -1,12 +1,13 @@
-function DropAccount(index, systemName, pathPrefix){
-	this.index = index;
-	this.title = systemName + "::" + pathPrefix + "dropAccount (Drop Account)";
-}
+/**
+ * 
+ */
 
 function runDropAccount(context){
 	const share = context.share;
-	const client = share.authRequireAccount(context, this.index.accessGroup || 'admin');
+	
+	share.authRequireAccount(context, this.index.accessGroup || 'admin');
 	context.title = this.title;
+	
 	const query = context.query;
 	const auth = this.index.auth || share.authenticationProvider;
 	
@@ -79,8 +80,17 @@ function runDropAccount(context){
 	};
 }
 
-const PROTOTYPE = DropAccount.prototype = {
-	handle : runDropAccount
-};
+const ae3 = require("ae3");
 
-module.exports = DropAccount;
+const DropAccount = module.exports = ae3.Class.create(
+	"DropAccount",
+	undefined,
+	function DropAccount(index, systemName, pathPrefix){
+		this.index = index;
+		this.title = systemName + "::" + pathPrefix + "dropAccount (Drop Account)";
+		return this;
+	},
+	{
+		handle : runDropAccount
+	}
+);
