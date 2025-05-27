@@ -10,6 +10,7 @@ exports.startAuth = function startAuth(startContext, returnLocation) {
 
 exports.showForm = function showForm(startContext) {
 	return {
+		code : 472,
 		layout	: 'data-form',
 		title	: 'E-mail authentication',
 		fields	: [

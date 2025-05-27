@@ -118,7 +118,7 @@ var commands = {
 			}
 			var result = auth.addUser(username, silent);
 			if(!result){
-				return console.fail('failed');
+				return silent || console.fail('failed');
 			}
 			console.sendMessage("user created.");
 			return true;

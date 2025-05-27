@@ -17,7 +17,7 @@ const INDEX = {
 {
 	var auth = require('ae3.web/AuthAccountsPage').create({ 
 		systemName : "ACM", 
-		pathPrefix : "/administration/", 
+		pathPrefix : "administration/", 
 	});
 	
 	for(let i of auth.commandKeys()){
