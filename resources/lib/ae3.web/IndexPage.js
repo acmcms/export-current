@@ -298,6 +298,19 @@ const IndexPage = module.exports = require("ae3").Class.create(
 	{
 		"create" : {
 			/**
+			 * Props:
+			 * 
+			 * auth
+			 * 
+			 * authRequired
+			 * 
+			 * title
+			 * 
+			 * titleUnauthenticated
+			 * 
+			 * menu
+			 * 
+			 * commands
 			 * 
 			 * @param props { title, auth, menu, commands }
 			 * @returns
@@ -438,7 +451,7 @@ function internMakeLoginOptions(query, share, Index){
 					icon : "folder_key",
 					ui : true,
 					access : "public",
-					title : "Login using session cookie and html form",
+					title : "Login using session cookie and form",
 					preview : {
 						depthLimit : 1,
 						zoom : "row",
