@@ -30,7 +30,11 @@
 	defaultSource	: defaultSource,
 	keywords		: "html try it yourself, html code preview",
 	previewFunction	: function(x){
-		return x;
+		return {
+			layout : "final",
+			contentType : "text/html",
+			content : x
+		};
 	}
 } %><%
 

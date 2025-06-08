@@ -12,8 +12,13 @@
 
 %><%IF: parameters.preview %><%
 	%><%EXEC: result = content.previewFunction(parameters.code || content.defaultSource) %><%
-	%><%IF: result.layout || result.template %><%
+	%><%IF: result.template %><%
 		%><%RETURN: result %><%
+	%><%/IF%><%
+	%><%IF: result?.layout === "final" %><%
+		%><%FINAL: result.contentType ?? parameters.preview.split(' ')[0] == 'text' ? 'text/plain' : 'text/html' %><%
+			= result.content;
+		%><%/FINAL%><%
 	%><%/IF%><%
 	%><%FINAL: parameters.preview.split(' ')[0] == 'text' ? 'text/plain' : 'text/html' %><%
 		= result;
