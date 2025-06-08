@@ -1,0 +1,46 @@
+<%FORMAT: 'default' %><%
+
+%><%OUTPUT: defaultSource %><%
+%><svg width="600" height="150" xmlns="http://www.w3.org/2000/svg">
+  <!-- Myx's Icon (remains unchanged) -->
+  <g transform="translate(150,40)">
+    <!-- Head: Blue -->
+    <circle cx="0" cy="0" r="20" fill="blue" />
+    <!-- Body: Blue -->
+    <rect x="-10" y="20" width="20" height="30" fill="blue" />
+    <!-- Label -->
+    <text x="0" y="60" text-anchor="middle" fill="blue" font-size="14">Myx</text>
+  </g>
+  
+  <!-- Woody's Icon with Adjusted Skin Tone -->
+  <g transform="translate(450,40)">
+    <!-- Head: Adjusted lighter skin tone (#D2A679) -->
+    <circle cx="0" cy="0" r="20" fill="#D2A679" />
+    <!-- Body: Green -->
+    <rect x="-10" y="20" width="20" height="30" fill="green" />
+    <!-- Glasses: simple white glasses -->
+    <line x1="-12" y1="-5" x2="-2" y2="-5" stroke="white" stroke-width="2"/>
+    <line x1="2" y1="-5" x2="12" y2="-5" stroke="white" stroke-width="2"/>
+    <line x1="-2" y1="-5" x2="2" y2="-5" stroke="white" stroke-width="2"/>
+    <!-- Label -->
+    <text x="0" y="60" text-anchor="middle" fill="green" font-size="14">Woody</text>
+  </g>
+</svg><%
+%><%/OUTPUT%><%
+
+%><%RETURN: {
+	title			: "SVG image quick preview",
+	template		: "try.tpl",
+	useRequire		: true,
+	defaultSource	: defaultSource,
+	keywords		: "preview SVG, preview, svg",
+	previewFunction	: function(x){
+		return {
+			layout : "final",
+			contentType : "image/svg+xml",
+			content : x
+		};
+	}
+} %><%
+
+%><%/FORMAT%>
