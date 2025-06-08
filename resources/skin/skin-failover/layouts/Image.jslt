@@ -18,7 +18,11 @@ binary || (binary = context.resolveToBinary( resolve ));
 href || (href = context.resolveToHref( resolve ));
 
 
-console.log('>>>>>>> resolve=' + resolve + ', binary=' + binary + ', href=' + href);
+console.log("ae3.skin: skin-failover: Image: %s", Format.jsDscribe({
+	resolve : resolve,
+	binary : binary,
+	href : href
+}));
 
 return binary 
 	? Layouts.extend( layout, {
