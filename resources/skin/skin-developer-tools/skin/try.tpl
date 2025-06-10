@@ -15,8 +15,8 @@
 	%><%IF: result.template %><%
 		%><%RETURN: result %><%
 	%><%/IF%><%
-	%><%IF: result?.layout === "final" %><%
-		%><%FINAL: result.contentType ?? parameters.preview.split(' ')[0] == 'text' ? 'text/plain' : 'text/html' %><%
+	%><%IF: result?.layout == "final" %><%
+		%><%FINAL: result.contentType ?? ( parameters.preview.split(' ')[0] == 'text' ? 'text/plain' : 'text/html' ) %><%
 			= result.content;
 		%><%/FINAL%><%
 	%><%/IF%><%
