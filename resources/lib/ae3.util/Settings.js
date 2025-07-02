@@ -7,7 +7,7 @@ const vfs = require("ae3/vfs");
  * @returns boolean
  */
 function filterDescriptors(file/* , i, a */) {
-	return file.key.endsWith(".json");
+	return file.key.endsWith(".json") && !file.key.startsWith(".");
 }
 
 /**
