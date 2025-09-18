@@ -416,6 +416,14 @@ const Share = module.exports = ae3.Class.create(
 				result.menu = client.menu || this.clientElementMenuProperty(context) || undefined;
 				result.ae3 = query.parameters.ae3 || undefined;
 				
+				switch(format){
+				case 'xml':
+					if( (admin = query.attributes["X-WebUI-CDN-URI"] || undefined) ){
+						result.webuiCdnBaseUri = admin + "skin-standard-xml/";
+					}
+					return result;
+				}
+				
 				return result;
 			}
 		},

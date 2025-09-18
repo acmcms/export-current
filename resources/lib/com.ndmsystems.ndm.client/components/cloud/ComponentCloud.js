@@ -1,6 +1,7 @@
 const ae3 = require("ae3");
 
 const CLIENT_ON_UPDATE_TOKEN_XNS_FN = require("./ClientOnUpdateTokenXnsFn");
+const CLIENT_ON_CLOUD_SETTINGS_XNS_FN = require("./ClientOnCloudSettingsXnsFn");
 
 const ComponentCloud = module.exports = ae3.Class.create(
 	"ComponentCloud",
@@ -14,7 +15,7 @@ const ComponentCloud = module.exports = ae3.Class.create(
 			value : "cloud"
 		},
 		acceptXmlNotifications : {
-			value : ["ut3"]
+			value : ["cs3", "ut3"]
 		},
 		
 		requestXmlNotifications : {
@@ -29,8 +30,13 @@ const ComponentCloud = module.exports = ae3.Class.create(
 		onXmlNotification : {
 			value : function(id, data){
 				switch(id){
+					
 				case "ut3":
 					return CLIENT_ON_UPDATE_TOKEN_XNS_FN.call(this.client, id, data);
+					
+				case "cs3":
+					return CLIENT_ON_CLOUD_SETTINGS_XNS_FN.call(this.client, id, data);
+					
 				}
 				return;
 			}

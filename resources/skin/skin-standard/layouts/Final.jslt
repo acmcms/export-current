@@ -8,10 +8,11 @@
 import ru.myx.ae3.answer.Reply;
 import ru.myx.ae3.act.Context;
 
-var reply = Reply.object( "LAYOUT_FINAL", Context.getRequest(), layout.content ) //
+const reply = Reply.object( "LAYOUT_FINAL", Context.getRequest(), layout.content ) //
 			.setCode( layout.code || 200 ) //
 			.setContentType( layout.type || 'text/plain' ) //
-			.setFinal();
+			.setFinal() //
+;
 
 if(false === layout.cache){
 	reply.setNoCaching();

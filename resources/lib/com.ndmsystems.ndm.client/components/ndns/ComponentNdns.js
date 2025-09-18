@@ -14,7 +14,7 @@ const ComponentNdns = module.exports = ae3.Class.create(
 			value : "ndns"
 		},
 		acceptXmlNotifications : {
-			value : ['ubA','ut3']
+			value : ["ubA", "ut3"]
 		},
 		
 		requestXmlNotifications : {
@@ -29,8 +29,10 @@ const ComponentNdns = module.exports = ae3.Class.create(
 		onXmlNotification : {
 			value : function(id, data){
 				switch(id){
-					case "ubA":
+					
+				case "ubA":
 					return CLIENT_ON_UPDATE_BOOKING_XNS_FN.call(this.client, id, data);
+					
 				}
 				return;
 			}

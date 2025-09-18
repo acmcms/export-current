@@ -1,0 +1,20 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+
+
+const xsl = layout.xsl;
+if(xsl !== "/!/skin/skin-standard-xml/show.xsl"){
+	return layout;
+}
+
+const uwebuiCdn = context.query?.attributes["X-WebUI-CDN-URI"];
+if(!uwebuiCdn){
+	return layout;
+}
+
+return Layouts.extend(layout, {
+	xsl : uwebuiCdn + "skin-standard-xml/show.xsl"
+});

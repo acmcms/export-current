@@ -31,8 +31,8 @@
 	<xsl:variable name="sudo"><xsl:if test="*/client/@userId"><xsl:value-of select="*/client/@id"/></xsl:if></xsl:variable>
 	<xsl:variable name="base">
 		<xsl:choose>
-			<xsl:when test="*/client/@webRoot">
-				<xsl:value-of select="*/client/@webRoot"/>
+			<xsl:when test="*/client/@webuiCdnBaseUri">
+				<xsl:value-of select="*/client/@webuiCdnBaseUri"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:text></xsl:text>
@@ -549,9 +549,14 @@
 				</div>
 			</xsl:when>
 			<xsl:when test="$format/@variant='code'">
-				<div class="code {$format/@cssClass}">
+				<div class="code ui-code ui-code-{$zoom} {$format/@cssClass}">
 					<xsl:value-of select='$value'/>
 				</div>
+			</xsl:when>
+			<xsl:when test="$format/@variant='xml-source-code'">
+				<textarea class="code ui-code ui-code-{$zoom} {$format/@cssClass}">
+					<xsl:copy-of select="$value"/>
+				</textarea>
 			</xsl:when>
 			<xsl:when test="$format/@variant='geo' or $format/@variant='geo-row'">
 				<xsl:choose>
@@ -619,21 +624,36 @@
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="$format/@variant='map'">
-				<table class="items">
-					<tr><th>#</th><th>key</th><th>value</th></tr>
-					<xsl:for-each select="$value/*">
-						<tr>
-							<td><xsl:value-of select="position()"/></td>
-							<td><xsl:value-of select='name(.)'/></td>
-							<td>
-								<xsl:call-template name="formatted">
-									<xsl:with-param name="format" select="."/>
-									<xsl:with-param name="value" select="."/>
-								</xsl:call-template>
-							</td>
-						</tr>
-					</xsl:for-each>
-				</table>
+				<xsl:if test="$value/@* | $value/*">
+					<div class="ui-table-screen-{$zoom}" x-ui-debug="map {$zoom} {$parentInputValue}">
+					<div class="ui-table-container">
+					<div class="table-map ui-map ui-map-{$zoom} {$format/@cssClass}"><table class="ui-map items">
+						<colgroup>
+							<col class="ui-map-value ui-map-index-{$zoom}"/>
+							<col class="ui-map-value"/>
+							<col class="ui-map-value"/>
+						</colgroup>
+						<thead>
+							<tr><th>#</th><th>key</th><th>value</th></tr>
+						</thead>
+						<tbody>
+						<xsl:for-each select="$value/@* | $value/*">
+							<tr>
+								<td><xsl:value-of select="position()"/></td>
+								<td><xsl:value-of select='local-name()'/></td>
+								<td>
+									<xsl:call-template name="formatted">
+										<xsl:with-param name="format" select="."/>
+										<xsl:with-param name="value" select="."/>
+									</xsl:call-template>
+								</td>
+							</tr>
+						</xsl:for-each>
+						</tbody>
+					</table></div>
+					</div>
+					</div>
+				</xsl:if>
 			</xsl:when>
 			<xsl:when test="$format/@variant='form'">
 				<xsl:for-each select="$format">
@@ -2564,7 +2584,7 @@
 
 	<xsl:template match="help">
 		<a tabindex="-1" href="{@src}" target="_blank" style="padding:0;margin:1pt;border:0">
-			<button class="ui-button" type="button" onclick="return true" onclick2="window.open(&quot;{@src}&quot;);return false;" tabindex="99998">
+			<button class="ui-button" type="button" onclick="return true" tabindex="99998">
 				<div class="ui-cmd-icon">
 					<img src="{$silk}help.png" alt="user:" class="icon"/>
 				</div>

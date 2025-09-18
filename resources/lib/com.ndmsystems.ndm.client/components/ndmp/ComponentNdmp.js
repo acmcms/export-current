@@ -15,7 +15,7 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 			value : "ndmp"
 		},
 		acceptXmlNotifications : {
-			value : ['ut3','cc3','um1','cl1']
+			value : ["ut3", "cc3", "um1", "cl1"]
 		},
 		
 		requestXmlNotifications : {
@@ -30,10 +30,13 @@ const ComponentNdmp = module.exports = ae3.Class.create(
 		onXmlNotification : {
 			value : function(id, data){
 				switch(id){
-					case "cl1":
-						return CLIENT_ON_UPDATE_LINKING_XNS_FN.call(this.client, id, data);
-					case "um1":
-						return CLIENT_ON_UPDATE_MANAGEMENT_XNS_FN.call(this.client, id, data);
+					
+				case "cl1":
+					return CLIENT_ON_UPDATE_LINKING_XNS_FN.call(this.client, id, data);
+					
+				case "um1":
+					return CLIENT_ON_UPDATE_MANAGEMENT_XNS_FN.call(this.client, id, data);
+					
 				}
 				return;
 			}

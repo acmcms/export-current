@@ -268,7 +268,6 @@ TD.name, DIV.name, TABLE.items TH, TABLE.items>THEAD>TR>TD, TD.fldkey{
 	white-space:nowrap;
 }
 TABLE.items TH, TABLE.items TD{
-	font-size: 10pt;
 	text-align: left;
 	vertical-align: top;
 	padding: 2pt;
@@ -620,6 +619,79 @@ SPAN.ui-fldbox-compact:hover, SPAN.ui-fldbox-compact:focus {
 	width: 200px;
 	opacity: 1;
 	transition: width 0.33s ease-in-out 0s, opacity 0.15s ease-out 230ms;
+}
+
+DIV.ui-map {
+	max-width: 100%;
+}
+
+.ui-map-document, .ui-map-window {
+	width: 100%;
+}
+
+DIV.ui-map-cell, DIV.ui-map-compact {
+	font-size: .66em;
+	letter-spacing: -.0125em;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	border: 0;
+	overflow: auto;
+}
+
+DIV.ui-map-compact COL.ui-map-value, 
+DIV.ui-map-cell COL.ui-map-value, 
+DIV.ui-map-column COL.ui-map-value,
+DIV.ui-map-compact tr > :nth-child(3), 
+DIV.ui-map-cell tr > :nth-child(3), 
+DIV.ui-map-column tr > :nth-child(3) {
+	max-width: 32em;
+	width: fit-content;
+	display: block;
+	font-weight: bold;
+	margin-left: 1.75em;
+	margin-top: -.125em;
+	margin-bottom: .125em;
+	padding-top: 0;
+	border: 0;
+}
+
+DIV.ui-map-compact tr > :nth-child(2)::after, 
+DIV.ui-map-cell tr > :nth-child(2)::after, 
+DIV.ui-map-column tr > :nth-child(2)::after {
+	content: ' =';
+	font-style: normal;
+	font-weight: bold;
+}
+
+
+DIV.ui-map-compact tr > :nth-child(2), 
+DIV.ui-map-cell tr > :nth-child(2), 
+DIV.ui-map-column tr > :nth-child(2) {
+	max-width: 24em;
+	width: fit-content;
+	display: block;
+	font-style: italic;
+	margin-top: .125em;
+	margin-bottom: -.125em;
+	padding-bottom: 0;
+	border-right: 0;
+	border-bottom: 0;
+}
+
+DIV.ui-map-compact THEAD>TR,
+DIV.ui-map-compact COL.ui-map-index-compact, 
+DIV.ui-map-compact tr > :nth-child(1),
+DIV.ui-map-cell THEAD>TR,
+DIV.ui-map-cell COL.ui-map-index-cell,
+DIV.ui-map-cell tr > :nth-child(1) {
+	display: none;
+	visibility: collapse;
+}
+
+DIV.ui-map-compact TR, 
+DIV.ui-map-cell TR {
+	display: inline;
 }
 
 .ui-message-table-document, .ui-message-table-window {
