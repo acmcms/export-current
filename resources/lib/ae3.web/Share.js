@@ -380,13 +380,17 @@ const Share = module.exports = ae3.Class.create(
 				const result = {
 					geo : query.attributes['Geo-Mean'],
 					ip : query.sourceAddress,
-					format : format
+					format : format,
+					webuiCdnBaseUri : query.attributes["X-WebUI-CDN-URI"] || undefined,
 				};
+				
 				if(!client || client.id === 'guest'){
+
 					result.date = (new Date()).toISOString();
 					if(format !== 'clean'){
 						result.menu = !this.authRequired && this.clientElementMenuProperty(context) || undefined;
 					}
+
 					return result;
 				}
 				
@@ -415,14 +419,6 @@ const Share = module.exports = ae3.Class.create(
 				result.admin = admin || undefined;
 				result.menu = client.menu || this.clientElementMenuProperty(context) || undefined;
 				result.ae3 = query.parameters.ae3 || undefined;
-				
-				switch(format){
-				case 'xml':
-					if( (admin = query.attributes["X-WebUI-CDN-URI"] || undefined) ){
-						result.webuiCdnBaseUri = admin + "skin-standard-xml/";
-					}
-					return result;
-				}
 				
 				return result;
 			}

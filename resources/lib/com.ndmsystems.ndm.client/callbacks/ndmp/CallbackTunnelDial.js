@@ -98,6 +98,9 @@ const CallbackTunnelDial = module.exports = ae3.Class.create(
 	{
 		"prepareCallback" : {
 			value : function(component){
+
+				this.client = component.client;
+				
 				const keys = component.confirmedMatingKeys;
 				if(!keys){
 					console.log(
@@ -266,8 +269,14 @@ const CallbackTunnelDial = module.exports = ae3.Class.create(
 		"requestCallback" : {
 			value : function(query){
 				if(query && this.clientAddress) {
-					query = query.addAttribute("X-Forwarded-For", this.clientAddress);
-					query = query.addAttribute("X-Debug", "through ndm.client::ndmp::tunnelDial");
+					query = query//
+						.addAttribute("Secure", this.isSecure) //
+						.setSourceAddress(this.clientAddress) //
+						.addAttribute("X-Debug", "through ndm.client::ndmp::tunnelDial") //
+						.addAttribute("X-Real-IP", this.clientAddress) //
+						.addAttribute("X-Forwarded-For", this.clientAddress + "," + this.socket.remoteAddress) //
+						.addAttribute("X-WebUI-CDN-URI", this.client.webuiCdn) //
+					;
 				}
 				console.log("ndm.client::CallbackTunnelDial:requestCallback: web request: %s", Format.jsDescribe(query));
 				return ae3.web.WebInterface.dispatch(query);

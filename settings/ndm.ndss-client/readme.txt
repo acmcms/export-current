@@ -14,6 +14,9 @@ devel.json:
 	"override" : {
 		"allowPlainHandshake" : false,
 		"forcePlainHandshake" : false,
+		"forceCertificateValidation" : false,
+		"tlsClientRequired" : false,
+		"terminateOnClient" : false,
 		"useCloudWebuiCdnUri" : "https://static.operator.net/base/v-1.0/"
 		"-- pecularities" : "^^^"
 	},

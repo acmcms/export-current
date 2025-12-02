@@ -84,7 +84,7 @@ const Client = module.exports = ae3.Class.create(
 		this.ndssHost		= serviceSettings?.host ?? serviceSettings?.ndssHost ?? folder.getContentAsText("ndssHost", "");
 		this.licenseNumber	= serviceSettings?.key ?? serviceSettings?.license ?? folder.getContentAsText("license", "");
 		this.serviceKey		= serviceSettings?.pass ?? serviceSettings?.serviceKey ?? folder.getContentAsText("serviceKey", "");
-		this.hardwareId		= serviceSettings?.hwid ?? serviceSettings?.hardwareId ?? folder.getContentAsText("hardwareId", "ae3ndmc");
+		this.hardwareId		= serviceSettings?.hwid ?? serviceSettings?.hardwareId ?? folder.getContentAsText("hardwareId", "ae3ndmc") ?? "ae3ndmc";
 		this.ndmpHost		= ""; // ?? cache ?? // ddnsHost || folder.getContentAsText("ndmpHost", "");
 		this.ddnsHost		= ""; // ?? cache ?? // ddnsHost || folder.getContentAsText("ddnsHost", "");
 		

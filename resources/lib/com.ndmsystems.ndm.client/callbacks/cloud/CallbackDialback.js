@@ -95,7 +95,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 		"prepareCallback" : {
 			value : function(component){
 				
-				this.useWebuiCdnUri = component.client.cloudWebUiCdnUri;
+				this.client = component.client;
 				 
 				const override = component.client.overrideSettings;
 				
@@ -265,7 +265,7 @@ const CallbackDialback = module.exports = ae3.Class.create(
 						.addAttribute("X-Debug", "through ndm.client::uhp::dialback") //
 						.addAttribute("X-Real-IP", this.clientAddress) //
 						.addAttribute("X-Forwarded-For", this.clientAddress + "," + this.socket.remoteAddress) //
-						.addAttribute("X-WebUI-CDN-URI", this.useWebuiCdnUri) //
+						.addAttribute("X-WebUI-CDN-URI", this.client.webuiCdn) //
 					;
 				}
 				console.log("ndm.client::CallbackDialback:requestCallback: web request: %s", Format.jsDescribe(query));
