@@ -167,6 +167,18 @@ const Net = module.exports = Object.create(Object.create(null, {
 	isValidIPv4 : {
 		value : BaseNetHelper.isValidIPv4
 	},
+	isValidIPv6 : {
+		value : BaseNetHelper.isValidIPv6
+	},
+	isValidMAC : {
+		value : BaseNetHelper.isValidMAC
+	},
+	isRoutedIPv4 : {
+		value : BaseNetHelper.isRoutedIPv4
+	},
+	isRoutedIPv6 : {
+		value : BaseNetHelper.isRoutedIPv6
+	},
 	isSocketAddress : {
 		value : function(obj){
 			return obj instanceof SocketAddress;
