@@ -1,0 +1,8 @@
+{
+	"extensions" : ["html", "htm"],
+	"contentTypes" : ["text/html"],
+	"priority" : 0,
+	"context" : {
+		"reference" : "java.class/ru.myx.ae3.l2.html.WebContextHtml"
+	}
+}

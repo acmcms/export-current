@@ -2129,7 +2129,7 @@
 						<xsl:if test="$zoom != 'compact'">
 							<xsl:for-each select="preview">
 								<xsl:if test="not(@depthLimit) or (@depthLimit &gt;= $depth)">
-									<a href="javascript:void" class="ui-cmd-preview-block">
+									<a href="javascript:;" class="ui-cmd-preview-block">
 										<xsl:call-template name="formatted">
 											<xsl:with-param name="format" select="."/>
 											<xsl:with-param name="value" select="."/>
@@ -2565,7 +2565,7 @@
 									<xsl:if test="$itemZoom != 'compact'">
 										<xsl:for-each select="preview">
 											<xsl:if test="not(@depthLimit) or (@depthLimit &gt;= $depth)">
-												<a href="javascript:void" class="ui-cmd-preview-block">
+												<a href="javascript:;" class="ui-cmd-preview-block">
 													<xsl:call-template name="formatted">
 														<xsl:with-param name="format" select="."/>
 														<xsl:with-param name="value" select="."/>

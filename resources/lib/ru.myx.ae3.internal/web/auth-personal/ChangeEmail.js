@@ -54,10 +54,10 @@ function runChangeEmail(context){
 		%><form<%= Format.xmlAttribute('title', this.title) %>><%
 			= Format.xmlElement('client', context.share.clientElementProperties(context));
 			%><field name="clientId" title="Client ID" type="constant" value="<%= client %>"/><%
-			%><field name="login" title="Login" type="text" /><%
+			%><field name="login" title="Login" type="string" /><%
 			%><field name="pass" title="Password" type="password" /><%
-			%><field name="email" title="New Email" type="text" /><%
-			%><field name="again" title="Once more" type="text" /><%
+			%><field name="email" title="New Email" type="string" /><%
+			%><field name="again" title="Once more" type="string" /><%
 			%><help src="/resource/documentation.xml#personal/changeEmail" /><%
 			%><submit title="Change Email..." /><%
 		%></form><%

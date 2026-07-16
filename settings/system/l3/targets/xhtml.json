@@ -1,0 +1,8 @@
+{
+	"extensions" : ["xhtml", "xhtm"],
+	"contentTypes" : ["application/xhtml+xml"],
+	"priority" : 0,
+	"context" : {
+		"reference" : "java.class/ru.myx.ae3.l2.xml.WebContextXmlXhtml"
+	}
+}

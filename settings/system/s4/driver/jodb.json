@@ -1,0 +1,6 @@
+{
+	type : "ae3/Factory",
+	name : "jodb",
+	description : "JODB S4 Local Driver",
+	reference : "java.class/ru.myx.ae3.vfs.s4.lcl.jodb.JodbLocalS4"
+}

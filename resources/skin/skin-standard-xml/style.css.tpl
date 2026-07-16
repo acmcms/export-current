@@ -1051,6 +1051,9 @@ IMG.ui-illustration, DIV.ui-illustration, DIV.ui-illustration-central{
 IMG.ui-small{
 	zoom:0.5;
 }
+IMG.ui-medium{
+	zoom:0.67;
+}
 @-moz-document url-prefix() {
 	IMG.ui-small{
 		max-width: 50%;
@@ -1062,6 +1065,12 @@ DIV.ui-small{
 	zoom: 0.9; 
 	transform: scale(0.9);
 	font-size: 90%; 
+}
+DIV.ui-medium{
+	width: 77%;
+	zoom: 0.96; 
+	transform: scale(0.96);
+	font-size: 96%; 
 }
 DIV.ui-illustration-central{
 	margin: 3pt auto 1em auto; 
@@ -1092,8 +1101,14 @@ DIV.ui-illustration-central{
 	IMG.ui-small{
 		zoom:0.75;
 	}
+	IMG.ui-medium{
+		zoom:0.85;
+	}
 	DIV.ui-small{
 		width: 80%;
+	}
+	DIV.ui-medium{
+		width: 87%;
 	}
 
 	.icon.ui-message-icon-document, .icon.ui-message-icon-window {
