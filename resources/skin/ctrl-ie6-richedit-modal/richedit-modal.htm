@@ -1,4 +1,11 @@
 <%
+// This is the skin's own `<default>` template (ctrl-ie6-richedit-modal/skin.settings.xml),
+// yet it never touches the `cke` namespace that same settings file imports from
+// vlapan-richedit-ckeditor. What it renders instead is a self-contained legacy multi-pane
+// editor (Tabble widget with ActiveX/IFrame/Div/Source/Preview panes, wired up below) built
+// straight from this skin's own client/js/*.js (DHTMLEd, EditorActiveX/IFrame/Div/Source/Preview).
+// The CKEditor import is declared but currently vestigial from this file's perspective —
+// don't assume `cke.*` is reachable here just because the settings file lists it.
 %><%EXEC: requireCss = [] %><%
 %><%EXEC: requireCss.add('shared-editor_style') %><%
 %><%EXEC: requireCss.add('wysiwyg') %><%

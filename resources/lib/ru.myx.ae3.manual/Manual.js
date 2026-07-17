@@ -5,6 +5,7 @@ const ManualItemDoc = require('./ManualItemDoc');
 const ManualItemGroup = require('./ManualItemGroup');
 const ManualItemLink = require('./ManualItemLink');
 
+const GROUPS = {};
 
 const Manual = {
 		

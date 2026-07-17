@@ -29,17 +29,17 @@ function ManualGroup(key, registryPath){
 			})//
 			.setDescriptorReducer((function(settings, description){
 				if(description.url){
-					const manual = new ManualItemLink(manual);
+					const manual = new ManualItemLink(description);
 					manual.index = this;
 					settings[key] = manual;
 
 				}else//
 				if(description.vfs){
-					const manual = new ManualItemDoc(manual);
+					const manual = new ManualItemDoc(description);
 					manual.index = this;
 					settings[key] = manual;
 				}else{
-					console.warn('>>>>>> invalid manual: name: %s, group: %s', manual.name, this.key);
+					console.warn('>>>>>> invalid manual: name: %s, group: %s', description.name, this.key);
 				}
 				return settings;
 			}).bind(this))//

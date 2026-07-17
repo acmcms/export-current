@@ -51,13 +51,18 @@ function reduceDataViewGridXls(layout){
 		title : layout.title || layout.attributes && layout.attributes.title || undefined,
 		width : 2,
 		border : true,
-		elements : Array(fields).flatMap(function(field){
+		// this engine's Array.prototype never implements flatMap (only map/filter/forEach/reduce/
+		// concat - see ru.myx.ae3.ecma.array.ImplBaseGlobalArray) - map + reduce/concat one level
+		// flat instead
+		elements : Array(fields).map(function(field){
 			const key = field.id || field.name;
 			return [
 				field.title || field.name || key || "",
 				reduceFieldValue(field, key ? values[key] : undefined)
 			];
-		})
+		}).reduce(function(flat, pair){
+			return flat.concat(pair);
+		}, [])
 	};
 }
 
