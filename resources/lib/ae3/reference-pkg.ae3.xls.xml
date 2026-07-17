@@ -35,33 +35,45 @@
 					<item><n>
 						createBinaryFromLayout
 					</n><d>
-						Creates a binary object containing the PDF file generated using 'layout' argument.
+						Renders any layout tree straight to an <code>.xls</code> binary - the general escape hatch for a caller that already has layout content on hand and doesn't fit the two specific shapes below.
 					</d></item>
 					<item><n>
 						makeDataTableBinary
 					</n><d>
+						The spreadsheet-export idea for a <b>listing</b>: give it a set of columns and the rows of a data table, get back a formatted worksheet a user could open in Excel - headers, per-column typing (dates, prices, links...), a title row. The natural "Download as XLS" counterpart to a table/grid view.
 					</d></item>
 					<item><n>
 						makeDataTableMessage
 					</n><d>
+						<a href="#pkg-ae3.xls.makeDataTableBinary">makeDataTableBinary</a>'s result, packaged as a flow message rather than handed back as an HTTP reply directly - for composing into a larger script-driven flow.
 					</d></item>
 					<item><n>
 						makeDataTableReply
 					</n><d>
+						<a href="#pkg-ae3.xls.makeDataTableBinary">makeDataTableBinary</a>'s result, packaged as a downloadable HTTP reply - what a page's "Download as XLS" link actually resolves to.
 					</d></item>
 					<item><n>
 						makeFormBinary
 					</n><d>
+						The spreadsheet-export idea for a single <b>record</b> rather than a listing: given a set of fields and their current values, produce a worksheet laid out as a label column next to a value column - the export counterpart to a detail/form view, the way <a href="#pkg-ae3.xls.makeDataTableBinary">makeDataTableBinary</a> is the counterpart to a listing view.
 					</d></item>
 					<item><n>
 						makeFormMessage
 					</n><d>
+						<a href="#pkg-ae3.xls.makeFormBinary">makeFormBinary</a>'s result, packaged as a flow message.
 					</d></item>
 					<item><n>
 						makeFormReply
 					</n><d>
+						<a href="#pkg-ae3.xls.makeFormBinary">makeFormBinary</a>'s result, packaged as a downloadable HTTP reply.
 					</d></item>
 				</fields>
+			</paragraph>
+			<paragraph>
+				<b>This is a static SAPI-style module for scripts to call directly - it is not part of the layout-rendering engine</b> (<code>TargetContextAbstract</code>'s <code>Skin.getLayoutDefinition(name)</code>-driven walk that html/pdf/text participate in). That separation is deliberate, not a gap: XLS support is optional (depends on JExcelAPI/<code>jxl.jar</code> actually being deployed), so keeping it as an independently-loadable script avoids coupling the shared layout walk to an optional dependency - the same reason <code>ae3.sys.pkg.base</code> ships many similarly-shaped SAPI modules for its own, more universally-available capabilities.
+			</paragraph>
+			<paragraph>
+				Separately, <code>ae3.sys.pkg.l2.tgt.xls</code> also now provides a real, layout-engine-integrated <code>WebContextXls</code> - reachable directly via <code>?___output=xls</code> on any page's URL, no script call needed - built on plain <code>string</code>/<code>grid</code> layout primitives (matching <code>PdfLayoutString</code>/<code>PdfLayoutGrid</code>'s pattern), independent of this module. See that unit's own CLAUDE.md for the current state of that engine (deliberately minimal: plain text cells only, no per-column formatting yet).
 			</paragraph>
 		</text>
 	</article>
@@ -71,28 +83,7 @@
 		<title>Workbook object</title>
 		<text>
 			<paragraph>
-				The instance of DocumentBuilder class is created when 
-				you building a new PDF document. It provides a set of methods to
-				work on document's content and meta-data. Each instances of 
-				DocumentBuilder has following methods and properties:
-				<fields layout="list">
-					<columns>
-						<column id="n" title="Name"/>
-						<column id="d" title="Summary"/>
-					</columns>
-					<item n="flushPage"><d>
-						Starts new page.
-					</d></item>
-					<item n="appendHtml"><d>
-						Appends document's content using html text provided by 'html' argument.
-					</d></item>
-					<item n="appendXhtml"><d>
-						Appends document's content using xhtml text provided by 'xhtml' argument.
-					</d></item>
-					<item n="toBinary"><d>
-						Finalizes the document and returns the binary object in PDF format.
-					</d></item>
-				</fields>
+				A read-only <code>jxl.Workbook</code>, returned by <a href="#pkg-ae3.xls">ae3/xls</a>'s <code>getWorkbook(...)</code> overloads (from a <code>File</code>, byte array, <code>TransferBuffer</code>/<code>TransferCopier</code>, or an <code>ae3.base.BaseMessage</code>) - for reading an <b>existing</b> <code>.xls</code> file, not building a new one (see <a href="#pkg-ae3.xls.WorkbookChange">WorkbookChange</a> for that). Per the "Reading data from zipped xls file" example below: call <code>workbook.getSheet(index)</code> to get a sheet, <code>sheet.getRows()</code> for its row count, and <code>sheet.getCell(x, row).contents</code> to read a cell's text. This is JExcelAPI's own <code>jxl.Workbook</code>/<code>jxl.Sheet</code>/<code>jxl.Cell</code> API surface directly, not an AE3 wrapper - see the <a href="#ae3.xls-references">References</a> article below for the upstream JExcelAPI 2.6.12 documentation for its full method set; not re-documented here.
 			</paragraph>
 		</text>
 	</article>
@@ -102,36 +93,41 @@
 		<title>WorkbookChange object</title>
 		<text>
 			<paragraph>
-				The instance of DocumentBuilder class is created when 
-				you building a new PDF document. It provides a set of methods to
-				work on document's content and meta-data. Each instances of 
-				DocumentBuilder has following methods and properties:
+				Returned by <a href="#pkg-ae3.xls">ae3/xls</a>'s <code>createWorkbook()</code> (a new, empty workbook) or <code>createWorkbookChange(workbook)</code> (a copy-on-write wrapper around an existing <a href="#pkg-ae3.xls.Workbook">Workbook</a>, for modifying it). Wraps JExcelAPI's <code>WritableWorkbook</code>, writing into an in-memory buffer - nothing is actually serialized until <code>buildWorkbook()</code> is called.
 				<fields layout="list">
 					<columns>
 						<column id="n" title="Name"/>
 						<column id="d" title="Summary"/>
 					</columns>
 					<item n="buildWorkbook"><d>
+						Finalizes the workbook (calls JExcelAPI's <code>write()</code>/<code>close()</code> internally) and returns the built <code>.xls</code> binary as a <code>TransferCopier</code>. Must be called exactly once, and only after all sheets/cells have been written - calling it mid-construction, or more than once, is not supported by the underlying <code>WritableWorkbook</code> model.
 					</d></item>
 					<item n="createCellFormat"><d>
+						Creates a blank <a href="#pkg-ae3.xls.WorkbookCellFormat">WorkbookCellFormat</a> with no number/date format applied - typically used for header/label cells with custom font/alignment/border only.
 					</d></item>
 					<item n="createCellFormatDate"><d>
+						Creates a <a href="#pkg-ae3.xls.WorkbookCellFormat">WorkbookCellFormat</a> for date cells. Takes a date-pattern string (defaults to <code>"yyyy/MM/dd HH:mm"</code> when omitted/null) - see <code>setCellDate</code> on <a href="#pkg-ae3.xls.WorkbookSheetChange">WorkbookSheetChange</a>.
 					</d></item>
 					<item n="createCellFormatFloating"><d>
+						Creates a <a href="#pkg-ae3.xls.WorkbookCellFormat">WorkbookCellFormat</a> using JExcelAPI's <code>NumberFormats.FLOAT</code> - for <code>setCellFloating</code>.
 					</d></item>
 					<item n="createCellFormatInteger"><d>
+						Creates a <a href="#pkg-ae3.xls.WorkbookCellFormat">WorkbookCellFormat</a> using JExcelAPI's <code>NumberFormats.INTEGER</code> - for <code>setCellInteger</code>.
 					</d></item>
 					<item n="createCellFormatPrice"><d>
+						Creates a <a href="#pkg-ae3.xls.WorkbookCellFormat">WorkbookCellFormat</a> using JExcelAPI's <code>NumberFormats.FRACTION_TWO_DIGITS</code> - for <code>setCellPrice</code>.
 					</d></item>
 					<item n="createCellFormatText"><d>
+						Creates a <a href="#pkg-ae3.xls.WorkbookCellFormat">WorkbookCellFormat</a> using JExcelAPI's <code>NumberFormats.TEXT</code> - for plain-text label cells (<code>setCellLabel</code>).
 					</d></item>
 					<item n="createSheet"><d>
-						Creates new <a href="#pkg-ae3.xls.WorkbookSheetChange">WorkbookSheetChange</a> object.
+						Creates a new sheet (appended at the end) and returns its <a href="#pkg-ae3.xls.WorkbookSheetChange">WorkbookSheetChange</a> wrapper.
 					</d></item>
 					<item n="createSheetChange"><d>
-						Creates <a href="#pkg-ae3.xls.WorkbookSheetChange">WorkbookSheetChange</a> object for an existing sheet in the workbook.
+						Returns a <a href="#pkg-ae3.xls.WorkbookSheetChange">WorkbookSheetChange</a> wrapper for an already-existing sheet at the given index.
 					</d></item>
 					<item n="moveSheet"><d>
+						Moves a sheet from one index to another within the workbook (delegates directly to JExcelAPI's own <code>WritableWorkbook.moveSheet</code>).
 					</d></item>
 				</fields>
 			</paragraph>
@@ -144,38 +140,47 @@
 		<title>WorkbookSheetChange object</title>
 		<text>
 			<paragraph>
-				The instance of DocumentBuilder class is created when 
-				you building a new PDF document. It provides a set of methods to
-				work on document's content and meta-data. Each instances of 
-				DocumentBuilder has following methods and properties:
+				One sheet within a <a href="#pkg-ae3.xls.WorkbookChange">WorkbookChange</a>'s workbook, returned by its <code>createSheet(title)</code>/<code>createSheetChange(index)</code>. Cells are addressed by explicit <code>(x, y)</code> coordinates - unlike some other AE3 render targets (e.g. PDF's table primitive), JExcelAPI has no auto-wrapping/flow layout, every cell position is set directly.
 				<fields layout="list">
 					<columns>
 						<column id="n" title="Name"/>
 						<column id="d" title="Summary"/>
 					</columns>
 					<item n="isHidden"><d>
+						Whether this sheet is currently hidden in the workbook.
 					</d></item>
 					<item n="isProtected"><d>
+						Whether this sheet is currently write-protected.
 					</d></item>
 					<item n="mergeCells"><d>
+						<code>mergeCells(firstCol, firstRow, lastCol, lastRow)</code> - merges a rectangular cell range into one, e.g. for a title row spanning several columns (see the title-row handling in <a href="#pkg-ae3.xls.makeDataTableBinary">makeDataTableBinary</a> and the Examples article below).
 					</d></item>
 					<item n="setCellDate"><d>
+						<code>setCellDate(x, y, value, format?, cellFormat)</code> - writes a date cell. <code>value</code> may be a <code>Date</code>, a millisecond timestamp, or (per <a href="#pkg-ae3.xls">ae3/xls</a>'s own <code>formatterDate</code>) a parseable date string.
 					</d></item>
 					<item n="setCellFloating"><d>
+						<code>setCellFloating(x, y, value, cellFormat)</code> - writes a floating-point numeric cell.
 					</d></item>
 					<item n="setCellHyperlink"><d>
+						<code>setCellHyperlink(x, y, url, label?, cellFormat)</code> - writes a clickable hyperlink cell. <code>label</code> defaults to the URL itself when omitted (see <a href="#pkg-ae3.xls">ae3/xls</a>'s own <code>formatterHref</code> for the base-URL/relative-link handling built on top of this).
 					</d></item>
 					<item n="setCellInteger"><d>
+						<code>setCellInteger(x, y, value, cellFormat)</code> - writes a whole-number numeric cell.
 					</d></item>
 					<item n="setCellLabel"><d>
+						<code>setCellLabel(x, y, text, cellFormat)</code> - writes a plain text cell. The most commonly used write method - this is what <code>ae3.sys.pkg.l2.tgt.xls</code>'s own layout-engine-integrated <code>XlsTargetContext</code>/<code>XlsLayoutString</code>/<code>XlsLayoutGrid</code> (a separate, newer mechanism from this SAPI module - see the note at the end of the first article above) calls exclusively, since it currently only supports plain-text cells.
 					</d></item>
 					<item n="setCellPrice"><d>
+						<code>setCellPrice(x, y, value, cellFormat)</code> - writes a numeric cell formatted to two decimal places (currency-style).
 					</d></item>
 					<item n="setHidden"><d>
+						Hides or unhides this sheet.
 					</d></item>
 					<item n="setName"><d>
+						Renames this sheet.
 					</d></item>
 					<item n="setProtected"><d>
+						Write-protects or unprotects this sheet.
 					</d></item>
 				</fields>
 			</paragraph>

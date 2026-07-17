@@ -3,7 +3,10 @@
  */
 
 const FiltersFormLayout = require("./FiltersFormLayout");
-const reduceDataViewGrid = require("./ReduceDataViewGridFn");
+const reduceDataViewGridPdf = require("./ReduceDataViewGridPdfFn");
+const reduceDataViewGridTxt = require("./ReduceDataViewGridTxtFn");
+const reduceDataViewGridHtml = require("./ReduceDataViewGridHtmlFn");
+const reduceDataViewGridXls = require("./ReduceDataViewGridXlsFn");
 const formatXmlAttributes = Format.xmlAttributes;
 const formatXmlElement = Format.xmlElement;
 const formatXmlElements = Format.xmlElements;
@@ -29,16 +32,23 @@ function makeDataViewReply(context, layout){
 	/** ae3/xml, ae3/xls, ae3/txt, ae3/pdf were never implemented - this redirect always threw
 	 * "Not a function" for any explicit ___output matching one of these (see MakeMessageReplyFn.js
 	 * for the same bug, found and disabled there first). "xml" needs no redirect at all - the
-	 * XML+XSL builder below already produces the correct pure-XML reply directly. "pdf"/"txt" now
-	 * route to a real reduction (2-column grid of primitives) that PdfTargetContext/TextTargetContext
-	 * already render natively via their own getLayoutForContext(), no per-format module needed.
-	 * "xls" has no registered output target/renderer at all yet (separate, larger, deferred task -
-	 * not just this redirect) so it still falls through to the XML+XSL builder below. */
+	 * XML+XSL builder below already produces the correct pure-XML reply directly. "pdf"/"txt"/
+	 * "html"/"xls" each route to their own real reduction (2-column grid of primitives,
+	 * deliberately NOT shared between formats - see each ReduceDataViewGrid*Fn.js's own header
+	 * for why) that PdfTargetContext/TextTargetContext/HtmlDomTargetContext/XlsTargetContext
+	 * already render natively via their own getLayoutForContext(), no per-format require()
+	 * module needed - "xls" now has a real, registered output target too
+	 * (ae3.sys.pkg.l2.tgt.xls's WebContextXls/xls.json), not just this redirect. */
 	if(query?.parameters.___output){
 		switch(query.parameters.___output){
 		case "pdf":
+			return reduceDataViewGridPdf(layout);
 		case "txt":
-			return reduceDataViewGrid(layout);
+			return reduceDataViewGridTxt(layout);
+		case "html":
+			return reduceDataViewGridHtml(layout);
+		case "xls":
+			return reduceDataViewGridXls(layout);
 		}
 	}
 

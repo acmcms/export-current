@@ -96,26 +96,41 @@ if(!a || !b || !c){
 							<column id="d" title="Summary"/>
 						</columns>
 						<item n="HashMap"><d>
+							A thread-safe map, for shared state a task might touch concurrently with others.
 						</d></item>
 						<item n="FutureSimpleUnknown"><d>
+							A future/promise holding a result of any type - the general-purpose one when the result shape doesn't fit the more specific future types below.
 						</d></item>
 						<item n="FutureSimpleString"><d>
+							A future/promise specifically for a string result.
 						</d></item>
 						<item n="FutureSimpleBinary"><d>
-						</d></item>
-						<item n="FutureSimpleBinary"><d>
+							A future/promise specifically for a binary result.
 						</d></item>
 						<item n="SimpleFutureBatchClass"><d>
+							A future that completes once every task in a batch has completed - for waiting on a whole group of concurrent tasks together rather than one at a time.
 						</d></item>
 						<item n="FutureCallParallelClass"><d>
+							Runs several functions concurrently and aggregates their results into one future - what <code>asyncAll</code> (below) builds internally.
 						</d></item>
 						<item n="CustomFutureObjectClass"><d>
+							Wraps another future so its eventual result is transformed by a callback before being handed to whoever's waiting. Example:
+							<code><![CDATA[
+function loadLicenseImpl(x){ ... }
+
+function loadLicense(){
+	return new CustomFutureObjectClass(vfs.getContentsCollection(null), loadLicenseImpl);
+}
+							]]></code>
 						</d></item>
 						<item n="FutureFirstPositiveClass"><d>
+							The concurrent counterpart to <code>firstPositive</code> (below): given several tasks, completes with whichever one first produces a truthy result, without waiting for the rest.
 						</d></item>
 						<item n="FunctionWrapOnceClass"><d>
+							The class behind <code>wrapOnce</code> (below).
 						</d></item>
 						<item n="FunctionWrapSyncClass"><d>
+							The class behind <code>wrapSync</code> (below).
 						</d></item>
 						<item n="firstPositive"><d>
 							<code>firstPositive(tasks:Array):Object</code>
@@ -146,8 +161,12 @@ if(!a || !b || !c){
 							<code>wrapSync(x:Function,lock:Object):Function</code>
 						</d></item>
 						<item n="wrapHash" hl="true"><d>
+							<code>wrapHash(f:Array&lt;Function&gt;):Function</code>
+							Spreads calls across a set of functions by the hash of the first argument (which becomes mandatory) - the same input always lands on the same function, useful for partitioning work by key while keeping it deterministic. Pass a power-of-two-sized array (2, 4, 8...) for the most even spread.
 						</d></item>
 						<item n="wrapLoop" hl="true"><d>
+							<code>wrapLoop(f:Array&lt;Function&gt;):Function</code>
+							Spreads calls across a set of functions round-robin, by call count rather than by argument - for evening out load across a fixed pool of workers when (unlike <code>wrapHash</code>) there's no need for the same input to always land on the same one.
 						</d></item>
 						<item n="wrapBuffered"><d>
 							<code>wrapBuffered(x:Function):Function</code>
@@ -362,24 +381,33 @@ var input = Transfer.createCopier(process.getInputStream()).toStringUtf8();
 							<column id="n" title="Name"/>
 							<column id="d" title="Summary"/>
 						</columns>
-						<item n="BUFFER_LARGE"><d>
-						</d></item>
-						<item n="BUFFER_MAX"><d>
+						<item n="BUFFER_SMALL"><d>
+							The smallest of the four tuned byte-buffer sizes below - for short-lived or small-volume copies.
 						</d></item>
 						<item n="BUFFER_MEDIUM"><d>
+							A mid-sized tuned byte-buffer size, for everyday copies that don't warrant the largest buffer.
 						</d></item>
-						<item n="BUFFER_SMALL"><d>
+						<item n="BUFFER_LARGE"><d>
+							A large tuned byte-buffer size, for bulk copies where fewer, bigger reads/writes pay off.
+						</d></item>
+						<item n="BUFFER_MAX"><d>
+							The largest tuned byte-buffer size - the ceiling to use for the highest-volume transfers.
 						</d></item>
 						<item n="EMPTY_BYTE_ARRAY"><d>
+							A shared zero-length <code>byte[]</code> - use instead of allocating a fresh empty array.
 						</d></item>
 						<item n="EMPTY_READER"><d>
+							A shared <code>java.io.Reader</code> that immediately reports end-of-stream - use as a no-op reader instead of allocating one.
 						</d></item>
 						<item n="EMPTY_STREAM"><d>
+							A shared <code>java.io.InputStream</code> that immediately reports end-of-stream - use as a no-op stream instead of allocating one.
 						</d></item>
 						<item n="binarySize"><d>
 							<code>binarySize(x:AnyBinary):Number</code>
 						</d></item>
 						<item n="compareStreams" hl="true hd"><d>
+							<code>compareStreams(stream1:InputStream,stream2:InputStream):Number</code>
+							Byte-for-byte content comparison of two streams - <code>0</code> when they're identical, non-zero otherwise. For comparing/ordering binary content itself, not just references to it.
 						</d></item>
 						<item n="copyBytes"><d>
 							<code>copyBytes(src:AnyBinary,srcOff:Number,dst:ByteBuffer,dstOff:Number,length:Number):Number</code>
@@ -432,6 +460,76 @@ var input = Transfer.createCopier(process.getInputStream()).toStringUtf8();
 	<section namespacePrefix="util::" layout="section">
 		<anchor>module-ae3/Util</anchor>
 		<title>Module: ae3/Util</title>
+
+		<article>
+			<name>'Util' Namespace Quick Reference</name>
+			<text>
+				<paragraph>Obtain the instance of Util Client API.</paragraph>
+				<code>const Util = require('ae3/Util');</code>
+				<paragraph>or</paragraph>
+				<code><![CDATA[
+const ae3 = require('ae3');
+const Util = ae3.Util;
+				]]></code>
+				<paragraph>
+					<code>ae3.Util</code> is a namespace - each property below lazily loads its own module on first access, so requiring <code>ae3/Util</code> doesn't pull in everything at once. <code>Cache</code>, <code>Codecs</code> and <code>Xml</code> have their own dedicated articles later on this page; the rest are quick-referenced here:
+					<fields layout="list">
+						<columns>
+							<column id="n" title="Name"/>
+							<column id="d" title="Summary"/>
+						</columns>
+						<item n="Auth"><d>
+							User/session authentication helpers.
+						</d></item>
+						<item n="AuthMap"><d>
+							A config-driven authentication provider - accounts, logins and their permissions declared directly as a settings map rather than backed by an external identity system.
+						</d></item>
+						<item n="AuthVfs"><d>
+							A VFS-backed authentication provider, built on <code>Auth</code> - account data lives in the VFS rather than a static config map.
+						</d></item>
+						<item n="Base"><d>
+							Small shared base helpers - currently just <code>MapperBuilder</code>, for building field-mapping functions.
+						</d></item>
+						<item n="CollectConsole"><d>
+							A virtual console that collects everything written to it so the messages can be read back afterward, instead of only going to a live log.
+						</d></item>
+						<item n="Counter"><d>
+							A simple counter utility.
+						</d></item>
+						<item n="Dom"><d>
+							DOM helper utilities.
+						</d></item>
+						<item n="HtmlChunkedConsole"><d>
+							A console/log renderer that streams its output as chunked HTML.
+						</d></item>
+						<item n="Settings"><d>
+							Loads and filters JSON settings descriptors from a VFS folder - the mechanism behind most of AE3's own <code>settings/*</code>-tree config discovery.
+						</d></item>
+						<item n="Shell"><d>
+							Runs external processes/shell commands.
+						</d></item>
+						<item n="TrackerVfs"><d>
+							A VFS-backed change tracker.
+						</d></item>
+						<item n="Queues"><d>
+							Queue-building utilities - see <code>QueueBuilder</code>.
+						</d></item>
+						<item n="HashMap"><d>
+							Re-export of <code>java.util.HashMap</code>.
+						</d></item>
+						<item n="TreeMap"><d>
+							Re-export of <code>java.util.TreeMap</code> (sorted-key map).
+						</d></item>
+						<item n="HashSet"><d>
+							Re-export of <code>java.util.HashSet</code>.
+						</d></item>
+						<item n="TreeSet"><d>
+							Re-export of <code>java.util.TreeSet</code> (sorted set).
+						</d></item>
+					</fields>
+				</paragraph>
+			</text>
+		</article>
 	</section>
 	
 	<section namespacePrefix="vfs::" layout="section">

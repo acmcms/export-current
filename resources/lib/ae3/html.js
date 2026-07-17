@@ -166,6 +166,7 @@ function makeDataTableBinary(layout){
 }
 
 function makeDataTableReply(query, layout){
+	const name = layout.name || 'data';
 	return ae3.Reply.binary('HTML', query, makeDataTableBinary(layout), name + ".html");
 }
 

@@ -75,6 +75,7 @@ function makeDataTableBinary(layout){
 }
 
 function makeDataTableReply(query, layout){
+	const name = layout.name || 'data';
 	return ae3.Reply.binary('PDF', query, makeDataTableBinary(layout), name + ".pdf");
 }
 

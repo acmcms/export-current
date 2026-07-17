@@ -1,5 +1,7 @@
 
 import ru.myx.util.xls.ExcelSAPI;
+import ru.myx.ae3.serve.SimpleServeRequest;
+import ru.myx.ae3.l2.xls.XlsTargetReplyContext;
 
 var object = Object.create(ExcelSAPI);
 
@@ -9,7 +11,7 @@ var ae3 = require("ae3");
 function createBinaryFromLayout(layout){
 	var query = new SimpleServeRequest();
 	query.setResourceIdentifier("/document.xls");
-	new XlsReplyTargetContext(query, null, null).transform(layout);
+	new XlsTargetReplyContext(query, null, null).transform(layout);
 	return query.getResult();
 }
 
@@ -409,26 +411,30 @@ function makeFormBinary(layout){
 }
 
 function makeDataTableMessage(layout){
+	const name = layout.name || 'data';
 	return ae3.Flow.binary('XLS', 'Excel File', {
-		"Content-Type"			: File.getContentTypeForName(name + ".xls"),
-		"Content-Disposition"	: "attachment; filename=" + name + ".xls"
+		"Content-Type"			: File.getContentTypeForName(`${name}.xls`),
+		"Content-Disposition"	: `attachment; filename=${name}.xls`
 	}, makeDataTableBinary(layout));
 }
 
 function makeFormMessage(layout){
+	const name = layout.name || 'data';
 	return ae3.Flow.binary('XLS', 'Excel File', {
-		"Content-Type"			: File.getContentTypeForName(name + ".xls"),
-		"Content-Disposition"	: "attachment; filename=" + name + ".xls"
+		"Content-Type"			: File.getContentTypeForName(`${name}.xls`),
+		"Content-Disposition"	: `attachment; filename=${name}.xls`
 	}, makeFormBinary(layout));
 }
 
 function makeDataTableReply(query, layout){
-	return ae3.Reply.binary('XLS', query, makeDataTableBinary(layout), name + ".xls");
+	const name = layout.name || 'data';
+	return ae3.Reply.binary('XLS', query, makeDataTableBinary(layout), `${name}.xls`);
 }
 
 
 function makeFormReply(query, layout){
-	return ae3.Reply.binary('XLS', query, makeFormBinary(layout), name + ".xls");
+	const name = layout.name || 'data';
+	return ae3.Reply.binary('XLS', query, makeFormBinary(layout), `${name}.xls`);
 }
 
 Object.defineProperties(object, {
