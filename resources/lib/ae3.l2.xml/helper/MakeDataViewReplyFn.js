@@ -3,6 +3,7 @@
  */
 
 const FiltersFormLayout = require("./FiltersFormLayout");
+const reduceDataViewGrid = require("./ReduceDataViewGridFn");
 const formatXmlAttributes = Format.xmlAttributes;
 const formatXmlElement = Format.xmlElement;
 const formatXmlElements = Format.xmlElements;
@@ -25,19 +26,22 @@ const formatQueryStringParameters = Format.queryStringParameters;
  */
 function makeDataViewReply(context, layout){
 	const query = context?.query;
+	/** ae3/xml, ae3/xls, ae3/txt, ae3/pdf were never implemented - this redirect always threw
+	 * "Not a function" for any explicit ___output matching one of these (see MakeMessageReplyFn.js
+	 * for the same bug, found and disabled there first). "xml" needs no redirect at all - the
+	 * XML+XSL builder below already produces the correct pure-XML reply directly. "pdf"/"txt" now
+	 * route to a real reduction (2-column grid of primitives) that PdfTargetContext/TextTargetContext
+	 * already render natively via their own getLayoutForContext(), no per-format module needed.
+	 * "xls" has no registered output target/renderer at all yet (separate, larger, deferred task -
+	 * not just this redirect) so it still falls through to the XML+XSL builder below. */
 	if(query?.parameters.___output){
 		switch(query.parameters.___output){
-		case "xml":
-			return require("ae3/xml").makeDataViewReply(query, layout);
-		case "xls":
-			return require("ae3/xls").makeDataViewReply(query, layout);
-		case "txt":
-			return require("ae3/txt").makeDataViewReply(query, layout);
 		case "pdf":
-			return require("ae3/pdf").makeDataViewReply(query, layout);
+		case "txt":
+			return reduceDataViewGrid(layout);
 		}
 	}
-	
+
 	const attributes = layout.attributes ? Object.create(layout.attributes) : {};
 	attributes.layout = "view";
 	const filters = layout.filters ?? context.layoutFilters;

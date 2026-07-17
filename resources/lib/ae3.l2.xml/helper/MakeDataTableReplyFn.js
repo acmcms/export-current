@@ -42,7 +42,11 @@ const FMT_ITEM_INTERN_REPLACE_VALUE = function(name, item){
  */
 function makeDataTableReply(context, layout){
 	const query = context?.query;
-	if(query?.parameters.___output){
+	/** ae3/xml, ae3/xls, ae3/txt, ae3/pdf, ae3/html, ae3/csv were never implemented - this
+	 * redirect always threw "Not a function" for any explicit ___output matching one of these.
+	 * Disabled the same way makeMessageReply's identical switch already was; falls through to
+	 * the XML+XSL builder below for every format instead. */
+	if(false && query?.parameters.___output){
 		switch(query.parameters.___output){
 		case "xml":
 			return require("ae3/xml").makeDataTableReply(query, layout);

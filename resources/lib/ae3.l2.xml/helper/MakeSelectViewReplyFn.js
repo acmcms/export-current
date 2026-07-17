@@ -23,7 +23,12 @@ const formatXmlNodeValue = Format.xmlNodeValue;
  */
 function makeSelectViewReply(context, layout){
 	const query = context?.query;
-	if(query?.parameters.___output){
+	/** ae3/xml, ae3/xls, ae3/txt, ae3/pdf were never implemented - this redirect always threw
+	 * "Not a function" for any explicit ___output matching one of these (also note it called
+	 * .makeDataFormReply/.makeDataViewReply, not .makeSelectViewReply - never exercised).
+	 * Disabled the same way makeMessageReply's identical switch already was; falls through to
+	 * the XML+XSL builder below for every format instead. */
+	if(false && query?.parameters.___output){
 		switch(query.parameters.___output){
 		case "xml":
 			return require("ae3/xml").makeDataFormReply(query, layout);
