@@ -1,0 +1,23 @@
+//
+//
+// Arguments:
+//		layout - current layout
+//
+
+
+/**
+ * 'external:' added to prevent normal replace: browsers do not allow cross-domain
+ * (idiots - that was the point)
+ */
+if(layout.xsl !== "external:/!/skin/skin-standard-xml/show.xsl"){
+	return layout;
+}
+
+const webuiCdn = context.query?.attributes["X-WebUI-CDN-URI"];
+if(!webuiCdn){
+	return layout;
+}
+
+return Layouts.extend(layout, {
+	xsl : webuiCdn + "skin-standard-xml/show.xsl"
+});
