@@ -29,16 +29,6 @@ const formatQueryStringParameters = Format.queryStringParameters;
  */
 function makeDataViewReply(context, layout){
 	const query = context?.query;
-	/** ae3/xml, ae3/xls, ae3/txt, ae3/pdf were never implemented - this redirect always threw
-	 * "Not a function" for any explicit ___output matching one of these (see MakeMessageReplyFn.js
-	 * for the same bug, found and disabled there first). "xml" needs no redirect at all - the
-	 * XML+XSL builder below already produces the correct pure-XML reply directly. "pdf"/"txt"/
-	 * "html"/"xls" each route to their own real reduction (2-column grid of primitives,
-	 * deliberately NOT shared between formats - see each ReduceDataViewGrid*Fn.js's own header
-	 * for why) that PdfTargetContext/TextTargetContext/HtmlDomTargetContext/XlsTargetContext
-	 * already render natively via their own getLayoutForContext(), no per-format require()
-	 * module needed - "xls" now has a real, registered output target too
-	 * (ae3.sys.pkg.l2.tgt.xls's WebContextXls/xls.json), not just this redirect. */
 	if(query?.parameters.___output){
 		switch(query.parameters.___output){
 		case "pdf":

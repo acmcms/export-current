@@ -1193,6 +1193,7 @@
 		<xsl:param name="format" />
 		<xsl:param name="value" />
 		<xsl:param name="zoom" />
+		<xsl:param name="parentInputValue" />
 		<xsl:choose>
 			<xsl:when test="$format/@type='constant'">
 				<span x-ui-debug="input/constant {$zoom}"><xsl:call-template name="formatted">
@@ -2105,6 +2106,7 @@
 		<xsl:param name="format"/>
 		<xsl:param name="zoom"/>
 		<xsl:param name="depth" select="$depth | 2[not($depth)]"/>
+		<xsl:variable name="itemZoom"><xsl:value-of select="$format/@zoom" /><xsl:if test="not($format/@zoom)"><xsl:value-of select="$zoom" /></xsl:if></xsl:variable>
 		<xsl:comment> command-check: zoom: <xsl:value-of select="$zoom" />, depth: <xsl:value-of select="$depth" />, limit: <xsl:value-of select="@depthLimit" /></xsl:comment>
 		<xsl:variable name="iconWithTitle">
 			<div class="ui-cmd-icon">
