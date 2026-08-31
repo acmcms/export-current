@@ -50,3 +50,18 @@ function initInputDisableInvisible(){
 		setTimeout(fn, 17);
 	}
 }
+
+/**
+ * show.xsl.tpl:181's `<xsl:value-of disable-output-escaping="yes" select="rawHeadData[not($clean)]"/>`
+ * injects real production markup (DataTables' library-loading <script src> tags, an inline init
+ * <script>, a <style> block - see Ae3WebService.js's prepareHtmlTable()) straight into <head>, with
+ * no wrapping element of its own - it's a bare disable-output-escaping value, sibling to <head>'s
+ * other (all-element) children.
+ *
+ * Pages are now served as text/html (HTML5), which natively supports raw embedded <script>/<style>
+ * blocks in server-rendered markup - unlike strict XML (application/xhtml+xml), the reason a
+ * server-side CDATA-wrap + client-side unwrap step existed here at all. Saxon's server-side
+ * serializer (ru.myx.ae3.l2.xml.XslServerRender) now passes disable-output-escaping content straight
+ * through raw/unescaped, so rawHeadData's <script>/<style> blocks are already live elements in the
+ * initial HTML5-parsed DOM - no unwrap step needed. See this package's MAGIC.md.
+ */
