@@ -193,7 +193,7 @@ td.field, div.field, td.fldcollapse{
 	text-align: right;
 }
 td.field, div.field{
-	padding: 3pt;
+	padding: 1pt 3pt 1pt 3pt;
 	margin: 1pt 0 1pt 0;
 }
 td.fldcollapse{
@@ -234,11 +234,6 @@ div.submit{
 }
 
 
-table.table {
-	border-collapse: separate;
-	row-gap: 3pt;
-	gap: 3pt;
-}
 table.table>tbody>tr>td, table.table>thead>tr>th, table.table>tbody>tr>th {
 	padding: 3pt;
 	overflow: hidden;

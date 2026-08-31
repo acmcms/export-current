@@ -61,6 +61,10 @@ Menu = parent.Menu || {
 		}, 50);
 	},
 
+	escapeTitleHtml : function(title){
+		return String(title == null ? "" : title).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	},
+
 	attachMenu : function(button, structure){
 		// jQuery compatibility
 		button.ownerDocument || (button.length == 1 && (button = button[0]));
@@ -171,7 +175,7 @@ Menu = parent.Menu || {
 				if(element.menusource || element.submenu){
 					// 1) this way due to firefox bug in float:right - thanx to bastards from FF
 					// 2) not programmatic way due to strange behaviour in IE - thanx to bastards from IE
-					item.innerHTML = icon + title + '<span>&#x25BA;</span>';
+					item.innerHTML = icon + Menu.escapeTitleHtml(title) + '<span>&#x25BA;</span>';
 					item.submenu = element.submenu;
 					item.submenudate = element.submenudate || ((new Date()).getTime() - 60000);
 					item.menusource = element.menusource;
@@ -217,7 +221,7 @@ Menu = parent.Menu || {
 					};
 					continue;
 				}
-				item.innerHTML = icon + title;
+				item.innerHTML = icon + Menu.escapeTitleHtml(title);
 				if(element.exec){
 					item.action = function(){
 						var iframe = document.createElement("iframe");
@@ -465,7 +469,7 @@ Menu = parent.Menu || {
 					var item = target.ownerDocument.createElement("div");
 					item.className = "menu-element";
 					button.appendChild(item);
-					item.innerHTML = icon + (typeof element.title == "function" ? element.title(element) : element.title);
+					item.innerHTML = icon + Menu.escapeTitleHtml(typeof element.title == "function" ? element.title(element) : element.title);
 				}else{
 					button.innerHTML = icon;
 				}
