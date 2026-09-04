@@ -6,7 +6,7 @@
 	version="1.0"
 	>
 	
-	<xsl:output method="xhtml" indent="no" omit-xml-declaration="yes"/>
+	<xsl:output method="html" indent="no"/>
 	<xsl:decimal-format name="decimal" decimal-separator='.' grouping-separator=' ' />
 
 	<xsl:variable name="clean" select="*/client/@format='clean'"/>
