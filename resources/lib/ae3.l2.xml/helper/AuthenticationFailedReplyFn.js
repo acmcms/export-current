@@ -5,6 +5,7 @@
 const formatJsObject = Format.jsObject;
 const formatXmlAttribute = Format.xmlAttribute;
 const formatXmlElement = Format.xmlElement;
+const internMakeLoginOptions = require("./InternMakeLoginOptionsFn");
 
 /**
  * 
@@ -55,7 +56,7 @@ function buildAuthenticationFailedReply(context){
 				%><message><%
 					%>This service requires all clients to sign-in. There was an authentication failure.<%
 				%></message><%
-				= internMakeLoginOptions(query, Index);
+				= internMakeLoginOptions(query, context.share);
 				// <command key="/?login" icon="arrow_refresh" title="Login / Retry"/>
 			%></authentication-failed><%
 		}

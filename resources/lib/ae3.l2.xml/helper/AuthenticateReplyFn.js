@@ -4,6 +4,7 @@
 
 const formatXmlAttribute = Format.xmlAttribute;
 const formatXmlElement = Format.xmlElement;
+const internMakeLoginOptions = require("./InternMakeLoginOptionsFn");
 
 /**
  * 
@@ -39,7 +40,7 @@ function buildAuthenticateReply(context){
 		var url = query.url;
 		var xml;
 		$output(xml){
-			%><authenticate<%= formatXmlAttribute("title", context.title || message) %> layout="menu" zoom="document"><%
+			%><authenticate<%= formatXmlAttribute("title", context.title || "Authentication required") %> layout="menu" zoom="document"><%
 				= formatXmlElement("client", context.share.clientElementProperties(context));
 				if(query.attributes["Secure"] !== "true" && url.startsWith("http://")){
 					%><message><%
@@ -50,7 +51,7 @@ function buildAuthenticateReply(context){
 						%>This service requires all clients to sign-in.<%
 					%></message><%
 				}
-				= internMakeLoginOptions(query, Index);
+				= internMakeLoginOptions(query, context.share);
 			%></authenticate><%
 		}
 		return {

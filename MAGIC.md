@@ -20,3 +20,11 @@ example implementation behind the `hello-world` host/service pair.
 `interfaces.xml`/`servers.xml`/`properties.xml`/`initialize.xml` (read from `path.protected`,
 not from this axiom root) is a separate, independently-supplied config tree — see `unit-test`'s
 and `clean-boot`'s own MAGIC.md for that side of the boot process.
+
+A self-link is a symbolic link whose name is its own parent directory's name, and whose target is that parent. It makes a folder look like the file the engine wants beside it, and the engine trusts `File.isFile()`.
+
+`ImplementEngine.getVersion()` reads `<path.public>/version/version` and returns `null` unless that test passes (`/Volumes/workspace/myx/ae3.sys/java/ru/myx/ae3/ImplementEngine.java:92-110`). `Engine.java:229-235` then reports the bare `VERSION_NUMBER` with no version text. Nothing logs and no build fails, so the tree reads as unstamped.
+
+Check every tree before trusting a bare build number. `find . -type l` lists the links, and `readlink` gives each target. A self-link is one whose target is its own parent directory. A directory standing where `version/version` belongs is the one that costs a stamp.
+
+Two further costs are measured elsewhere, and both follow the same style of link. A host-filesystem VFS mount follows it, so one folder becomes self-similar to depth 32. `CodecsHelper.mapToZip` pays that once per level. Both are in `/Volumes/workspace/myx/ae3.sdk/MAGIC.md`. A settings map is unaffected, and the measurement is in `/Volumes/workspace/myx/ae3.sys.pkg.base/MAGIC.md`.
