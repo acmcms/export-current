@@ -35,8 +35,6 @@
 				
 				useJQuery		: default: undefined, force use jQuery library, or default. Specify 'true' for current version.
 				
-				useYUI			: default: undefined, force use YUI-core library, or default
-				
 				head			: part of head (excluding <head> tag)
 				
 				doctype			: 'html', 'standard', 'ieQuirks', 'ie6', 'strict', 'frameset', 'loose', 'GWT'
@@ -243,26 +241,6 @@
 						request.protocolVariant.toLowerCase() === 'https'
 							? "/!/skin/skin-standard-html/$files/jquery-"+useJQuery+".min.js"
 							: "http://code.jquery.com/jquery-"+useJQuery+".min.js"
-					) %>"></script><%
-				}
-			
-				var useYUI =
-					// IS explicitly requested in page content OR
-					content.useYUI === true || (
-					// NOT explicitly disabled in page content AND NOT disabled in query AND
-					content.useYUI !== false && !parameters.__no_yui && (
-					
-						// requested in query OR
-						parameters.__use_yui ||
-						
-						// requested in skin settings OR
-						settings.useYUI
-					));
-				if( useYUI ) { 
-					%><script type="text/javascript" src="<%= Format.xmlAttributeFragment(
-						request.protocolVariant.toLowerCase() === 'https'
-							? "http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js" // not local yet
-							: "http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"
 					) %>"></script><%
 				}
 			

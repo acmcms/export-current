@@ -143,17 +143,6 @@
 						</tr>
 						<tr>
 							<td>
-								useYUI
-							</td>
-							<td>
-								:
-							</td>
-							<td>
-								default: undefined, force use <a href="http://yuilibrary.com">YUI</a>-core library, or default
-							</td>
-						</tr>
-						<tr>
-							<td>
 								head
 							</td>
 							<td>

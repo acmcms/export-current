@@ -1311,6 +1311,7 @@ input.el-radio + label.st-radio-sel:active::before {
 	line-height: 1.1em; 
 	float:right; 
 	height: 1.1em; 
+	margin-top: 1em;
 }
 
 .ui-chk-master{
